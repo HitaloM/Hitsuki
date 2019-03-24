@@ -1,0 +1,6 @@
+requests>=2.18.4
+telethon
+ujson
+pythonping
+redis
+pymongo
