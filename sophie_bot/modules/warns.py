@@ -98,6 +98,10 @@ async def event(event):
     })
     user = MONGO.user_list.find_one({'user_id': user_id})
     user_name = user['first_name']
+    user_str = '[{}](@{})'.format(
+        user['first_name'], user['username'])
+    chat_title = MONGO.chat_list.find_one({
+        'chat_id': event.chat_id})['chat_title']
     text = "**Warns of {}:**\n".format(user_name)
     H = 0
     for warn in warns:
@@ -106,6 +110,10 @@ async def event(event):
         if rsn == 'None':
             rsn = "No reason"
         text += "{}: `{}`\n".format(H, rsn)
+    if H == 0:
+        await event.reply("User {} don't have any warns in **{}**!".format(
+            user_str, chat_title))
+        return
     await event.reply(text)
 
 
