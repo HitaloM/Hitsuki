@@ -17,9 +17,15 @@ async def event(event):
         await event.reply("You don't have rights to warn users here!")
         return
 
-    user, reason = await get_user_and_text(event)
-    user_id = user['user_id']
+    try:
+        user, reason = await get_user_and_text(event)
+        user_id = int(user['user_id'])
+    except Exception:
+        user_id = int(event.from_id)
     chat_id = event.chat_id
+    if user_id in WHITELISTED:
+        await event.reply("This user is whitelisted!")
+        return
     rndm = randomString(15)
     print(rndm)
     MONGO.warns.insert_one({
@@ -28,7 +34,6 @@ async def event(event):
         'group_id': chat_id,
         'reason': str(reason)
     })
-    print(user)
     admin_id = event.from_id
     admin = MONGO.user_list.find_one({'user_id': admin_id})
     admin_str = '[{}](@{})'.format(
