@@ -12,25 +12,6 @@ from sophie_bot.events import flood_limit, register
 from telethon import custom
 
 
-@register(incoming=True, pattern="^/start help$")
-async def event(event):
-    text = "If you are seeing that mean help is working"
-    await event.reply(text)
-
-
-@register(incoming=True, pattern="^/help$")
-async def event(event):
-    if not event.from_id == event.chat_id:
-        text = "Contact me in PM for help"
-        inline = [[custom.Button.url('Click me for help!', 'https://t.me/rSophieBetaBot?start=help')]]
-        await event.reply(text, buttons=inline)
-        return
-    text = "\n__yea__ \n**yea** \n`yea`"
-    inline = [[custom.Button.url('Click me for help!',
-              'https://t.me/rSophieBetaBot?start=help')]]
-    await event.reply(text, buttons=inline)
-
-
 @register(incoming=True, pattern="^/start$")
 async def event(event):
 
