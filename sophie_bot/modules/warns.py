@@ -24,7 +24,7 @@ async def event(event):
         user_id = int(event.from_id)
     chat_id = event.chat_id
     if user_id in WHITELISTED:
-        await event.reply("This user is whitelisted!")
+        await event.reply("This user is whitelisted, You cannot warn them!")
         return
     rndm = randomString(15)
     print(rndm)
@@ -40,7 +40,7 @@ async def event(event):
         admin['first_name'], admin['username'])
     user_str = '[{}](@{})'.format(
         user['first_name'], user['username'])
-    text = "{} warned {}\n".format(admin_str, user_str)
+    text = "{} have warned {}\n".format(admin_str, user_str)
     text += "Reason: `{}`\n".format(reason)
 
     old = MONGO.warns.find({
@@ -56,7 +56,7 @@ async def event(event):
     if h >= 3:
         if await ban_user(event, user_id, chat_id, None) is False:
             return
-        text += "Max warns limit reached, user banned!"
+        text += "User have exceed the warns limit, Banned!"
         MONGO.warns.delete_many({
             'user_id': user_id,
             'group_id': chat_id
@@ -94,7 +94,7 @@ async def event(event):
         user_id = int(event.from_id)
     if user_id in WHITELISTED:
         await event.reply(
-            "This user clear as white paper, he can't have warns."
+            "This user is clear as white paper, he can't have warns."
         )
         return
     warns = MONGO.warns.find({
@@ -116,7 +116,7 @@ async def event(event):
             rsn = "No reason"
         text += "{}: `{}`\n".format(H, rsn)
     if H == 0:
-        await event.reply("User {} don't have any warns in **{}**!".format(
+        await event.reply("{} don't have any warns in **{}**!".format(
             user_str, chat_title))
         return
     await event.reply(text)
