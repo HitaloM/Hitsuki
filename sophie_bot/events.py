@@ -22,10 +22,10 @@ def flood_limit(chat_id, command):
     number = int(REDIS.get(db_name))
     print(number)
     REDIS.expire(db_name, 60)
-    if number > 3:
+    if number > 7:
         return 'EXIT'
         REDIS.expire(db_name, 120)
-    if number > 2:
+    if number > 6:
         return True
         REDIS.expire(db_name, 120)
     else:
