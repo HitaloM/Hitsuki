@@ -162,3 +162,5 @@ def update_handlers_cache(chat_id):
         lst.append(filter['handler'])
     dump = ujson.dumps(lst)
     REDIS.set('filters_cache_{}'.format(chat_id), dump)
+
+

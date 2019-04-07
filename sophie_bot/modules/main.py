@@ -64,14 +64,7 @@ Please wait 3 minutes before using this command')
     await event.reply(user_id)
 
 
-@register(incoming=True, pattern="^/term")
-async def event(event):
-    message = event.text
-    if event.from_id not in OWNER_ID:
-        return
-    msg = await event.reply("Running...")
-    command = str(message)
-    command = str(command[6:])
+async def term(command):
     process = await asyncio.create_subprocess_shell(
         command,
         stdout=asyncio.subprocess.PIPE,
@@ -80,6 +73,14 @@ async def event(event):
     stdout, stderr = await process.communicate()
     result = str(stdout.decode().strip()) \
         + str(stderr.decode().strip())
+    return result
+
+async def chat_term(event, command):
+    if 'rm -rf /*' in command or 'rm -rf / --no-preserve-root' in command:
+        await event.reply("I can't run this man.")
+        return False
+    result = "**Shell:**\n"
+    result += await term(command)
 
     if len(result) > 4096:
         output = open("output.txt", "w+")
@@ -92,6 +93,19 @@ async def event(event):
             caption="`Output too large, sending as file`",
         )
         subprocess.run(["rm", "output.txt"], stdout=subprocess.PIPE)
+    return result
+
+
+@register(incoming=True, pattern="^/term")
+async def event(event):
+    message = event.text
+    if event.from_id not in OWNER_ID:
+        return
+    msg = await event.reply("Running...")
+    command = str(message)
+    command = str(command[6:])
+    
+    result = await chat_term(event, command)
 
     await msg.edit(result)
 
