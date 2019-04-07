@@ -24,7 +24,7 @@ Please wait 3 minutes before using this command')
 @register(incoming=True, pattern="^/insults$")
 async def event(event):
 
-    res = False #flood_limit(event.chat_id, 'insults')
+    res = flood_limit(event.chat_id, 'insults')
     if res == 'EXIT':
         return
     elif res is True:
