@@ -30,26 +30,10 @@ Please wait 3 minutes before using this command')
     await event.reply(text, buttons=inline)
 
 
-@register(incoming=True, pattern="^/chatid")
-async def event(event):
-
-    res = flood_limit(event.chat_id, 'chatid')
-    if res == 'EXIT':
-        return
-    elif res is True:
-        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this command')
-        return
-
-    chat_id = event.chat_id
-    chat_id = "The chat id is `{}`".format(chat_id)
-    await event.reply(chat_id)
-
-
 @register(incoming=True, pattern="^/id")
 async def event(event):
 
-    res = flood_limit(event.chat_id, 'chatid')
+    res = flood_limit(event.chat_id, 'id')
     if res == 'EXIT':
         return
     elif res is True:
@@ -57,9 +41,20 @@ async def event(event):
 Please wait 3 minutes before using this command')
         return
 
-    user_id = event.from_id
-    user_id = "Your id is `{}`".format(user_id)
-    await event.reply(user_id)
+    text = "**ID's:**\n"
+    text += "Your id - `{}`\n".format(event.from_id)
+    text += "Chat id - `{}`\n".format(event.chat_id)
+    text += "Your message id - `{}`\n".format(event.message.id)
+
+    if event.message.reply_to_msg_id:
+        msg = await event.get_reply_message()
+        text += "\n**Replied message:**\n"
+        user = MONGO.user_list.find_one({'user_id': msg.from_id})
+        user_link = "[{}'s](https://t.me/{})".format(user['first_name'], msg.from_id)
+        text += "{} user id - `{}`\n".format(user_link, msg.from_id)
+        text += "{} message id - `{}`".format(user_link, msg.id)
+
+    await event.reply(text)
 
 
 async def term(command):
