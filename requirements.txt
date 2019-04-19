@@ -1,7 +1,6 @@
 requests>=2.18.4
 git+https://github.com/LonamiWebs/Telethon.git
 ujson
-pythonping
 redis
 pymongo
 python-dotenv

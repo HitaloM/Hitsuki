@@ -4,8 +4,6 @@ import time
 import asyncio
 import subprocess
 
-from pythonping import ping
-
 from sophie_bot import MONGO, OWNER_ID
 from sophie_bot.events import flood_limit, register
 
@@ -100,6 +98,9 @@ async def chat_term(event, command):
 async def event(event):
     message = event.text
     if event.from_id not in OWNER_ID:
+        msg = await event.reply("Running...")
+        await asyncio.sleep(2)
+        await msg.edit("Blyat can't do it becuase u dumb.")
         return
     msg = await event.reply("Running...")
     command = str(message)
@@ -108,64 +109,3 @@ async def event(event):
     result = await chat_term(event, command)
 
     await msg.edit(result)
-
-
-@register(incoming=True, pattern="^/ping$")
-async def handler(event):
-    res = flood_limit(event.chat_id, 'ping')
-    if res == 'EXIT':
-        return
-    elif res is True:
-        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this command')
-        return
-
-    message = await event.reply('Self checking...')
-
-    tg_api = ping('149.154.167.51', count=5)
-    google = ping('google.com', count=5)
-    text = "**Pong!**\n"
-    text += "Average speed to Telegram mtproto server - `{}` ms\n".format(
-        tg_api.rtt_avg_ms)
-    if google.rtt_avg:
-        gspeed = google.rtt_avg
-    else:
-        gspeed = google.rtt_avg
-    text += "Average speed to Google - `{}` ms\n".format(gspeed)
-
-    # Self check
-    start_time = time.time()
-    for i in range(3):
-        msg = await event.reply("Test {}".format(i), reply_to=event.chat_id)
-        await msg.delete()
-    end_time = time.time()
-    purge_time = round(float(end_time - start_time) * 1000)
-    if purge_time < 200:
-        purge_status = "Good"
-    elif purge_time < 400:
-        purge_status = "Ok"
-    else:
-        purge_status = "Poor"
-
-    text += "\n**Self check**\n"
-    text += "Purge status - `{}` (purge done for `{}` ms)\n".format(
-        purge_status, purge_time)
-
-    start_time = time.time()
-    for i in range(50):
-        MONGO.test.insert_one({"test": i})
-        MONGO.test.delete_one({})
-    end_time = time.time()
-
-    db_time = round(float(end_time - start_time) * 1000)
-    if db_time < 10:  # Database can't be so fast, there is a database error
-        db_status = "Something went wrong! Please write to @MrYacha"
-    elif db_time < 50:
-        db_status = "Good"
-    elif db_time < 70:
-        db_status = "Ok"
-    else:
-        db_status = 'Poor'
-    text += "Database status - `{}` (done for `{}` ms)".format(
-        db_status, db_time)
-    await message.edit(text)
