@@ -109,7 +109,7 @@ async def is_user_admin(chat_id, user_id):
         return False
 
 
-@register(incoming=True, pattern="^/adminlist")
+@register(incoming=True, pattern="^/adminlist|^/admins")
 async def event(event):
     res = flood_limit(event.chat_id, 'admins')
     if res == 'EXIT':
