@@ -199,3 +199,9 @@ async def get_id_by_nick(data):
 
     user = await bot(GetFullUserRequest(data))
     return user
+
+
+async def user_link(user_id):
+    user = MONGO.user_list.find_one({'user_id': user_id})
+    user_link = "[{}](https://t.me/{})".format(user['first_name'], user_id)
+    return user_link

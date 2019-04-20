@@ -6,7 +6,7 @@ import subprocess
 
 from sophie_bot import MONGO, OWNER_ID
 from sophie_bot.events import flood_limit, register
-from sophie_bot.modules.users import get_user_and_text
+from sophie_bot.modules.users import user_link
 
 from telethon import custom
 
@@ -56,9 +56,9 @@ Please wait 3 minutes before using this command')
         msg = await event.get_reply_message()
         text += "\n**Replied message:**\n"
         user = MONGO.user_list.find_one({'user_id': msg.from_id})
-        user_link = "[{}](https://t.me/{})'s".format(user['first_name'], msg.from_id)
-        text += "{} user id - `{}`\n".format(user_link, msg.from_id)
-        text += "{} message id - `{}`".format(user_link, msg.id)
+        userl = await user_link(msg.from_id)
+        text += "{}'s user id - `{}`\n".format(userl, msg.from_id)
+        text += "{}'s message id - `{}`".format(userl, msg.id)
 
     else:
         user, lol = await get_user_and_text(event)

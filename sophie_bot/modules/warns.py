@@ -5,7 +5,7 @@ import re
 from telethon import events
 from sophie_bot import MONGO, bot, WHITELISTED
 from sophie_bot.events import register
-from sophie_bot.modules.users import get_user_and_text, is_user_admin
+from sophie_bot.modules.users import get_user_and_text, is_user_admin, user_link
 from sophie_bot.modules.bans import ban_user
 from telethon.tl.custom import Button
 
@@ -36,10 +36,8 @@ async def event(event):
     })
     admin_id = event.from_id
     admin = MONGO.user_list.find_one({'user_id': admin_id})
-    admin_str = '[{}](@{})'.format(
-        admin['first_name'], admin['username'])
-    user_str = '[{}](@{})'.format(
-        user['first_name'], user['username'])
+    admin_str = await user_link(admin['user_id'])
+    user_str = await user_link(user['user_id'])
     text = "{} have warned {}\n".format(admin_str, user_str)
     text += "Reason: `{}`\n".format(reason)
 
@@ -53,7 +51,7 @@ async def event(event):
 
     button = Button.inline("Remove warn", 'remove_warn_{}'.format(rndm))
 
-    if h >= 3:
+    if h >= 99:
         if await ban_user(event, user_id, chat_id, None) is False:
             return
         text += "User have exceed the warns limit, Banned!"
@@ -79,9 +77,7 @@ async def event(event):
     print(warn_id)
     warn = MONGO.warns.find_one({'warn_id': warn_id})
     MONGO.notes.delete_one({'_id': warn['_id']})
-    user = MONGO.user_list.find_one({'user_id': user_id})
-    user_str = '[{}](@{})'.format(
-        user['first_name'], user['username'])
+    user_str = await user_link(user_id)
     await event.edit("Warn deleted by {}".format(user_str), link_preview=False)
 
 
@@ -101,13 +97,10 @@ async def event(event):
         'user_id': user_id,
         'group_id': event.chat_id
     })
-    user = MONGO.user_list.find_one({'user_id': user_id})
-    user_name = user['first_name']
-    user_str = '[{}](@{})'.format(
-        user['first_name'], user['username'])
+    user_str = await user_link(user_id)
     chat_title = MONGO.chat_list.find_one({
         'chat_id': event.chat_id})['chat_title']
-    text = "**Warns of {}:**\n".format(user_name)
+    text = "**Warns of **{}**:**\n".format(user_str)
     H = 0
     for warn in warns:
         H += 1
