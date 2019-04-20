@@ -27,7 +27,6 @@ async def event(event):
         await event.reply("This user is whitelisted, You cannot warn them!")
         return
     rndm = randomString(15)
-    print(rndm)
     MONGO.warns.insert_one({
         'warn_id': rndm,
         'user_id': user_id,
@@ -74,7 +73,6 @@ async def event(event):
         return
 
     warn_id = re.search(r'remove_warn_(.*)', str(event.data)).group(1)[:-1]
-    print(warn_id)
     warn = MONGO.warns.find_one({'warn_id': warn_id})
     MONGO.notes.delete_one({'_id': warn['_id']})
     user_str = await user_link(user_id)

@@ -56,7 +56,6 @@ async def event(event):
         return
 
     args = event.message.raw_text.split(" ")
-    print(len(args))
     if len(args) < 3:
         await event.reply("args error")
         return

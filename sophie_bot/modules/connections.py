@@ -36,7 +36,6 @@ async def event(event):
             return
 
     history = MONGO.connections.find_one({'user_id': user_id})
-    print(history)
     if not history:
         MONGO.connections.insert_one({
             'user_id': user_id,
@@ -54,22 +53,15 @@ async def event(event):
         btn3 = history['btn3']
         updated = history['updated']
 
-        print(updated)
-
         if history['updated'] == 1 and chat_id != history['btn2'] and chat_id != history['btn3']:
-            print("do 1")
             btn1 = chat_id
             updated = 2
         elif history['updated'] == 2 and chat_id != history['btn1'] and chat_id != history['btn3']:
-            print("do 2")
             btn2 = chat_id
             updated = 3
         elif history['updated'] >= 3 and chat_id != history['btn2'] and chat_id != history['btn1']:
-            print("do 3")
             btn3 = chat_id
             updated = 1
-        else:
-            print("Error")
 
         MONGO.connections.delete_one({'_id': history['_id']})
 
@@ -82,8 +74,6 @@ async def event(event):
             'updated': updated
         })
 
-        print(updated, btn1, btn2, btn3)
-
     REDIS.set('connection_cache_{}'.format(user_id), chat_id)
 
     await event.reply("Successfully connected to **{}**!".format(chat_title))
@@ -95,7 +85,6 @@ async def event(event):
     if not event.chat_id == user_id:
         return
     history = MONGO.connections.find_one({'user_id': user_id})
-    print(history)
     if not history:
         await event.reply(
             "You not connected to any chat for history, connect via `/connect <chat id>`"
@@ -107,7 +96,6 @@ async def event(event):
                 'connect_{}'.format(history['btn1']))]]
     if history['btn2']:
         chat_title = MONGO.chat_list.find_one({'chat_id': history['btn2']})
-        print(chat_title)
         buttons += [[Button.inline("{}".format(chat_title['chat_title']),
                     'connect_{}'.format(history['btn2']))]]
     if history['btn3']:

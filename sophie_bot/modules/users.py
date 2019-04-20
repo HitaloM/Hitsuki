@@ -81,7 +81,6 @@ async def update_users(event):
 @register(incoming=True, pattern="^/test ?(.*)")
 async def event(event):
     msg = await event.get_reply_message()
-    print(msg)
     await event.reply(msg)
 
 
@@ -124,9 +123,7 @@ Please wait 3 minutes before using this command')
     admins = ujson.decode(dump)
     text = '**Admin in this group:**\n'
     for admin in admins:
-        print(admin)
         H = MONGO.user_list.find_one({'user_id': admin})
-        print(H)
         if H:
             text += '- {} ({})\n'.format(H['first_name'], H['user_id'])
 
@@ -168,7 +165,6 @@ async def get_user_and_text(event):
 
                 if '@' in event.message.raw_text.split(" ", 2)[1]:
                     input_str = event.message.raw_text.split(" ", 2)[1][1:]
-                    print(input_str)
                     user = MONGO.user_list.find_one(
                         {'username': input_str}
                     )

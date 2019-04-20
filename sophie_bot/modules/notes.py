@@ -23,7 +23,6 @@ async def event(event):
 
     note_name = event.message.text.split(" ", 2)[1]
     file_id = None
-    print(len(event.message.text.split(" ")))
     if len(event.message.text.split(" ")) > 2:
         prim_text = event.message.text.split(" ", 1)[1].split(" ", 1)[1]
     else:
@@ -200,7 +199,6 @@ async def event(event):
 @register(incoming=True, pattern="^#")
 async def event(event):
     note_name = event.message.raw_text[1:]
-    print(note_name)
     if len(note_name) > 1:
         await send_note(
             event.chat_id, event.chat_id, event.message.id, note_name)
@@ -236,7 +234,6 @@ async def event(event):
     notename = event_data.group(2)[:-1]
     group_id = event_data.group(1)
     user_id = event.original_update.user_id
-    print(event)
     try:
         await send_note(user_id, group_id, None, notename)
         await event.answer("I pm'ed note to you!")
@@ -252,7 +249,6 @@ async def event(event):
     event_data = re.search(r'get_alert_(.*)_(.*)', data)
     notename = event_data.group(2)[:-1]
     group_id = event_data.group(1)
-    print(event)
     note = MONGO.notes.find_one({'chat_id': int(group_id), 'name': notename})
     if not note:
         await event.answer("I can't find this note!", alert=True)

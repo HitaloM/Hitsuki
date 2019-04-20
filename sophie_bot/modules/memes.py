@@ -64,7 +64,6 @@ async def event(event):
 
 def is_memes_enabled(chat_id):
     lol = MONGO.memes_enabled.find_one({'chat_id': chat_id})
-    print(lol)
     if lol:
         return True
     else:
