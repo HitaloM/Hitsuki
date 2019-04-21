@@ -2,28 +2,31 @@ import re
 from sophie_bot import MONGO, REDIS, bot
 from sophie_bot.events import register
 from telethon.tl.custom import Button
+from telethon import errors
 from telethon import events
 
 
-@register(incoming=True, pattern="^/connect (.*)")
+@register(incoming=True, pattern="^/connect ?(.*)")
 async def event(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
-        return
-
-    chat = event.message.raw_text.split(" ", 2)[1]
-    if not chat[0] == '-':
-        chat = MONGO.chat_list.find_one({
-            'chat_nick': chat.replace("@", "")
-        })
-        if not chat:
-            event.reply("I can't find this chat, try using chat id.")
-            return
-    else:
+        chat = event.chat_id
         chat = MONGO.chat_list.find_one({'chat_id': int(chat)})
-        if not chat:
-            event.reply("I can't find this chat.")
-            return
+        print(chat)
+    else:
+        chat = event.message.raw_text.split(" ", 2)[1]
+        if not chat[0] == '-':
+            chat = MONGO.chat_list.find_one({
+                'chat_nick': chat.replace("@", "")
+            })
+            if not chat:
+                event.reply("I can't find this chat, try using chat id.")
+                return
+        else:
+            chat = MONGO.chat_list.find_one({'chat_id': int(chat)})
+            if not chat:
+                event.reply("I can't find this chat.")
+                return
 
     chat_id = chat['chat_id']
     chat_title = chat['chat_title']
@@ -76,7 +79,16 @@ async def event(event):
 
     REDIS.set('connection_cache_{}'.format(user_id), chat_id)
 
-    await event.reply("Successfully connected to **{}**!".format(chat_title))
+    text = "Successfully connected to **{}**!".format(chat_title)
+    if event.chat_id == user_id:
+        await event.reply(text)
+    else:
+        try:
+            await bot.send_message(user_id, text)
+        except errors.rpcerrorlist.UserIsBlockedError:
+            await event.reply("Your pm has been successfully connected to **{}**! Write to @rSophieBot for start using connection.".format(chat_title))
+            return
+        await event.reply("Your pm has been successfully connected to **{}**!".format(chat_title))
 
 
 @register(incoming=True, pattern="^/connect$")

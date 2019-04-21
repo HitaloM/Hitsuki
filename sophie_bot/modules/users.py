@@ -16,11 +16,6 @@ async def event(event):
 async def update_users(event):
     chat_id = event.chat_id
     user_id = event.from_id
-    try:
-        chat_name = event.chat.title
-    except Exception as err:
-        await event.edit(str(err))
-        chat_name = "Local"
     user = await bot.get_entity(user_id)
     chat = await bot.get_entity(chat_id)
 
@@ -45,6 +40,11 @@ async def update_users(event):
         chatnick = None
     else:
         chatnick = chat.username
+
+    if not hasattr(chat, 'title'):
+        chat_name = "Local chat"
+    else:
+        chat_name = chat.title
 
     MONGO.chat_list.insert_one(
         {"chat_id": chat_id,
@@ -76,12 +76,6 @@ async def update_users(event):
                  'user_lang': user.lang_code})
     except Exception as err:
         await event.edit(str(err))
-
-
-@register(incoming=True, pattern="^/test ?(.*)")
-async def event(event):
-    msg = await event.get_reply_message()
-    await event.reply(msg)
 
 
 async def update_admin_cache(chat_id):
@@ -128,6 +122,17 @@ Please wait 3 minutes before using this command')
             text += '- {} ({})\n'.format(H['first_name'], H['user_id'])
 
     await msg.edit(text)
+
+
+@register(incoming=True, pattern="^/test (\w*)")
+async def event(event):
+    #msg = await get_user_and_text(event)
+    #print(msg)
+    #await event.reply(msg['first_name'])
+    notename = event.pattern_match.group(1)
+    string = event.text.partition(notename)[2]
+    print(notename)
+    print(string)
 
 
 async def get_user_and_text(event):
