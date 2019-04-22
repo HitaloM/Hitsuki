@@ -75,7 +75,7 @@ async def event(event):
 async def event(event):
     if event.from_id not in OWNER_ID:
         return
-    text = event.pattern_match.group(1)
+    text = event.message.text.split(" ", 1)[1]
     # Add chats to sbroadcast list
     chats = MONGO.chat_list.find({})
     MONGO.sbroadcast_list.drop()
@@ -95,12 +95,11 @@ async def event(event):
     chat_id = event.chat_id
     match = MONGO.sbroadcast_list.find_one({'chat_id': chat_id})
     if match:
-        print("yes")
         try:
             raw_text = MONGO.sbroadcast_settings.find_one({})['text']
-            print(raw_text)
             text, buttons = button_parser(event.chat_id, raw_text)
-            print(buttons)
+            if len(buttons) == 0:
+                buttons = None
             await bot.send_message(chat_id, text, buttons=buttons)
         except Exception as err:
             print(err)
