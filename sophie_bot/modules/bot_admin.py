@@ -52,7 +52,6 @@ async def event(event):
         )) 
     
 
-
 @register(incoming=True, pattern="^/sbroadcast ?(.*)")
 async def event(event):
     if event.from_id not in OWNER_ID:
@@ -94,3 +93,13 @@ async def event(event):
                 'all_chats': old['all_chats'],
                 'recived_chats': num
             }, upsert=False)
+
+
+@register(incoming=True, pattern="^/backup")
+async def event(event):
+    if event.from_id not in OWNER_ID:
+        return
+    msg = await event.reply("Running...")
+    date = await chat_term(event, "date \"+%Y-%m-%d.%H:%M:%S\"")
+    await chat_term(event, "mongodump --gzip --archive > Backups/dump_{}.gz".format(date))
+    await msg.edit("**Done!**\nBackup under `Backups/dump_{}.gz`".format(date))
