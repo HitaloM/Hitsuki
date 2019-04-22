@@ -1,9 +1,10 @@
 import asyncio
 import subprocess
 
-from sophie_bot import OWNER_ID
+from sophie_bot import bot, MONGO, OWNER_ID
 from sophie_bot.modules.main import term
 from sophie_bot.events import register
+from sophie_bot.modules.notes import button_parser
 
 
 async def chat_term(event, command):
@@ -42,3 +43,29 @@ async def event(event):
     result = await chat_term(event, command)
 
     await msg.edit(result)
+
+
+@register(incoming=True, pattern="^/broadcast ?(.*)")
+async def event(event):
+    if event.from_id not in OWNER_ID:
+        return
+    chats = MONGO.chat_list.find({})
+    raw_text = event.pattern_match.group(1)
+    text, buttons = button_parser(event.chat_id, raw_text)
+    msg = await event.reply("Broadcasting to {} chats...".format(chats.count()))
+    num_succ = 0
+    num_fail = 0
+    for chat in chats:
+        try:
+            await bot.send_message(chat['chat_id'], text, buttons=buttons)
+            num_succ = num_succ + 1
+        except Exception as err:
+            num_fail = num_fail + 1
+            await msg.edit("Error:\n`{}`.\nBroadcasting will continues.".format(err))
+            await asyncio.sleep(2)
+            msg = await event.edit("Broadcasting to {} chats...".format(chats.count()))
+    await msg.edit(
+        "**Broadcast completed!** Message sended to `{}` chats successfully, `{}` didn't received message.".format(
+            num_succ, num_fail
+        )) 
+    
