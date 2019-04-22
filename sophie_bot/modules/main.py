@@ -78,3 +78,37 @@ async def term(command):
     result = str(stdout.decode().strip()) \
         + str(stderr.decode().strip())
     return result
+
+
+async def chat_term(event, command):
+    if 'rm -rf /*' in command or 'rm -rf / --no-preserve-root' in command:
+        await event.reply("I can't run this man.")
+        return False
+    result = await term(command)
+
+    if len(result) > 4096:
+        output = open("output.txt", "w+")
+        output.write(result)
+        output.close()
+        await event.client.send_file(
+            event.chat_id,
+            "sender.txt",
+            reply_to=event.id,
+            caption="`Output too large, sending as file`",
+        )
+        subprocess.run(["rm", "output.txt"], stdout=subprocess.PIPE)
+    return result
+
+
+@register(incoming=True, pattern="^/botchanges")
+async def event(event):
+    res = flood_limit(event.chat_id, 'botchanges')
+    if res == 'EXIT':
+        return
+    elif res is True:
+        await event.reply('**Flood detected! **\
+Please wait 3 minutes before using this command')
+        return
+    command = "git log --pretty=format:\"%an: %s\" "
+    result = await chat_term(event, command)
+    await event.reply(result)
