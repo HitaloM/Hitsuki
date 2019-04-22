@@ -30,8 +30,10 @@ async def event(event):
     if event.from_id not in OWNER_ID:
         return
     chats = MONGO.chat_list.find({})
-    raw_text = event.pattern_match.group(1)
+    raw_text = event.message.text.split(" ", 1)[1]
     text, buttons = button_parser(event.chat_id, raw_text)
+    if len(buttons) == 0:
+        buttons = None
     msg = await event.reply("Broadcasting to {} chats...".format(chats.count()))
     num_succ = 0
     num_fail = 0
@@ -43,7 +45,7 @@ async def event(event):
             num_fail = num_fail + 1
             await msg.edit("Error:\n`{}`.\nBroadcasting will continues.".format(err))
             await asyncio.sleep(2)
-            msg = await event.edit("Broadcasting to {} chats...".format(chats.count()))
+            await msg.edit("Broadcasting to {} chats...".format(chats.count()))
     await msg.edit(
         "**Broadcast completed!** Message sended to `{}` chats successfully, `{}` didn't received message.".format(
             num_succ, num_fail
