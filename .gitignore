@@ -6,6 +6,7 @@ sophie_bot/__pycache__/*
 sophie_bot/modules/__pycache__/*
 sophie_bot/modules/lang/__pycache__/*
 sophie_bot/modules/sql_helper/__pycache__/*
-.vscode/*
 output.txt
 Backups/
+.stignore
+.vscode/
