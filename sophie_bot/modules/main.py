@@ -6,6 +6,7 @@ import subprocess
 
 from sophie_bot import MONGO, OWNER_ID
 from sophie_bot.events import flood_limit, register
+from sophie_bot.modules.users import get_user_and_text
 
 from telethon import custom
 
@@ -30,7 +31,7 @@ Please wait 3 minutes before using this command')
     await event.reply(text, buttons=inline)
 
 
-@register(incoming=True, pattern="^/id")
+@register(incoming=True, pattern="^/id ?(.*)")
 async def event(event):
 
     res = flood_limit(event.chat_id, 'id')
@@ -46,16 +47,27 @@ Please wait 3 minutes before using this command')
     text += "Chat id - `{}`\n".format(event.chat_id)
     text += "Your message id - `{}`\n".format(event.message.id)
 
-    if event.message.reply_to_msg_id:
+    #TODO: Normal args...
+    if event.message.text == '/id':
+        await event.reply(text)
+        return
+
+    elif event.message.reply_to_msg_id:
         msg = await event.get_reply_message()
         text += "\n**Replied message:**\n"
         user = MONGO.user_list.find_one({'user_id': msg.from_id})
-        user_link = "[{}'s](https://t.me/{})".format(user['first_name'], msg.from_id)
+        user_link = "[{}](https://t.me/{})'s".format(user['first_name'], msg.from_id)
         text += "{} user id - `{}`\n".format(user_link, msg.from_id)
         text += "{} message id - `{}`".format(user_link, msg.id)
 
+    else:
+        user, lol = await get_user_and_text(event)
+        lol = lol # No prevent pylint warn ;-;
+        user_link = "[{}](https://t.me/{})'s".format(user['first_name'], user['user_id'])
+        text += "{} user id - `{}`\n".format(user_link, user['user_id'])
+    
     await event.reply(text)
-
+    
 
 async def term(command):
     process = await asyncio.create_subprocess_shell(
