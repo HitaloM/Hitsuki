@@ -228,6 +228,9 @@ def button_parser(chat_id, texts):
         elif raw_button[1] == 'alert':
             t = [Button.inline(raw_button[0], 'get_alert_{}_{}'.format(
                 chat_id, raw_button[2]))]
+        elif raw_button[1] == 'deletemsg':
+            t = [Button.inline(raw_button[0], 'get_delete_msg_{}_{}'.format(
+                chat_id, raw_button[2]))]
 
         if raw_button[3]:
             buttons.insert(s - 1, buttons[s - 1] + t)
@@ -270,3 +273,8 @@ async def event(event):
         return
 
     await event.answer(text, alert=True)
+
+
+@bot.on(events.CallbackQuery(data=re.compile(b'get_delete_msg_')))
+async def event(event):
+    await event.delete()
