@@ -135,7 +135,7 @@ Please wait 3 minutes before using this command')
     await event.reply(text)
 
 
-async def send_note(chat_id, group_id, msg_id, note_name, show_none=False):
+async def send_note(chat_id, group_id, msg_id, note_name, show_none=False, noformat=False):
     file_id = None
     note = MONGO.notes.find_one({'chat_id': int(group_id), 'name': note_name})
     if not note and show_none is True:
@@ -147,9 +147,14 @@ async def send_note(chat_id, group_id, msg_id, note_name, show_none=False):
     if note['file_id']:
         file_id = note['file_id']
 
-    text = "**Note {}**\n\n".format(note_name)
-    text += note['text']
+    if noformat is True:
+        format = 'html'
+        text = "<b>Note {}</b>\n\n".format(note_name)
+    else:
+        format = 'md'
+        text = "**Note {}**\n\n".format(note_name)
 
+    text += note['text']
     string, buttons = button_parser(group_id, text)
 
     if not buttons:
@@ -159,6 +164,7 @@ async def send_note(chat_id, group_id, msg_id, note_name, show_none=False):
         await bot.send_file(
             chat_id,
             file_id,
+            parse_mode=format,
             reply_to=msg_id,
             caption=text,
             buttons=buttons
@@ -166,7 +172,7 @@ async def send_note(chat_id, group_id, msg_id, note_name, show_none=False):
 
     else:
         await bot.send_message(chat_id, string, buttons=buttons,
-                               reply_to=msg_id)
+                                parse_mode=format, reply_to=msg_id)
 
 
 @bot.on(events.CallbackQuery(data=re.compile(b'delnote_')))
@@ -187,13 +193,19 @@ async def event(event):
         note['name'], link), link_preview=False)
 
 
-@register(incoming=True, pattern="^/get")
+@register(incoming=True, pattern="^/get (.?)")
 async def event(event):
-    note_name = event.message.raw_text.split(" ", 1)
+    raw_text = event.message.raw_text.split()
+    note_name = raw_text[1]
+    print(len(raw_text))
+    if len(raw_text) >= 3 and raw_text[2].lower() == "noformat":
+        noformat = True
+    else:
+        noformat = False
     if len(note_name) > 1:
         await send_note(
-            event.chat_id, event.chat_id, event.message.id, note_name[1],
-            show_none=True)
+            event.chat_id, event.chat_id, event.message.id, note_name,
+            show_none=True, noformat=noformat)
 
 
 @register(incoming=True, pattern="^#")
