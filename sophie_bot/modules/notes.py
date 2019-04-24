@@ -147,6 +147,9 @@ async def send_note(chat_id, group_id, msg_id, note_name, show_none=False, nofor
     if note['file_id']:
         file_id = note['file_id']
 
+    if not file_id:
+        file_id = None
+
     if noformat is True:
         format = 'html'
         text = "<b>Note {}</b>\n\n".format(note_name)
@@ -160,19 +163,14 @@ async def send_note(chat_id, group_id, msg_id, note_name, show_none=False, nofor
     if not buttons:
         buttons = None
 
-    if file_id:
-        await bot.send_file(
-            chat_id,
-            file_id,
-            parse_mode=format,
-            reply_to=msg_id,
-            caption=text,
-            buttons=buttons
-        )
-
-    else:
-        await bot.send_message(chat_id, string, buttons=buttons,
-                                parse_mode=format, reply_to=msg_id)
+    await bot.send_message(
+        chat_id,
+        string,
+        buttons=buttons,
+        parse_mode=format,
+        reply_to=msg_id,
+        file=file_id
+    )
 
 
 @bot.on(events.CallbackQuery(data=re.compile(b'delnote_')))
