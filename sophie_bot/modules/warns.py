@@ -10,7 +10,7 @@ from sophie_bot.modules.bans import ban_user
 from telethon.tl.custom import Button
 
 
-@register(incoming=True, pattern="^/warn(?!s) ?(.*)")
+@register(incoming=True, pattern="^/warn\s?(.*)")
 async def event(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -50,7 +50,14 @@ async def event(event):
 
     button = Button.inline("Remove warn", 'remove_warn_{}'.format(rndm))
 
-    if h >= 99:
+    warn_limit = MONGO.warnlimit.find_one({'chat_id': event.chat_id})
+
+    if not warn_limit:
+        warn_limit = 3
+    else:
+        warn_limit = int(warn_limit['num'])
+
+    if h >= warn_limit:
         if await ban_user(event, user_id, chat_id, None) is False:
             return
         text += "User have exceed the warns limit, Banned!"
@@ -59,7 +66,7 @@ async def event(event):
             'group_id': chat_id
         })
     else:
-        text += "Warns count - {}/{}\n".format(h, 3)
+        text += "Warns count - {}/{}\n".format(h, warn_limit)
 
     await event.reply(text, buttons=button, link_preview=False)
 
@@ -112,6 +119,26 @@ async def event(event):
         return
     await event.reply(text)
 
+
+@register(incoming=True, pattern="^/setwarnlimit ?(.*)")
+async def event(event):
+    arg = event.pattern_match.group(1)
+    old = MONGO.warnlimit.find_one({'chat_id': event.chat_id})
+    if not arg:
+        if old:
+            num = old['num']
+        else:
+            num = 3
+        await event.reply("Current warn limit is `{}`".format(num))
+    else:
+        if old:
+            MONGO.warnlimit.delete_one({'_id': old['_id']})
+        num = int(arg)
+        MONGO.warnlimit.insert_one({
+            'chat_id': event.chat_id,
+            'num': num
+        })
+        await event.reply("Warn limit updated to {}".format(num))
 
 def randomString(stringLength):
     letters = string.ascii_letters
