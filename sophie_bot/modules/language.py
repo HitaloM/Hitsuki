@@ -54,10 +54,6 @@ Please wait 3 minutes before using this command')
         return
 
     arg = event.message.raw_text.split(" ", 2)[1]
-    if event.chat_id == event.from_id:
-        pm = True
-    else:
-        pm = False
 
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
