@@ -43,12 +43,48 @@ Please wait 3 minutes before using this command')
     await event.reply(text, buttons=buttons)
 
 
+@register(incoming=True, pattern="^/lang (.*)$")
+async def handler(event):
+    res = flood_limit(event.chat_id, 'lang')
+    if res == 'EXIT':
+        return
+    elif res is True:
+        await event.reply('**Flood detected! **\
+Please wait 3 minutes before using this command')
+        return
+
+    arg = event.message.raw_text.split(" ", 2)[1]
+    if event.chat_id == event.from_id:
+        pm = True
+    else:
+        pm = False
+
+    K = await is_user_admin(event.chat_id, event.from_id)
+    if K is False:
+        await event.reply("You don't have rights to set language here!")
+        return
+
+    if not arg in LANG_VARS:
+        await event.reply("I don't support this language yet!")
+        return
+    
+    old = MONGO.lang.find_one({'chat_id': event.chat_id})
+    if old:
+        MONGO.notes.delete_one({'_id': old['_id']})
+    
+    MONGO.lang.insert_one({'chat_id': event.chat_id, 'lang': arg})
+    await event.reply("Language changed to {}".format(arg))
+
+
 @bot.on(events.CallbackQuery(data=re.compile(b'select_lang_')))
 async def event(event):
     chat = event.chat_id
     event_data = re.search(r'select_lang_(.*)', str(event.data))
     lang = event_data.group(1)[:-1]
     REDIS.set('lang_cache_{}'.format(chat), lang)
+    old = MONGO.lang.find_one({'chat_id': chat})
+    if old:
+        MONGO.notes.delete_one({'_id': old['_id']})
     MONGO.lang.insert_one({'chat_id': chat, 'lang': lang})
     await event.edit(
         "Language changed to **{}**!".format(SUPPORTED_LANGUAGES[lang]))
