@@ -1,0 +1,13 @@
+{"language_info":{
+    "name": "Rusian",
+    "small_name": "rus",
+    "flag": "🇷🇺",
+    "code": "ru"
+},
+"STRINGS":{
+    "notes": {
+        "notelist_header": "**Заметки в этом чате:**\n",
+        "notelist_no_notes": "Нет заметок в этом чате!"
+    }
+ }
+}

@@ -47,7 +47,7 @@ Please wait 3 minutes before using this filter')
                     await event.delete()
 
 
-@register(incoming=True, pattern="^/filter")
+@register(incoming=True, pattern="^/filter(?!s) (.*)")
 async def event(event):
 
     K = await is_user_admin(event.chat_id, event.from_id)
@@ -101,7 +101,7 @@ async def event(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^/getfilter")
+@register(incoming=True, pattern="^/filters")
 async def event(event):
 
     res = 2 #flood_limit(event.chat_id, 'filters')

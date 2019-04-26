@@ -49,8 +49,11 @@ async def event(event):
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
     MONGO.notes.insert_one(
-        {"chat_id": chat_id, "name": note_name, "text": note_text,
-         'date': date, 'creator': event.from_id,
+        {'chat_id': chat_id, 
+         'name': note_name, 
+         'text': note_text,
+         'date': date,
+         'creator': event.from_id,
          'file_id': file_id})
 
     new = MONGO.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
@@ -126,9 +129,9 @@ Please wait 3 minutes before using this command')
         return
 
     notes = MONGO.notes.find({'chat_id': event.chat_id})
-    text = get_string("notelist_header", event.chat_id)
+    text = get_string("notes", "notelist_header", event.chat_id)
     if notes.count() == 0:
-        text = get_string("notelist_no_notes", event.chat_id)
+        text = get_string("notes", "notelist_no_notes", event.chat_id)
     else:
         for note in notes:
             text += "- `{}`\n".format(note['name'])
