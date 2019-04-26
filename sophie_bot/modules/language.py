@@ -63,7 +63,7 @@ Please wait 3 minutes before using this command')
         await event.reply("You don't have rights to set language here!")
         return
 
-    if not arg in LANG_VARS:
+    if not arg in LANGS:
         await event.reply("I don't support this language yet!")
         return
     
