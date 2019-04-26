@@ -112,3 +112,20 @@ Please wait 3 minutes before using this command')
     command = "git log --pretty=format:\"%an: %s\" "
     result = await chat_term(event, command)
     await event.reply(result)
+
+
+@register(incoming=True, pattern="^/stats")
+async def event(event):
+    res = flood_limit(event.chat_id, 'stats')
+    if res == 'EXIT':
+        return
+    elif res is True:
+        await event.reply('**Flood detected! **\
+Please wait 3 minutes before using this command')
+        return
+
+    text = "**Stats**\n"
+    usrs = MONGO.user_list.count()
+    chats = MONGO.chat_list.count()
+    text += "{} total users, in {} chats".format(usrs, chats)
+    await event.reply(text)
