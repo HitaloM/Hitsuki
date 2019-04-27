@@ -47,13 +47,8 @@ async def event(event):
             await event.reply("Time value isn't a correct!")
 
     if await ban_user(event, user.id, event.chat_id, bantime) is True:
-        admin = MONGO.user_list.find_one({'user_id': event.from_id})
-        if not admin:
-            admin = "owo"
-        admin_str = '[{}](@{})'.format(
-            admin['first_name'], admin['username'])
-        user_str = '[{}](@{})'.format(
-            user.first_name, user.username)
+        admin_str = user_link(event.from_id)
+        user_str = user_link(user['user_id'])
         text = "User {} banned by {}!\n".format(user_str, admin_str)
         text += "For `{}` {}\n".format(time_val[:-1], unit_str)
         text += "Reason: `{}`".format(reason)
