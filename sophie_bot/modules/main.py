@@ -2,6 +2,7 @@
 
 import time
 import asyncio
+import math
 
 from sophie_bot import MONGO, OWNER_ID
 from sophie_bot.events import flood_limit, register
@@ -127,5 +128,18 @@ Please wait 3 minutes before using this command')
     text = "**Stats**\n"
     usrs = MONGO.user_list.count()
     chats = MONGO.chat_list.count()
-    text += "{} total users, in {} chats".format(usrs, chats)
+    text += "{} total users, in {} chats\n".format(usrs, chats)
+    db = MONGO.command("dbstats")
+    text += 'Database size is {}, free {}'.format(
+        convert_size(db['dataSize']), convert_size(db['fsTotalSize'] - db['fsUsedSize']))
     await event.reply(text)
+
+
+def convert_size(size_bytes):
+   if size_bytes == 0:
+       return "0B"
+   size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+   i = int(math.floor(math.log(size_bytes, 1024)))
+   p = math.pow(1024, i)
+   s = round(size_bytes / p, 2)
+   return "%s %s" % (s, size_name[i])
