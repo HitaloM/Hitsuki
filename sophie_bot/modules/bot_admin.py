@@ -1,7 +1,7 @@
 import asyncio
 import subprocess
 
-from sophie_bot import bot, MONGO, OWNER_ID
+from sophie_bot import bot, MONGO, REDIS, OWNER_ID
 from sophie_bot.modules.main import term, chat_term
 from sophie_bot.events import register
 from sophie_bot.modules.notes import button_parser
@@ -103,3 +103,11 @@ async def event(event):
     date = await chat_term(event, "date \"+%Y-%m-%d.%H:%M:%S\"")
     await chat_term(event, "mongodump --gzip --archive > Backups/dump_{}.gz".format(date))
     await msg.edit("**Done!**\nBackup under `Backups/dump_{}.gz`".format(date))
+
+
+@register(incoming=True, pattern="^/purgecaches")
+async def event(event):
+    if event.from_id not in OWNER_ID:
+        return
+    REDIS.flushdb()
+    await event.reply("Redis cache was cleaned.")
