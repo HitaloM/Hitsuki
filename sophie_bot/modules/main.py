@@ -87,7 +87,7 @@ async def term(command):
 
 async def chat_term(event, command):
     if 'rm -rf /*' in command or 'rm -rf / --no-preserve-root' in command:
-        await event.reply("I can't run this man.")
+        await event.reply("I can't run this, man.")
         return False
     result = await term(command)
 

@@ -2,6 +2,7 @@ import time
 
 from sophie_bot.events import register
 from sophie_bot.modules.users import get_user_and_text, is_user_admin
+from sophie_bot.modules.bans import user_link
 from sophie_bot import MONGO
 
 from telethon.tl.functions.channels import EditBannedRequest
@@ -13,13 +14,8 @@ from telethon.tl.types import ChatBannedRights
 async def event(event):
     user, reason = await get_user_and_text(event)
     if await ban_user(event, user['user_id'], event.chat_id, None) is True:
-        admin = MONGO.user_list.find_one({'user_id': event.from_id})
-        if not admin:
-            admin = "owo"
-        admin_str = '[{}](@{})'.format(
-            admin['first_name'], admin['username'])
-        user_str = '[{}](@{})'.format(
-            user['first_name'], user['username'])
+        admin_str = user_link(event.from_id)
+        user_str = user_link(user['user_id'])
         await event.reply("User {} banned by {}!\nReason: `{}`".format(
             user_str, admin_str, reason), link_preview=False)
 
