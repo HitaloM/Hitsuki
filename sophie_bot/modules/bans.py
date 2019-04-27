@@ -54,9 +54,9 @@ async def event(event):
         admin = MONGO.user_list.find_one({'user_id': event.from_id})
         if not admin:
             admin = "owo"
-        admin_str = '[{}](https://t.me/{})'.format(
+        admin_str = '[{}](@{})'.format(
             admin['first_name'], admin['username'])
-        user_str = '[{}](https://t.me/{})'.format(
+        user_str = '[{}](@{})'.format(
             user.first_name, user.username)
         text = "User {} banned by {}!\n".format(user_str, admin_str)
         text += "For `{}` {}\n".format(time_val[:-1], unit_str)
