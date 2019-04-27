@@ -72,6 +72,7 @@ Please wait 3 minutes before using this command')
         MONGO.notes.delete_one({'_id': old['_id']})
     
     MONGO.lang.insert_one({'chat_id': event.chat_id, 'lang': arg})
+    REDIS.set('lang_cache_{}'.format(event.chat_id), arg)
     await event.reply("Language changed to {}".format(arg))
 
 
@@ -98,13 +99,14 @@ async def event(event):
 
 def get_string(module, text, chat_id):
     lang = get_chat_lang(chat_id)
-    print(LANGUAGES[lang])
-    if not module in LANGUAGES[lang]['STRINGS']:
-        if text in LANGUAGES['en']['STRINGS'][module]:
-            return LANGUAGES['en']['STRINGS'][module][text]
-    if text in LANGUAGES[lang]['STRINGS'][module]:
+    print(lang)
+        
+    if module in LANGUAGES[lang]['STRINGS'] and \
+        text in LANGUAGES[lang]['STRINGS'][module]:
         return LANGUAGES[lang]['STRINGS'][module][text]
 
+    if text in LANGUAGES['en']['STRINGS'][module]:
+        return LANGUAGES['en']['STRINGS'][module][text]
     return text
 
 

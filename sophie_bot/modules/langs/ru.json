@@ -7,7 +7,13 @@
 "STRINGS":{
     "notes": {
         "notelist_header": "**Заметки в этом чате:**\n",
-        "notelist_no_notes": "Нет заметок в этом чате!"
+        "notelist_no_notes": "Нет заметок в этом чате!",
+        "no_right_save_note": "Вы не имеете заметок в этом чате!!",
+        
+        "saved": "сохранена",
+        "updated": "обновлена",
+        "note_saved_or_updated" :"**Заметка {} {}!**\n",
+        "you_can_get_note": "Вы можете получить заметку используя `/get {name}`, или `{name}`"
     }
  }
 }

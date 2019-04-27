@@ -16,9 +16,10 @@ from telethon.tl.custom import Button
 
 @register(incoming=True, pattern="^/save")
 async def event(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
+    chat_id = event.chat_id
+    K = await is_user_admin(chat_id, event.from_id)
     if K is False:
-        await event.reply("You don't have rights to save notes here!")
+        await event.reply(get_string("notes", "no_right_save_note", chat_id))
         return
 
     note_name = event.message.text.split(" ", 2)[1]
@@ -39,11 +40,10 @@ async def event(event):
     else:
         note_text = prim_text
 
-    chat_id = event.chat_id
-    status = "saved"
+    status = get_string("notes", "saved", chat_id)
     old = MONGO.notes.find_one({'chat_id': chat_id, "name": note_name})
     if old:
-        status = "updated"
+        status = get_string("notes", "updated", chat_id)
         MONGO.notes.delete_one({'_id': old['_id']})
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -57,8 +57,9 @@ async def event(event):
          'file_id': file_id})
 
     new = MONGO.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
-    text = "**Note {} {}!**".format(note_name, status)
-    text += "\nYou can retrieve this note by using `/get {name}`, or `{name}`"\
+    text = get_string("notes", "note_saved_or_updated", chat_id).format(note_name, status)
+    text += get_string(
+        "notes", "you_can_get_note", chat_id)\
         .format(name=note_name)
 
     if status == 'saved':

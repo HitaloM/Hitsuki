@@ -6,8 +6,14 @@
 },
  "STRINGS":{
     "notes": {
+        "notelist_no_notes": "No notes in this chat!",
         "notelist_header": "**Notes in this chat:**\n",
-        "notelist_no_notes": "No notes in this chat!"
+        "no_right_save_note": "You don't have rights to save notes here!",
+        
+        "saved": "saved",
+        "updated": "updated",
+        "note_saved_or_updated" :"**Note {} {}!**\n",
+        "you_can_get_note": "You can retrieve this note by using `/get {name}`, or `{name}`"
     }
  }
 }
