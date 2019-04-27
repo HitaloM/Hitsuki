@@ -32,10 +32,10 @@ Please wait 3 minutes before using this command')
 
     if not event.from_id == event.chat_id:
         text = "Contact me in PM for help"
-        inline = [[custom.Button.url('Click me for help!', 'https://t.me/rSophieBetaBot?start=help')]]
+        inline = [[custom.Button.url('Click me for help!', 'https://t.me/rSophieBot?start=help')]]
         await event.reply(text, buttons=inline)
         return
     text = "\n__yea__ \n**yea** \n`yea`"
     inline = [[custom.Button.url('Click me for help!',
-              'https://t.me/rSophieBetaBot?start=help')]]
+              'https://t.me/rSophieBot?start=help')]]
     await event.reply(text, buttons=inline)

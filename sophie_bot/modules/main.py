@@ -22,6 +22,10 @@ async def event(event):
 Please wait 3 minutes before using this command')
         return
 
+    if not event.from_id == event.chat_id:
+        await event.reply('Hey there, My name is Sophie!')
+        return
+
     text = "Hey there! My name is Sophie :3, I help you manage your group and more!"
     text += "\n__yea__ \n**yea** \n`yea`"
     inline = [[custom.Button.url('Help', 'google.com')]]
