@@ -14,17 +14,17 @@ from telethon.tl.custom import Button
 async def event(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
-        await event.reply("You don't have rights to warn users here!")
+        await event.reply("You're not an admin!")
         return
 
     user, reason = await get_user_and_text(event)
     user_id = int(user['user_id'])
     chat_id = event.chat_id
     if user_id in WHITELISTED:
-        await event.reply("This user is whitelisted, You cannot warn them!")
+        await event.reply("This is one of the whitelisted user!")
         return
     if user_id in await get_chat_admins(chat_id):
-        await event.reply("I can't warn admins!")
+        await event.reply("Heck, I can't warn the admins!")
         return
 
     rndm = randomString(15)
@@ -62,13 +62,13 @@ async def event(event):
     if h >= warn_limit:
         if await ban_user(event, user_id, chat_id, None) is False:
             return
-        text += "User have exceed the warns limit, Banned!"
+        text += "Warnings has been exceeded! {} has been banned!".format(user_str)
         MONGO.warns.delete_many({
             'user_id': user_id,
             'group_id': chat_id
         })
     else:
-        text += "Warns count - {}/{}\n".format(h, warn_limit)
+        text += "Warns: {}/{}\n".format(h, warn_limit)
 
     await event.reply(text, buttons=button, link_preview=False)
 
@@ -78,7 +78,7 @@ async def event(event):
     user_id = event.query.user_id
     K = await is_user_admin(event.chat_id, user_id)
     if K is False:
-        await event.answer("You don't have rights to remove warns here!")
+        await event.answer("You're not an admin, Only admins can do!")
         return
 
     warn_id = re.search(r'remove_warn_(.*)', str(event.data)).group(1)[:-1]
@@ -86,7 +86,7 @@ async def event(event):
     if warn:
         MONGO.notes.delete_one({'_id': warn['_id']})
     user_str = await user_link(user_id)
-    await event.edit("Warn deleted by {}".format(user_str), link_preview=False)
+    await event.edit("Warn removed by {}".format(user_str), link_preview=False)
 
 
 @register(incoming=True, pattern="^[!/]warns ?(.*)")
@@ -98,7 +98,7 @@ async def event(event):
         user_id = int(event.from_id)
     if user_id in WHITELISTED:
         await event.reply(
-            "This user is clear as white paper, he can't have warns."
+            "There are no warnings for this user!"
         )
         return
     warns = MONGO.warns.find({
@@ -108,7 +108,7 @@ async def event(event):
     user_str = await user_link(user_id)
     chat_title = MONGO.chat_list.find_one({
         'chat_id': event.chat_id})['chat_title']
-    text = "**Warns of **{}**:**\n".format(user_str)
+    text = "****{}**'s warnings:**\n".format(user_str)
     H = 0
     for warn in warns:
         H += 1
@@ -117,7 +117,7 @@ async def event(event):
             rsn = "No reason"
         text += "{}: `{}`\n".format(H, rsn)
     if H == 0:
-        await event.reply("{} don't have any warns in **{}**!".format(
+        await event.reply("{} hasn't been warned in **{}** before!".format(
             user_str, chat_title))
         return
     await event.reply(text)
@@ -132,7 +132,7 @@ async def event(event):
             num = old['num']
         else:
             num = 3
-        await event.reply("Current warn limit is `{}`".format(num))
+        await event.reply("Warn limit is currently `{}`".format(num))
     else:
         if old:
             MONGO.warnlimit.delete_one({'_id': old['_id']})
@@ -141,7 +141,7 @@ async def event(event):
             'chat_id': event.chat_id,
             'num': num
         })
-        await event.reply("Warn limit updated to {}".format(num))
+        await event.reply("Warn limit has been updated to {}!".format(num))
 
 
 def randomString(stringLength):
