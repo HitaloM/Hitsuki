@@ -1,0 +1,3 @@
+files:
+  - source: sophie_bot/modules/langs/en.json
+    translation: /**/sophie_bot/modules/langs/%two_letters_code%.json
