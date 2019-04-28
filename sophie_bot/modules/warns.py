@@ -10,7 +10,7 @@ from sophie_bot.modules.bans import ban_user
 from telethon.tl.custom import Button
 
 
-@register(incoming=True, pattern="^/warn\s ?(.*)")
+@register(incoming=True, pattern="^[!/]warn(?!(s)) ?(.*)")
 async def event(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -81,7 +81,8 @@ async def event(event):
 
     warn_id = re.search(r'remove_warn_(.*)', str(event.data)).group(1)[:-1]
     warn = MONGO.warns.find_one({'warn_id': warn_id})
-    MONGO.notes.delete_one({'_id': warn['_id']})
+    if warn:
+        MONGO.notes.delete_one({'_id': warn['_id']})
     user_str = await user_link(user_id)
     await event.edit("Warn deleted by {}".format(user_str), link_preview=False)
 
