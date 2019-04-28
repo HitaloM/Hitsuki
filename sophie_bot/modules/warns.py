@@ -5,7 +5,7 @@ import re
 from telethon import events
 from sophie_bot import MONGO, bot, WHITELISTED
 from sophie_bot.events import register
-from sophie_bot.modules.users import get_user_and_text, is_user_admin, user_link
+from sophie_bot.modules.users import get_user_and_text, is_user_admin, get_chat_admins, user_link
 from sophie_bot.modules.bans import ban_user
 from telethon.tl.custom import Button
 
@@ -23,6 +23,10 @@ async def event(event):
     if user_id in WHITELISTED:
         await event.reply("This user is whitelisted, You cannot warn them!")
         return
+    if user_id in await get_chat_admins(chat_id):
+        await event.reply("I can't warn admins!")
+        return
+
     rndm = randomString(15)
     MONGO.warns.insert_one({
         'warn_id': rndm,

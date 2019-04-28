@@ -90,16 +90,21 @@ async def update_admin_cache(chat_id):
 
 
 async def is_user_admin(chat_id, user_id):
+    admins = await get_chat_admins(chat_id)
+    if user_id in admins:
+        return True
+    else:
+        return False
+
+
+async def get_chat_admins(chat_id):
     dump = REDIS.get('admins_cache_{}'.format(chat_id))
     if not dump:
         await update_admin_cache(chat_id)
         dump = REDIS.get('admins_cache_{}'.format(chat_id))
 
     admins = ujson.decode(dump)
-    if user_id in admins:
-        return True
-    else:
-        return False
+    return admins
 
 
 @register(incoming=True, pattern="^/adminlist|^/admins")
