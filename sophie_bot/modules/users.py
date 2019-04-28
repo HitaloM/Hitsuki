@@ -160,24 +160,46 @@ async def get_user_and_text(event):
                     MessageEntityMentionName:
                 user = probable_user_mention_entity
             else:
-                if input_str.isdigit():
+                if input_str and input_str.isdigit():
                     input_str = int(input_str)
+
                 # the disgusting CRAP way, of doing the thing
                 if len(msg) >= 3:
                     text = event.message.raw_text.split(" ", 2)[2]
                 else:
                     text = None
 
-                if '@' in event.message.raw_text.split(" ", 2)[1]:
-                    input_str = event.message.raw_text.split(" ", 2)[1][1:]
+                userk = event.message.raw_text.split(" ", 2)[1]
+
+                # Search user in database
+                if '@' in userk:
+                    input_str = userk[1:]
                     user = MONGO.user_list.find_one(
                         {'username': input_str}
                     )
-                else:
-                    user = int(event.message.raw_text.split(" ", 2)[1])
+                elif userk.isdigit():
+                    userk = int(userk)
                     user = MONGO.user_list.find_one(
-                        {'user_id': input_str}
+                        {'user_id': userk}
                     )
+                else:
+                    user = MONGO.user_list.find_one(
+                        {'username': input_str}
+                    )
+
+                # Will ask Telegram for help with it.
+                if not user:
+                    user = await event.client(GetFullUserRequest(userk))
+                    # Add user in database
+                    user = {'user_id': user.user.id,
+                         'first_name': user.user.first_name,
+                         'last_name': user.user.last_name,
+                         'username': user.user.username,
+                         'user_lang': user.user.lang_code
+                    }
+                    MONGO.user_list.insert_one(user)
+
+
         else:
             if len(msg) >= 3:
                 text = event.message.raw_text.split(" ", 2)[2]
@@ -188,7 +210,8 @@ async def get_user_and_text(event):
             except Exception as err:
                 await event.edit(str(err))
                 return None
-
+    if not text:
+        text = None
     return user, text
 
 

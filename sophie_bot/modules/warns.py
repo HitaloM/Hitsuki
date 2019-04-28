@@ -17,11 +17,8 @@ async def event(event):
         await event.reply("You don't have rights to warn users here!")
         return
 
-    try:
-        user, reason = await get_user_and_text(event)
-        user_id = int(user['user_id'])
-    except Exception:
-        user_id = int(event.from_id)
+    user, reason = await get_user_and_text(event)
+    user_id = int(user['user_id'])
     chat_id = event.chat_id
     if user_id in WHITELISTED:
         await event.reply("This user is whitelisted, You cannot warn them!")
