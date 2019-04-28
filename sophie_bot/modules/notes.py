@@ -77,7 +77,8 @@ async def event(event):
 
     K = await is_user_admin(chat_id, event.from_id)
     if K is False:
-        await event.reply("You don't have rights to save notes here!")
+        await event.reply(get_string(
+            "notes", "dont_have_rights_to_save", chat_id))
         return
 
     note_name = event.message.text.split(" ", 2)[1]
@@ -96,7 +97,8 @@ async def event(event):
 
     K = await is_user_admin(chat_id, event.from_id)
     if K is False:
-        await event.reply("You don't have rights to save notes here!")
+        await event.reply(get_string(
+            "notes", "dont_have_rights", chat_id))
         return
 
     note_name = event.message.text.split(" ", 2)[1]
