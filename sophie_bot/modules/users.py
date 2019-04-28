@@ -227,8 +227,5 @@ async def get_id_by_nick(data):
 
 async def user_link(user_id):
     user = MONGO.user_list.find_one({'user_id': user_id})
-    if user['username']:
-        user_link = "[{}](https://t.me/{})".format(user['first_name'], user['username'])
-    else:
-        user_link = "[{}](https://t.me/{})".format(user['first_name'], user['user_id'])
+    user_link = "[{}](tg://user?id={})".format(user['first_name'], user['user_id'])
     return user_link
