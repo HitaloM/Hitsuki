@@ -35,7 +35,8 @@ async def event(event):
     admin_str = await user_link(admin['user_id'])
     user_str = await user_link(user['user_id'])
     text = "{} have warned {}\n".format(admin_str, user_str)
-    text += "Reason: `{}`\n".format(reason)
+    if reason:
+        text += "Reason: `{}`\n".format(reason)
 
     old = MONGO.warns.find({
         'user_id': user_id,
