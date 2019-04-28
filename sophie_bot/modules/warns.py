@@ -10,7 +10,7 @@ from sophie_bot.modules.bans import ban_user
 from telethon.tl.custom import Button
 
 
-@register(incoming=True, pattern="^[!/]warn(?!(s)) ?(.*)")
+@register(incoming=True, pattern="^[!/]warn(?!(\w)) ?(.*)")
 async def event(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -87,7 +87,7 @@ async def event(event):
     await event.edit("Warn deleted by {}".format(user_str), link_preview=False)
 
 
-@register(incoming=True, pattern="^/warns ?(.*)")
+@register(incoming=True, pattern="^[!/]warns ?(.*)")
 async def event(event):
     try:
         user, reason = await get_user_and_text(event)
@@ -121,7 +121,7 @@ async def event(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^/setwarnlimit\s ?(.*)")
+@register(incoming=True, pattern="^[!/]warnlimit\s ?(.*)")
 async def event(event):
     arg = event.pattern_match.group(1)
     old = MONGO.warnlimit.find_one({'chat_id': event.chat_id})
