@@ -91,11 +91,10 @@ async def event(event):
 
 @register(incoming=True, pattern="^[!/]warns ?(.*)")
 async def event(event):
-    try:
-        user, reason = await get_user_and_text(event)
-        user_id = int(user['user_id'])
-    except Exception:
-        user_id = int(event.from_id)
+    user, reason = await get_user_and_text(event)
+    if not user:
+        user = MONGO.user_list.find_one({'user_id': event.from_id})
+    user_id = int(user['user_id'])
     if user_id in WHITELISTED:
         await event.reply(
             "There are no warnings for this user!"

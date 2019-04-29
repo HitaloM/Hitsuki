@@ -159,7 +159,6 @@ async def get_user_and_text(event):
 
 async def get_user(event):
     msg = event.message.raw_text.split()
-    msg_1 = msg[1]
     if event.reply_to_msg_id:
         msg = await event.get_reply_message()
         user = MONGO.user_list.find_one(
@@ -167,14 +166,15 @@ async def get_user(event):
 
         # Will ask Telegram for help with it.
         if not user:
-            # Set msg_1 var to int if it a user_id
-            if msg_1.isdigit():
-                msg_1 = int(msg_1)
-            user = await event.client(GetFullUserRequest(msg_1))
+            user = await event.client(GetFullUserRequest(int(msg.from_id)))
             # Add user in database
             if user:
                 user = add_user_to_db(user)
     else:
+        if len(msg) > 1:
+            msg_1 = msg[1]
+        else:
+            return None
         input_str = event.pattern_match.group(1)
         if event.message.entities is not None:
             mention_entity = event.message.entities
