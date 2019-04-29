@@ -107,7 +107,7 @@ async def event(event):
     user_str = await user_link(user_id)
     chat_title = MONGO.chat_list.find_one({
         'chat_id': event.chat_id})['chat_title']
-    text = "****{}**'s warnings:**\n".format(user_str)
+    text = "{}'s **warnings:**\n".format(user_str)
     H = 0
     for warn in warns:
         H += 1
