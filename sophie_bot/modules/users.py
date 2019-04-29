@@ -179,6 +179,7 @@ async def get_user(event):
         else:
             # Wont tagged any user, lets use sender
             user = MONGO.user_list.find_one({'user_id': event.from_id})
+            return user
         input_str = event.pattern_match.group(1)
         if event.message.entities is not None:
             mention_entity = event.message.entities
