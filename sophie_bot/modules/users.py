@@ -142,82 +142,100 @@ async def event(event):
 
 async def get_user_and_text(event):
     msg = event.message.raw_text.split()
+    user = await get_user(event)
     if event.reply_to_msg_id:
         if len(msg) >= 2:
             text = event.message.raw_text.split(" ", 1)[1]
         else:
             text = None
+    else:
+        if len(msg) >= 3:
+            text = event.message.raw_text.split(" ", 2)[2]
+        else:
+            text = None
+
+    return user, text
+
+
+async def get_user(event):
+    msg = event.message.raw_text.split()
+    msg_1 = msg[1]
+    if event.reply_to_msg_id:
         msg = await event.get_reply_message()
         user = MONGO.user_list.find_one(
-            {'user_id': msg.from_id}
-        )
+            {'user_id': msg.from_id})
+
+        # Will ask Telegram for help with it.
+        if not user:
+            # Set msg_1 var to int if it a user_id
+            if msg_1.isdigit():
+                msg_1 = int(msg_1)
+            user = await event.client(GetFullUserRequest(msg_1))
+            # Add user in database
+            if user:
+                user = add_user_to_db(user)
     else:
         input_str = event.pattern_match.group(1)
         if event.message.entities is not None:
             mention_entity = event.message.entities
             probable_user_mention_entity = mention_entity[0]
-            if len(msg) >= 3:
-                text = event.message.raw_text.split(" ", 2)[2]
-            else:
-                text = None
 
             if type(probable_user_mention_entity) == \
                     MessageEntityMentionName:
                 user = probable_user_mention_entity
+                # This section isn't a debugged
+                if user:
+                    user = add_user_to_db(user)
             else:
                 if input_str and input_str.isdigit():
                     input_str = int(input_str)
 
-                # the disgusting CRAP way, of doing the thing
-                if len(msg) >= 3:
-                    text = event.message.raw_text.split(" ", 2)[2]
-                else:
-                    text = None
-
-                userk = event.message.raw_text.split(" ", 2)[1]
-
                 # Search user in database
-                if '@' in userk:
-                    input_str = userk[1:]
+                if '@' in msg_1:
+                    # Remove '@'
                     user = MONGO.user_list.find_one(
-                        {'username': input_str}
+                        {'username': msg_1[1:]}
                     )
-                elif userk.isdigit():
-                    userk = int(userk)
+                elif msg_1.isdigit():
+                    # User id
+                    msg_1 = int(msg_1)
                     user = MONGO.user_list.find_one(
-                        {'user_id': userk}
+                        {'user_id': int(msg_1)}
                     )
                 else:
                     user = MONGO.user_list.find_one(
                         {'username': input_str}
                     )
 
-                # Will ask Telegram for help with it.
+                # If we didn't find user in database will ask Telegram.
                 if not user:
-                    user = await event.client(GetFullUserRequest(userk))
+                    user = await event.client(GetFullUserRequest(msg_1))
                     # Add user in database
-                    user = {'user_id': user.user.id,
-                         'first_name': user.user.first_name,
-                         'last_name': user.user.last_name,
-                         'username': user.user.username,
-                         'user_lang': user.user.lang_code
-                    }
-                    MONGO.user_list.insert_one(user)
-
+                    user = add_user_to_db(user)
 
         else:
-            if len(msg) >= 3:
-                text = event.message.raw_text.split(" ", 2)[2]
-            else:
-                text = None
             try:
                 user = await event.client.get_entity(input_str)
+                if user:
+                    user = add_user_to_db(user)
             except Exception as err:
-                await event.edit(str(err))
+                await event.reply(str(err))
                 return None
-    if not text:
-        text = None
-    return user, text
+    return user
+
+
+async def add_user_to_db(user):
+    user = {'user_id': user.user.id,
+            'first_name': user.user.first_name,
+            'last_name': user.user.last_name,
+            'username': user.user.username,
+            'user_lang': user.user.lang_code
+    }
+    old = MONGO.user_list.find_one({'user_id': user['user_id']})
+    if old:
+        MONGO.user_list.delete_one({'_id': old['_id']})
+    MONGO.user_list.insert_one(user)
+    return user
 
 
 async def get_id_by_nick(data):
