@@ -185,7 +185,7 @@ async def get_user(event):
                 user = probable_user_mention_entity
                 # This section isn't a debugged
                 if user:
-                    user = add_user_to_db(user)
+                    user = await add_user_to_db(user)
             else:
                 if input_str and input_str.isdigit():
                     input_str = int(input_str)
@@ -211,13 +211,13 @@ async def get_user(event):
                 if not user:
                     user = await event.client(GetFullUserRequest(msg_1))
                     # Add user in database
-                    user = add_user_to_db(user)
+                    user = await add_user_to_db(user)
 
         else:
             try:
                 user = await event.client.get_entity(input_str)
                 if user:
-                    user = add_user_to_db(user)
+                    user = await add_user_to_db(user)
             except Exception as err:
                 await event.reply(str(err))
                 return None
