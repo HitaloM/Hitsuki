@@ -93,7 +93,7 @@ async def event(event):
 async def event(event):
     user, reason = await get_user_and_text(event)
     if not user:
-        user = MONGO.user_list.find_one({'user_id': event.from_id})
+        return
     user_id = int(user['user_id'])
     if user_id in WHITELISTED:
         await event.reply(

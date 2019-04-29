@@ -166,15 +166,19 @@ async def get_user(event):
 
         # Will ask Telegram for help with it.
         if not user:
-            user = await event.client(GetFullUserRequest(int(msg.from_id)))
-            # Add user in database
-            if user:
-                user = add_user_to_db(user)
+            try:
+                user = await event.client(GetFullUserRequest(int(msg.from_id)))
+                # Add user in database
+                if user:
+                    user = add_user_to_db(user)
+            except Exception as err:
+                        pass
     else:
         if len(msg) > 1:
             msg_1 = msg[1]
         else:
-            return None
+            # Wont tagged any user, lets use sender
+            user = MONGO.user_list.find_one({'user_id': event.from_id})
         input_str = event.pattern_match.group(1)
         if event.message.entities is not None:
             mention_entity = event.message.entities
@@ -209,11 +213,15 @@ async def get_user(event):
 
                 # If we didn't find user in database will ask Telegram.
                 if not user:
-                    user = await event.client(GetFullUserRequest(msg_1))
-                    # Add user in database
-                    user = await add_user_to_db(user)
+                    try:
+                        user = await event.client(GetFullUserRequest(msg_1))
+                        # Add user in database
+                        user = await add_user_to_db(user)
+                    except Exception as err:
+                        pass
 
         else:
+            # Last try before fail
             try:
                 user = await event.client.get_entity(input_str)
                 if user:
@@ -221,6 +229,9 @@ async def get_user(event):
             except Exception as err:
                 await event.reply(str(err))
                 return None
+    if not user:
+        await event.reply("I can't find this user in whole Telegram.")
+        return None
     return user
 
 
