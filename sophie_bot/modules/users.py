@@ -181,47 +181,55 @@ async def get_user(event):
             user = MONGO.user_list.find_one({'user_id': event.from_id})
             return user
         input_str = event.pattern_match.group(1)
-        if event.message.entities is not None:
-            mention_entity = event.message.entities
-            probable_user_mention_entity = mention_entity[0]
+        mention_entity = event.message.entities
 
-            if type(probable_user_mention_entity) == \
-                    MessageEntityMentionName:
-                user = probable_user_mention_entity
-                # This section isn't a debugged
-                if user:
-                    user = await add_user_to_db(user)
-            else:
-                if input_str and input_str.isdigit():
-                    input_str = int(input_str)
+        if input_str and input_str.isdigit():
+            input_str = int(input_str)
 
-                # Search user in database
-                if '@' in msg_1:
-                    # Remove '@'
-                    user = MONGO.user_list.find_one(
-                        {'username': msg_1[1:]}
-                    )
-                elif msg_1.isdigit():
-                    # User id
-                    msg_1 = int(msg_1)
-                    user = MONGO.user_list.find_one(
-                        {'user_id': int(msg_1)}
-                    )
-                else:
-                    user = MONGO.user_list.find_one(
-                        {'username': input_str}
-                    )
-
-                # If we didn't find user in database will ask Telegram.
-                if not user:
-                    try:
-                        user = await event.client(GetFullUserRequest(msg_1))
-                        # Add user in database
-                        user = await add_user_to_db(user)
-                    except Exception as err:
-                        pass
-
+        # Search user in database
+        if '@' in msg_1:
+            # Remove '@'
+            user = MONGO.user_list.find_one(
+                {'username': msg_1[1:]}
+            )
+        elif msg_1.isdigit():
+            # User id
+            msg_1 = int(msg_1)
+            user = MONGO.user_list.find_one(
+                {'user_id': int(msg_1)}
+            )
         else:
+            user = MONGO.user_list.find_one(
+                {'username': input_str}
+            )
+
+        # If we didn't find user in database will ask Telegram.
+        if not user:
+            try:
+                user = await event.client(GetFullUserRequest(msg_1))
+                # Add user in database
+                user = await add_user_to_db(user)
+            except Exception as err:
+                pass
+
+        # Still didn't find? Lets try get entities
+        if mention_entity:
+            probable_user_mention_entity = mention_entity[1]
+            if not user:
+                if not isinstance(probable_user_mention_entity, MessageEntityMentionName):
+                    user_id = await event.client.get_entity(input_str)
+                    return
+                else:
+                    user_id = probable_user_mention_entity.user_id
+                if user_id:
+                    userf = await event.client(GetFullUserRequest(int(user_id)))
+                    user = MONGO.user_list.find_one(
+                        {'user_id': int(userf.user.id)}
+                    )
+                    if not user and userf:
+                        user = await add_user_to_db(userf)
+
+        if not user:
             # Last try before fail
             try:
                 user = await event.client.get_entity(input_str)
