@@ -1,6 +1,6 @@
 from sophie_bot import MONGO
 
-from sophie_bot.modules.users import get_user_and_text, user_link
+from sophie_bot.modules.users import get_user, user_link
 from sophie_bot.events import flood_limit, register
 
 
@@ -33,9 +33,8 @@ Please wait 3 minutes before using this command')
         return
 
     else:
-        user, lol = await get_user_and_text(event)
-        lol = lol # No prevent pylint warn ;-;
+        user = await get_user(event)
         userl = "[{}](https://t.me/{})'s".format(user['first_name'], user['user_id'])
         text += "{} user id - `{}`\n".format(userl, user['user_id'])
-    
+
     await event.reply(text)

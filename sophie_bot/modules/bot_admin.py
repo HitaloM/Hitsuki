@@ -1,8 +1,7 @@
 import asyncio
-import subprocess
 
 from sophie_bot import bot, MONGO, REDIS, OWNER_ID
-from sophie_bot.modules.main import term, chat_term
+from sophie_bot.modules.main import chat_term
 from sophie_bot.events import register
 from sophie_bot.modules.notes import button_parser
 
@@ -18,7 +17,7 @@ async def event(event):
     msg = await event.reply("Running...")
     command = str(message)
     command = str(command[6:])
-    
+
     result = "**Shell:**\n"
     result += await chat_term(event, command)
 
@@ -47,10 +46,10 @@ async def event(event):
             await asyncio.sleep(2)
             await msg.edit("Broadcasting to {} chats...".format(chats.count()))
     await msg.edit(
-        "**Broadcast completed!** Message sended to `{}` chats successfully, `{}` didn't received message.".format(
-            num_succ, num_fail
-        )) 
-    
+        "**Broadcast completed!** Message sended to `{}` chats successfully, \
+`{}` didn't received message.".format(
+            num_succ, num_fail))
+
 
 @register(incoming=True, pattern="^/sbroadcast ?(.*)")
 async def event(event):
@@ -70,7 +69,7 @@ async def event(event):
     })
     await event.reply("Smart broadcast planned for `{}` chats".format(chats.count()))
 
-# Check on smart broadcast 
+# Check on smart broadcast
 @register(incoming=True)
 async def event(event):
     chat_id = event.chat_id
@@ -88,7 +87,7 @@ async def event(event):
         old = MONGO.sbroadcast_settings.find_one({})
         num = old['recived_chats'] + 1
         MONGO.sbroadcast_settings.update(
-            {'_id':old['_id']}, {
+            {'_id': old['_id']}, {
                 'text': old['text'],
                 'all_chats': old['all_chats'],
                 'recived_chats': num

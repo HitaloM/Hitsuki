@@ -86,7 +86,9 @@ async def event(event):
         try:
             await bot.send_message(user_id, text)
         except errors.rpcerrorlist.UserIsBlockedError:
-            await event.reply("Your pm has been successfully connected to **{}**! Write to @rSophieBot for start using connection.".format(chat_title))
+            await event.reply(
+                "Your pm has been successfully connected to **{}**! Write to @rSophieBot \
+for start using connection.".format(chat_title))
             return
         await event.reply("Your pm has been successfully connected to **{}**!".format(chat_title))
 

@@ -22,6 +22,7 @@ print(LANGUAGES)
 
 LOGGER.info("Languages loaded: {}".format(LANGS))
 
+
 @register(incoming=True, pattern="^/lang$")
 async def handler(event):
     res = flood_limit(event.chat_id, 'lang')
@@ -63,14 +64,14 @@ Please wait 3 minutes before using this command')
         await event.reply("You don't have rights to set language here!")
         return
 
-    if not arg in LANGS:
+    if arg not in LANGS:
         await event.reply("I don't support this language yet!")
         return
-    
+
     old = MONGO.lang.find_one({'chat_id': event.chat_id})
     if old:
         MONGO.notes.delete_one({'_id': old['_id']})
-    
+
     MONGO.lang.insert_one({'chat_id': event.chat_id, 'lang': arg})
     REDIS.set('lang_cache_{}'.format(event.chat_id), arg)
     await event.reply("Language changed to {}".format(arg))
@@ -87,20 +88,19 @@ async def event(event):
     lang = event_data.group(1)[:-1]
     REDIS.set('lang_cache_{}'.format(chat), lang)
     old = MONGO.lang.find_one({'chat_id': chat})
-    if old: 
+    if old:
         MONGO.notes.delete_one({'_id': old['_id']})
     MONGO.lang.insert_one({'chat_id': chat, 'lang': lang})
     await event.edit(
         "Language changed to **{}**!".format(
-            LANGUAGES[lang]["language_info"]["name"] + \
-                " " + LANGUAGES[lang]["language_info"]["flag"]
+            LANGUAGES[lang]["language_info"]["name"] + " \
+                " + LANGUAGES[lang]["language_info"]["flag"]
         ))
 
 
 def get_string(module, text, chat_id):
     lang = get_chat_lang(chat_id)
-    print(lang)
-        
+
     if module in LANGUAGES[lang]['STRINGS'] and \
         text in LANGUAGES[lang]['STRINGS'][module]:
         return LANGUAGES[lang]['STRINGS'][module][text]

@@ -104,7 +104,7 @@ async def event(event):
 @register(incoming=True, pattern="^/filters")
 async def event(event):
 
-    res = 2 #flood_limit(event.chat_id, 'filters')
+    res = 2  # flood_limit(event.chat_id, 'filters')
     if res == 'EXIT':
         return
     elif res is True:
@@ -161,5 +161,3 @@ def update_handlers_cache(chat_id):
         lst.append(filter['handler'])
     dump = ujson.dumps(lst)
     REDIS.set('filters_cache_{}'.format(chat_id), dump)
-
-

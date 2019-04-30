@@ -1,4 +1,3 @@
-import asyncio
 from sophie_bot.events import flood_limit, register
 
 from telethon import custom

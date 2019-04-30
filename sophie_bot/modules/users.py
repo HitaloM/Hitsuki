@@ -129,17 +129,6 @@ Please wait 3 minutes before using this command')
     await msg.edit(text)
 
 
-@register(incoming=True, pattern="^/test (\w*)")
-async def event(event):
-    #msg = await get_user_and_text(event)
-    #print(msg)
-    #await event.reply(msg['first_name'])
-    notename = event.pattern_match.group(1)
-    string = event.text.partition(notename)[2]
-    print(notename)
-    print(string)
-
-
 async def get_user_and_text(event):
     msg = event.message.raw_text.split()
     user = await get_user(event)
@@ -171,8 +160,8 @@ async def get_user(event):
                 # Add user in database
                 if user:
                     user = add_user_to_db(user)
-            except Exception as err:
-                        pass
+            except Exception:
+                pass
     else:
         if len(msg) > 1:
             msg_1 = msg[1]
@@ -209,7 +198,7 @@ async def get_user(event):
                 user = await event.client(GetFullUserRequest(msg_1))
                 # Add user in database
                 user = await add_user_to_db(user)
-            except Exception as err:
+            except Exception:
                 pass
 
         # Still didn't find? Lets try get entities
@@ -250,7 +239,7 @@ async def add_user_to_db(user):
             'last_name': user.user.last_name,
             'username': user.user.username,
             'user_lang': user.user.lang_code
-    }
+            }
     old = MONGO.user_list.find_one({'user_id': user['user_id']})
     if old:
         MONGO.user_list.delete_one({'_id': old['_id']})
@@ -270,5 +259,6 @@ async def get_id_by_nick(data):
 
 async def user_link(user_id):
     user = MONGO.user_list.find_one({'user_id': user_id})
-    user_link = "[{}](tg://user?id={})".format(user['first_name'], user['user_id'])
+    user_link = "[{}](tg://user?id={})".format(
+        user['first_name'], user['user_id'])
     return user_link

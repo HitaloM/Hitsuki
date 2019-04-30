@@ -1,11 +1,8 @@
-"""Main module."""
-
-import time
 import asyncio
 import math
+import subprocess
 
-from sophie_bot import MONGO, OWNER_ID
-from sophie_bot.modules.users import get_user_and_text, user_link
+from sophie_bot import MONGO
 from sophie_bot.events import flood_limit, register
 
 from telethon import custom
@@ -33,7 +30,7 @@ Please wait 3 minutes before using this command')
                custom.Button.url('Channel', 't.me/ok')]]
 
     await event.reply(text, buttons=inline)
-    
+
 
 async def term(command):
     process = await asyncio.create_subprocess_shell(
@@ -104,10 +101,10 @@ Please wait 3 minutes before using this command')
 
 
 def convert_size(size_bytes):
-   if size_bytes == 0:
-       return "0B"
-   size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
-   i = int(math.floor(math.log(size_bytes, 1024)))
-   p = math.pow(1024, i)
-   s = round(size_bytes / p, 2)
-   return "%s %s" % (s, size_name[i])
+    if size_bytes == 0:
+        return "0B"
+    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+    i = int(math.floor(math.log(size_bytes, 1024)))
+    p = math.pow(1024, i)
+    s = round(size_bytes / p, 2)
+    return "%s %s" % (s, size_name[i])

@@ -2,7 +2,6 @@ import time
 
 from sophie_bot.events import register
 from sophie_bot.modules.users import get_user_and_text, is_user_admin, user_link
-from sophie_bot import MONGO
 
 from telethon.tl.functions.channels import EditBannedRequest
 

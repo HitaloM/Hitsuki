@@ -49,8 +49,8 @@ async def event(event):
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
     MONGO.notes.insert_one(
-        {'chat_id': chat_id, 
-         'name': note_name, 
+        {'chat_id': chat_id,
+         'name': note_name,
          'text': note_text,
          'date': date,
          'creator': event.from_id,
@@ -256,8 +256,7 @@ async def event(event):
     try:
         await send_note(user_id, group_id, None, notename)
         await event.answer("I pm'ed note to you!")
-    except errors.rpcerrorlist.UserIsBlockedError or \
-            errors.rpcerrorlist.PeerIdInvalidError:
+    except errors.rpcerrorlist.UserIsBlockedError or errors.rpcerrorlist.PeerIdInvalidError:
         await event.answer(
             "Write /start in my pm and click on button again!", alert=True)
 
