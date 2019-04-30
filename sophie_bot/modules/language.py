@@ -18,8 +18,6 @@ for filename in os.listdir('sophie_bot/modules/langs'):
     exec("LANGUAGES[\"" + lang['language_info']['code'] + "\"] = lang")
     LANGS += tuple([lang['language_info']['code']])
 
-print(LANGUAGES)
-
 LOGGER.info("Languages loaded: {}".format(LANGS))
 
 

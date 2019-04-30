@@ -73,9 +73,9 @@ async def event(event):
         await event.reply('**Flood detected! **\
 Please wait 3 minutes before using this command')
         return
-    command = "git log --pretty=format:\"%an: %s\" -60"
+    command = "git log --pretty=format:\"%an: %s\" -30"
     result = "**Bot changes:**\n"
-    result += "__Showed last 60 commits__\n"
+    result += "__Showed last 30 commits__\n"
     result += await chat_term(event, command)
     await event.reply(result)
 
