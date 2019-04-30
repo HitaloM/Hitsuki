@@ -120,6 +120,7 @@ Please wait 3 minutes before using this command')
     await update_admin_cache(event.chat_id)
     dump = REDIS.get('admins_cache_{}'.format(event.chat_id))
     admins = ujson.decode(dump)
+    admins.sort()
     text = '**Admin in this group:**\n'
     for admin in admins:
         H = MONGO.user_list.find_one({'user_id': admin})
