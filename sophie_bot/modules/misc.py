@@ -1,4 +1,4 @@
-from sophie_bot import MONGO
+from sophie_bot import mongodb
 
 from sophie_bot.modules.users import get_user, user_link
 from sophie_bot.events import flood_limit, register
@@ -23,7 +23,7 @@ Please wait 3 minutes before using this command')
     if event.message.reply_to_msg_id:
         msg = await event.get_reply_message()
         text += "\n**Replied message:**\n"
-        user = MONGO.user_list.find_one({'user_id': msg.from_id})
+        user = mongodb.user_list.find_one({'user_id': msg.from_id})
         userl = await user_link(msg.from_id)
         text += "{}'s user id - `{}`\n".format(userl, msg.from_id)
         text += "{}'s message id - `{}`".format(userl, msg.id)

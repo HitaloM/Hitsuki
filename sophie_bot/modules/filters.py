@@ -1,7 +1,7 @@
 import re
 import ujson
 
-from sophie_bot import MONGO, REDIS
+from sophie_bot import mongodb, redis
 from sophie_bot.events import flood_limit, register
 from sophie_bot.modules.users import is_user_admin
 from sophie_bot.modules.notes import send_note
@@ -10,7 +10,7 @@ from sophie_bot.modules.connections import get_conn_chat
 
 @register(incoming=True)
 async def event(event):
-    cache = REDIS.get('filters_cache_{}'.format(event.chat_id))
+    cache = redis.get('filters_cache_{}'.format(event.chat_id))
     try:
         lst = ujson.decode(cache)
     except TypeError:
@@ -25,7 +25,7 @@ async def event(event):
             if match:
 
                 regx = '{}'.format(filter)
-                H = MONGO.filters.find_one(
+                H = mongodb.filters.find_one(
                     {'chat_id': event.chat_id,
                      "handler": {'$regex': regx}})
 
@@ -93,7 +93,7 @@ async def event(event):
         await event.reply("Wrong action! Read the help.")
         return
 
-    MONGO.filters.insert_one(
+    mongodb.filters.insert_one(
         {"chat_id": event.chat_id,
          "handler": handler.lower(),
          'action': action, 'arg': arg})
@@ -120,7 +120,7 @@ Please wait 3 minutes before using this command')
         chat_id = conn[1]
         chat_title = conn[2]
 
-    filters = MONGO.filters.find({'chat_id': chat_id})
+    filters = mongodb.filters.find({'chat_id': chat_id})
     text = "**Filters in {}:**\n".format(chat_title)
     H = 0
     for filter in filters:
@@ -144,20 +144,20 @@ async def event(event):
 
     handler = event.message.raw_text.split(" ")[1]
     regx = '{}'.format(handler)
-    filter = MONGO.filters.find_one({'chat_id': event.chat_id,
+    filter = mongodb.filters.find_one({'chat_id': event.chat_id,
                                      "handler": {'$regex': regx}})
     if not filter:
         await event.reply("I can't find this filter!")
         return
-    MONGO.filters.delete_one({'_id': filter['_id']})
+    mongodb.filters.delete_one({'_id': filter['_id']})
     update_handlers_cache(event.chat_id)
     await event.reply("Filter {} deleted!".format(handler))
 
 
 def update_handlers_cache(chat_id):
-    filters = MONGO.filters.find({'chat_id': chat_id})
+    filters = mongodb.filters.find({'chat_id': chat_id})
     lst = []
     for filter in filters:
         lst.append(filter['handler'])
     dump = ujson.dumps(lst)
-    REDIS.set('filters_cache_{}'.format(chat_id), dump)
+    redis.set('filters_cache_{}'.format(chat_id), dump)

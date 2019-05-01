@@ -1,4 +1,4 @@
-from sophie_bot import LOGGER
+from sophie_bot import logger
 
 
 def list_all_modules():
@@ -15,5 +15,5 @@ def list_all_modules():
 
 
 ALL_MODULES = sorted(list_all_modules())
-LOGGER.info("Modules to load: %s", str(ALL_MODULES))
+logger.info("Modules to load: %s", str(ALL_MODULES))
 __all__ = ALL_MODULES + ["ALL_MODULES"]

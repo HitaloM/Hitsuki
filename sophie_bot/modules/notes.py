@@ -5,7 +5,7 @@ from time import gmtime, strftime
 
 from bson.objectid import ObjectId
 
-from sophie_bot import MONGO, bot
+from sophie_bot import mongodb, bot
 from sophie_bot.events import flood_limit, register
 from sophie_bot.modules.users import is_user_admin
 from sophie_bot.modules.language import get_string
@@ -41,14 +41,14 @@ async def event(event):
         note_text = prim_text
 
     status = get_string("notes", "saved", chat_id)
-    old = MONGO.notes.find_one({'chat_id': chat_id, "name": note_name})
+    old = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if old:
         status = get_string("notes", "updated", chat_id)
-        MONGO.notes.delete_one({'_id': old['_id']})
+        mongodb.notes.delete_one({'_id': old['_id']})
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
-    MONGO.notes.insert_one(
+    mongodb.notes.insert_one(
         {'chat_id': chat_id,
          'name': note_name,
          'text': note_text,
@@ -56,7 +56,7 @@ async def event(event):
          'creator': event.from_id,
          'file_id': file_id})
 
-    new = MONGO.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
+    new = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
     text = get_string("notes", "note_saved_or_updated", chat_id).format(note_name, status)
     text += get_string(
         "notes", "you_can_get_note", chat_id)\
@@ -82,9 +82,9 @@ async def event(event):
         return
 
     note_name = event.message.text.split(" ", 2)[1]
-    note = MONGO.notes.find_one({'chat_id': chat_id, "name": note_name})
+    note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if note:
-        MONGO.notes.delete_one({'_id': note['_id']})
+        mongodb.notes.delete_one({'_id': note['_id']})
         text = "Note {} removed!".format(note_name)
     else:
         text = "I can't find this note!"
@@ -102,7 +102,7 @@ async def event(event):
         return
 
     note_name = event.message.text.split(" ", 2)[1]
-    note = MONGO.notes.find_one({'chat_id': chat_id, "name": note_name})
+    note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if not note:
         text = "I can't find this note!"
     else:
@@ -110,7 +110,7 @@ async def event(event):
         text += "Note: `{}`\n".format(note_name)
         text += "Last updated in: `{}`\n".format(note['date'])
 
-        creator = MONGO.user_list.find_one({'user_id': note['creator']})
+        creator = mongodb.user_list.find_one({'user_id': note['creator']})
         if creator:
             text += "Created by: {} (`{}`)\n".format(
                 creator['first_name'], creator['user_id'])
@@ -131,7 +131,7 @@ async def event(event):
 Please wait 3 minutes before using this command')
         return
 
-    notes = MONGO.notes.find({'chat_id': event.chat_id})
+    notes = mongodb.notes.find({'chat_id': event.chat_id})
     text = get_string("notes", "notelist_header", event.chat_id)
     if notes.count() == 0:
         text = get_string("notes", "notelist_no_notes", event.chat_id)
@@ -143,7 +143,7 @@ Please wait 3 minutes before using this command')
 
 async def send_note(chat_id, group_id, msg_id, note_name, show_none=False, noformat=False):
     file_id = None
-    note = MONGO.notes.find_one({'chat_id': int(group_id), 'name': note_name})
+    note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': note_name})
     if not note and show_none is True:
         await bot.send_message(chat_id, "Note not found!", reply_to=msg_id)
         return
@@ -187,9 +187,9 @@ async def event(event):
         await event.answer("You don't have rights to save notes here!")
         return
     note_id = re.search(r'delnote_(.*)', str(event.data)).group(1)[:-1]
-    note = MONGO.notes.find_one({'_id': ObjectId(note_id)})
+    note = mongodb.notes.find_one({'_id': ObjectId(note_id)})
     if note:
-        MONGO.notes.delete_one({'_id': note['_id']})
+        mongodb.notes.delete_one({'_id': note['_id']})
 
     user = await bot.get_entity(user_id)
     link = "[{}](tg://user?id={})".format(user.first_name, user_id)
@@ -267,7 +267,7 @@ async def event(event):
     event_data = re.search(r'get_alert_(.*)_(.*)', data)
     notename = event_data.group(2)[:-1]
     group_id = event_data.group(1)
-    note = MONGO.notes.find_one({'chat_id': int(group_id), 'name': notename})
+    note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': notename})
     if not note:
         await event.answer("I can't find this note!", alert=True)
         return

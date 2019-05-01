@@ -1,6 +1,6 @@
 import asyncio
 
-from sophie_bot import bot, MONGO, REDIS, OWNER_ID
+from sophie_bot import bot, mongodb, redis, OWNER_ID
 from sophie_bot.modules.main import chat_term
 from sophie_bot.events import register
 from sophie_bot.modules.notes import button_parser
@@ -28,7 +28,7 @@ async def event(event):
 async def event(event):
     if event.from_id not in OWNER_ID:
         return
-    chats = MONGO.chat_list.find({})
+    chats = mongodb.chat_list.find({})
     raw_text = event.message.text.split(" ", 1)[1]
     text, buttons = button_parser(event.chat_id, raw_text)
     if len(buttons) == 0:
@@ -57,12 +57,12 @@ async def event(event):
         return
     text = event.message.text.split(" ", 1)[1]
     # Add chats to sbroadcast list
-    chats = MONGO.chat_list.find({})
-    MONGO.sbroadcast_list.drop()
-    MONGO.sbroadcast_settings.drop()
+    chats = mongodb.chat_list.find({})
+    mongodb.sbroadcast_list.drop()
+    mongodb.sbroadcast_settings.drop()
     for chat in chats:
-        MONGO.sbroadcast_list.insert_one({'chat_id': chat['chat_id']})
-    MONGO.sbroadcast_settings.insert_one({
+        mongodb.sbroadcast_list.insert_one({'chat_id': chat['chat_id']})
+    mongodb.sbroadcast_settings.insert_one({
         'text': text,
         'all_chats': chats.count(),
         'recived_chats': 0
@@ -73,20 +73,20 @@ async def event(event):
 @register(incoming=True)
 async def event(event):
     chat_id = event.chat_id
-    match = MONGO.sbroadcast_list.find_one({'chat_id': chat_id})
+    match = mongodb.sbroadcast_list.find_one({'chat_id': chat_id})
     if match:
         try:
-            raw_text = MONGO.sbroadcast_settings.find_one({})['text']
+            raw_text = mongodb.sbroadcast_settings.find_one({})['text']
             text, buttons = button_parser(event.chat_id, raw_text)
             if len(buttons) == 0:
                 buttons = None
             await bot.send_message(chat_id, text, buttons=buttons)
         except Exception as err:
             print(err)
-        MONGO.sbroadcast_list.delete_one({'chat_id': chat_id})
-        old = MONGO.sbroadcast_settings.find_one({})
+        mongodb.sbroadcast_list.delete_one({'chat_id': chat_id})
+        old = mongodb.sbroadcast_settings.find_one({})
         num = old['recived_chats'] + 1
-        MONGO.sbroadcast_settings.update(
+        mongodb.sbroadcast_settings.update(
             {'_id': old['_id']}, {
                 'text': old['text'],
                 'all_chats': old['all_chats'],
@@ -100,7 +100,7 @@ async def event(event):
         return
     msg = await event.reply("Running...")
     date = await chat_term(event, "date \"+%Y-%m-%d.%H:%M:%S\"")
-    await chat_term(event, "mongodump --gzip --archive > Backups/dump_{}.gz".format(date))
+    await chat_term(event, "mongodbdump --gzip --archive > Backups/dump_{}.gz".format(date))
     await msg.edit("**Done!**\nBackup under `Backups/dump_{}.gz`".format(date))
 
 
@@ -108,5 +108,5 @@ async def event(event):
 async def event(event):
     if event.from_id not in OWNER_ID:
         return
-    REDIS.flushdb()
-    await event.reply("Redis cache was cleaned.")
+    redis.flushdb()
+    await event.reply("redis cache was cleaned.")

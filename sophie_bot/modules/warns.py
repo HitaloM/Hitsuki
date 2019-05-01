@@ -3,7 +3,7 @@ import string
 import re
 
 from telethon import events
-from sophie_bot import MONGO, bot, WHITELISTED
+from sophie_bot import mongodb, bot, WHITELISTED
 from sophie_bot.events import register
 from sophie_bot.modules.users import get_user_and_text, is_user_admin, get_chat_admins, user_link
 from sophie_bot.modules.bans import ban_user
@@ -28,21 +28,21 @@ async def event(event):
         return
 
     rndm = randomString(15)
-    MONGO.warns.insert_one({
+    mongodb.warns.insert_one({
         'warn_id': rndm,
         'user_id': user_id,
         'group_id': chat_id,
         'reason': str(reason)
     })
     admin_id = event.from_id
-    admin = MONGO.user_list.find_one({'user_id': admin_id})
+    admin = mongodb.user_list.find_one({'user_id': admin_id})
     admin_str = await user_link(admin['user_id'])
     user_str = await user_link(user['user_id'])
     text = "{} have warned {}\n".format(admin_str, user_str)
     if reason:
         text += "Reason: `{}`\n".format(reason)
 
-    old = MONGO.warns.find({
+    old = mongodb.warns.find({
         'user_id': user_id,
         'group_id': chat_id
     })
@@ -52,7 +52,7 @@ async def event(event):
 
     button = Button.inline("Remove warn", 'remove_warn_{}'.format(rndm))
 
-    warn_limit = MONGO.warnlimit.find_one({'chat_id': event.chat_id})
+    warn_limit = mongodb.warnlimit.find_one({'chat_id': event.chat_id})
 
     if not warn_limit:
         warn_limit = 3
@@ -63,7 +63,7 @@ async def event(event):
         if await ban_user(event, user_id, chat_id, None) is False:
             return
         text += "Warnings has been exceeded! {} has been banned!".format(user_str)
-        MONGO.warns.delete_many({
+        mongodb.warns.delete_many({
             'user_id': user_id,
             'group_id': chat_id
         })
@@ -82,9 +82,9 @@ async def event(event):
         return
 
     warn_id = re.search(r'remove_warn_(.*)', str(event.data)).group(1)[:-1]
-    warn = MONGO.warns.find_one({'warn_id': warn_id})
+    warn = mongodb.warns.find_one({'warn_id': warn_id})
     if warn:
-        MONGO.notes.delete_one({'_id': warn['_id']})
+        mongodb.notes.delete_one({'_id': warn['_id']})
     user_str = await user_link(user_id)
     await event.edit("Warn removed by {}".format(user_str), link_preview=False)
 
@@ -100,12 +100,12 @@ async def event(event):
             "There are no warnings for this user!"
         )
         return
-    warns = MONGO.warns.find({
+    warns = mongodb.warns.find({
         'user_id': user_id,
         'group_id': event.chat_id
     })
     user_str = await user_link(user_id)
-    chat_title = MONGO.chat_list.find_one({
+    chat_title = mongodb.chat_list.find_one({
         'chat_id': event.chat_id})['chat_title']
     text = "{}'s **warnings:**\n".format(user_str)
     H = 0
@@ -125,7 +125,7 @@ async def event(event):
 @register(incoming=True, pattern="^[!/]warnlimit\s ?(.*)")
 async def event(event):
     arg = event.pattern_match.group(1)
-    old = MONGO.warnlimit.find_one({'chat_id': event.chat_id})
+    old = mongodb.warnlimit.find_one({'chat_id': event.chat_id})
     if not arg:
         if old:
             num = old['num']
@@ -134,9 +134,9 @@ async def event(event):
         await event.reply("Warn limit is currently `{}`".format(num))
     else:
         if old:
-            MONGO.warnlimit.delete_one({'_id': old['_id']})
+            mongodb.warnlimit.delete_one({'_id': old['_id']})
         num = int(arg)
-        MONGO.warnlimit.insert_one({
+        mongodb.warnlimit.insert_one({
             'chat_id': event.chat_id,
             'num': num
         })

@@ -2,7 +2,7 @@ import asyncio
 import math
 import subprocess
 
-from sophie_bot import MONGO
+from sophie_bot import mongodb
 from sophie_bot.events import flood_limit, register
 
 from telethon import custom
@@ -91,10 +91,10 @@ Please wait 3 minutes before using this command')
         return
 
     text = "**Stats**\n"
-    usrs = MONGO.user_list.count()
-    chats = MONGO.chat_list.count()
+    usrs = mongodb.user_list.count()
+    chats = mongodb.chat_list.count()
     text += "{} total users, in {} chats\n".format(usrs, chats)
-    db = MONGO.command("dbstats")
+    db = mongodb.command("dbstats")
     text += 'Database size is {}, free {}'.format(
         convert_size(db['dataSize']), convert_size(db['fsTotalSize'] - db['fsUsedSize']))
     await event.reply(text)

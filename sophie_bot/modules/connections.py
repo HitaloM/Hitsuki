@@ -1,5 +1,5 @@
 import re
-from sophie_bot import MONGO, REDIS, bot
+from sophie_bot import mongodb, redis, bot
 from sophie_bot.events import register
 from telethon.tl.custom import Button
 from telethon import errors
@@ -11,19 +11,19 @@ async def event(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
         chat = event.chat_id
-        chat = MONGO.chat_list.find_one({'chat_id': int(chat)})
+        chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
         print(chat)
     else:
         chat = event.message.raw_text.split(" ", 2)[1]
         if not chat[0] == '-':
-            chat = MONGO.chat_list.find_one({
+            chat = mongodb.chat_list.find_one({
                 'chat_nick': chat.replace("@", "")
             })
             if not chat:
                 event.reply("I can't find this chat, try using chat id.")
                 return
         else:
-            chat = MONGO.chat_list.find_one({'chat_id': int(chat)})
+            chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
             if not chat:
                 event.reply("I can't find this chat.")
                 return
@@ -31,16 +31,16 @@ async def event(event):
     chat_id = chat['chat_id']
     chat_title = chat['chat_title']
 
-    user_chats = MONGO.user_list.find_one({'user_id': user_id})
+    user_chats = mongodb.user_list.find_one({'user_id': user_id})
     if user_chats and 'chats' in user_chats:
         if chat_id not in user_chats['chats']:
             await event.reply(
                 "You not in the connecting group, join and write any message.")
             return
 
-    history = MONGO.connections.find_one({'user_id': user_id})
+    history = mongodb.connections.find_one({'user_id': user_id})
     if not history:
-        MONGO.connections.insert_one({
+        mongodb.connections.insert_one({
             'user_id': user_id,
             'chat_id': chat_id,
             'btn1': chat_id,
@@ -66,9 +66,9 @@ async def event(event):
             btn3 = chat_id
             updated = 1
 
-        MONGO.connections.delete_one({'_id': history['_id']})
+        mongodb.connections.delete_one({'_id': history['_id']})
 
-        MONGO.connections.insert_one({
+        mongodb.connections.insert_one({
             'user_id': user_id,
             'chat_id': chat_id,
             'btn1': btn1,
@@ -77,7 +77,7 @@ async def event(event):
             'updated': updated
         })
 
-    REDIS.set('connection_cache_{}'.format(user_id), chat_id)
+    redis.set('connection_cache_{}'.format(user_id), chat_id)
 
     text = "Successfully connected to **{}**!".format(chat_title)
     if event.chat_id == user_id:
@@ -98,25 +98,25 @@ async def event(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
         return
-    history = MONGO.connections.find_one({'user_id': user_id})
+    history = mongodb.connections.find_one({'user_id': user_id})
     if not history:
         await event.reply(
             "You not connected to any chat for history, connect via `/connect <chat id>`"
         )
         return
     buttons = []
-    chat_title = MONGO.chat_list.find_one({'chat_id': history['btn1']})
+    chat_title = mongodb.chat_list.find_one({'chat_id': history['btn1']})
     buttons += [[Button.inline("{}".format(chat_title['chat_title']),
                 'connect_{}'.format(history['btn1']))]]
     if history['btn2']:
-        chat_title = MONGO.chat_list.find_one({'chat_id': history['btn2']})
+        chat_title = mongodb.chat_list.find_one({'chat_id': history['btn2']})
         buttons += [[Button.inline("{}".format(chat_title['chat_title']),
                     'connect_{}'.format(history['btn2']))]]
     if history['btn3']:
-        chat_title = MONGO.chat_list.find_one({'chat_id': history['btn3']})
+        chat_title = mongodb.chat_list.find_one({'chat_id': history['btn3']})
         buttons += [[Button.inline("{}".format(chat_title['chat_title']),
                     'connect_{}'.format(history['btn3']))]]
-    chat_title = MONGO.chat_list.find_one({'chat_id': int(history['chat_id'])})
+    chat_title = mongodb.chat_list.find_one({'chat_id': int(history['chat_id'])})
     text = "**Current connected chat:**\n`"
     text += chat_title['chat_title']
     text += "`\n\n**Select chat to connect:**"
@@ -127,10 +127,10 @@ async def event(event):
 async def event(event):
     user_id = event.original_update.user_id
     chat_id = re.search(r'connect_(.*)', str(event.data)).group(1)[:-1]
-    chat_title = MONGO.chat_list.find_one({'chat_id': int(chat_id)})
-    old = MONGO.connections.find_one({'user_id': user_id})
-    MONGO.connections.delete_one({'_id': old['_id']})
-    MONGO.connections.insert_one({
+    chat_title = mongodb.chat_list.find_one({'chat_id': int(chat_id)})
+    old = mongodb.connections.find_one({'user_id': user_id})
+    mongodb.connections.delete_one({'_id': old['_id']})
+    mongodb.connections.insert_one({
         'user_id': user_id,
         'chat_id': chat_id,
         'btn1': old['btn1'],
@@ -138,25 +138,25 @@ async def event(event):
         'btn3': old['btn3'],
         'updated': old['updated']
     })
-    REDIS.set('connection_cache_{}'.format(user_id), chat_id)
+    redis.set('connection_cache_{}'.format(user_id), chat_id)
     await event.edit("Successfully connected to **{}**!".format(
         chat_title['chat_title']))
 
 
 async def get_conn_chat(user_id, chat_id, admin=False):
     if not user_id == chat_id:
-        chat_title = MONGO.chat_list.find_one({
+        chat_title = mongodb.chat_list.find_one({
             'chat_id': int(chat_id)})['chat_title']
         return True, chat_id, chat_title
-    user_chats = MONGO.user_list.find_one({'user_id': user_id})['chats']
+    user_chats = mongodb.user_list.find_one({'user_id': user_id})['chats']
     if chat_id not in user_chats:
         return False,
         "You not in this chat anymore, i'll disconnect you.",
         None
 
-    group_id = MONGO.connections.find_one({'user_id': int(user_id)})['chat_id']
+    group_id = mongodb.connections.find_one({'user_id': int(user_id)})['chat_id']
     if not group_id:
         return False, 'err1'
-    chat_title = MONGO.chat_list.find_one({
+    chat_title = mongodb.chat_list.find_one({
         'chat_id': int(group_id)})['chat_title']
     return True, int(group_id), chat_title

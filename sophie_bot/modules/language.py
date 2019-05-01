@@ -7,7 +7,7 @@ from telethon import events
 
 from sophie_bot.events import register, flood_limit
 from sophie_bot.modules.users import is_user_admin
-from sophie_bot import REDIS, MONGO, LOGGER, bot
+from sophie_bot import redis, mongodb, logger, bot
 
 LANGUAGES = {}
 LANGS = ()
@@ -18,7 +18,7 @@ for filename in os.listdir('sophie_bot/modules/langs'):
     exec("LANGUAGES[\"" + lang['language_info']['code'] + "\"] = lang")
     LANGS += tuple([lang['language_info']['code']])
 
-LOGGER.info("Languages loaded: {}".format(LANGS))
+logger.info("Languages loaded: {}".format(LANGS))
 
 
 @register(incoming=True, pattern="^/lang$")
@@ -66,12 +66,12 @@ Please wait 3 minutes before using this command')
         await event.reply("I don't support this language yet!")
         return
 
-    old = MONGO.lang.find_one({'chat_id': event.chat_id})
+    old = mongodb.lang.find_one({'chat_id': event.chat_id})
     if old:
-        MONGO.notes.delete_one({'_id': old['_id']})
+        mongodb.notes.delete_one({'_id': old['_id']})
 
-    MONGO.lang.insert_one({'chat_id': event.chat_id, 'lang': arg})
-    REDIS.set('lang_cache_{}'.format(event.chat_id), arg)
+    mongodb.lang.insert_one({'chat_id': event.chat_id, 'lang': arg})
+    redis.set('lang_cache_{}'.format(event.chat_id), arg)
     await event.reply("Language changed to {}".format(arg))
 
 
@@ -84,11 +84,11 @@ async def event(event):
         return
     event_data = re.search(r'select_lang_(.*)', str(event.data))
     lang = event_data.group(1)[:-1]
-    REDIS.set('lang_cache_{}'.format(chat), lang)
-    old = MONGO.lang.find_one({'chat_id': chat})
+    redis.set('lang_cache_{}'.format(chat), lang)
+    old = mongodb.lang.find_one({'chat_id': chat})
     if old:
-        MONGO.notes.delete_one({'_id': old['_id']})
-    MONGO.lang.insert_one({'chat_id': chat, 'lang': lang})
+        mongodb.notes.delete_one({'_id': old['_id']})
+    mongodb.lang.insert_one({'chat_id': chat, 'lang': lang})
     await event.edit(
         "Language changed to **{}**!".format(
             LANGUAGES[lang]["language_info"]["name"] + " \
@@ -109,19 +109,19 @@ def get_string(module, text, chat_id):
 
 
 def get_chat_lang(chat_id):
-    r = REDIS.get('lang_cache_{}'.format(chat_id))
+    r = redis.get('lang_cache_{}'.format(chat_id))
     if r:
         return r.decode('utf-8')
     else:
-        db_lang = MONGO.lang.find_one({'chat_id': chat_id})
+        db_lang = mongodb.lang.find_one({'chat_id': chat_id})
         if db_lang:
             # Rebuild lang cache
-            REDIS.set('lang_cache_{}'.format(chat_id), db_lang['lang'])
+            redis.set('lang_cache_{}'.format(chat_id), db_lang['lang'])
             return db_lang['lang']
-        user_lang = MONGO.user_list.find_one({'user_id': chat_id})
+        user_lang = mongodb.user_list.find_one({'user_id': chat_id})
         if user_lang and user_lang['user_lang'] in LANGS:
             # Add telegram language in lang cache
-            REDIS.set('lang_cache_{}'.format(chat_id), user_lang['user_lang'])
+            redis.set('lang_cache_{}'.format(chat_id), user_lang['user_lang'])
             return user_lang['user_lang']
         else:
             return 'en'
