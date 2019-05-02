@@ -1,44 +1,27 @@
-# A simple script to print some messages.
-import os
-import sys
-import time
 import logging
+import ujson
 
-from dotenv import load_dotenv
 from telethon import TelegramClient
 from pymongo import MongoClient
 import redis
-
-load_dotenv("bot.config")
 
 # logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO)
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
+f = open('sophie_bot/bot_conf.json', "r")
+conf = ujson.load(f)
 
-def get_env(name, message, cast=str):
-    if name in os.environ:
-        return os.environ[name]
-    while True:
-        value = input(message)
-        try:
-            return cast(value)
-        except ValueError as e:
-            print(e, file=sys.stderr)
-            time.sleep(1)
+OWNER_ID = int(conf["basic"]["owner_id"])
+WHITELISTED = list(conf["advanced"]["whitelisted"])
+WHITELISTED.append(OWNER_ID)
 
-
-OWNER_ID = [654839744, 483808054]
-WHITELISTED = []  # 518221376
-
-WHITELISTED = WHITELISTED + OWNER_ID
-
-API_ID = os.environ.get("API_ID", None)
-API_HASH = os.environ.get("API_HASH", None)
-TOKEN = os.environ.get("TOKEN", None)
+API_ID = conf["basic"]["app_id"]
+API_HASH = conf["basic"]["app_hash"]
+TOKEN = conf["basic"]["bot_token"]
 NAME = TOKEN.split(':')[0]
 
 bot = TelegramClient(NAME, API_ID, API_HASH)
