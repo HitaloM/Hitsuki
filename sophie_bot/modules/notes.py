@@ -282,4 +282,19 @@ async def event(event):
 
 @bot.on(events.CallbackQuery(data=re.compile(b'get_delete_msg_')))
 async def event(event):
+    data = str(event.data)
+    event_data = re.search(r'get_delete_msg_(.*)_(.*)', data)
+    if 'admin' in event_data.group(2):
+        user_id = event.query.user_id
+        K = await is_user_admin(event.chat_id, user_id)
+        if K is False:
+            await event.answer("Only admins can remove this message!", alert=True)
+            return
+    elif 'user' in event_data.group(2):
+        pass
+    else:
+        await event.answer(
+            "deletemsg button can contain only 'admin' or 'user' argument!", alert=True)
+        return
+
     await event.delete()
