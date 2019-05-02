@@ -158,13 +158,14 @@ async def send_note(chat_id, group_id, msg_id, note_name, show_none=False, nofor
 
     if noformat is True:
         format = 'html'
-        text = "<b>Note {}</b>\n\n".format(note_name)
+        string = "<b>Note {}</b>\n\n".format(note_name)
+        string += note['text']
+        buttons = ""
     else:
         format = 'md'
         text = "**Note {}**\n\n".format(note_name)
-
-    text += note['text']
-    string, buttons = button_parser(group_id, text)
+        text += note['text']
+        string, buttons = button_parser(group_id, text)
 
     if not buttons:
         buttons = None
