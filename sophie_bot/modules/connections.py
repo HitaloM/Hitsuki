@@ -6,7 +6,7 @@ from telethon import errors
 from telethon import events
 
 
-@register(incoming=True, pattern="^/connect ?(.*)")
+@register(incoming=True, pattern="^[/!]connect ?(.*)")
 async def event(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
@@ -93,7 +93,7 @@ for start using connection.".format(chat_title))
         await event.reply("Your pm has been successfully connected to **{}**!".format(chat_title))
 
 
-@register(incoming=True, pattern="^/connect$")
+@register(incoming=True, pattern="^[/!]connect$")
 async def event(event):
     user_id = event.from_id
     if not event.chat_id == user_id:

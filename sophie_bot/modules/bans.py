@@ -8,7 +8,7 @@ from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
 
-@register(incoming=True, pattern="^/ban (.*)")
+@register(incoming=True, pattern="^[/!]ban (.*)")
 async def event(event):
     user, reason = await get_user_and_text(event)
     if await ban_user(event, user['user_id'], event.chat_id, None) is True:
@@ -18,7 +18,7 @@ async def event(event):
             user_str, admin_str, reason), link_preview=False)
 
 
-@register(incoming=True, pattern="^/tban (.*)")
+@register(incoming=True, pattern="^[/!]tban (.*)")
 async def event(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:

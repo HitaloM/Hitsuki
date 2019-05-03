@@ -14,7 +14,7 @@ from telethon import custom, errors, events, utils
 from telethon.tl.custom import Button
 
 
-@register(incoming=True, pattern="^/save")
+@register(incoming=True, pattern="^[/!]save")
 async def event(event):
     chat_id = event.chat_id
     K = await is_user_admin(chat_id, event.from_id)
@@ -71,7 +71,7 @@ async def event(event):
     await event.reply(text, buttons=buttons)
 
 
-@register(incoming=True, pattern="^/clear")
+@register(incoming=True, pattern="^[/!]clear")
 async def event(event):
     chat_id = event.chat_id
 
@@ -91,7 +91,7 @@ async def event(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^/noteinfo")
+@register(incoming=True, pattern="^[/!]noteinfo")
 async def event(event):
     chat_id = event.chat_id
 
@@ -120,7 +120,7 @@ async def event(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^/notes")
+@register(incoming=True, pattern="^[/!]notes")
 async def event(event):
 
     res = flood_limit(event.chat_id, 'notes')
@@ -198,7 +198,7 @@ async def event(event):
         note['name'], link), link_preview=False)
 
 
-@register(incoming=True, pattern="^/get (.?)")
+@register(incoming=True, pattern="^[/!]get (.?)")
 async def event(event):
     raw_text = event.message.raw_text.split()
     note_name = raw_text[1]

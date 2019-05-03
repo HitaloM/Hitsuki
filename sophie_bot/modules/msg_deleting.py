@@ -5,7 +5,7 @@ from sophie_bot.events import register
 from sophie_bot.modules.users import is_user_admin
 
 
-@register(incoming=True, pattern="^/purge")
+@register(incoming=True, pattern="^[/!]purge")
 async def event(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -34,7 +34,7 @@ async def event(event):
     await message.edit(text)
 
 
-@register(incoming=True, pattern="^/del")
+@register(incoming=True, pattern="^[/!]del")
 async def event(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:

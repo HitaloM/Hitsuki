@@ -21,7 +21,7 @@ for filename in os.listdir('sophie_bot/modules/langs'):
 logger.info("Languages loaded: {}".format(LANGS))
 
 
-@register(incoming=True, pattern="^/lang$")
+@register(incoming=True, pattern="^[/!]lang$")
 async def handler(event):
     res = flood_limit(event.chat_id, 'lang')
     if res == 'EXIT':
@@ -45,7 +45,7 @@ Please wait 3 minutes before using this command')
     await event.reply(text, buttons=buttons)
 
 
-@register(incoming=True, pattern="^/lang (.*)$")
+@register(incoming=True, pattern="^[/!]lang (.*)$")
 async def handler(event):
     res = flood_limit(event.chat_id, 'lang')
     if res == 'EXIT':

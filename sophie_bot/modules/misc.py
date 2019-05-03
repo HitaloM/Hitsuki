@@ -4,7 +4,7 @@ from sophie_bot.modules.users import get_user, user_link
 from sophie_bot.events import flood_limit, register
 
 
-@register(incoming=True, pattern="^/id ?(.*)")
+@register(incoming=True, pattern="^[/!]id ?(.*)")
 async def event(event):
 
     res = flood_limit(event.chat_id, 'id')

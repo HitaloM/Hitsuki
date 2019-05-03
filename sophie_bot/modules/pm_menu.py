@@ -6,7 +6,7 @@ from telethon.tl.custom import Button
 from telethon import events
 
 
-@register(incoming=True, pattern="^/start$")
+@register(incoming=True, pattern="^[/!]start$")
 async def event(event):
     if not event.chat_id == event.from_id:
         return

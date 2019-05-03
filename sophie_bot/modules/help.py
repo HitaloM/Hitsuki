@@ -3,7 +3,7 @@ from sophie_bot.events import flood_limit, register
 from telethon import custom
 
 
-@register(incoming=True, pattern="^/start help$")
+@register(incoming=True, pattern="^[/!]start help$")
 async def event(event):
 
     res = flood_limit(event.chat_id, 'starthelp')
@@ -18,7 +18,7 @@ Please wait 3 minutes before using this command')
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^/help$")
+@register(incoming=True, pattern="^[/!]help$")
 async def event(event):
 
     res = flood_limit(event.chat_id, 'help')

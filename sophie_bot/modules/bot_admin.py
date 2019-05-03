@@ -6,10 +6,10 @@ from sophie_bot.events import register
 from sophie_bot.modules.notes import button_parser
 
 
-@register(incoming=True, pattern="^/term")
+@register(incoming=True, pattern="^[/!]term")
 async def event(event):
     message = event.text
-    if event.from_id not in OWNER_ID:
+    if event.from_id == OWNER_ID:
         msg = await event.reply("Running...")
         await asyncio.sleep(2)
         await msg.edit("Blyat can't do it becuase u dumb.")
@@ -24,9 +24,9 @@ async def event(event):
     await msg.edit(result)
 
 
-@register(incoming=True, pattern="^/broadcast ?(.*)")
+@register(incoming=True, pattern="^[/!]broadcast ?(.*)")
 async def event(event):
-    if event.from_id not in OWNER_ID:
+    if event.from_id == OWNER_ID:
         return
     chats = mongodb.chat_list.find({})
     raw_text = event.message.text.split(" ", 1)[1]
@@ -51,9 +51,9 @@ async def event(event):
             num_succ, num_fail))
 
 
-@register(incoming=True, pattern="^/sbroadcast ?(.*)")
+@register(incoming=True, pattern="^[/!]sbroadcast ?(.*)")
 async def event(event):
-    if event.from_id not in OWNER_ID:
+    if event.from_id == OWNER_ID:
         return
     text = event.message.text.split(" ", 1)[1]
     # Add chats to sbroadcast list
@@ -94,9 +94,9 @@ async def event(event):
             }, upsert=False)
 
 
-@register(incoming=True, pattern="^/backup")
+@register(incoming=True, pattern="^[/!]backup")
 async def event(event):
-    if event.from_id not in OWNER_ID:
+    if event.from_id == OWNER_ID:
         return
     msg = await event.reply("Running...")
     date = await chat_term(event, "date \"+%Y-%m-%d.%H:%M:%S\"")
@@ -104,9 +104,9 @@ async def event(event):
     await msg.edit("**Done!**\nBackup under `Backups/dump_{}.gz`".format(date))
 
 
-@register(incoming=True, pattern="^/purgecaches")
+@register(incoming=True, pattern="^[/!]purgecaches")
 async def event(event):
-    if event.from_id not in OWNER_ID:
+    if event.from_id == OWNER_ID:
         return
     redis.flushdb()
     await event.reply("redis cache was cleaned.")

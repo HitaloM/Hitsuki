@@ -107,7 +107,7 @@ async def get_chat_admins(chat_id):
     return admins
 
 
-@register(incoming=True, pattern="^/adminlist|^/admins")
+@register(incoming=True, pattern="^[/!]adminlist|^/admins")
 async def event(event):
     res = flood_limit(event.chat_id, 'admins')
     if res == 'EXIT':
