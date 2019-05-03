@@ -4,6 +4,10 @@
     "bot_token": "676436262:CQnxOF8uVG8QO0eEyMUl3jR0jC9rpiyFzKk",
 
     "owner_id": 483808054
+
+    "owner_id": 483808054,
+    "mongo_port": 27017,
+    "mongo_conn": "localhost"
 },
  "advanced":{
     "whitelisted": ["518221376", "000000"]

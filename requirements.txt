@@ -3,4 +3,5 @@ git+https://github.com/LonamiWebs/Telethon.git
 ujson
 redis
 pymongo
+dnspython
 python-dotenv

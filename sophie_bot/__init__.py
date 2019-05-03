@@ -22,12 +22,14 @@ WHITELISTED.append(OWNER_ID)
 API_ID = conf["basic"]["app_id"]
 API_HASH = conf["basic"]["app_hash"]
 TOKEN = conf["basic"]["bot_token"]
+MONGO_CONN = conf["basic"]["mongo_conn"]
+MONGO_PORT = conf["basic"]["mongo_port"]
 NAME = TOKEN.split(':')[0]
 
 bot = TelegramClient(NAME, API_ID, API_HASH)
 
 # Init MongoDB
-mongodb = MongoClient('localhost', 27017).sophia
+mongodb = MongoClient(MONGO_CONN).sophie
 
 # Init redis
 redis = redis.StrictRedis(
