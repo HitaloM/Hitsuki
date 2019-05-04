@@ -7,8 +7,9 @@ from bson.objectid import ObjectId
 
 from sophie_bot import mongodb, bot
 from sophie_bot.events import flood_limit, register
-from sophie_bot.modules.users import is_user_admin
+from sophie_bot.modules.users import is_user_admin, user_link
 from sophie_bot.modules.language import get_string
+from sophie_bot.modules.connections import get_conn_chat
 
 from telethon import custom, errors, events, utils
 from telethon.tl.custom import Button
@@ -16,11 +17,11 @@ from telethon.tl.custom import Button
 
 @register(incoming=True, pattern="^[/!]save")
 async def event(event):
-    chat_id = event.chat_id
-    K = await is_user_admin(chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("notes", "no_right_save_note", chat_id))
+    status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
+    if status is False:
+        await event.reply(chat_id)
         return
+    # send_id = event.chat_id
 
     note_name = event.message.text.split(" ", 2)[1]
     file_id = None
@@ -57,14 +58,16 @@ async def event(event):
          'file_id': file_id})
 
     new = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
-    text = get_string("notes", "note_saved_or_updated", chat_id).format(note_name, status)
+    text = get_string("notes", "note_saved_or_updated", chat_id).format(
+        note_name, status, chat_title)
     text += get_string(
         "notes", "you_can_get_note", chat_id)\
         .format(name=note_name)
 
     if status == 'saved':
         buttons = [
-            [Button.inline('Delete note', 'delnote_{}'.format(new))]]
+            [Button.inline(get_string("notes", "del_note", chat_id), 'delnote_{}'.format(new))]
+        ]
     else:
         buttons = None
 
@@ -85,9 +88,9 @@ async def event(event):
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if note:
         mongodb.notes.delete_one({'_id': note['_id']})
-        text = "Note {} removed!".format(note_name)
+        text = get_string("notes", "note_removed", chat_id).format(note_name)
     else:
-        text = "I can't find this note!"
+        text = get_string("notes", "cant_find_note", chat_id)
     await event.reply(text)
 
 
@@ -104,26 +107,31 @@ async def event(event):
     note_name = event.message.text.split(" ", 2)[1]
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if not note:
-        text = "I can't find this note!"
+        text = get_string("notes", "cant_find_note", chat_id)
     else:
-        text = "**Note info**\n"
-        text += "Note: `{}`\n".format(note_name)
-        text += "Last updated in: `{}`\n".format(note['date'])
+        text = get_string("notes", "note_info_title", chat_id)
+        text += get_string("notes", "note_info_note", chat_id).format(note_name)
+        text += get_string("notes", "note_info_updated", chat_id).format(
+            note_name).format(note['date'])
 
         creator = mongodb.user_list.find_one({'user_id': note['creator']})
         if creator:
-            text += "Created by: {} (`{}`)\n".format(
+            text += get_string("notes", "note_info_by", chat_id).format(
                 creator['first_name'], creator['user_id'])
         else:
-            text += "Creator not cached, I can't find him.\n"
+            text += get_string("notes", "note_info_crt_not_cached", chat_id)
 
     await event.reply(text)
 
 
 @register(incoming=True, pattern="^[/!]notes")
 async def event(event):
+    status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
+    if status is False:
+        await event.reply(chat_id)
+        return
 
-    res = flood_limit(event.chat_id, 'notes')
+    res = flood_limit(chat_id, 'notes')
     if res == 'EXIT':
         return
     elif res is True:
@@ -131,10 +139,10 @@ async def event(event):
 Please wait 3 minutes before using this command')
         return
 
-    notes = mongodb.notes.find({'chat_id': event.chat_id})
-    text = get_string("notes", "notelist_header", event.chat_id)
+    notes = mongodb.notes.find({'chat_id': chat_id})
+    text = get_string("notes", "notelist_header", chat_id).format(chat_title)
     if notes.count() == 0:
-        text = get_string("notes", "notelist_no_notes", event.chat_id)
+        text = get_string("notes", "notelist_no_notes", chat_id)
     else:
         for note in notes:
             text += "- `{}`\n".format(note['name'])
@@ -145,7 +153,8 @@ async def send_note(chat_id, group_id, msg_id, note_name, show_none=False, nofor
     file_id = None
     note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': note_name})
     if not note and show_none is True:
-        await bot.send_message(chat_id, "Note not found!", reply_to=msg_id)
+        await bot.send_message(chat_id, get_string(
+            "notes", "note_not_found", chat_id), reply_to=msg_id)
         return
     elif not note:
         return None
@@ -185,16 +194,15 @@ async def event(event):
     user_id = event.query.user_id
     K = await is_user_admin(event.chat_id, user_id)
     if K is False:
-        await event.answer("You don't have rights to save notes here!")
+        await event.answer(get_string("notes", "dont_have_rights_to_save", event.chat_id))
         return
     note_id = re.search(r'delnote_(.*)', str(event.data)).group(1)[:-1]
     note = mongodb.notes.find_one({'_id': ObjectId(note_id)})
     if note:
         mongodb.notes.delete_one({'_id': note['_id']})
 
-    user = await bot.get_entity(user_id)
-    link = "[{}](tg://user?id={})".format(user.first_name, user_id)
-    await event.edit("Note {} deleted by {}.".format(
+    link = user_link(user_id)
+    await event.edit(get_string("notes", "note_deleted_by", event.chat_id).format(
         note['name'], link), link_preview=False)
 
 
@@ -215,10 +223,15 @@ async def event(event):
 
 @register(incoming=True, pattern="^#")
 async def event(event):
+    status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id)
+    real_chat_id = event.chat_id
+    if status is False:
+        await event.reply(chat_id)
+        return
     note_name = event.message.raw_text[1:]
     if len(note_name) > 1:
         await send_note(
-            event.chat_id, event.chat_id, event.message.id, note_name)
+            real_chat_id, chat_id, event.message.id, note_name)
 
 
 def button_parser(chat_id, texts):
@@ -259,7 +272,7 @@ async def event(event):
         await event.answer("I pm'ed note to you!")
     except errors.rpcerrorlist.UserIsBlockedError or errors.rpcerrorlist.PeerIdInvalidError:
         await event.answer(
-            "Write /start in my pm and click on button again!", alert=True)
+            get_string("notes", "user_blocked", event.chat_id), alert=True)
 
 
 @bot.on(events.CallbackQuery(data=re.compile(b'get_alert_')))
@@ -270,12 +283,12 @@ async def event(event):
     group_id = event_data.group(1)
     note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': notename})
     if not note:
-        await event.answer("I can't find this note!", alert=True)
+        await event.answer(get_string("notes", "cant_find_note", event.chat_id), alert=True)
         return
     text = note['text']
     if len(text) >= 200:
         await event.answer(
-            "This note bigger than Telegram limit of 200 symbols!", alert=True)
+            get_string("notes", "note_so_big", event.chat_id), alert=True)
         return
 
     await event.answer(text, alert=True)
@@ -289,13 +302,13 @@ async def event(event):
         user_id = event.query.user_id
         K = await is_user_admin(event.chat_id, user_id)
         if K is False:
-            await event.answer("Only admins can remove this message!", alert=True)
+            await event.answer(get_string("notes", "only_admins_can_rmw", event.chat_id), alert=True)
             return
     elif 'user' in event_data.group(2):
         pass
     else:
         await event.answer(
-            "deletemsg button can contain only 'admin' or 'user' argument!", alert=True)
+            get_string("notes", "delmsg_no_arg", event.chat_id), alert=True)
         return
 
     await event.delete()

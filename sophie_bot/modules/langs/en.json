@@ -7,14 +7,27 @@
  "STRINGS":{
     "notes": {
         "notelist_no_notes": "No notes in this chat!",
-        "notelist_header": "**Notes in this chat:**\n",
+        "notelist_header": "**Notes in **{}:\n",
         "no_right_save_note": "You don't have rights to save notes here!",
-        
         "saved": "saved",
         "updated": "updated",
-        "note_saved_or_updated" :"**Note {} {}!**\n",
+        "note_saved_or_updated" :"**Note {} {} in {}!**\n",
         "you_can_get_note": "You can retrieve this note by using `/get {name}`, or `{name}`",
-        "dont_have_rights_to_save": "You don't have rights to save notes here!"
+        "dont_have_rights_to_save": "You don't have rights to save notes here!",
+        "del_note": "Delete note",
+        "note_removed": "Note {} removed!",
+        "cant_find_note": "I can't find this note!",
+        "note_info_title": "**Note info**\n",
+        "note_info_note": "Note: `{}`\n",
+        "note_info_updated": "Last updated in: `{}`\n",
+        "note_info_by": "Created by: {} (`{}`)\n",
+        "note_info_crt_not_cached": "Creator not cached, I can't find him.\n",
+        "note_not_found": "Note not found!",
+        "note_deleted_by": "Note {} deleted by {}.",
+        "user_blocked": "Write /start in my pm and click on button again!",
+        "note_so_big": "This note bigger than Telegram limit of 200 symbols!",
+        "only_admins_can_rmw": "Only admins can remove this message",
+        "delmsg_no_arg": "deletemsg button can contain only 'admin' or 'user' argument!"
     }
  }
 }

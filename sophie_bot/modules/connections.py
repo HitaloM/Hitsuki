@@ -1,6 +1,9 @@
 import re
+
 from sophie_bot import mongodb, redis, bot
 from sophie_bot.events import register
+from sophie_bot.modules.users import is_user_admin
+
 from telethon.tl.custom import Button
 from telethon import errors
 from telethon import events
@@ -25,7 +28,7 @@ async def event(event):
         else:
             chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
             if not chat:
-                event.reply("I can't find this chat.")
+                await event.reply("I can't find this chat.")
                 return
 
     chat_id = chat['chat_id']
@@ -123,6 +126,20 @@ async def event(event):
     await event.reply(text, buttons=buttons)
 
 
+@register(incoming=True, pattern="^/disconnect$")
+async def event(event):
+    user_id = event.from_id
+    old = mongodb.connections.find_one({'user_id': user_id})
+    if not old:
+        await event.reply(
+            "You was not connected to any chat before!")
+        return
+    chat_title = await get_conn_chat(user_id, event.chat_id)
+    mongodb.connections.delete_one({'_id': old['_id']})
+    redis.delete('connection_cache_{}'.format(user_id))
+    await event.reply("You was desconnected from {} chat.".format(chat_title))
+
+
 @bot.on(events.CallbackQuery(data=re.compile(b'connect_')))
 async def event(event):
     user_id = event.original_update.user_id
@@ -154,9 +171,17 @@ async def get_conn_chat(user_id, chat_id, admin=False):
         "You not in this chat anymore, i'll disconnect you.",
         None
 
-    group_id = mongodb.connections.find_one({'user_id': int(user_id)})['chat_id']
+    group_id = mongodb.connections.find_one({'user_id': int(user_id)})
     if not group_id:
-        return False, 'err1'
+        return True, user_id, "Local"
+    group_id = group_id['chat_id']
+
     chat_title = mongodb.chat_list.find_one({
         'chat_id': int(group_id)})['chat_title']
+
+    if admin is True:
+        K = await is_user_admin(chat_id, user_id)
+        if K is False:
+            return False, "You should be admin in {}!".format(chat_title), None
+
     return True, int(group_id), chat_title

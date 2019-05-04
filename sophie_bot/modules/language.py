@@ -100,7 +100,7 @@ def get_string(module, text, chat_id):
     lang = get_chat_lang(chat_id)
 
     if module in LANGUAGES[lang]['STRINGS'] and \
-        text in LANGUAGES[lang]['STRINGS'][module]:
+            text in LANGUAGES[lang]['STRINGS'][module]:
         return LANGUAGES[lang]['STRINGS'][module][text]
 
     if text in LANGUAGES['en']['STRINGS'][module]:

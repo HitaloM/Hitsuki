@@ -90,6 +90,9 @@ async def update_admin_cache(chat_id):
 
 
 async def is_user_admin(chat_id, user_id):
+    # User's pm should have admin rights
+    if chat_id == user_id:
+        return True
     admins = await get_chat_admins(chat_id)
     if user_id in admins:
         return True
