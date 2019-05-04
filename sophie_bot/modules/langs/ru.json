@@ -9,11 +9,25 @@
         "notelist_header": "**Заметки в этом чате:**\n",
         "notelist_no_notes": "Нет заметок в этом чате!",
         "no_right_save_note": "Вы не имеете заметок в этом чате!!",
-        
         "saved": "сохранена",
         "updated": "обновлена",
         "note_saved_or_updated" :"**Заметка {} {}!**\n",
-        "you_can_get_note": "Вы можете получить заметку используя `/get {name}`, или `{name}`"
+        "you_can_get_note": "Вы можете получить заметку используя `/get {name}`, или `{name}`",
+        "dont_have_rights_to_save": "Вы не имеете прав сохранять заметки здесь!",
+        "del_note": "Удалить заметку",
+        "note_removed": "Заметка {} удалена!",
+        "cant_find_note": "Я не могу получить эту заметку!",
+        "note_info_title": "**Информация про заметку**\n",
+        "note_info_note": "Заметка: `{}`\n",
+        "note_info_updated": "Последнее обновление: `{}`\n",
+        "note_info_by": "Создана: {} (`{}`)\n",
+        "note_info_crt_not_cached": "Создатель не кеширован, Я не могу найти его!\n",
+        "note_not_found": "Заметка не найдена!",
+        "note_deleted_by": "Заметка {} удалена {}.",
+        "user_blocked": "Напишите /start в мою личку и нажмите на кнопку снова!",
+        "note_so_big": "Эта заметка больше чем лимит Telegram в 200 символов!",
+        "only_admins_can_rmw": "Только админы могут удалять заметки",
+        "delmsg_no_arg": "Кнопка deletemsg может иметь только аргумент 'admin' или 'user'!"
     }
  }
 }
