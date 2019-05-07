@@ -9,11 +9,12 @@ from sophie_bot.modules.notes import button_parser
 @register(incoming=True, pattern="^[/!]term")
 async def event(event):
     message = event.text
-    if event.from_id == OWNER_ID:
+    if not event.from_id == OWNER_ID:
         msg = await event.reply("Running...")
         await asyncio.sleep(2)
         await msg.edit("Blyat can't do it becuase u dumb.")
         return
+    
     msg = await event.reply("Running...")
     command = str(message)
     command = str(command[6:])
@@ -26,7 +27,7 @@ async def event(event):
 
 @register(incoming=True, pattern="^[/!]broadcast ?(.*)")
 async def event(event):
-    if event.from_id == OWNER_ID:
+    if not event.from_id == OWNER_ID:
         return
     chats = mongodb.chat_list.find({})
     raw_text = event.message.text.split(" ", 1)[1]
@@ -53,7 +54,7 @@ async def event(event):
 
 @register(incoming=True, pattern="^[/!]sbroadcast ?(.*)")
 async def event(event):
-    if event.from_id == OWNER_ID:
+    if not event.from_id == OWNER_ID:
         return
     text = event.message.text.split(" ", 1)[1]
     # Add chats to sbroadcast list
@@ -96,7 +97,7 @@ async def event(event):
 
 @register(incoming=True, pattern="^[/!]backup")
 async def event(event):
-    if event.from_id == OWNER_ID:
+    if not event.from_id == OWNER_ID:
         return
     msg = await event.reply("Running...")
     date = await chat_term(event, "date \"+%Y-%m-%d.%H:%M:%S\"")
@@ -106,7 +107,7 @@ async def event(event):
 
 @register(incoming=True, pattern="^[/!]purgecaches")
 async def event(event):
-    if event.from_id == OWNER_ID:
+    if not event.from_id == OWNER_ID:
         return
     redis.flushdb()
     await event.reply("redis cache was cleaned.")

@@ -1,6 +1,8 @@
 import time
 
+from sophie_bot import bot
 from sophie_bot.events import register
+from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import get_user_and_text, is_user_admin, user_link
 
 from telethon.tl.functions.channels import EditBannedRequest
@@ -14,15 +16,16 @@ async def event(event):
     if await ban_user(event, user['user_id'], event.chat_id, None) is True:
         admin_str = user_link(event.from_id)
         user_str = user_link(user['user_id'])
-        await event.reply("User {} banned by {}!\nReason: `{}`".format(
-            user_str, admin_str, reason), link_preview=False)
+        text = get_string("bans", "user_banned", event.chat_id)
+        text += get_string("bans", "reason", event.chat_id)
+        await event.reply(text.format(user_str, admin_str, reason), link_preview=False)
 
 
 @register(incoming=True, pattern="^[/!]tban (.*)")
 async def event(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
-        await event.reply("You don't have rights to ban users here!")
+        await event.reply(get_string("bans", "u_dont_have_rights", event.chat_id))
         return
     user, data = await get_user_and_text(event)
     data = data.split(' ', 2)
@@ -42,7 +45,7 @@ async def event(event):
             bantime = int(time.time() + int(time_num) * 24 * 60 * 60)
             unit_str = 'days'
         else:
-            await event.reply("Time value isn't a correct!")
+            await event.reply(get_string("bans", "time_var_incorrect", event.chat_id))
 
     if await ban_user(event, user.id, event.chat_id, bantime) is True:
         admin_str = user_link(event.from_id)
@@ -57,7 +60,7 @@ async def ban_user(event, user_id, chat_id, time_val):
 
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
-        await event.reply("You don't have rights to ban users here!")
+        await event.reply(get_string("bans", "u_dont_have_rights", event.chat_id))
         return
 
     banned_rights = ChatBannedRights(
@@ -72,8 +75,10 @@ async def ban_user(event, user_id, chat_id, time_val):
         embed_links=True,
     )
 
-    if user_id == 885745757:
-        await event.reply("Are you crazy?! Ban myself!")
+    bot_id = await bot.get_self().id
+
+    if user_id == bot_id:
+        await event.reply(get_string("bans", "bot_cant_be_banned", event.chat_id))
         return False
     if await is_user_admin(chat_id, user_id) is True:
         await event.reply("This is admin, i can't ban him.")

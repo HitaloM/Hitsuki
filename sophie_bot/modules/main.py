@@ -56,7 +56,7 @@ async def chat_term(event, command):
         output.close()
         await event.client.send_file(
             event.chat_id,
-            "sender.txt",
+            "output.txt",
             reply_to=event.id,
             caption="`Output too large, sending as file`",
         )
