@@ -252,8 +252,12 @@ def button_parser(chat_id, texts):
             t = [Button.inline(raw_button[0], 'get_delete_msg_{}_{}'.format(
                 chat_id, raw_button[2]))]
 
+        print(s)
+
         if raw_button[3]:
-            buttons.insert(s - 1, buttons[s - 1] + t)
+            new = buttons[-1] + t
+            buttons = buttons[:-1]
+            buttons.append(new)
         else:
             buttons.append(t)
 
