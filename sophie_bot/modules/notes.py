@@ -167,14 +167,17 @@ async def send_note(chat_id, group_id, msg_id, note_name, show_none=False, nofor
 
     if noformat is True:
         format = 'html'
-        string = "<b>Note {}</b>\n\n".format(note_name)
-        string += note['text']
+        string = note['text']
         buttons = ""
     else:
         format = 'md'
-        text = "**Note {}**\n\n".format(note_name)
-        text += note['text']
-        string, buttons = button_parser(group_id, text)
+        string, buttons = button_parser(group_id, note['text'])
+
+    if len(string.rstrip()) == 0:
+        if noformat is True:
+            string = "<b>Note {}</b>\n\n".format(note_name)
+        else:
+            string = "**Note {}**\n\n".format(note_name)
 
     if not buttons:
         buttons = None
@@ -239,7 +242,6 @@ def button_parser(chat_id, texts):
     raw_buttons = re.findall(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', texts)
     text = re.sub(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', '', texts)
     for raw_button in raw_buttons:
-        s = len(buttons)
         if raw_button[1] == 'url':
             t = [custom.Button.url(raw_button[0], raw_button[2])]
         elif raw_button[1] == 'note':
@@ -251,8 +253,6 @@ def button_parser(chat_id, texts):
         elif raw_button[1] == 'deletemsg':
             t = [Button.inline(raw_button[0], 'get_delete_msg_{}_{}'.format(
                 chat_id, raw_button[2]))]
-
-        print(s)
 
         if raw_button[3]:
             new = buttons[-1] + t
