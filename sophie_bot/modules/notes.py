@@ -23,7 +23,7 @@ async def event(event):
         return
     # send_id = event.chat_id
 
-    note_name = event.message.text.split(" ", 2)[1]
+    note_name = event.message.text.split(" ", 2)[1].lower()
     file_id = None
     if len(event.message.text.split(" ")) > 2:
         prim_text = event.message.text.split(" ", 1)[1].split(" ", 1)[1]
@@ -43,18 +43,30 @@ async def event(event):
 
     status = get_string("notes", "saved", chat_id)
     old = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
+    created_date = ''
+    creator = ''
     if old:
+        created_date = old['created']
+        creator = old['creator']
         status = get_string("notes", "updated", chat_id)
         mongodb.notes.delete_one({'_id': old['_id']})
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
+    if not created_date:
+        created_date = date
+
+    if not creator:
+        creator = event.from_id
 
     mongodb.notes.insert_one(
         {'chat_id': chat_id,
          'name': note_name,
          'text': note_text,
          'date': date,
-         'creator': event.from_id,
+         'created': created_date,
+         'updated_by': event.from_id,
+         'creator': creator,
          'file_id': file_id})
 
     new = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
@@ -111,15 +123,10 @@ async def event(event):
     else:
         text = get_string("notes", "note_info_title", chat_id)
         text += get_string("notes", "note_info_note", chat_id).format(note_name)
+        text += get_string("notes", "note_info_created", chat_id).format(
+            note['created'], await user_link(note['creator']))
         text += get_string("notes", "note_info_updated", chat_id).format(
-            note_name).format(note['date'])
-
-        creator = mongodb.user_list.find_one({'user_id': note['creator']})
-        if creator:
-            text += get_string("notes", "note_info_by", chat_id).format(
-                creator['first_name'], creator['user_id'])
-        else:
-            text += get_string("notes", "note_info_crt_not_cached", chat_id)
+            note['date'], await user_link(note['updated_by']))
 
     await event.reply(text)
 
@@ -212,7 +219,7 @@ async def event(event):
 @register(incoming=True, pattern="^[/!]get (.?)")
 async def event(event):
     raw_text = event.message.raw_text.split()
-    note_name = raw_text[1]
+    note_name = raw_text[1].lower()
     print(len(raw_text))
     if len(raw_text) >= 3 and raw_text[2].lower() == "noformat":
         noformat = True
@@ -231,7 +238,7 @@ async def event(event):
     if status is False:
         await event.reply(chat_id)
         return
-    note_name = event.message.raw_text[1:]
+    note_name = event.message.raw_text[1:].lower()
     if len(note_name) > 1:
         await send_note(
             real_chat_id, chat_id, event.message.id, note_name)
