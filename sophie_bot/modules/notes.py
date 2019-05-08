@@ -15,7 +15,7 @@ from telethon import custom, errors, events, utils
 from telethon.tl.custom import Button
 
 
-@register(incoming=True, pattern="^[/!]save")
+@register(incoming=True, pattern="^[/!]save(\s)")
 async def event(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
@@ -131,7 +131,7 @@ async def event(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^[/!]notes")
+@register(incoming=True, pattern="^[/!]notes|[/!]saved")
 async def event(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
@@ -211,7 +211,7 @@ async def event(event):
     if note:
         mongodb.notes.delete_one({'_id': note['_id']})
 
-    link = user_link(user_id)
+    link = await user_link(user_id)
     await event.edit(get_string("notes", "note_deleted_by", event.chat_id).format(
         note['name'], link), link_preview=False)
 
