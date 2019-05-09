@@ -2,6 +2,7 @@ import re
 
 from sophie_bot import bot, mongodb, redis
 from sophie_bot.events import register
+from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import is_user_admin
 
 from telethon import errors, events
@@ -14,7 +15,6 @@ async def connect_with_arg(event):
     if not event.chat_id == user_id:
         chat = event.chat_id
         chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
-        print(chat)
     else:
         chat = event.message.raw_text.split(" ", 2)[1]
         if not chat[0] == '-':
@@ -22,12 +22,12 @@ async def connect_with_arg(event):
                 'chat_nick': chat.replace("@", "")
             })
             if not chat:
-                event.reply("I can't find this chat, try using chat id.")
+                await event.reply(get_string("connections", "cant_find_chat_use_id", chat))
                 return
         else:
             chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
             if not chat:
-                await event.reply("I can't find this chat.")
+                await event.reply(get_string("connections", "cant_find_chat", chat))
                 return
 
     chat_id = chat['chat_id']
@@ -36,8 +36,7 @@ async def connect_with_arg(event):
     user_chats = mongodb.user_list.find_one({'user_id': user_id})
     if user_chats and 'chats' in user_chats:
         if chat_id not in user_chats['chats']:
-            await event.reply(
-                "You not in the connecting group, join and write any message.")
+            await event.reply(get_string("connections", "not_in_group", chat))
             return
 
     history = mongodb.connections.find_one({'user_id': user_id})
@@ -81,18 +80,17 @@ async def connect_with_arg(event):
 
     redis.set('connection_cache_{}'.format(user_id), chat_id)
 
-    text = "Successfully connected to **{}**!".format(chat_title)
+    text = get_string("connections", "connected", chat).format(chat_title)
     if event.chat_id == user_id:
         await event.reply(text)
     else:
         try:
             await bot.send_message(user_id, text)
         except errors.rpcerrorlist.UserIsBlockedError:
-            await event.reply(
-                "Your pm has been successfully connected to **{}**! Write to @rSophieBot \
-for start using connection.".format(chat_title))
+            await event.reply(get_string("connections", "connected_pm_to_me", chat).format(
+                chat_title))
             return
-        await event.reply("Your pm has been successfully connected to **{}**!".format(chat_title))
+        await event.reply(get_string("connections", "pm_connected", chat).format(chat_title))
 
 
 @register(incoming=True, pattern="^[/!]connect$")
@@ -102,9 +100,7 @@ async def connect(event):
         return
     history = mongodb.connections.find_one({'user_id': user_id})
     if not history:
-        await event.reply(
-            "You not connected to any chat for history, connect via `/connect <chat id>`"
-        )
+        await event.reply(get_string("connections", "history_empty", event.chat_id))
         return
     buttons = []
     chat_title = mongodb.chat_list.find_one({'chat_id': history['btn1']})
@@ -119,9 +115,9 @@ async def connect(event):
         buttons += [[Button.inline("{}".format(chat_title['chat_title']),
                     'connect_{}'.format(history['btn3']))]]
     chat_title = mongodb.chat_list.find_one({'chat_id': int(history['chat_id'])})
-    text = "**Current connected chat:**\n`"
+    text = get_string("connections", "connected_chat", event.chat_id)
     text += chat_title['chat_title']
-    text += "`\n\n**Select chat to connect:**"
+    text += get_string("connections", "select_chat_to_connect", event.chat_id)
     await event.reply(text, buttons=buttons)
 
 
@@ -130,13 +126,12 @@ async def disconnect(event):
     user_id = event.from_id
     old = mongodb.connections.find_one({'user_id': user_id})
     if not old:
-        await event.reply(
-            "You was not connected to any chat before!")
+        await event.reply(get_string("connections", "u_wasnt_connected", event.chat_id))
         return
     chat_title = await get_conn_chat(user_id, event.chat_id)
     mongodb.connections.delete_one({'_id': old['_id']})
     redis.delete('connection_cache_{}'.format(user_id))
-    await event.reply("You was desconnected from {} chat.".format(chat_title))
+    await event.reply(get_string("connections", "disconnected", event.chat_id).format(chat_title))
 
 
 @bot.on(events.CallbackQuery(data=re.compile(b'connect_')))
@@ -155,7 +150,7 @@ async def event(event):
         'updated': old['updated']
     })
     redis.set('connection_cache_{}'.format(user_id), chat_id)
-    await event.edit("Successfully connected to **{}**!".format(
+    await event.edit(get_string("connections", "connected", event.chat_id).format(
         chat_title['chat_title']))
 
 
@@ -167,7 +162,7 @@ async def get_conn_chat(user_id, chat_id, admin=False):
     user_chats = mongodb.user_list.find_one({'user_id': user_id})['chats']
     if chat_id not in user_chats:
         return False,
-        "You not in this chat anymore, i'll disconnect you.",
+        get_string("connections", "not_in_chat", event.chat_id),
         None
 
     group_id = mongodb.connections.find_one({'user_id': int(user_id)})
@@ -181,6 +176,7 @@ async def get_conn_chat(user_id, chat_id, admin=False):
     if admin is True:
         K = await is_user_admin(group_id, user_id)
         if K is False:
-            return False, "You should be admin in {}!".format(chat_title), None
+            return False, get_string(
+                "connections", "u_should_be_admin", event.chat_id).format(chat_title), None
 
     return True, int(group_id), chat_title
