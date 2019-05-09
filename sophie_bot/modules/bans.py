@@ -6,11 +6,10 @@ from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import get_user_and_text, is_user_admin, user_link
 
 from telethon.tl.functions.channels import EditBannedRequest
-
 from telethon.tl.types import ChatBannedRights
 
 
-@register(incoming=True, pattern="^[/!]ban (.*)")
+@register(incoming=True, pattern="^[/!]ban ?(.*)")
 async def ban(event):
     user, reason = await get_user_and_text(event)
     if await ban_user(event, user['user_id'], event.chat_id, None) is True:
@@ -21,7 +20,7 @@ async def ban(event):
         await event.reply(text.format(user_str, admin_str, reason), link_preview=False)
 
 
-@register(incoming=True, pattern="^[/!]tban (.*)")
+@register(incoming=True, pattern="^[/!]tban ?(.*)")
 async def tban(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -75,7 +74,7 @@ async def ban_user(event, user_id, chat_id, time_val):
         embed_links=True,
     )
 
-    bot_id = await bot.get_self().id
+    bot_id = 885745757
 
     if user_id == bot_id:
         await event.reply(get_string("bans", "bot_cant_be_banned", event.chat_id))

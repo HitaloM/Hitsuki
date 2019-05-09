@@ -1,9 +1,12 @@
 import logging
-import ujson
+
+from pymongo import MongoClient
+
+import redis
 
 from telethon import TelegramClient
-from pymongo import MongoClient
-import redis
+
+import ujson
 
 # logging
 logging.basicConfig(

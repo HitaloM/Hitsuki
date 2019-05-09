@@ -1,8 +1,8 @@
 import asyncio
 
-from sophie_bot import bot, mongodb, redis, OWNER_ID
-from sophie_bot.modules.main import chat_term
+from sophie_bot import OWNER_ID, bot, mongodb, redis
 from sophie_bot.events import register
+from sophie_bot.modules.main import chat_term
 from sophie_bot.modules.notes import button_parser
 
 

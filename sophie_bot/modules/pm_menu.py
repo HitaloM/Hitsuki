@@ -2,8 +2,8 @@ from sophie_bot import bot
 from sophie_bot.events import register
 from sophie_bot.modules.language import lang_info
 
-from telethon.tl.custom import Button
 from telethon import events
+from telethon.tl.custom import Button
 
 
 @register(incoming=True, pattern="^[/!]start$")

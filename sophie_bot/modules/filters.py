@@ -1,11 +1,12 @@
 import re
-import ujson
 
 from sophie_bot import mongodb, redis
 from sophie_bot.events import flood_limit, register
-from sophie_bot.modules.users import is_user_admin
-from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.connections import get_conn_chat
+from sophie_bot.modules.notes import send_note
+from sophie_bot.modules.users import is_user_admin
+
+import ujson
 
 
 @register(incoming=True)

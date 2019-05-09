@@ -1,12 +1,11 @@
 import re
 
-from sophie_bot import mongodb, redis, bot
+from sophie_bot import bot, mongodb, redis
 from sophie_bot.events import register
 from sophie_bot.modules.users import is_user_admin
 
+from telethon import errors, events
 from telethon.tl.custom import Button
-from telethon import errors
-from telethon import events
 
 
 @register(incoming=True, pattern="^[/!]connect ?(.*)")

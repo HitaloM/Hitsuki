@@ -1,10 +1,10 @@
-from telethon import events
-
 from sophie_bot import bot, mongodb
 from sophie_bot.events import register
+from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_link
-from sophie_bot.modules.connections import get_conn_chat
+
+from telethon import events
 
 
 @bot.on(events.ChatAction)

@@ -1,15 +1,13 @@
-"""Notes module."""
-
 import re
 from time import gmtime, strftime
 
 from bson.objectid import ObjectId
 
-from sophie_bot import mongodb, bot
+from sophie_bot import bot, mongodb
 from sophie_bot.events import flood_limit, register
-from sophie_bot.modules.users import is_user_admin, user_link
-from sophie_bot.modules.language import get_string
 from sophie_bot.modules.connections import get_conn_chat
+from sophie_bot.modules.language import get_string
+from sophie_bot.modules.users import is_user_admin, user_link
 
 from telethon import custom, errors, events, utils
 from telethon.tl.custom import Button
