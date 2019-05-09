@@ -16,7 +16,7 @@ from telethon.tl.custom import Button
 
 
 @register(incoming=True, pattern="^[/!]save(\s)")
-async def event(event):
+async def save_note(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
         await event.reply(chat_id)
@@ -87,7 +87,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[/!]clear")
-async def event(event):
+async def clear_note(event):
     chat_id = event.chat_id
 
     K = await is_user_admin(chat_id, event.from_id)
@@ -107,7 +107,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[/!]noteinfo")
-async def event(event):
+async def noteinfo(event):
     chat_id = event.chat_id
 
     K = await is_user_admin(chat_id, event.from_id)
@@ -132,7 +132,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[/!]notes|[/!]saved")
-async def event(event):
+async def list_notes(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
         await event.reply(chat_id)
@@ -200,7 +200,7 @@ async def send_note(chat_id, group_id, msg_id, note_name, show_none=False, nofor
 
 
 @bot.on(events.CallbackQuery(data=re.compile(b'delnote_')))
-async def event(event):
+async def del_note_callback(event):
     user_id = event.query.user_id
     K = await is_user_admin(event.chat_id, user_id)
     if K is False:
@@ -217,7 +217,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[/!]get (.?)")
-async def event(event):
+async def get_note(event):
     raw_text = event.message.raw_text.split()
     note_name = raw_text[1].lower()
     print(len(raw_text))
@@ -232,7 +232,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^#")
-async def event(event):
+async def check_hashtag(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id)
     real_chat_id = event.chat_id
     if status is False:
@@ -272,7 +272,7 @@ def button_parser(chat_id, texts):
 
 
 @bot.on(events.CallbackQuery(data=re.compile(b'get_note_')))
-async def event(event):
+async def get_note_callback(event):
     data = str(event.data)
     event_data = re.search(r'get_note_(.*)_(.*)', data)
     notename = event_data.group(2)[:-1]
@@ -287,7 +287,7 @@ async def event(event):
 
 
 @bot.on(events.CallbackQuery(data=re.compile(b'get_alert_')))
-async def event(event):
+async def get_alert_callback(event):
     data = str(event.data)
     event_data = re.search(r'get_alert_(.*)_(.*)', data)
     notename = event_data.group(2)[:-1]
@@ -306,14 +306,15 @@ async def event(event):
 
 
 @bot.on(events.CallbackQuery(data=re.compile(b'get_delete_msg_')))
-async def event(event):
+async def del_message_callback(event):
     data = str(event.data)
     event_data = re.search(r'get_delete_msg_(.*)_(.*)', data)
     if 'admin' in event_data.group(2):
         user_id = event.query.user_id
         K = await is_user_admin(event.chat_id, user_id)
         if K is False:
-            await event.answer(get_string("notes", "only_admins_can_rmw", event.chat_id), alert=True)
+            await event.answer(
+                get_string("notes", "only_admins_can_rmw", event.chat_id), alert=True)
             return
     elif 'user' in event_data.group(2):
         pass

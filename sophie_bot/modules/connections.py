@@ -10,7 +10,7 @@ from telethon import events
 
 
 @register(incoming=True, pattern="^[/!]connect ?(.*)")
-async def event(event):
+async def connect_with_arg(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
         chat = event.chat_id
@@ -97,7 +97,7 @@ for start using connection.".format(chat_title))
 
 
 @register(incoming=True, pattern="^[/!]connect$")
-async def event(event):
+async def connect(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
         return
@@ -127,7 +127,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^/disconnect$")
-async def event(event):
+async def disconnect(event):
     user_id = event.from_id
     old = mongodb.connections.find_one({'user_id': user_id})
     if not old:

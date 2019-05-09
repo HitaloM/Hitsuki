@@ -7,14 +7,14 @@ from sophie_bot.modules.notes import button_parser
 
 
 @register(incoming=True, pattern="^[/!]term")
-async def event(event):
+async def term(event):
     message = event.text
     if not event.from_id == OWNER_ID:
         msg = await event.reply("Running...")
         await asyncio.sleep(2)
         await msg.edit("Blyat can't do it becuase u dumb.")
         return
-    
+
     msg = await event.reply("Running...")
     command = str(message)
     command = str(command[6:])
@@ -26,7 +26,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[/!]broadcast ?(.*)")
-async def event(event):
+async def broadcast(event):
     if not event.from_id == OWNER_ID:
         return
     chats = mongodb.chat_list.find({})
@@ -53,7 +53,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[/!]sbroadcast ?(.*)")
-async def event(event):
+async def sbroadcast(event):
     if not event.from_id == OWNER_ID:
         return
     text = event.message.text.split(" ", 1)[1]
@@ -72,7 +72,7 @@ async def event(event):
 
 # Check on smart broadcast
 @register(incoming=True)
-async def event(event):
+async def check_message_for_smartbroadcast(event):
     chat_id = event.chat_id
     match = mongodb.sbroadcast_list.find_one({'chat_id': chat_id})
     if match:
@@ -96,7 +96,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[/!]backup")
-async def event(event):
+async def backup(event):
     if not event.from_id == OWNER_ID:
         return
     msg = await event.reply("Running...")
@@ -106,7 +106,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[/!]purgecaches")
-async def event(event):
+async def purgecaches(event):
     if not event.from_id == OWNER_ID:
         return
     redis.flushdb()

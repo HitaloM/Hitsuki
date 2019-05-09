@@ -11,7 +11,7 @@ from telethon.tl.custom import Button
 
 
 @register(incoming=True, pattern="^[!/]warn(?!(\w)) ?(.*)")
-async def event(event):
+async def warn_user(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
         await event.reply("You're not an admin!")
@@ -74,7 +74,7 @@ async def event(event):
 
 
 @bot.on(events.CallbackQuery(data=re.compile(b'remove_warn_')))
-async def event(event):
+async def remove_warn(event):
     user_id = event.query.user_id
     K = await is_user_admin(event.chat_id, user_id)
     if K is False:
@@ -90,7 +90,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[!/]warns ?(.*)")
-async def event(event):
+async def user_warns(event):
     user, reason = await get_user_and_text(event)
     if not user:
         return
@@ -123,7 +123,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[!/]warnlimit\s ?(.*)")
-async def event(event):
+async def warnlimit(event):
     arg = event.pattern_match.group(1)
     old = mongodb.warnlimit.find_one({'chat_id': event.chat_id})
     if not arg:

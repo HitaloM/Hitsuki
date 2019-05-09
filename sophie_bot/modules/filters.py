@@ -9,7 +9,7 @@ from sophie_bot.modules.connections import get_conn_chat
 
 
 @register(incoming=True)
-async def event(event):
+async def check_message(event):
     cache = redis.get('filters_cache_{}'.format(event.chat_id))
     try:
         lst = ujson.decode(cache)
@@ -48,7 +48,7 @@ Please wait 3 minutes before using this filter')
 
 
 @register(incoming=True, pattern="^[/!]filter(?!s) (.*)")
-async def event(event):
+async def add_filter(event):
 
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -102,7 +102,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[/!]filters")
-async def event(event):
+async def list_filters(event):
 
     res = 2  # flood_limit(event.chat_id, 'filters')
     if res == 'EXIT':
@@ -136,7 +136,7 @@ Please wait 3 minutes before using this command')
 
 
 @register(incoming=True, pattern="^[/!]stop")
-async def event(event):
+async def stop_filter(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
         await event.reply("You don't have rights to stop filters here!")
@@ -145,7 +145,7 @@ async def event(event):
     handler = event.message.raw_text.split(" ")[1]
     regx = '{}'.format(handler)
     filter = mongodb.filters.find_one({'chat_id': event.chat_id,
-                                     "handler": {'$regex': regx}})
+                                      "handler": {'$regex': regx}})
     if not filter:
         await event.reply("I can't find this filter!")
         return

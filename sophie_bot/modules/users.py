@@ -9,7 +9,7 @@ import ujson
 
 
 @register()
-async def event(event):
+async def do_update_users(event):
     await update_users(event)
 
 
@@ -75,7 +75,7 @@ async def update_users(event):
                  'username': user.username,
                  'user_lang': user.lang_code})
     except Exception as err:
-        await event.edit(str(err))
+        await event.reply(str(err))
 
 
 async def update_admin_cache(chat_id):
@@ -110,8 +110,8 @@ async def get_chat_admins(chat_id):
     return admins
 
 
-@register(incoming=True, pattern="^[/!]adminlist|^/admins")
-async def event(event):
+@register(incoming=True, pattern="^[/!]adminlist")
+async def adminlist(event):
     res = flood_limit(event.chat_id, 'admins')
     if res == 'EXIT':
         return

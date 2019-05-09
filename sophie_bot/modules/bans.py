@@ -11,7 +11,7 @@ from telethon.tl.types import ChatBannedRights
 
 
 @register(incoming=True, pattern="^[/!]ban (.*)")
-async def event(event):
+async def ban(event):
     user, reason = await get_user_and_text(event)
     if await ban_user(event, user['user_id'], event.chat_id, None) is True:
         admin_str = user_link(event.from_id)
@@ -22,7 +22,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[/!]tban (.*)")
-async def event(event):
+async def tban(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
         await event.reply(get_string("bans", "u_dont_have_rights", event.chat_id))

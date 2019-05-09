@@ -22,7 +22,7 @@ logger.info("Languages loaded: {}".format(LANGS))
 
 
 @register(incoming=True, pattern="^[/!]lang$")
-async def handler(event):
+async def lang(event):
     res = flood_limit(event.chat_id, 'lang')
     if res == 'EXIT':
         return
@@ -46,7 +46,7 @@ Please wait 3 minutes before using this command')
 
 
 @register(incoming=True, pattern="^[/!]lang (.*)$")
-async def handler(event):
+async def lang_with_arg(event):
     res = flood_limit(event.chat_id, 'lang')
     if res == 'EXIT':
         return
@@ -76,7 +76,7 @@ Please wait 3 minutes before using this command')
 
 
 @bot.on(events.CallbackQuery(data=re.compile(b'select_lang_')))
-async def event(event):
+async def set_lang_callback(event):
     chat = event.chat_id
     K = await is_user_admin(chat, event.original_update.user_id)
     if K is False:

@@ -7,7 +7,7 @@ from telethon import events
 
 
 @register(incoming=True, pattern="^[/!]start$")
-async def event(event):
+async def start(event):
     if not event.chat_id == event.from_id:
         return
 
@@ -15,7 +15,7 @@ async def event(event):
 
 
 @bot.on(events.CallbackQuery(data='start'))
-async def event(event):
+async def start_callback(event):
     await get_start(event)
 
 
@@ -33,7 +33,7 @@ async def get_start(event):
 
 
 @bot.on(events.CallbackQuery(data='set_lang'))
-async def event(event):
+async def set_lang_callback(event):
     text, buttons = lang_info(event.chat_id, pm=True)
     buttons.append([
         Button.inline("Back", 'start')

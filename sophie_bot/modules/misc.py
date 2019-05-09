@@ -5,7 +5,7 @@ from sophie_bot.events import flood_limit, register
 
 
 @register(incoming=True, pattern="^[/!]id ?(.*)")
-async def event(event):
+async def id(event):
 
     res = flood_limit(event.chat_id, 'id')
     if res == 'EXIT':

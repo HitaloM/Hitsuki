@@ -49,7 +49,7 @@ async def handler(event):
 
 
 @register(incoming=True, pattern="^[/!]setwelcome (.*)")
-async def event(event):
+async def setwelcome(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
         await event.reply(chat_id)

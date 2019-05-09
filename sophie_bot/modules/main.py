@@ -9,7 +9,7 @@ from telethon import custom
 
 
 @register(incoming=True, pattern="^[/!]start$")
-async def event(event):
+async def start(event):
 
     res = flood_limit(event.chat_id, 'start')
     if res == 'EXIT':
@@ -65,7 +65,7 @@ async def chat_term(event, command):
 
 
 @register(incoming=True, pattern="^[/!]botchanges")
-async def event(event):
+async def botchanges(event):
     res = flood_limit(event.chat_id, 'botchanges')
     if res == 'EXIT':
         return
@@ -81,7 +81,7 @@ Please wait 3 minutes before using this command')
 
 
 @register(incoming=True, pattern="^[/!]stats")
-async def event(event):
+async def stats(event):
     res = flood_limit(event.chat_id, 'stats')
     if res == 'EXIT':
         return

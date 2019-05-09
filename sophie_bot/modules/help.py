@@ -19,7 +19,7 @@ Please wait 3 minutes before using this command')
 
 
 @register(incoming=True, pattern="^[/!]help$")
-async def event(event):
+async def help(event):
 
     res = flood_limit(event.chat_id, 'help')
     if res == 'EXIT':

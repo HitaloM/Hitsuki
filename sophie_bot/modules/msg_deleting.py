@@ -6,7 +6,7 @@ from sophie_bot.modules.users import is_user_admin
 
 
 @register(incoming=True, pattern="^[/!]purge")
-async def event(event):
+async def purge(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
         await event.reply("You don't have rights to purge here!")
@@ -35,7 +35,7 @@ async def event(event):
 
 
 @register(incoming=True, pattern="^[/!]del")
-async def event(event):
+async def del_message(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
         await event.reply("You don't have rights to delete messsages here!")
