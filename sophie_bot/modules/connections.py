@@ -179,7 +179,7 @@ async def get_conn_chat(user_id, chat_id, admin=False):
         'chat_id': int(group_id)})['chat_title']
 
     if admin is True:
-        K = await is_user_admin(chat_id, user_id)
+        K = await is_user_admin(group_id, user_id)
         if K is False:
             return False, "You should be admin in {}!".format(chat_title), None
 
