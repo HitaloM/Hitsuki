@@ -22,6 +22,8 @@ async def save_note(event):
     # send_id = event.chat_id
 
     note_name = event.message.text.split(" ", 2)[1].lower()
+    if note_name[0] == "#":
+        note_name = note_name[1:]
     file_id = None
     if len(event.message.text.split(" ")) > 2:
         prim_text = event.message.text.split(" ", 1)[1].split(" ", 1)[1]
@@ -218,7 +220,8 @@ async def del_note_callback(event):
 async def get_note(event):
     raw_text = event.message.raw_text.split()
     note_name = raw_text[1].lower()
-    print(len(raw_text))
+    if note_name[0] == "#":
+        note_name = note_name[1:]
     if len(raw_text) >= 3 and raw_text[2].lower() == "noformat":
         noformat = True
     else:
