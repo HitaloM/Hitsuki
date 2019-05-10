@@ -54,6 +54,14 @@ async def tban(event):
         text += "Reason: `{}`".format(reason)
         await event.reply(text, link_preview=False)
 
+@register(incoming=True, pattern="^[/!]kick ?(.*)")
+async def kick(event):
+    user, data = await get_user_and_text(event)  #No need data but to reurn "user" properly so...
+    if await kick_user(event, user['user_id'], event.chat_id) is True:
+        admin_str = user_link(event.from_id)
+        user_str = user_link(user['user_id'])
+        text = "{} kicked {}".format(admin_str, user_str)
+        await event.reply(text)
 
 async def ban_user(event, user_id, chat_id, time_val):
 
@@ -96,4 +104,53 @@ async def ban_user(event, user_id, chat_id, time_val):
         await event.edit(str(err))
         return False
 
+    return True
+
+async def kick_user(event, user_id, chat_id):
+    K = await is_user_admin(event.chat_id, event.from_id)
+    if K is False:
+        await event.reply(get_string("bans", "u_dont_have_rights", event.chat_id))
+        return
+    banned_rights = ChatBannedRights(
+           until_date=None,
+           send_messages=True,
+           view_messages=True
+           )
+
+    unbanned_rights = ChatBannedRights(
+            until_date=None,
+            view_messages=False,
+            send_messages=False
+            )
+
+
+    bot_id = 885745757
+    
+    if user_id == bot_id:
+        await event.reply(get_string("bans", "bot_cant_be_banned", event.chat_id))
+        return False
+    if await is_user_admin(chat_id, user_id) is True:
+        await event.reply("This is admin, I cant kick him")
+        return False
+
+    try:
+      await event.client(
+          EditBannedRequest(
+                   chat_id,
+                   user_id,
+                   banned_rights
+          )
+      )
+      
+      await event.client(
+              EditBannedRequest(
+                  chat_id,
+                  user_id,
+                  unbanned_rights
+                )
+            )
+
+    except Exception as err:
+        print(str(err))
+        return False
     return True
