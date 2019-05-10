@@ -1,4 +1,6 @@
 import asyncio
+import os
+from datetime import datetime
 
 from sophie_bot import OWNER_ID, bot, mongodb, redis
 from sophie_bot.events import register
@@ -111,3 +113,30 @@ async def purgecaches(event):
         return
     redis.flushdb()
     await event.reply("redis cache was cleaned.")
+
+
+@register(incoming=True, pattern="^[/!]botstop")
+async def purgecaches(event):
+    if not event.from_id == OWNER_ID:
+        return
+    await event.reply("Goodbye...")
+    exit(1)
+
+
+@register(incoming=True, pattern=".upload (.*)")
+async def upload_file(event):
+    input_str = event.pattern_match.group(1)
+    if os.path.exists(input_str):
+        await event.reply("Processing ...")
+        if os.path.exists(input_str):
+            # https://stackoverflow.com/a/678242/4723940
+            caption_rts = os.path.basename(input_str)
+            myfile = open(input_str, 'rb')
+            await event.client.send_file(
+                event.chat_id,
+                myfile,
+                caption=caption_rts,
+                force_document=False,
+                allow_cache=False,
+                reply_to=event.message.id
+            )
