@@ -1,0 +1,56 @@
+{"language_info": {
+    "name": "Indonesian",
+    "small_name": "imdo",
+    "flag": "🇮🇩",
+    "code": "id",
+    "translators": [492124491]
+},
+ "STRINGS": {
+    "notes": {
+        "notelist_no_notes": "Tidak ada catatan di obrolan ini!",
+        "notelist_header": "**Catatan di **{}:\n",
+        "no_right_save_note": "Anda tidak punya kewenangan untuk menyimpan catatan disini!",
+        "saved": "disimpan",
+        "updated": "diupdate",
+        "note_saved_or_updated" :"**Catatan {} {} di {}!**\n",
+        "you_can_get_note": "Anda bisa mendapatkan catatan dengan `/get {nama}, atau `#{nama}`",
+        "dont_have_rights_to_save": "Anda tidak memiliko kewenangan untuk menyimpan nktes disinj!",
+        "del_note": "Menghapus catatan",
+        "note_removed": "Catatan {} dihapus!",
+        "cant_find_note": "Saya tidak dapat menemukan catatan ini!",
+        "note_info_title": "**Info catatan**\n",
+        "note_info_note": "Catatan: `{}`\n",
+        "note_info_updated": "Update terbaru pads: `{}` oleh {}\n",
+        "note_info_created": "Catatan dibuat pada: `{}` oleh {}\n",
+        "note_info_crt_not_cached": "Creator tidak dicache, Saya tidak bisa menemukannya .\n",
+        "note_not_found": "Catatan tidak ditemukan!",
+        "note_deleted_by": "Catatan {} dihapus oleh {}.",
+        "user_blocked": "Tulis /start pada pm saya dan klik tombol lagi!",
+        "note_so_big": "Catatan ini lebih besar dari batasan telegram 200 simbol!",
+        "only_admins_can_rmw": "Hanya admin yang dapat menghapus pesan ini",
+        "delmsg_no_arg": "tombol deletemsg hanya dapat mengandung argumen admin an user!"
+    },
+    "bans": {
+        "user_banned": "Pengguna {} diblokir di {}!\n",
+        "reason": "Alasan",
+        "u_dont_have_rights": "Anda tidak mempunyai kewenangan untuk memblokir disini!",
+        "time_var_incorrect": "Satuan waktu tidak benar!",
+        "bot_cant_be_banned": "Apa kamu gila?! Blokir diri sendirif!"
+    },
+    "connections": {
+        "cant_find_chat_use_id": "Saya tidak bisa menemukan obrolan, silakan coba dengan id obrolan.",
+        "cant_find_chat": "Saya tidak dapat menemukan obrolan",
+        "not_in_group": "Anda tidak berada di grup koneksi, gabung dan tulis pesan apa saja.",
+        "connected": "Berhasil terhubung ke **{}**!",
+        "connected_pm_to_me": "Pm anda sudah terhubung ke **{}**! Tulis ke @rSophieBot untuk memulai menggunakan koneksi.",
+        "pm_connected": "Pm anda berhasil terhubung dengan **{}**!",
+        "history_empty": "Anda tidak terhubung dengan obrolan apapun dalam sejarah, koneksikan melalui `/connect <id obrolan>`",
+        "connected_chat": "**Obrolan yang terhubung saat ini:**\n`",
+        "select_chat_to_connect": "`\n\n**Pilih obrolan untuk menghubungkan :**",
+        "u_wasnt_connected": "Anda belum pernah mengoneksikan obrolan sebelumnya!",
+        "disconnected": "Anda melepaskan koneksi dari obrolan {}.",
+        "not_in_chat": "Anda tidak berada di obrolan ini lagi, saya akan melepaskan koneksi anda.",
+        "u_should_be_admin": "Anda harus menjadi admin di {}!"
+    }
+ }
+}

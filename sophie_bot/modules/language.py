@@ -3,7 +3,7 @@ import re
 
 from sophie_bot import bot, logger, mongodb, redis
 from sophie_bot.events import flood_limit, register
-from sophie_bot.modules.users import is_user_admin
+from sophie_bot.modules.users import is_user_admin, user_link
 
 from telethon import events
 from telethon.tl.custom import Button
@@ -25,7 +25,7 @@ logger.info("Languages loaded: {}".format(LANGS))
 
 @register(incoming=True, pattern="^[/!]lang$")
 async def lang(event):
-    res = flood_limit(event.chat_id, 'lang')
+    res = flood_limit(event.chat_id, 'lang11')
     if res == 'EXIT':
         return
     elif res is True:
@@ -91,11 +91,15 @@ async def set_lang_callback(event):
     if old:
         mongodb.notes.delete_one({'_id': old['_id']})
     mongodb.lang.insert_one({'chat_id': chat, 'lang': lang})
-    await event.edit(
-        "Language changed to **{}**!".format(
-            LANGUAGES[lang]["language_info"]["name"] + " \
-                " + LANGUAGES[lang]["language_info"]["flag"]
-        ))
+    text = "Language changed to **{}**!".format(
+        LANGUAGES[lang]["language_info"]["name"] + " " + LANGUAGES[lang]["language_info"]["flag"])
+    if 'translators' in LANGUAGES[lang]["language_info"]:
+        text += "\n\n**Translators:**\n"
+        for user in LANGUAGES[lang]["language_info"]['translators']:
+            text += "• "
+            text += await user_link(user)
+            text += '\n'
+    await event.edit(text)
 
 
 def get_string(module, text, chat_id):
