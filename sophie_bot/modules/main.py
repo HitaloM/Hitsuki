@@ -95,8 +95,12 @@ Please wait 3 minutes before using this command')
     chats = mongodb.chat_list.count()
     text += "{} total users, in {} chats\n".format(usrs, chats)
     db = mongodb.command("dbstats")
-    text += 'Database size is {}, free {}'.format(
-        convert_size(db['dataSize']), convert_size(db['fsTotalSize'] - db['fsUsedSize']))
+    if hasattr(db, 'fsTotalSize'):
+        text += 'Database size is {}, free {}'.format(
+            convert_size(db['dataSize']), convert_size(db['fsTotalSize'] - db['fsUsedSize']))
+    else:
+        text += 'Database size is {}, free 512M'.format(
+            convert_size(db['storageSize']))
     await event.reply(text)
 
 
