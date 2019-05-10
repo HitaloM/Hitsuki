@@ -1,9 +1,8 @@
 import time
 
-from sophie_bot import bot
 from sophie_bot.events import register
 from sophie_bot.modules.language import get_string
-from sophie_bot.modules.users import get_user_and_text, is_user_admin, user_link
+from sophie_bot.modules.users import get_user, get_user_and_text, is_user_admin, user_link
 
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
@@ -54,17 +53,18 @@ async def tban(event):
         text += "Reason: `{}`".format(reason)
         await event.reply(text, link_preview=False)
 
+
 @register(incoming=True, pattern="^[/!]kick ?(.*)")
 async def kick(event):
-    user, data = await get_user_and_text(event)  #No need data but to reurn "user" properly so...
+    user = await get_user(event)
     if await kick_user(event, user['user_id'], event.chat_id) is True:
         admin_str = user_link(event.from_id)
         user_str = user_link(user['user_id'])
         text = "{} kicked {}".format(admin_str, user_str)
         await event.reply(text)
 
-async def ban_user(event, user_id, chat_id, time_val):
 
+async def ban_user(event, user_id, chat_id, time_val):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
         await event.reply(get_string("bans", "u_dont_have_rights", event.chat_id))
@@ -106,26 +106,26 @@ async def ban_user(event, user_id, chat_id, time_val):
 
     return True
 
+
 async def kick_user(event, user_id, chat_id):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
         await event.reply(get_string("bans", "u_dont_have_rights", event.chat_id))
         return
     banned_rights = ChatBannedRights(
-           until_date=None,
-           send_messages=True,
-           view_messages=True
-           )
+        until_date=None,
+        send_messages=True,
+        view_messages=True
+    )
 
     unbanned_rights = ChatBannedRights(
-            until_date=None,
-            view_messages=False,
-            send_messages=False
-            )
-
+        until_date=None,
+        view_messages=False,
+        send_messages=False
+    )
 
     bot_id = 885745757
-    
+
     if user_id == bot_id:
         await event.reply(get_string("bans", "bot_cant_be_banned", event.chat_id))
         return False
@@ -134,21 +134,21 @@ async def kick_user(event, user_id, chat_id):
         return False
 
     try:
-      await event.client(
-          EditBannedRequest(
-                   chat_id,
-                   user_id,
-                   banned_rights
-          )
-      )
-      
-      await event.client(
-              EditBannedRequest(
-                  chat_id,
-                  user_id,
-                  unbanned_rights
-                )
+        await event.client(
+            EditBannedRequest(
+                chat_id,
+                user_id,
+                banned_rights
             )
+        )
+
+        await event.client(
+            EditBannedRequest(
+                chat_id,
+                user_id,
+                unbanned_rights
+            )
+        )
 
     except Exception as err:
         print(str(err))
