@@ -12,8 +12,8 @@ from telethon.tl.types import ChatBannedRights
 async def ban(event):
     user, reason = await get_user_and_text(event)
     if await ban_user(event, user['user_id'], event.chat_id, None) is True:
-        admin_str = user_link(event.from_id)
-        user_str = user_link(user['user_id'])
+        admin_str = await user_link(event.from_id)
+        user_str = await user_link(user['user_id'])
         text = get_string("bans", "user_banned", event.chat_id)
         text += get_string("bans", "reason", event.chat_id)
         await event.reply(text.format(user_str, admin_str, reason), link_preview=False)
@@ -46,8 +46,8 @@ async def tban(event):
             await event.reply(get_string("bans", "time_var_incorrect", event.chat_id))
 
     if await ban_user(event, user.id, event.chat_id, bantime) is True:
-        admin_str = user_link(event.from_id)
-        user_str = user_link(user['user_id'])
+        admin_str = await user_link(event.from_id)
+        user_str = await user_link(user['user_id'])
         text = "User {} banned by {}!\n".format(user_str, admin_str)
         text += "For `{}` {}\n".format(time_val[:-1], unit_str)
         text += "Reason: `{}`".format(reason)
@@ -58,10 +58,28 @@ async def tban(event):
 async def kick(event):
     user = await get_user(event)
     if await kick_user(event, user['user_id'], event.chat_id) is True:
-        admin_str = user_link(event.from_id)
-        user_str = user_link(user['user_id'])
-        text = "{} kicked {}".format(admin_str, user_str)
-        await event.reply(text)
+        admin_str = await user_link(event.from_id)
+        user_str = await user_link(user['user_id'])
+        text = get_string("bans", "user_kicked", event.chat_id)
+        await event.reply(text.format(admin_str, user_str))
+
+@register(incoming=True, pattern="[/!]unban ?(.*)")
+async def unban(event):
+    user, data = await get_user_and_text(event)
+    if await unban_user(event, user['user_id'], event.chat_id):
+        admin_str = await user_link(event.from_id)
+        user_str = await user_link(user['user_id'])
+        text = get_string("bans", "user_unbanned", event.chat_id)
+        await event.reply(text.format(admin_str, user_str))
+
+@register(incoming=True, pattern="[/!]mute ?(.*)")
+async def muter(event):
+    user, data = await get_user_and_text(event)
+    if await mute_user(event, user['user_id'], event.chat_id):
+       admin_str = await user_link(event.from_id)
+       user_str = await user_link(user['user_id'])
+       text = get_string("bans", "user_mooted", event.chat_id)
+       await event.reply(text.format(admin_str, user_str))
 
 
 async def ban_user(event, user_id, chat_id, time_val):
@@ -88,7 +106,7 @@ async def ban_user(event, user_id, chat_id, time_val):
         await event.reply(get_string("bans", "bot_cant_be_banned", event.chat_id))
         return False
     if await is_user_admin(chat_id, user_id) is True:
-        await event.reply("This is admin, i can't ban him.")
+        await event.reply(get_string("bans", "user_admin_ban", event.chat_id))
         return False
 
     try:
@@ -110,7 +128,7 @@ async def ban_user(event, user_id, chat_id, time_val):
 async def kick_user(event, user_id, chat_id):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights", event.chat_id))
+        await event.reply(get_string("bans", "u_dont_have_rights_kick", event.chat_id))
         return
     banned_rights = ChatBannedRights(
         until_date=None,
@@ -127,10 +145,10 @@ async def kick_user(event, user_id, chat_id):
     bot_id = 885745757
 
     if user_id == bot_id:
-        await event.reply(get_string("bans", "bot_cant_be_banned", event.chat_id))
+        await event.reply(get_string("bans", "bot_cant_be_kicked", event.chat_id))
         return False
     if await is_user_admin(chat_id, user_id) is True:
-        await event.reply("This is admin, I cant kick him")
+        await event.reply(get_string("bans", "user_admin_kick", event.chat_id))
         return False
 
     try:
@@ -150,6 +168,76 @@ async def kick_user(event, user_id, chat_id):
             )
         )
 
+    except Exception as err:
+        print(str(err))
+        return False
+    return True
+
+async def unban_user(event, user_id, chat_id):
+     K = await is_user_admin(event.chat_id, event.from_id)
+     if K is False:
+         await event.reply(get_string("bans", "u_dont_have_rights_unban", event.chat_id))
+         return
+
+     unbanned_rights = ChatBannedRights(
+        until_date=None,
+        view_messages=False,
+        send_messages=False,
+        send_media=False,
+        send_stickers=False,
+        send_gifs=False,
+        send_games=False,
+        send_inline=False,
+        embed_links=False,
+     )
+
+     bot_id = 885745757
+    
+     if user_id == bot_id:
+         await event.reply(get_string("bans", "bot_cant_be_unbanned", event.chat_id))
+         return False
+     if await is_user_admin(chat_id, user_id) is True:
+         await event.reply(get_string("bans", "user_admin_unban", event.chat_id))
+         return False
+     try:
+         await event.client(
+             EditBannedRequest(
+                 chat_id,
+                 user_id,
+                 unbanned_rights
+             )
+         )
+     except Exception as err:
+         print(str(err))
+         return False
+     return True
+
+async def mute_user(event, user_id, chat_id):
+    K = await is_user_admin(event.chat_id, event.from_id)
+    if K is False:
+        await event.reply(get_string("bans", "u_dont_have_rights", event.chat_id))
+        return
+    muted_rights = ChatBannedRights(
+            until_date=None,
+            send_messages=True
+        )
+
+    bot_id = 885745757
+
+    if user_id == bot_id:
+        await event.reply(get_string("bans", "bot_cant_be_muted", event.chat_id))
+        return False
+    if await is_user_admin(chat_id, user_id) is None:
+        await event.reply(get_string("bans", "user_admin_mute", event.chat_id))
+        return False
+    try:
+        await event.client(
+            EditBannedRequest(
+                chat_id,
+                user_id,
+                muted_rights
+            )
+        )
     except Exception as err:
         print(str(err))
         return False
