@@ -2,7 +2,8 @@
     "name": "Russian",
     "small_name": "rus",
     "flag": "🇷🇺",
-    "code": "ru"
+    "code": "ru",
+    "translators": [483808054]
 },
 "STRINGS":{
     "notes": {
