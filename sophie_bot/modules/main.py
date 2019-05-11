@@ -5,32 +5,6 @@ import subprocess
 from sophie_bot import mongodb
 from sophie_bot.events import flood_limit, register
 
-from telethon import custom
-
-
-@register(incoming=True, pattern="^[/!]start$")
-async def start(event):
-
-    res = flood_limit(event.chat_id, 'start')
-    if res == 'EXIT':
-        return
-    elif res is True:
-        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this command')
-        return
-
-    if not event.from_id == event.chat_id:
-        await event.reply('Hey there, My name is Sophie!')
-        return
-
-    text = "Hey there! My name is Sophie :3, I help you manage your group and more!"
-    text += "\n__yea__ \n**yea** \n`yea`"
-    inline = [[custom.Button.url('Help', 'google.com')]]
-    inline += [[custom.Button.url('Group', 't.me/ok'),
-               custom.Button.url('Channel', 't.me/ok')]]
-
-    await event.reply(text, buttons=inline)
-
 
 async def term(command):
     process = await asyncio.create_subprocess_shell(

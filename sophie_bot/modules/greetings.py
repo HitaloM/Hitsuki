@@ -15,7 +15,7 @@ async def handler(event):
         user_id = event.action_message.from_id
         welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
         if not welcome:
-            await event.reply("Welcome! How are you?".format())
+            await event.reply("Welcome! How are you?")
         elif welcome['enabled'] is False:
             return
         else:

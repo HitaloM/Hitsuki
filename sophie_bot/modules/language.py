@@ -102,15 +102,15 @@ async def set_lang_callback(event):
     await event.edit(text)
 
 
-def get_string(module, text, chat_id):
+def get_string(module, text, chat_id, dir="STRINGS"):
     lang = get_chat_lang(chat_id)
 
-    if module in LANGUAGES[lang]['STRINGS'] and \
-            text in LANGUAGES[lang]['STRINGS'][module]:
-        return LANGUAGES[lang]['STRINGS'][module][text]
+    if module in LANGUAGES[lang][dir] and \
+            text in LANGUAGES[lang][dir][module]:
+        return LANGUAGES[lang][dir][module][text]
 
-    if text in LANGUAGES['en']['STRINGS'][module]:
-        return LANGUAGES['en']['STRINGS'][module][text]
+    if text in LANGUAGES['en'][dir][module]:
+        return LANGUAGES['en'][dir][module][text]
     return text
 
 
