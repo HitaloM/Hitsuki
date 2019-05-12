@@ -28,6 +28,7 @@ TOKEN = conf["basic"]["bot_token"]
 MONGO_CONN = conf["basic"]["mongo_conn"]
 MONGO_PORT = conf["basic"]["mongo_port"]
 NAME = TOKEN.split(':')[0]
+BOT_NICK = conf["basic"]["bot_nick"]
 
 bot = TelegramClient(NAME, API_ID, API_HASH)
 

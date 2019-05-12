@@ -1,6 +1,6 @@
 import re
 
-from sophie_bot import bot, logger
+from sophie_bot import BOT_NICK, bot, logger
 from sophie_bot.events import register
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import LANGUAGES, lang_info, get_string, get_chat_lang
@@ -17,7 +17,7 @@ HELP = sorted(HELP)
 logger.info("Help loaded for: {}".format(HELP))
 
 
-@register(incoming=True, pattern="^[/!]start$")
+@register(incoming=True, pattern="^[/!]start ?(@)?(?(1){})$".format(BOT_NICK))
 async def start(event):
     if await flood_limit(event, 'start') is False:
         return

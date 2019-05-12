@@ -2,7 +2,7 @@ import asyncio
 import math
 import subprocess
 
-from sophie_bot import mongodb
+from sophie_bot import BOT_NICK, mongodb
 from sophie_bot.events import register
 from sophie_bot.modules.flood import flood_limit
 
@@ -39,7 +39,7 @@ async def chat_term(event, command):
     return result
 
 
-@register(incoming=True, pattern="^[/!]botchanges")
+@register(incoming=True, pattern="^[/!]botchanges ?(@)?(?(1){})$".format(BOT_NICK))
 async def botchanges(event):
     if await flood_limit(event, 'botchanges') is False:
         return
@@ -50,7 +50,7 @@ async def botchanges(event):
     await event.reply(result)
 
 
-@register(incoming=True, pattern="^[/!]stats")
+@register(incoming=True, pattern="^[/!]stats ?(@)?(?(1){})$".format(BOT_NICK))
 async def stats(event):
     if await flood_limit(event, 'stats') is False:
         return

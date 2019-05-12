@@ -1,6 +1,6 @@
 import re
 
-from sophie_bot import bot, mongodb, redis
+from sophie_bot import BOT_NICK, bot, mongodb, redis
 from sophie_bot.events import register
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import is_user_admin
@@ -9,7 +9,7 @@ from telethon import errors, events
 from telethon.tl.custom import Button
 
 
-@register(incoming=True, pattern="^[/!]connect ?(.*)")
+@register(incoming=True, pattern="^[/!]connect ?(@{})?(.*)".format(BOT_NICK))
 async def connect_with_arg(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
@@ -96,7 +96,7 @@ async def connect_with_arg(event):
         await event.reply(get_string("connections", "pm_connected", chat).format(chat_title))
 
 
-@register(incoming=True, pattern="^[/!]connect$")
+@register(incoming=True, pattern="^[/!]connect ?(@)?(?(1){})$".format(BOT_NICK))
 async def connect(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
@@ -124,7 +124,7 @@ async def connect(event):
     await event.reply(text, buttons=buttons)
 
 
-@register(incoming=True, pattern="^/disconnect$")
+@register(incoming=True, pattern="^/disconnect ?(@)?(?(1){})$".format(BOT_NICK))
 async def disconnect(event):
     user_id = event.from_id
     old = mongodb.connections.find_one({'user_id': user_id})

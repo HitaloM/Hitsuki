@@ -1,12 +1,13 @@
+from sophie_bot import BOT_NICK
 from sophie_bot.events import register
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.users import get_user, user_link
 
 
-@register(incoming=True, pattern="^[/!]id ?(.*)")
+@register(incoming=True, pattern="^[/!]id ?(@{})?(.*)".format(BOT_NICK))
 async def id(event):
 
-    if await flood_limit(event.chat_id, 'id') is False:
+    if await flood_limit(event, 'id') is False:
         return
 
     text = "Your id: `{}`\n".format(event.from_id)
@@ -24,6 +25,6 @@ async def id(event):
     else:
         user = await get_user(event)
         userl = await user_link(user['user_id'])
-        text += "{} user id - `{}`\n".format(userl, user['user_id'])
+        text += "{} user id: `{}`\n".format(userl, user['user_id'])
 
     await event.reply(text)

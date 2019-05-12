@@ -3,7 +3,7 @@ from time import gmtime, strftime
 
 from bson.objectid import ObjectId
 
-from sophie_bot import bot, mongodb
+from sophie_bot import BOT_NICK, bot, mongodb
 from sophie_bot.events import register
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.language import get_string
@@ -14,7 +14,7 @@ from telethon import custom, errors, events, utils
 from telethon.tl.custom import Button
 
 
-@register(incoming=True, pattern="^[/!]save(\s)")
+@register(incoming=True, pattern="^[/!]save(?!d) ?(@{})?(.*)".format(BOT_NICK))
 async def save_note(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
@@ -87,7 +87,7 @@ async def save_note(event):
     await event.reply(text, buttons=buttons)
 
 
-@register(incoming=True, pattern="^[/!]clear")
+@register(incoming=True, pattern="^[/!]clear ?(@{})?(.*)".format(BOT_NICK))
 async def clear_note(event):
     chat_id = event.chat_id
 
@@ -97,7 +97,7 @@ async def clear_note(event):
             "notes", "dont_have_rights_to_save", chat_id))
         return
 
-    note_name = event.message.text.split(" ", 2)[1]
+    note_name = event.pattern_match.group(2)
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if note:
         mongodb.notes.delete_one({'_id': note['_id']})
@@ -107,7 +107,7 @@ async def clear_note(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^[/!]noteinfo")
+@register(incoming=True, pattern="^[/!]noteinfo ?(@{})?(.*)".format(BOT_NICK))
 async def noteinfo(event):
     chat_id = event.chat_id
 
@@ -117,7 +117,7 @@ async def noteinfo(event):
             "notes", "dont_have_rights", chat_id))
         return
 
-    note_name = event.message.text.split(" ", 2)[1]
+    note_name = event.pattern_match.group(2)
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if not note:
         text = get_string("notes", "cant_find_note", chat_id)
@@ -132,7 +132,8 @@ async def noteinfo(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^[/!]notes|[/!]saved")
+@register(incoming=True, pattern="^[/!]notes ?(@)?(?(1){n})$|[/!]saved ?(@)?(?(1){n})$".format(
+    n=BOT_NICK))
 async def list_notes(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
@@ -212,7 +213,7 @@ async def del_note_callback(event):
         note['name'], link), link_preview=False)
 
 
-@register(incoming=True, pattern="^[/!]get (.?)")
+@register(incoming=True, pattern="^[/!]get ?(@{})?(.*)".format(BOT_NICK))
 async def get_note(event):
     raw_text = event.message.raw_text.split()
     note_name = raw_text[1].lower()
@@ -228,7 +229,7 @@ async def get_note(event):
             show_none=True, noformat=noformat)
 
 
-@register(incoming=True, pattern="^#")
+@register(incoming=True, pattern="^#(.*)")
 async def check_hashtag(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id)
     real_chat_id = event.chat_id

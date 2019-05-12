@@ -1,4 +1,4 @@
-from sophie_bot import bot, mongodb, redis
+from sophie_bot import BOT_NICK, bot, mongodb, redis
 from sophie_bot.events import register
 from sophie_bot.modules.flood import flood_limit
 
@@ -111,7 +111,7 @@ async def get_chat_admins(chat_id):
     return admins
 
 
-@register(incoming=True, pattern="^[/!]adminlist")
+@register(incoming=True, pattern="^[/!]adminlist ?(@)?(?(1){})".format(BOT_NICK))
 async def adminlist(event):
     if await flood_limit(event.chat_id, 'adminlist') is False:
         return

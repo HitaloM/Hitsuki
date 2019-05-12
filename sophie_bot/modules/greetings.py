@@ -1,4 +1,4 @@
-from sophie_bot import bot, mongodb
+from sophie_bot import BOT_NICK, bot, mongodb
 from sophie_bot.events import register
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.notes import send_note
@@ -52,13 +52,13 @@ async def handler(event):
                 event.chat_id, chat_id, event.action_message.id, text, show_none=True)
 
 
-@register(incoming=True, pattern="^[/!]setwelcome (.*)")
+@register(incoming=True, pattern="^[/!]setwelcome ?(@{})?(.*)".format(BOT_NICK))
 async def setwelcome(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
         await event.reply(chat_id)
         return
-    note_name = event.pattern_match.group(1)
+    note_name = event.pattern_match.group(2)
     note = mongodb.notes.find_one({
         'chat_id': chat_id,
         'name': note_name
@@ -77,7 +77,7 @@ async def setwelcome(event):
     await event.reply("Welcome set to note: `{}`".format(note_name))
 
 
-@register(incoming=True, pattern="^[/!]setwelcome$")
+@register(incoming=True, pattern="^[/!]setwelcome ?(@{})?(.*)".format(BOT_NICK))
 async def setwelcome_withot_args(event):
     if await flood_limit(event, 'setwelcome') is False:
         return

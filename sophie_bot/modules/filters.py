@@ -1,6 +1,6 @@
 import re
 
-from sophie_bot import mongodb, redis
+from sophie_bot import BOT_NICK, mongodb, redis
 from sophie_bot.events import register
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.notes import send_note
@@ -43,7 +43,7 @@ async def check_message(event):
                     await event.delete()
 
 
-@register(incoming=True, pattern="^[/!]filter(?!s) (.*)")
+@register(incoming=True, pattern="^[/!]filter(?!s) ?(@{})?(.*)".format(BOT_NICK))
 async def add_filter(event):
 
     K = await is_user_admin(event.chat_id, event.from_id)
@@ -97,7 +97,7 @@ async def add_filter(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^[/!]filters")
+@register(incoming=True, pattern="^[/!]filters ?(@)?(?(1){})$".format(BOT_NICK))
 async def list_filters(event):
 
     if await flood_limit(event, 'filters') is False:
@@ -126,14 +126,15 @@ async def list_filters(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^[/!]stop")
+@register(incoming=True, pattern="^[/!]stop ?(@{})?(.*)".format(BOT_NICK))
 async def stop_filter(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
         await event.reply("You don't have rights to stop filters here!")
         return
 
-    handler = event.message.raw_text.split(" ")[1]
+    handler = event.pattern_match.group(2)
+    print(handler)
     regx = '{}'.format(handler)
     filter = mongodb.filters.find_one({'chat_id': event.chat_id,
                                       "handler": {'$regex': regx}})
@@ -142,7 +143,7 @@ async def stop_filter(event):
         return
     mongodb.filters.delete_one({'_id': filter['_id']})
     update_handlers_cache(event.chat_id)
-    await event.reply("Filter {} deleted!".format(handler))
+    await event.reply("Filter `{}` deleted!".format(handler))
 
 
 def update_handlers_cache(chat_id):

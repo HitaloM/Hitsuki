@@ -2,7 +2,7 @@ import random
 import re
 import string
 
-from sophie_bot import WHITELISTED, bot, mongodb
+from sophie_bot import BOT_NICK, WHITELISTED, bot, mongodb
 from sophie_bot.events import register
 from sophie_bot.modules.bans import ban_user
 from sophie_bot.modules.users import get_chat_admins, get_user_and_text, is_user_admin, user_link
@@ -11,7 +11,7 @@ from telethon import events
 from telethon.tl.custom import Button
 
 
-@register(incoming=True, pattern="^[!/]warn(?!(\w)) ?(.*)")
+@register(incoming=True, pattern="^[!/]warn(?!(\w)) ?(@{})?(.*)".format(BOT_NICK))
 async def warn_user(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -90,7 +90,7 @@ async def remove_warn(event):
     await event.edit("Warn removed by {}".format(user_str), link_preview=False)
 
 
-@register(incoming=True, pattern="^[!/]warns ?(.*)")
+@register(incoming=True, pattern="^[!/]warns ?(@{})?(.*)".format(BOT_NICK))
 async def user_warns(event):
     user, reason = await get_user_and_text(event)
     if not user:
@@ -123,16 +123,16 @@ async def user_warns(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^[!/]warnlimit\s ?(.*)")
+@register(incoming=True, pattern="^[!/]warnlimit ?(@{})?(.*)".format(BOT_NICK))
 async def warnlimit(event):
-    arg = event.pattern_match.group(1)
+    arg = event.pattern_match.group(2)
     old = mongodb.warnlimit.find_one({'chat_id': event.chat_id})
     if not arg:
         if old:
             num = old['num']
         else:
             num = 3
-        await event.reply("Warn limit is currently `{}`".format(num))
+        await event.reply("Warn limit is currently: `{}`".format(num))
     else:
         if old:
             mongodb.warnlimit.delete_one({'_id': old['_id']})
