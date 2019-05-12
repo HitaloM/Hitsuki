@@ -4,6 +4,7 @@ from sophie_bot import BOT_NICK, mongodb, redis
 from sophie_bot.events import register
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.flood import flood_limit
+from sophie_bot.modules.language import get_string
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import is_user_admin
 
@@ -39,12 +40,11 @@ async def check_message(event):
 
 @register(incoming=True, pattern="^[/!]filter(?!s) ?(@{})?(.*)".format(BOT_NICK))
 async def add_filter(event):
-
+    chat_id = event.chat_id
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
-        await event.reply("You don't have rights to save filters here!")
+        await event.reply(get_string("filters", "dont_have_right", chat_id))
         return
-
     args = event.message.raw_text.split(" ")
     if len(args) < 3:
         await event.reply("args error")
@@ -56,31 +56,28 @@ async def add_filter(event):
         arg = args[3]
     else:
         arg = None
-    text = "Filter added\n"
-    text += "keyword: **{}**\n".format(handler)
+    text = get_string("filters", "filter_added", chat_id)
+    text += get_string("filters", "filter_keyword", chat_id).format(handler)
     if action == 'note':
         if not len(args) > 3:
-            await event.reply(
-                "Please write in arguments what note "
-                "you wanna send on this filter")
+            await event.reply(get_string("filters", "no_arg_note", chat_id))
             return
-        text += "Action: **send note** `{}`".format(arg)
-    elif action == 'tmute':
+        text += get_string("filters", "a_send_note", chat_id).format(arg)
+    elif action == 'tban':
         if not len(args) > 3:
-            await event.reply(
-                "Please write in arguments on what time you want mute user")
+            await event.reply(get_string("filters", "no_arg_tban", chat_id))
             return
-        text += "Action: **temrotary mute sender for** `{}`".format(str(arg))
+        text += get_string("filters", "no_arg_tban", chat_id).format(str(arg))
     elif action == 'delete':
-        text += "Action: **delete message**"
+        text += get_string("filters", "a_del", chat_id)
     elif action == 'ban':
-        text += "Action: **ban sender**"
+        text += get_string("filters", "a_ban", chat_id)
     elif action == 'mute':
-        text += "Action: **mute sender**"
+        text += get_string("filters", "a_mute", chat_id)
     elif action == 'kick':
-        text += "Action: **kick sender**"
+        text += get_string("filters", "a_kick", chat_id)
     else:
-        await event.reply("Wrong action! Read the help.")
+        await event.reply(get_string("filters", "wrong_action", chat_id))
         return
 
     mongodb.filters.insert_one(
@@ -93,10 +90,8 @@ async def add_filter(event):
 
 @register(incoming=True, pattern="^[/!]filters ?(@)?(?(1){})$".format(BOT_NICK))
 async def list_filters(event):
-
     if await flood_limit(event, 'filters') is False:
         return
-
     conn = await get_conn_chat(event.from_id, event.chat_id)
     if not conn[0] is True:
         await event.reply(conn[1])
@@ -104,10 +99,10 @@ async def list_filters(event):
     else:
         chat_id = conn[1]
         chat_title = conn[2]
-
     filters = mongodb.filters.find({'chat_id': chat_id})
-    text = "**Filters in {}:**\n".format(chat_title)
+    text = get_string("filters", "filters_in", chat_id).format(chat_title)
     H = 0
+
     for filter in filters:
         H += 1
         if filter['arg']:
@@ -116,7 +111,7 @@ async def list_filters(event):
         else:
             text += "- {} ({})\n".format(filter['handler'], filter['action'])
     if H == 0:
-        text = 'No filters in **{}**!'.format(chat_title)
+        text = get_string("filters", "no_filters_in", chat_id).format(chat_title)
     await event.reply(text)
 
 
@@ -124,7 +119,7 @@ async def list_filters(event):
 async def stop_filter(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
-        await event.reply("You don't have rights to stop filters here!")
+        await event.reply(get_string("filters", "no_rights_stop", event.chat_id))
         return
 
     handler = event.pattern_match.group(2)
@@ -133,11 +128,11 @@ async def stop_filter(event):
     filter = mongodb.filters.find_one({'chat_id': event.chat_id,
                                       "handler": {'$regex': regx}})
     if not filter:
-        await event.reply("I can't find this filter!")
+        await event.reply(get_string("filters", "cant_find_filter", event.chat_id))
         return
     mongodb.filters.delete_one({'_id': filter['_id']})
     update_handlers_cache(event.chat_id)
-    await event.reply("Filter `{}` deleted!".format(handler))
+    await event.reply(get_string("filters", "filter_deleted", event.chat_id).format(handler))
 
 
 def update_handlers_cache(chat_id):

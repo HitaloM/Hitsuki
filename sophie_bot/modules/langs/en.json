@@ -72,6 +72,27 @@
         "welcome_set_to_note": "Welcome set to note: `{}`",
         "welcome_is_note": "Welcome is note: `{}`",
         "welcome_is_default": "Welcome is default."
+    },
+    "filters": {
+        "dont_have_right": "You don't have rights to save filters here!",
+        "filter_added": "Filter added\n",
+        "filter_keyword": "keyword: **{}**\n",
+        "no_arg_note": "Please write in arguments what note you wanna send on this filter",
+        "a_send_note": "Action: **send note** `{}`",
+        "no_arg_tban": "Please write in arguments on what time you want ban user",
+        "a_tban": "Action: **temrotary ban sender for** `{}`",
+        "a_del": "Action: **delete message**",
+        "a_ban": "Action: **ban sender**",
+        "a_mute": "Action: **mute sender**",
+        "a_kick": "Action: **kick sender**",
+        "wrong_action": "Wrong action! Read the help.",
+
+        "no_filters_in": "No filters in **{}**!",
+        "filtes_in": "**Filters in {}:**\n",
+
+        "no_rights_stop": "You don't have rights to stop filters here!",
+        "cant_find_filter": "I can't find this filter!",
+        "filter_deleted": "Filter `{}` deleted!"
     }
  },
  "HELPS": {
