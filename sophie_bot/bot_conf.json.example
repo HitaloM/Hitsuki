@@ -1,12 +1,12 @@
 {"basic":{
-    "app_id": 20202020,
-    "app_hash": "15f6ng92ib02rv6hdznypchdaf2w9jco",
-    "bot_token": "676436262:CQnxOF8uVG8QO0eEyMUl3jR0jC9rpiyFzKk",
+    "app_id": "APP_ID",
+    "app_hash": "APP_HASH",
+    "bot_token": "BOT_TOKEN",
 
-    "owner_id": 483808054
+    "bot_nick": "BOT_NICK",
 
-    "owner_id": 483808054,
-    "mongo_port": 27017,
+    "owner_id": "YOUR_ID",
+    "mongo_port": "27017",
     "mongo_conn": "localhost"
 },
  "advanced":{
