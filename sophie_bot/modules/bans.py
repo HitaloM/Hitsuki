@@ -190,8 +190,8 @@ async def kick_user(event, user_id, chat_id):
 async def unban_user(event, user_id, chat_id):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights_unban",
-                          event.chat_id))
+        await event.reply(get_string(
+            "bans", "u_dont_have_rights_unban", event.chat_id))
         return
 
     unbanned_rights = ChatBannedRights(

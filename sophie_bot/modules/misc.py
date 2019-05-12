@@ -1,4 +1,3 @@
-from sophie_bot import mongodb
 from sophie_bot.events import flood_limit, register
 from sophie_bot.modules.users import get_user, user_link
 

@@ -1,6 +1,5 @@
 import asyncio
 import os
-from datetime import datetime
 
 from sophie_bot import OWNER_ID, bot, mongodb, redis
 from sophie_bot.events import register
@@ -50,8 +49,7 @@ async def broadcast(event):
             await msg.edit("Broadcasting to {} chats...".format(chats.count()))
     await msg.edit(
         "**Broadcast completed!** Message sended to `{}` chats successfully, \
-`{}` didn't received message.".format(
-            num_succ, num_fail))
+`{}` didn't received message.".format(num_succ, num_fail))
 
 
 @register(incoming=True, pattern="^[/!]sbroadcast ?(.*)")
@@ -70,7 +68,8 @@ async def sbroadcast(event):
         'all_chats': chats.count(),
         'recived_chats': 0
     })
-    await event.reply("Smart broadcast planned for `{}` chats".format(chats.count()))
+    await event.reply(
+        "Smart broadcast planned for `{}` chats".format(chats.count()))
 
 # Check on smart broadcast
 @register(incoming=True)
@@ -108,7 +107,7 @@ async def backup(event):
 
 
 @register(incoming=True, pattern="^[/!]purgecaches")
-async def purgecaches(event):
+async def purge_caches(event):
     if not event.from_id == OWNER_ID:
         return
     redis.flushdb()
@@ -116,7 +115,7 @@ async def purgecaches(event):
 
 
 @register(incoming=True, pattern="^[/!]botstop")
-async def purgecaches(event):
+async def bot_stop(event):
     if not event.from_id == OWNER_ID:
         return
     await event.reply("Goodbye...")
