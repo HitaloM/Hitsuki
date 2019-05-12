@@ -1,6 +1,6 @@
 import time
 
-from sophie_bot import BOT_NICK, bot
+from sophie_bot import WHITELISTED, BOT_NICK, bot
 from sophie_bot.events import register
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import (get_user, get_user_and_text,
@@ -109,6 +109,10 @@ async def ban_user(event, user_id, chat_id, time_val):
 
     bot_id = await bot.get_me()
     bot_id = bot_id.id
+
+    if str(user_id) in WHITELISTED:
+        await event.reply("This user is whitelisted")
+        return
 
     if user_id == bot_id:
         await event.reply(get_string("bans", "bot_cant_be_banned",
