@@ -33,7 +33,7 @@ BOT_NICK = conf["basic"]["bot_nick"]
 bot = TelegramClient(NAME, API_ID, API_HASH)
 
 # Init MongoDB
-mongodb = MongoClient(MONGO_CONN, MONGO_PORT).sophie
+mongodb = MongoClient(MONGO_CONN).sophie
 
 # Init Redis
 redis = redis.StrictRedis(
