@@ -41,7 +41,7 @@ async def chat_term(event, command):
 
 @register(incoming=True, pattern="^[/!]botchanges")
 async def botchanges(event):
-    if await flood_limit(event.chat_id, 'botchanges') is False:
+    if await flood_limit(event, 'botchanges') is False:
         return
     command = "git log --pretty=format:\"%an: %s\" -30"
     result = "**Bot changes:**\n"
@@ -52,7 +52,7 @@ async def botchanges(event):
 
 @register(incoming=True, pattern="^[/!]stats")
 async def stats(event):
-    if await flood_limit(event.chat_id, 'stats') is False:
+    if await flood_limit(event, 'stats') is False:
         return
     text = "**Stats**\n"
     usrs = mongodb.user_list.count()

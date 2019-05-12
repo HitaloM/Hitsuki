@@ -78,10 +78,11 @@ async def setwelcome(event):
 
 
 @register(incoming=True, pattern="^[/!]setwelcome$")
-async def setwelcome(event):
+async def setwelcome_withot_args(event):
     if await flood_limit(event, 'setwelcome') is False:
         return
-    status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, only_in_groups=True)
+    status, chat_id, chat_title = await get_conn_chat(
+        event.from_id, event.chat_id, only_in_groups=True)
     if status is False:
         await event.reply(chat_id)
         return
@@ -91,4 +92,3 @@ async def setwelcome(event):
         await event.reply("Welcome is note: `{}`".format(note_name))
     else:
         await event.reply("Welcome is default")
-
