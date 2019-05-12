@@ -2,7 +2,7 @@ import asyncio
 import math
 import subprocess
 
-from sophie_bot import mongodb
+from sophie_bot import mongodb, bot
 from sophie_bot.events import flood_limit, register
 
 
@@ -76,6 +76,7 @@ Please wait 3 minutes before using this command')
         text += 'Database size is {}, free 512M'.format(
             convert_size(db['storageSize']))
     await event.reply(text)
+
 
 
 def convert_size(size_bytes):

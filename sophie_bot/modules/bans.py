@@ -1,5 +1,6 @@
 import time
 
+from sophie_bot import bot
 from sophie_bot.events import register
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import (get_user, get_user_and_text,
@@ -106,7 +107,8 @@ async def ban_user(event, user_id, chat_id, time_val):
         embed_links=True,
     )
 
-    bot_id = 885745757
+    bot_id = await bot.get_me()
+    bot_id = bot_id.id
 
     if user_id == bot_id:
         await event.reply(get_string("bans", "bot_cant_be_banned",
@@ -151,7 +153,8 @@ async def kick_user(event, user_id, chat_id):
         send_messages=False
     )
 
-    bot_id = 885745757
+    bot_id = await bot.get_me()
+    bot_id = bot_id.id
 
     if user_id == bot_id:
         await event.reply(get_string("bans", "bot_cant_be_kicked",
@@ -203,7 +206,8 @@ async def unban_user(event, user_id, chat_id):
        embed_links=False,
     )
 
-    bot_id = 885745757
+    bot_id = await bot.get_me()
+    bot_id = bot_id.id
 
     if user_id == bot_id:
         await event.reply(get_string("bans", "bot_cant_be_unbanned",
@@ -238,7 +242,8 @@ async def mute_user(event, user_id, chat_id):
         send_messages=True
     )
 
-    bot_id = 885745757
+    bot_id = await bot.get_me()
+    bot_id = bot_id.id
 
     if user_id == bot_id:
         await event.reply(get_string("bans", "bot_cant_be_muted",
