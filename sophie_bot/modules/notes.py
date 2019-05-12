@@ -56,7 +56,7 @@ async def save_note(event):
         mongodb.notes.delete_one({'_id': old['_id']})
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
- 
+
     if not creator:
         creator = event.from_id
 

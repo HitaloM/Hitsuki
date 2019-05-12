@@ -45,10 +45,12 @@ async def lang(event):
 
 @register(incoming=True, pattern="^[/!]lang ?(@{})?(.*)".format(BOT_NICK))
 async def lang_with_arg(event):
+    if not event.pattern_match.group(2):
+        return
     if await flood_limit(event, 'lang') is False:
         return
 
-    arg = event.message.raw_text.split(" ", 2)[1]
+    arg = event.pattern_match.group(2)
 
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
