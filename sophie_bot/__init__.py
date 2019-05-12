@@ -19,8 +19,13 @@ f = open('sophie_bot/bot_conf.json', "r")
 conf = ujson.load(f)
 
 OWNER_ID = int(conf["basic"]["owner_id"])
+
+SUDO = list(conf["advanced"]["sudo"])
+SUDO.append(OWNER_ID)
+
 WHITELISTED = list(conf["advanced"]["whitelisted"])
-WHITELISTED.append(OWNER_ID)
+WHITELISTED = WHITELISTED + SUDO
+#WHITELISTED.append(OWNER_ID)
 
 API_ID = conf["basic"]["app_id"]
 API_HASH = conf["basic"]["app_hash"]

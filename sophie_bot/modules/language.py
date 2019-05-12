@@ -13,7 +13,7 @@ import ujson
 
 
 LANGUAGES = {}
-LANGS = ()
+LANGS = []
 
 for filename in os.listdir('sophie_bot/modules/langs'):
     f = open('sophie_bot/modules/langs/' + filename, "r")
