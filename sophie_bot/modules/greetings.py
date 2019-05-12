@@ -13,6 +13,9 @@ from telethon import events
 async def handler(event):
     print(event)
     if event.user_joined is True or event.user_added is True:
+        chat = event.chat_id
+        chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
+
         user_id = event.action_message.from_id
         bot_id = await bot.get_me()
         if bot_id.id == user_id:
@@ -56,6 +59,8 @@ async def handler(event):
 @register(incoming=True, pattern="^[/!]setwelcome ?(@{})?(.*)".format(BOT_NICK))
 async def setwelcome(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
+    chat = event.chat_id
+    chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
     if status is False:
         await event.reply(chat_id)
         return
@@ -80,6 +85,8 @@ async def setwelcome(event):
 
 @register(incoming=True, pattern="^[/!]setwelcome ?(@{})?(.*)".format(BOT_NICK))
 async def setwelcome_withot_args(event):
+    chat = event.chat_id
+    chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
     if await flood_limit(event, 'setwelcome') is False:
         return
     status, chat_id, chat_title = await get_conn_chat(
