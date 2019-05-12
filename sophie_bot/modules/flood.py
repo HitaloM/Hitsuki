@@ -1,4 +1,4 @@
-from sophie_bot import redis
+from sophie_bot import redis, SUDO
 
 
 async def flood_limit(event, command):
@@ -6,6 +6,9 @@ async def flood_limit(event, command):
         chat_id = event.chat_id
     else:
         chat_id = event.from_id
+
+    if event.from_id in SUDO:
+        return
 
     db_name = 'flood_command_{}_{}'.format(chat_id, command)
     redis.incr(db_name, 1)
