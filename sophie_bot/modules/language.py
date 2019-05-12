@@ -2,8 +2,9 @@ import os
 import re
 
 from sophie_bot import bot, logger, mongodb, redis
-from sophie_bot.events import flood_limit, register
+from sophie_bot.events import register
 from sophie_bot.modules.users import is_user_admin, user_link
+from sophie_bot.modules.flood import flood_limit
 
 from telethon import events
 from telethon.tl.custom import Button
@@ -25,12 +26,7 @@ logger.info("Languages loaded: {}".format(LANGS))
 
 @register(incoming=True, pattern="^[/!]lang$")
 async def lang(event):
-    res = flood_limit(event.chat_id, 'lang11')
-    if res == 'EXIT':
-        return
-    elif res is True:
-        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this command')
+    if await flood_limit(event.chat_id, 'lang') is False:
         return
 
     if event.chat_id == event.from_id:
@@ -49,12 +45,7 @@ Please wait 3 minutes before using this command')
 
 @register(incoming=True, pattern="^[/!]lang (.*)$")
 async def lang_with_arg(event):
-    res = flood_limit(event.chat_id, 'lang')
-    if res == 'EXIT':
-        return
-    elif res is True:
-        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this command')
+    if await flood_limit(event.chat_id, 'lang') is False:
         return
 
     arg = event.message.raw_text.split(" ", 2)[1]

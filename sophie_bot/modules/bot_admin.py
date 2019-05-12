@@ -7,22 +7,15 @@ from sophie_bot.modules.main import chat_term
 from sophie_bot.modules.notes import button_parser
 
 
-@register(incoming=True, pattern="^[/!]term")
+@register(incoming=True, pattern="^[/!]term (.*)")
 async def term(event):
-    message = event.text
     if not event.from_id == OWNER_ID:
-        msg = await event.reply("Running...")
-        await asyncio.sleep(2)
-        await msg.edit("Blyat can't do it becuase u dumb.")
         return
 
     msg = await event.reply("Running...")
-    command = str(message)
-    command = str(command[6:])
-
+    command = str(event.message.text.split(" ", 1)[1])
     result = "**Shell:**\n"
     result += await chat_term(event, command)
-
     await msg.edit(result)
 
 
@@ -128,7 +121,6 @@ async def upload_file(event):
     if os.path.exists(input_str):
         await event.reply("Processing ...")
         if os.path.exists(input_str):
-            # https://stackoverflow.com/a/678242/4723940
             caption_rts = os.path.basename(input_str)
             myfile = open(input_str, 'rb')
             await event.client.send_file(

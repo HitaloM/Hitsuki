@@ -3,7 +3,8 @@ import math
 import subprocess
 
 from sophie_bot import mongodb
-from sophie_bot.events import flood_limit, register
+from sophie_bot.events import register
+from sophie_bot.modules.flood import flood_limit
 
 
 async def term(command):
@@ -40,12 +41,7 @@ async def chat_term(event, command):
 
 @register(incoming=True, pattern="^[/!]botchanges")
 async def botchanges(event):
-    res = flood_limit(event.chat_id, 'botchanges')
-    if res == 'EXIT':
-        return
-    elif res is True:
-        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this command')
+    if await flood_limit(event.chat_id, 'botchanges') is False:
         return
     command = "git log --pretty=format:\"%an: %s\" -30"
     result = "**Bot changes:**\n"
@@ -56,14 +52,8 @@ Please wait 3 minutes before using this command')
 
 @register(incoming=True, pattern="^[/!]stats")
 async def stats(event):
-    res = flood_limit(event.chat_id, 'stats')
-    if res == 'EXIT':
+    if await flood_limit(event.chat_id, 'stats') is False:
         return
-    elif res is True:
-        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this command')
-        return
-
     text = "**Stats**\n"
     usrs = mongodb.user_list.count()
     chats = mongodb.chat_list.count()

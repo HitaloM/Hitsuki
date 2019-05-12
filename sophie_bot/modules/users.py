@@ -1,5 +1,6 @@
 from sophie_bot import bot, mongodb, redis
-from sophie_bot.events import flood_limit, register
+from sophie_bot.events import register
+from sophie_bot.modules.flood import flood_limit
 
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import ChannelParticipantsAdmins
@@ -112,12 +113,7 @@ async def get_chat_admins(chat_id):
 
 @register(incoming=True, pattern="^[/!]adminlist")
 async def adminlist(event):
-    res = flood_limit(event.chat_id, 'admins')
-    if res == 'EXIT':
-        return
-    elif res is True:
-        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this command')
+    if await flood_limit(event.chat_id, 'adminlist') is False:
         return
     msg = await event.reply("Updating cache now...")
     admin_list = await bot.get_participants(

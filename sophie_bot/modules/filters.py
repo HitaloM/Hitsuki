@@ -1,10 +1,11 @@
 import re
 
 from sophie_bot import mongodb, redis
-from sophie_bot.events import flood_limit, register
+from sophie_bot.events import register
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import is_user_admin
+from sophie_bot.modules.flood import flood_limit
 
 import ujson
 
@@ -31,13 +32,7 @@ async def check_message(event):
                      "handler": {'$regex': regx}})
 
                 if H['action'] == 'note':
-                    res = flood_limit(
-                        event.chat_id, 'filter_handler_{}'.format(filter))
-                    if res == 'EXIT':
-                        return
-                    elif res is True:
-                        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this filter')
+                    if await flood_limit(event, 'filter_handler_{}'.format(filter)) is False:
                         return
 
                     await send_note(
@@ -105,12 +100,7 @@ async def add_filter(event):
 @register(incoming=True, pattern="^[/!]filters")
 async def list_filters(event):
 
-    res = 2  # flood_limit(event.chat_id, 'filters')
-    if res == 'EXIT':
-        return
-    elif res is True:
-        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this command')
+    if await flood_limit(event, 'filters') is False:
         return
 
     conn = await get_conn_chat(event.from_id, event.chat_id)

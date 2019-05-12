@@ -1,7 +1,8 @@
 import re
 
 from sophie_bot import bot, logger
-from sophie_bot.events import register, flood_limit
+from sophie_bot.events import register
+from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import LANGUAGES, lang_info, get_string, get_chat_lang
 
 from telethon import events, custom
@@ -19,12 +20,7 @@ logger.info("Help loaded for: {}".format(HELP))
 @register(incoming=True, pattern="^[/!]start$")
 async def start(event):
 
-    res = flood_limit(event.chat_id, 'start')
-    if res == 'EXIT':
-        return
-    elif res is True:
-        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this command')
+    if await flood_limit(event.chat_id, 'start') is False:
         return
 
     if not event.from_id == event.chat_id:

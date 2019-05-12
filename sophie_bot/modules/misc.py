@@ -1,16 +1,12 @@
-from sophie_bot.events import flood_limit, register
+from sophie_bot.events import register
+from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.users import get_user, user_link
 
 
 @register(incoming=True, pattern="^[/!]id ?(.*)")
 async def id(event):
 
-    res = flood_limit(event.chat_id, 'id')
-    if res == 'EXIT':
-        return
-    elif res is True:
-        await event.reply('**Flood detected! **\
-Please wait 3 minutes before using this command')
+    if await flood_limit(event.chat_id, 'id') is False:
         return
 
     text = "Your id: `{}`\n".format(event.from_id)
