@@ -204,7 +204,10 @@ async def get_user(event):
 
         # Still didn't find? Lets try get entities
         if mention_entity:
-            probable_user_mention_entity = mention_entity[1]
+            if len(mention_entity) > 1:
+                probable_user_mention_entity = mention_entity[1]
+            else:
+                probable_user_mention_entity = mention_entity[0]
             if not user:
                 if not isinstance(probable_user_mention_entity, MessageEntityMentionName):
                     user_id = await event.client.get_entity(input_str)
