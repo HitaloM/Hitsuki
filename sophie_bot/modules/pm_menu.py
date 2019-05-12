@@ -19,7 +19,7 @@ logger.info("Help loaded for: {}".format(HELP))
 
 @register(incoming=True, pattern="^[/!]start$")
 async def start(event):
-    if await flood_limit(event.chat_id, 'start') is False:
+    if await flood_limit(event, 'start') is False:
         return
     if not event.from_id == event.chat_id:
         await event.reply('Hey there, My name is Sophie!')
