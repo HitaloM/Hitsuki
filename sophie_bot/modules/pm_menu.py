@@ -12,7 +12,7 @@ from telethon.tl.custom import Button
 HELP = []
 for module in LANGUAGES['en']['HELPS']:
     HELP.append(module)
-
+HELP = sorted(HELP)
 logger.info("Help loaded for: {}".format(HELP))
 
 
@@ -77,11 +77,17 @@ def get_help(event):
     text = "Select module to get help"
     chat_id = event.chat_id
     buttons = []
+    counter = 0
     for module in HELP:
+        counter += 1
         btn_name = get_string(module, "btn", chat_id, dir="HELPS")
-        data = get_string(module, "name", chat_id, dir="HELPS")
-        print(btn_name)
-        buttons.append([Button.inline(btn_name, 'mod_help_' + data)])
+        t = [Button.inline(btn_name, 'mod_help_' + module)]
+        if counter % 2 == 0:
+            new = buttons[-1] + t
+            buttons = buttons[:-1]
+            buttons.append(new)
+        else:
+            buttons.append(t)
     return text, buttons
 
 
