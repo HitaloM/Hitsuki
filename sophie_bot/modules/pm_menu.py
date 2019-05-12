@@ -3,9 +3,9 @@ import re
 from sophie_bot import BOT_NICK, bot, logger
 from sophie_bot.events import register
 from sophie_bot.modules.flood import flood_limit
-from sophie_bot.modules.language import LANGUAGES, lang_info, get_string, get_chat_lang
+from sophie_bot.modules.language import LANGUAGES, get_chat_lang, get_string, lang_info
 
-from telethon import events, custom
+from telethon import custom, events
 from telethon.tl.custom import Button
 
 

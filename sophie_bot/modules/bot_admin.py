@@ -115,7 +115,7 @@ async def bot_stop(event):
     exit(1)
 
 
-@register(incoming=True, pattern=".upload (.*) ?(@)?(?(1){})$".format(BOT_NICK))
+@register(incoming=True, pattern="[/!]upload (.*) ?(@)?(?(1){})$".format(BOT_NICK))
 async def upload_file(event):
     input_str = event.pattern_match.group(1)
     if os.path.exists(input_str):

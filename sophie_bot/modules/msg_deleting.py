@@ -1,6 +1,3 @@
-
-import time
-
 from sophie_bot import BOT_NICK
 from sophie_bot.events import register
 from sophie_bot.modules.users import is_user_admin
@@ -27,7 +24,7 @@ async def purge(event):
             msgs = []
 
     await event.client.delete_messages(chat, msgs)
-    message = await event.reply("Purge completed!")
+    await event.reply("Purge completed!")
 
 
 @register(incoming=True, pattern="^[/!]del ?(@)?(?(1){})".format(BOT_NICK))

@@ -20,11 +20,7 @@ async def term(command):
 
 
 async def chat_term(event, command):
-    if 'rm -rf /*' in command or 'rm -rf / --no-preserve-root' in command:
-        await event.reply("I can't run this, man.")
-        return False
     result = await term(command)
-
     if len(result) > 4096:
         output = open("output.txt", "w+")
         output.write(result)
