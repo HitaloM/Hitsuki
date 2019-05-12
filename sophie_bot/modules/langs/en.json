@@ -63,7 +63,8 @@
         "u_wasnt_connected": "You was not connected to any chat before!",
         "disconnected": "You were disconnected from {} .",
         "not_in_chat": "You're not in this chat anymore, I'll disconnect you.",
-        "u_should_be_admin": "You should be admin in {}!"
+        "u_should_be_admin": "You should be admin in {}!",
+        "usage_only_in_groups": "Usage limited only in groups!"
     }
  },
  "HELPS": {

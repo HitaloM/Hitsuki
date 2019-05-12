@@ -3,6 +3,7 @@ from sophie_bot.events import register
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_link
+from sophie_bot.modules.flood import flood_limit
 
 from telethon import events
 
@@ -11,8 +12,11 @@ from telethon import events
 async def handler(event):
     print(event)
     if event.user_joined is True or event.user_added is True:
-        chat_id = event.action_message.chat_id
         user_id = event.action_message.from_id
+        bot_id = await bot.get_me()
+        if bot_id.id == user_id:
+            return  # Do not welcome yourselve
+        chat_id = event.action_message.chat_id
         welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
         if not welcome:
             await event.reply("Welcome! How are you?")
@@ -70,4 +74,21 @@ async def setwelcome(event):
         'enabled': True,
         'note': note_name
     })
-    await event.reply("Welcome set to note {}".format(note_name))
+    await event.reply("Welcome set to note: `{}`".format(note_name))
+
+
+@register(incoming=True, pattern="^[/!]setwelcome$")
+async def setwelcome(event):
+    if await flood_limit(event, 'setwelcome') is False:
+        return
+    status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, only_in_groups=True)
+    if status is False:
+        await event.reply(chat_id)
+        return
+    old = mongodb.welcomes.find_one({'chat_id': chat_id})
+    if old:
+        note_name = old['note']
+        await event.reply("Welcome is note: `{}`".format(note_name))
+    else:
+        await event.reply("Welcome is default")
+
