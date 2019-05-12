@@ -14,26 +14,21 @@ async def id(event):
 Please wait 3 minutes before using this command')
         return
 
-    text = "**ID's:**\n"
-    text += "Your id - `{}`\n".format(event.from_id)
-    text += "Chat id - `{}`\n".format(event.chat_id)
-    text += "Your message id - `{}`\n".format(event.message.id)
+    text = "Your id: `{}`\n".format(event.from_id)
+    text += "Chat id: `{}`\n".format(event.chat_id)
 
     if event.message.reply_to_msg_id:
         msg = await event.get_reply_message()
-        text += "\n**Replied message:**\n"
-        user = mongodb.user_list.find_one({'user_id': msg.from_id})
         userl = await user_link(msg.from_id)
-        text += "{}'s user id - `{}`\n".format(userl, msg.from_id)
-        text += "{}'s message id - `{}`".format(userl, msg.id)
+        text += "{}'s user id: `{}`\n".format(userl, msg.from_id)
 
-    elif event.message.raw_text == "/id":
+    elif len(event.message.raw_text) == 3:
         await event.reply(text)
         return
 
     else:
         user = await get_user(event)
-        userl = "[{}](https://t.me/{})'s".format(user['first_name'], user['user_id'])
+        userl = await user_link(user['user_id'])
         text += "{} user id - `{}`\n".format(userl, user['user_id'])
 
     await event.reply(text)
