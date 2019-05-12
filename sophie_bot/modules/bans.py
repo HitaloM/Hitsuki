@@ -195,15 +195,15 @@ async def unban_user(event, user_id, chat_id):
         return
 
     unbanned_rights = ChatBannedRights(
-       until_date=None,
-       view_messages=False,
-       send_messages=False,
-       send_media=False,
-       send_stickers=False,
-       send_gifs=False,
-       send_games=False,
-       send_inline=False,
-       embed_links=False,
+        until_date=None,
+        view_messages=False,
+        send_messages=False,
+        send_media=False,
+        send_stickers=False,
+        send_gifs=False,
+        send_games=False,
+        send_inline=False,
+        embed_links=False,
     )
 
     bot_id = await bot.get_me()
