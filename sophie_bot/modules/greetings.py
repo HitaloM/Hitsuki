@@ -1,5 +1,6 @@
 from sophie_bot import BOT_NICK, bot, mongodb
 from sophie_bot.events import register
+from sophie_bot.modules.language import get_string
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_link
@@ -19,7 +20,7 @@ async def handler(event):
         chat_id = event.action_message.chat_id
         welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
         if not welcome:
-            await event.reply("Welcome! How are you?")
+            await event.reply(get_string("greetings", "welcome_hay", chat))
         elif welcome['enabled'] is False:
             return
         else:
@@ -64,7 +65,7 @@ async def setwelcome(event):
         'name': note_name
     })
     if not note:
-        await event.reply("I can't find this note")
+        await event.reply(get_string("greetings", "cant_find_note", chat))
         return
     old = mongodb.welcomes.find_one({'chat_id': chat_id})
     if old:
@@ -74,7 +75,7 @@ async def setwelcome(event):
         'enabled': True,
         'note': note_name
     })
-    await event.reply("Welcome set to note: `{}`".format(note_name))
+    await event.reply(get_string("greetings", "welcome_set_to_note", chat).format(note_name))
 
 
 @register(incoming=True, pattern="^[/!]setwelcome ?(@{})?(.*)".format(BOT_NICK))
@@ -89,6 +90,6 @@ async def setwelcome_withot_args(event):
     old = mongodb.welcomes.find_one({'chat_id': chat_id})
     if old:
         note_name = old['note']
-        await event.reply("Welcome is note: `{}`".format(note_name))
+        await event.reply(get_string("greetings", "welcome_is_note", chat).format(note_name))
     else:
-        await event.reply("Welcome is default")
+        await event.reply(get_string("greetings", "welcome_is_default", chat))

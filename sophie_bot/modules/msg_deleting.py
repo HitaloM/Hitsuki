@@ -17,9 +17,7 @@ async def purge(event):
     chat = await event.get_input_chat()
     msgs = []
     msg_id = msg.id
-    message = await event.reply("Purge started!")
     delete_to = event.message.id - 1
-    start_time = time.time()
     await event.client.delete_messages(chat, event.message.id)
     msgs.append(event.reply_to_msg_id)
     for m_id in range(int(delete_to), msg_id - 1, -1):
@@ -29,10 +27,7 @@ async def purge(event):
             msgs = []
 
     await event.client.delete_messages(chat, msgs)
-    end_time = time.time()
-    sec = round(float(end_time - start_time) * 1000)
-    text = "**Purge completed!**\nMessages deleted for {} ms".format(sec)
-    await message.edit(text)
+    message = await event.reply("Purge completed!")
 
 
 @register(incoming=True, pattern="^[/!]del ?(@)?(?(1){})".format(BOT_NICK))
