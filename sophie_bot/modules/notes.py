@@ -44,19 +44,19 @@ async def save_note(event):
 
     status = get_string("notes", "saved", chat_id)
     old = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
-    created_date = ''
-    creator = ''
+    created_date = None
+    creator = None
     if old:
-        created_date = old['created']
-        creator = old['creator']
+        if 'created' in old:
+            created_date = old['created']
+        if 'creator' in old:
+            creator = old['creator']
+
         status = get_string("notes", "updated", chat_id)
         mongodb.notes.delete_one({'_id': old['_id']})
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-
-    if not created_date:
-        created_date = date
-
+ 
     if not creator:
         creator = event.from_id
 

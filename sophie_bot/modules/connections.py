@@ -16,19 +16,22 @@ async def connect_with_arg(event):
         chat = event.chat_id
         chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
     else:
-        chat = event.message.raw_text.split(" ", 2)[1]
-        if not chat[0] == '-':
-            chat = mongodb.chat_list.find_one({
-                'chat_nick': chat.replace("@", "")
-            })
-            if not chat:
-                await event.reply(get_string("connections", "cant_find_chat_use_id", chat))
-                return
+        if not event.pattern_match.group(1):
+            return
         else:
-            chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
-            if not chat:
-                await event.reply(get_string("connections", "cant_find_chat", chat))
-                return
+            chat = event.message.raw_text.split(" ", 2)[1]
+            if not chat[0] == '-':
+                chat = mongodb.chat_list.find_one({
+                    'chat_nick': chat.replace("@", "")
+                })
+                if not chat:
+                    await event.reply(get_string("connections", "cant_find_chat_use_id", chat))
+                    return
+            else:
+                chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
+                if not chat:
+                    await event.reply(get_string("connections", "cant_find_chat", chat))
+                    return
 
     chat_id = chat['chat_id']
     chat_title = chat['chat_title']

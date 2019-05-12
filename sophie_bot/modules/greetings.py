@@ -24,17 +24,17 @@ async def handler(event):
             return
         else:
             user = mongodb.user_list.find_one({'user_id': user_id})
-            if not user['last_name']:
-                last_name = None
-                full_name = user['first_name']
-            else:
+            if 'last_name' in user:
                 last_name = user['last_name']
                 full_name = user['first_name'] + " " + last_name
-
-            if not user['username']:
-                username = None
             else:
+                last_name = None
+                full_name = user['first_name']
+
+            if 'username' in user:
                 username = user['username']
+            else:
+                username = None
 
             chatname = mongodb.chat_list.find_one({'chat_id': chat_id})
 
