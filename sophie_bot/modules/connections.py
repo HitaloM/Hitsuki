@@ -162,9 +162,6 @@ async def get_conn_chat(user_id, chat_id, admin=False, only_in_groups=False):
         chat_title = mongodb.chat_list.find_one({
             'chat_id': int(chat_id)})['chat_title']
         return True, chat_id, chat_title
-    else:
-        if only_in_groups is True:
-            return False, get_string("connections", "usage_only_in_groups", chat_id), None
     user_chats = mongodb.user_list.find_one({'user_id': user_id})['chats']
     if chat_id not in user_chats:
         return False,
@@ -173,6 +170,8 @@ async def get_conn_chat(user_id, chat_id, admin=False, only_in_groups=False):
 
     group_id = mongodb.connections.find_one({'user_id': int(user_id)})
     if not group_id:
+        if only_in_groups is True:
+            return False, get_string("connections", "usage_only_in_groups", chat_id), None
         return True, user_id, "Local"
     group_id = group_id['chat_id']
 

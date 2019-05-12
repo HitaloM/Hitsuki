@@ -28,6 +28,8 @@ async def handler(event):
             return
         else:
             user = mongodb.user_list.find_one({'user_id': user_id})
+            if not user:
+                return  # TODO: Add user in db
             if 'last_name' in user:
                 last_name = user['last_name']
                 full_name = user['first_name'] + " " + last_name
