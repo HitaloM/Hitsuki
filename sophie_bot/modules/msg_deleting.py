@@ -1,5 +1,6 @@
 from sophie_bot import BOT_NICK
 from sophie_bot.events import register
+from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import is_user_admin
 
 
@@ -7,10 +8,10 @@ from sophie_bot.modules.users import is_user_admin
 async def purge(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
-        await event.reply("You don't have rights to purge here!")
+        await event.reply(get_string("msg_deleting", "no_rights_purge", event.chat_id))
         return
     if not event.message.reply_to_msg_id:
-        await event.reply("Reply to message to start purge!")
+        await event.reply(get_string("msg_deleting", "reply_to_msg", event.chat_id))
         return
     msg = await event.get_reply_message()
 
@@ -27,14 +28,14 @@ async def purge(event):
             msgs = []
 
     await event.client.delete_messages(chat, msgs)
-    await event.reply("Purge completed!")
+    await event.reply(get_string("msg_deleting", "purge_done", event.chat_id))
 
 
 @register(incoming=True, pattern="^[/!]del ?(@)?(?(1){})".format(BOT_NICK))
 async def del_message(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
-        await event.reply("You don't have rights to delete messsages here!")
+        await event.reply(get_string("msg_deleting", "no_rights_del", event.chat_id))
         return
     msg = await event.get_reply_message()
     chat = await event.get_input_chat()

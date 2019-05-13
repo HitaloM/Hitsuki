@@ -95,17 +95,28 @@
         "filter_deleted": "Filter `{}` deleted!"
     },
     "warns": {
-	"user_no_admeme": "You're not an admin",
-	"purged_warns": "{} resetted warns of {} successfully!",
-	"usr_no_wrn": "{} hasn't got warns till to reset!",
-	"usr_whitelist": "This is one of whitelisted user!",
-	"Admin_no_wrn": "Heck, I can't warn the admins!",
-	"warn": "{} have warned {}\n",
-	"warn_rsn": "Reason: `{}`\n",
-	"warn_bun": "Warnings has been exceeded! {} has been banned!",
-	"warn_num": "Warns: {}/{}\n",
-	"rmv_warn_admin": "You're not an admin, Only admins can do!",
-    "rmv_sfl": "Warn removed by {}"
+        "user_no_admeme": "You're not an admin",
+        "purged_warns": "{} resetted warns of {} successfully!",
+        "usr_no_wrn": "{} hasn't got warns till to reset!",
+        "usr_whitelist": "This is one of whitelisted user!",
+        "Admin_no_wrn": "Heck, I can't warn the admins!",
+        "warn": "{} have warned {}\n",
+        "warn_rsn": "Reason: `{}`\n",
+        "warn_bun": "Warnings has been exceeded! {} has been banned!",
+        "warn_num": "Warns: {}/{}\n",
+        "rmv_warn_admin": "You're not an admin, Only admins can do!",
+        "rmv_sfl": "Warn removed by {}"
+    },
+    "msg_deleting": {
+        "no_rights_purge": "You don't have rights to purge here!",
+        "reply_to_msg": "Reply to message to start purge!",
+        "purge_done": "Purge completed!",
+        "no_rights_del": "You don't have rights to delete messsages here!"
+    },
+    "misc": {
+        "your_id": "Your id: `{}`\n",
+        "chat_id": "Chat id: `{}`\n",
+        "user_id": "{}'s user id: `{}`\n"
     }
  },
  "HELPS": {
