@@ -1,0 +1,169 @@
+{
+    "language_info": {
+        "name": "Russian",
+        "small_name": "rus",
+        "flag": "🇷🇺",
+        "code": "ru"
+    },
+    "STRINGS": {
+        "notes": {
+            "notelist_no_notes": "Нет заметок в этом чате!",
+            "notelist_header": "**Заметки в этом чате:**\n",
+            "no_right_save_note": "Вы не имеете заметок в этом чате!!",
+            "saved": "сохранена",
+            "updated": "обновлена",
+            "note_saved_or_updated": "**Заметка {} {}!**\n",
+            "you_can_get_note": "Вы можете получить заметку используя `/get {name}`, или `{name}`",
+            "dont_have_rights_to_save": "Вы не имеете прав сохранять заметки здесь!",
+            "del_note": "Удалить заметку",
+            "note_removed": "Заметка {} удалена!",
+            "cant_find_note": "Я не могу получить эту заметку!",
+            "note_info_title": "**Информация про заметку**\n",
+            "note_info_note": "Заметка: `{}`\n",
+            "note_info_updated": "Последнее обновление: `{}`\n",
+            "note_info_created": "Заметка создана в: `{}`, создатель: {}\n",
+            "note_info_crt_not_cached": "Создатель не кеширован, Я не могу найти его!\n",
+            "note_not_found": "Заметка не найдена!",
+            "note_deleted_by": "Заметка {} удалена {}.",
+            "user_blocked": "Напишите /start в мою личку и нажмите на кнопку снова!",
+            "note_so_big": "Эта заметка больше чем лимит Telegram в 200 символов!",
+            "only_admins_can_rmw": "Только админы могут удалять заметки",
+            "delmsg_no_arg": "Кнопка deletemsg может иметь только аргумент 'admin' или 'user'!"
+        },
+        "bans": {
+            "user_banned": "Пользователь {} забанен {} в {}!\n",
+            "reason": "Причина",
+            "u_dont_have_rights": "Вы не имеете прав банить пользователей здесь!",
+            "time_var_incorrect": "Значение времени не допустимо!",
+            "bot_cant_be_banned": "Ты сумасшедший?! Забань себя!",
+            "u_dont_have_rights_kick": "Вы не имеете прав кикать пользователей здесь!",
+            "u_dont_have_rights_mute": "Вы не имеете прав мутить пользователей здесь!",
+            "u_dont_have_rights_unban": "Вы не имеете прав разбанивать пользователей здесь!",
+            "bot_cant_be_kicked": "Ты сумасшедший?! Кикни себя!",
+            "bot_cant_be_muted": "Ты сумасшедший?! Замуть себя!",
+            "bot_cant_be_unbanned": "Эй! Я не забанена!!!",
+            "user_kicked": "Юзер {} кикнут {} в {}",
+            "user_unbanned": "Юзер {} разблокирован {} в {} успешно",
+            "user_admin_ban": "Это админ, я не могу забанить его.",
+            "user_admin_mute": "Это админ, я не могу замутить его.",
+            "user_admin_kick": "Это админ, я не могу кикнуть его.",
+            "user_admin_unban": "Серьезно?! Как я могу разблокировать админа?",
+            "user_admin_unmute": "Мм?! размучен",
+            "user_mooted": "Юзер {} заткнут {} в {}"
+        },
+        "connections": {
+            "can't_find_chat_use_id": "Я не могу найти этот чат, попробуйте использовать id чата.",
+            "can't_find_chat": "Я не могу найти этот чат.",
+            "not_in_group": "Вы не в группе, к которой вы пытаетесь подключиться, войдите и напишите любое сообщение там.",
+            "connected": "Успешное подключено к **{}**!",
+            "connected_pm_to_me": "Ваша личка была успешно подключена к **{}**! Напишите к @rSophieBot, чтобы начать использовать.",
+            "pm_connected": "Ваша личка была успешно подключена к **{}**!",
+            "history_empty": "You not connected to any chat for history, connect via `/connect [chat id]`",
+            "connected_chat": "**Текущий чат подключен:**\n`",
+            "select_chat_to_connect": "`\n\n**Выберите чат для подключения:**",
+            "u_wasnt_connected": "Вы не были подключены к чату раньше!",
+            "disconnected": "Вы были отключены от {} .",
+            "not_in_chat": "Вы больше не в этом чате, я отключу вас.",
+            "u_should_be_admin": "Вы должны быть администратором в {}!",
+            "usage_only_in_groups": "Использование ограничено только в группах!"
+        },
+        "greetings": {
+            "welcome_hay": "Добро пожаловать! Как вы?",
+            "cant_find_note": "Я не могу получить эту заметку.",
+            "welcome_set_to_note": "Приветствие настроено на заметку: `{}`",
+            "welcome_is_note": "Приветствие настроено на заметку: `{}`",
+            "welcome_is_default": "Приветствие не настроено."
+        },
+        "filters": {
+            "dont_have_right": "Вы не имеете прав сохранять фильтры здесь!",
+            "filter_added": "Фильтр добавлен\n",
+            "filter_keyword": "ключевое слово: **{}**\n",
+            "no_arg_note": "Пожалуйста, напишите в аргументах, какую заметку вы хотите использовать для этого фильтра",
+            "a_send_note": "Действие: **отправить заметку** `{}`",
+            "no_arg_tban": "Пожалуйста, напишите в аргументах, на сколько времени вы хотите, чтобы пользователь был заблокирован",
+            "a_tban": "Действие: **временный бан отправителя на** `{}`",
+            "a_del": "Действие: **удалить сообщение**",
+            "a_ban": "Действие: **бан отправителя**",
+            "a_mute": "Действие: **мут отправителя**",
+            "a_kick": "Действие: **кик отправителя**",
+            "wrong_action": "Неправильное действие! Прочитайте справку.",
+            "no_filters_in": "Нет фильтров в **{}**!",
+            "filtes_in": "**Фильтры в {}:**\n",
+            "no_rights_stop": "Вы не имеете прав останавливать фильтры здесь!",
+            "cant_find_filter": "Я не могу получить этот фильтр!",
+            "filter_deleted": "Фильтр `{}` был удален!"
+        },
+        "warns": {
+            "user_no_admeme": "Вы не админ",
+            "purged_warns": "{} снял все предупреждение {} успешно!",
+            "usr_no_wrn": "У {} не было предупреждений до сброса!",
+            "usr_whitelist": "Это один из пользователей в белом списке!",
+            "Admin_no_wrn": "Эй, я не могу дать варн админу!",
+            "warn": "{} предупредил {}\n",
+            "warn_rsn": "Причина: `{}`\n",
+            "warn_bun": "Предупреждения превышены! {} был забанен!",
+            "warn_num": "Предупреждений: {}/{}\n",
+            "rmv_warn_admin": "Вы не администратор, только администраторы могут это сделать!",
+            "rmv_sfl": "Варн удален {}"
+        },
+        "msg_deleting": {
+            "no_rights_purge": "Вы не имеете прав чистить здесь!",
+            "reply_to_msg": "Ответьте на сообщение, чтобы начать чистку!",
+            "purge_done": "Чистка завершена!",
+            "no_rights_del": "Вы не имеете прав удалять сообщения здесь!"
+        },
+        "misc": {
+            "your_id": "Ваш id: `{}`\n",
+            "chat_id": "Id чата: `{}`\n",
+            "user_id": "Id пользователя {}: `{}`\n"
+        }
+    },
+    "HELPS": {
+        "notes": {
+            "btn": "Заметки",
+            "title": "Notes are great to save random tidbits of information; a phone number, a nice gif, a funny picture - anything!",
+            "text": {
+                "i1": "\nAvailable commands are:",
+                "i2": "- /save [name] [data]: Replying to a message will save that message. Even works on media!",
+                "i3": "- /get [name]: get the note registered to that word.",
+                "i4": "- /clear [name]: delete the note",
+                "i5": "- /notes: Список всех заметок",
+                "i6": "- /saved: same as /notes",
+                "i7": "- /noteinfo [name]: Show detailed info about note, who updated and created note",
+                "i8": "\nAn example of how to save a note would be via:",
+                "i9": "`/save data This is example note!`",
+                "i10": "\nIf you want a button write /markdownhelp to get a help with it.",
+                "i11": "\nNow, anyone using `/get data`, or `#data` will be replied to with `This is example note!`.",
+                "i12": "\nIf you want to save an image, gif, or sticker, or any other data, do the following:",
+                "i13": "`save word` while replying to a sticker or whatever data you'd like. Now, the note at `#word` contains a sticker which will be sent as a reply.",
+                "i14": "\nTip: to retrieve a note without the formatting, use `/get [name] noformat`",
+                "i15": "This will retrieve the note and send it without formatting it; getting you the raw markdown, allowing you to make easy edits."
+            }
+        },
+        "purges": {
+            "btn": "Purges",
+            "title": "Need to delete lots of messages? That's what purges are for!",
+            "text": {
+                "i1": "\nAvailable commands are:",
+                "i2": "- /purge: deletes all messages from the message you replied to, to the current message.",
+                "i3": "- /del: deletes the message you replied to."
+            }
+        },
+        "warns": {
+            "btn": "Предупреждения",
+            "title": "Keep your members in check with warnings; stop them getting out of control!",
+            "text": {
+                "i1": "\nAvailable commands are:",
+                "i2": "- /warn [reason]: warn a user for the specified reason .",
+                "i3": "- /warns: returns the list of warns, with reasons, for that user.",
+                "i4": "- /rmwarn: remove the latest warn for that user. #TODO",
+                "i5": "- /resetwarns: reset all of a user's warns. #TODO",
+                "i6": "- /setwarnlimit: sets the number of warns before an action is taken upon the user.",
+                "i7": "\nIf you're looking for a way to automatically warn users when they say certain things, go to the blacklists module.",
+                "i8": "\nAn example of how to set a new multiword warning:",
+                "i9": "`/warn @user Because warning is fun`",
+                "i10": "\nThis will warn the user called @user, with a reason of 'Because warning is fun'"
+            }
+        }
+    }
+}
