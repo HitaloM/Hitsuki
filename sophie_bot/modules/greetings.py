@@ -1,5 +1,5 @@
-from sophie_bot import BOT_NICK, bot, mongodb
-from sophie_bot.events import register
+from sophie_bot import bot, mongodb
+from sophie_bot.events import command
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import get_string
@@ -10,8 +10,7 @@ from telethon import events
 
 
 @bot.on(events.ChatAction)
-async def handler(event):
-    print(event)
+async def welcome_trigger(event):
     if event.user_joined is True or event.user_added is True:
         chat = event.chat_id
         chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
@@ -58,7 +57,7 @@ async def handler(event):
                 event.chat_id, chat_id, event.action_message.id, text, show_none=True)
 
 
-@register(incoming=True, pattern="^[/!]setwelcome ?(@{})?(.*)".format(BOT_NICK))
+@command("setwelcome", arg=True)
 async def setwelcome(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     chat = event.chat_id
@@ -85,8 +84,11 @@ async def setwelcome(event):
     await event.reply(get_string("greetings", "welcome_set_to_note", chat).format(note_name))
 
 
-@register(incoming=True, pattern="^[/!]setwelcome ?(@{})?(.*)".format(BOT_NICK))
+@command("setwelcome", arg=True)
 async def setwelcome_withot_args(event):
+    # FIXME: We use arg=True workarond to check if not args.
+    if not event.pattern_match.group(2):
+        return
     chat = event.chat_id
     chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
     if await flood_limit(event, 'setwelcome') is False:

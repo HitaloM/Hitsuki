@@ -1,13 +1,13 @@
 import asyncio
 import os
 
-from sophie_bot import BOT_NICK, OWNER_ID, bot, mongodb, redis
-from sophie_bot.events import register
+from sophie_bot import OWNER_ID, bot, mongodb, redis
+from sophie_bot.events import command, register
 from sophie_bot.modules.main import chat_term
 from sophie_bot.modules.notes import button_parser
 
 
-@register(incoming=True, pattern="^[/!]term ?(@{})?(.*)".format(BOT_NICK))
+@command("term", arg=True)
 async def term(event):
     if not event.from_id == OWNER_ID:
         return
@@ -19,7 +19,7 @@ async def term(event):
     await msg.edit(result)
 
 
-@register(incoming=True, pattern="^[/!]broadcast ?(@{})?(.*)".format(BOT_NICK))
+@command("broadcast", arg=True)
 async def broadcast(event):
     if not event.from_id == OWNER_ID:
         return
@@ -45,7 +45,7 @@ async def broadcast(event):
 `{}` didn't received message.".format(num_succ, num_fail))
 
 
-@register(incoming=True, pattern="^[/!]sbroadcast ?(@{})?(.*)".format(BOT_NICK))
+@command("sbroadcast", arg=True)
 async def sbroadcast(event):
     if not event.from_id == OWNER_ID:
         return
@@ -89,7 +89,7 @@ async def check_message_for_smartbroadcast(event):
             }, upsert=False)
 
 
-@register(incoming=True, pattern="^[/!]backup ?(@)?(?(1){})$".format(BOT_NICK))
+@command("backup", arg=True)
 async def backup(event):
     if not event.from_id == OWNER_ID:
         return
@@ -99,7 +99,7 @@ async def backup(event):
     await msg.edit("**Done!**\nBackup under `Backups/dump_{}.gz`".format(date))
 
 
-@register(incoming=True, pattern="^[/!]purgecaches ?(@)?(?(1){})$".format(BOT_NICK))
+@command("purgecaches?(s)", arg=True)
 async def purge_caches(event):
     if not event.from_id == OWNER_ID:
         return
@@ -107,7 +107,7 @@ async def purge_caches(event):
     await event.reply("redis cache was cleaned.")
 
 
-@register(incoming=True, pattern="^[/!]botstop ?(@)?(?(1){})$".format(BOT_NICK))
+@command("botstop", arg=True)
 async def bot_stop(event):
     if not event.from_id == OWNER_ID:
         return
@@ -115,7 +115,7 @@ async def bot_stop(event):
     exit(1)
 
 
-@register(incoming=True, pattern="[/!]upload (.*) ?(@)?(?(1){})$".format(BOT_NICK))
+@command("upload", arg=True)
 async def upload_file(event):
     input_str = event.pattern_match.group(1)
     if os.path.exists(input_str):

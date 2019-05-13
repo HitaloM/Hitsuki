@@ -1,7 +1,7 @@
 import time
 
-from sophie_bot import WHITELISTED, BOT_NICK, bot
-from sophie_bot.events import register
+from sophie_bot import WHITELISTED, bot
+from sophie_bot.events import command
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import (get_user, get_user_and_text,
                                       is_user_admin, user_link)
@@ -11,7 +11,7 @@ from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
 
-@register(incoming=True, pattern="^[/!]ban ?(@{})?(.*)".format(BOT_NICK))
+@command("ban", arg=True)
 async def ban(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -33,7 +33,7 @@ async def ban(event):
                           link_preview=False)
 
 
-@register(incoming=True, pattern="^[/!]tban ?(@{})?(.*)".format(BOT_NICK))
+@command("tban", arg=True)
 async def tban(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -75,7 +75,7 @@ async def tban(event):
         await event.reply(text, link_preview=False)
 
 
-@register(incoming=True, pattern="^[/!]kick ?(@{})?(.*)".format(BOT_NICK))
+@command("kick", arg=True)
 async def kick(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -95,7 +95,7 @@ async def kick(event):
         await event.reply(text.format(admin_str, user_str, chat_title))
 
 
-@register(incoming=True, pattern="[/!]unban ?(@{})?(.*)".format(BOT_NICK))
+@command("unban", arg=True)
 async def unban(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -115,7 +115,7 @@ async def unban(event):
         await event.reply(text.format(admin_str, user_str, chat_title))
 
 
-@register(incoming=True, pattern="[/!]mute ?(@{})?(.*)".format(BOT_NICK))
+@command("mute", arg=True)
 async def muter(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:

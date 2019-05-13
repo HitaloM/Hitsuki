@@ -1,11 +1,10 @@
-from sophie_bot import BOT_NICK
-from sophie_bot.events import register
-from sophie_bot.modules.language import get_string
+from sophie_bot.events import command
 from sophie_bot.modules.flood import flood_limit
+from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import get_user, user_link
 
 
-@register(incoming=True, pattern="^[/!]id ?(@{})?(.*)".format(BOT_NICK))
+@command("id", arg=True)
 async def id(event):
 
     if await flood_limit(event, 'id') is False:

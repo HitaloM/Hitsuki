@@ -1,8 +1,8 @@
 import os
 import re
 
-from sophie_bot import BOT_NICK, bot, logger, mongodb, redis
-from sophie_bot.events import register
+from sophie_bot import bot, logger, mongodb, redis
+from sophie_bot.events import command
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.users import is_user_admin, user_link
 
@@ -24,7 +24,7 @@ for filename in os.listdir('sophie_bot/modules/langs'):
 logger.info("Languages loaded: {}".format(LANGS))
 
 
-@register(incoming=True, pattern="^[/!]lang ?(@)?(?(1){})$".format(BOT_NICK))
+@command("lang")
 async def lang(event):
     if await flood_limit(event, 'lang') is False:
         return
@@ -43,7 +43,7 @@ async def lang(event):
     await event.reply(text, buttons=buttons)
 
 
-@register(incoming=True, pattern="^[/!]lang ?(@{})?(.*)".format(BOT_NICK))
+@command("lang", arg=True)
 async def lang_with_arg(event):
     if not event.pattern_match.group(2):
         return

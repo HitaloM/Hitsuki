@@ -3,8 +3,8 @@ from time import gmtime, strftime
 
 from bson.objectid import ObjectId
 
-from sophie_bot import BOT_NICK, bot, mongodb
-from sophie_bot.events import register
+from sophie_bot import bot, mongodb
+from sophie_bot.events import command, register
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import get_string
@@ -14,7 +14,7 @@ from telethon import custom, errors, events, utils
 from telethon.tl.custom import Button
 
 
-@register(incoming=True, pattern="^[/!]save(?!d) ?(@{})?(.*)".format(BOT_NICK))
+@command("save", arg=True)
 async def save_note(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
@@ -87,7 +87,7 @@ async def save_note(event):
     await event.reply(text, buttons=buttons)
 
 
-@register(incoming=True, pattern="^[/!]clear ?(@{})?(.*)".format(BOT_NICK))
+@command("clear", arg=True)
 async def clear_note(event):
     chat_id = event.chat_id
 
@@ -107,7 +107,7 @@ async def clear_note(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^[/!]noteinfo ?(@{})?(.*)".format(BOT_NICK))
+@command("noteinfo", arg=True)
 async def noteinfo(event):
     chat_id = event.chat_id
 
@@ -132,8 +132,7 @@ async def noteinfo(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^[/!]notes ?(@)?(?(1){n})$|[/!]saved ?(@)?(?(1){n})$".format(
-    n=BOT_NICK))
+@command("notes")
 async def list_notes(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
@@ -213,7 +212,7 @@ async def del_note_callback(event):
         note['name'], link), link_preview=False)
 
 
-@register(incoming=True, pattern="^[/!]get ?(@{})?(.*)".format(BOT_NICK))
+@command("get", arg=True)
 async def get_note(event):
     raw_text = event.message.raw_text.split()
     note_name = raw_text[1].lower()

@@ -1,5 +1,5 @@
-from sophie_bot import BOT_NICK, SUDO, bot, mongodb, redis
-from sophie_bot.events import register
+from sophie_bot import SUDO, bot, mongodb, redis
+from sophie_bot.events import register, command
 from sophie_bot.modules.flood import flood_limit
 
 from telethon.tl.functions.users import GetFullUserRequest
@@ -116,7 +116,7 @@ async def get_chat_admins(chat_id):
     return admins
 
 
-@register(incoming=True, pattern="^[/!]adminlist ?(@)?(?(1){})".format(BOT_NICK))
+@command("adminlist", arg=True)
 async def adminlist(event):
     if await flood_limit(event.chat_id, 'adminlist') is False:
         return

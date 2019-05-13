@@ -1,10 +1,9 @@
-from sophie_bot import BOT_NICK
-from sophie_bot.events import register
+from sophie_bot.events import command
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import is_user_admin
 
 
-@register(incoming=True, pattern="^[/!]purge ?(@)?(?(1){})".format(BOT_NICK))
+@command("purge")
 async def purge(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -31,7 +30,7 @@ async def purge(event):
     await event.reply(get_string("msg_deleting", "purge_done", event.chat_id))
 
 
-@register(incoming=True, pattern="^[/!]del ?(@)?(?(1){})".format(BOT_NICK))
+@command("del")
 async def del_message(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:

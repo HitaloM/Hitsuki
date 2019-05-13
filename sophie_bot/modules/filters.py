@@ -1,7 +1,7 @@
 import re
 
-from sophie_bot import BOT_NICK, mongodb, redis
-from sophie_bot.events import register
+from sophie_bot import mongodb, redis
+from sophie_bot.events import command, register
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import get_string
@@ -38,7 +38,7 @@ async def check_message(event):
                 await event.delete()
 
 
-@register(incoming=True, pattern="^[/!]filter(?!s) ?(@{})?(.*)".format(BOT_NICK))
+@command("filter(?!s)", arg=True)
 async def add_filter(event):
     chat_id = event.chat_id
     K = await is_user_admin(event.chat_id, event.from_id)
@@ -88,7 +88,7 @@ async def add_filter(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^[/!]filters ?(@)?(?(1){})$".format(BOT_NICK))
+@command("filters", arg=True)
 async def list_filters(event):
     if await flood_limit(event, 'filters') is False:
         return
@@ -115,7 +115,7 @@ async def list_filters(event):
     await event.reply(text)
 
 
-@register(incoming=True, pattern="^[/!]stop ?(@{})?(.*)".format(BOT_NICK))
+@command("stop", arg=True)
 async def stop_filter(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
