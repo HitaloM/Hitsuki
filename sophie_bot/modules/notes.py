@@ -73,9 +73,7 @@ async def save_note(event):
     new = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
     text = get_string("notes", "note_saved_or_updated", chat_id).format(
         note_name, status, chat_title)
-    text += get_string(
-        "notes", "you_can_get_note", chat_id)\
-        .format(name=note_name)
+    text += get_string("notes", "you_can_get_note", chat_id).format(name=note_name)
 
     if status == 'saved':
         buttons = [
