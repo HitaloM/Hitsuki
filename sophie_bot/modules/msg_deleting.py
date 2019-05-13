@@ -9,6 +9,9 @@ async def purge(event):
     if K is False:
         await event.reply("You don't have rights to purge here!")
         return
+    if not event.message.reply_to_msg_id:
+        await event.reply("Reply to message to start purge!")
+        return
     msg = await event.get_reply_message()
 
     chat = await event.get_input_chat()

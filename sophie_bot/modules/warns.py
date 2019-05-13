@@ -5,7 +5,8 @@ import string
 from sophie_bot import BOT_NICK, WHITELISTED, bot, mongodb
 from sophie_bot.events import register
 from sophie_bot.modules.bans import ban_user
-from sophie_bot.modules.users import get_chat_admins, get_user_and_text, is_user_admin, user_link, get_user
+from sophie_bot.modules.users import (get_chat_admins, get_user_and_text,
+                                      is_user_admin, user_link, get_user)
 from sophie_bot.modules.language import get_string
 
 from telethon import events
