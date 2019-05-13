@@ -72,7 +72,7 @@ async def save_note(event):
 
     new = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
     text = get_string("notes", "note_saved_or_updated", chat_id).format(
-        note_name, status, chat_title)
+        note_name=note_name, status=status, chat_title=chat_title)
     text += get_string("notes", "you_can_get_note", chat_id).format(name=note_name)
 
     if status == 'saved':
@@ -99,7 +99,7 @@ async def clear_note(event):
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if note:
         mongodb.notes.delete_one({'_id': note['_id']})
-        text = get_string("notes", "note_removed", chat_id).format(note_name)
+        text = get_string("notes", "note_removed", chat_id).format(note_name=note_name)
     else:
         text = get_string("notes", "cant_find_note", chat_id)
     await event.reply(text)
@@ -121,11 +121,11 @@ async def noteinfo(event):
         text = get_string("notes", "cant_find_note", chat_id)
     else:
         text = get_string("notes", "note_info_title", chat_id)
-        text += get_string("notes", "note_info_note", chat_id).format(note_name)
+        text += get_string("notes", "note_info_note", chat_id).format(note_name=note_name)
         text += get_string("notes", "note_info_created", chat_id).format(
-            note['created'], await user_link(note['creator']))
+            data=note['created'], user=await user_link(note['creator']))
         text += get_string("notes", "note_info_updated", chat_id).format(
-            note['date'], await user_link(note['updated_by']))
+            data=note['date'], user=await user_link(note['updated_by']))
 
     await event.reply(text)
 
@@ -141,7 +141,7 @@ async def list_notes(event):
         return
 
     notes = mongodb.notes.find({'chat_id': chat_id})
-    text = get_string("notes", "notelist_header", chat_id).format(chat_title)
+    text = get_string("notes", "notelist_header", chat_id).format(chat_name=chat_title)
     if notes.count() == 0:
         text = get_string("notes", "notelist_no_notes", chat_id)
     else:
@@ -207,7 +207,7 @@ async def del_note_callback(event):
 
     link = await user_link(user_id)
     await event.edit(get_string("notes", "note_deleted_by", event.chat_id).format(
-        note['name'], link), link_preview=False)
+        note_name=note['name'], user=link), link_preview=False)
 
 
 @command("get", arg=True)
