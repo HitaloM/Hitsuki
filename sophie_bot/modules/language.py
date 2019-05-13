@@ -98,7 +98,8 @@ async def set_lang_callback(event):
 def get_string(module, text, chat_id, dir="STRINGS"):
     lang = get_chat_lang(chat_id)
 
-    if module in LANGUAGES[lang][dir] and \
+    if dir in LANGUAGES[lang] and \
+        module in LANGUAGES[lang][dir] and \
             text in LANGUAGES[lang][dir][module]:
         return LANGUAGES[lang][dir][module][text]
 

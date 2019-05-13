@@ -105,7 +105,8 @@
 	"warn_bun": "Warnings has been exceeded! {} has been banned!",
 	"warn_num": "Warns: {}/{}\n",
 	"rmv_warn_admin": "You're not an admin, Only admins can do!",
-	"rmv_sfl": "Warn removed by {}"
+    "rmv_sfl": "Warn removed by {}"
+    }
 
  },
  "HELPS": {
@@ -153,7 +154,7 @@
             "i8": "\nAn example of how to set a new multiword warning:",
             "i9": "`/warn @user Because warning is fun`",
             "i10": "\nThis will warn the user called @user, with a reason of 'Because warning is fun'"
+            }   
         }
     }
  }
-}

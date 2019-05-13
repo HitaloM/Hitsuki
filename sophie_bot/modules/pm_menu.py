@@ -91,7 +91,10 @@ async def get_mod_help_callback(event):
     text += '\n'
     lang = get_chat_lang(chat_id)
     for string in get_string(module, "text", chat_id, dir="HELPS"):
-        text += LANGUAGES[lang]["HELPS"][module]['text'][string]
+        if "HELPS" in LANGUAGES[lang]:
+            text += LANGUAGES[lang]["HELPS"][module]['text'][string]
+        else:
+            text += LANGUAGES["en"]["HELPS"][module]['text'][string]
         text += '\n'
     buttons = [[Button.inline("Back", 'get_help')]]
     await event.edit(text, buttons=buttons)
