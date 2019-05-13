@@ -5,7 +5,8 @@ import string
 from sophie_bot import BOT_NICK, WHITELISTED, bot, mongodb
 from sophie_bot.events import register
 from sophie_bot.modules.bans import ban_user
-from sophie_bot.modules.users import get_chat_admins, get_user_and_text, is_user_admin, user_link
+from sophie_bot.modules.users import get_chat_admins, get_user_and_text, is_user_admin, user_link, get_user
+from sophie_bot.modules.language import get_string
 
 from telethon import events
 from telethon.tl.custom import Button
@@ -15,17 +16,17 @@ from telethon.tl.custom import Button
 async def warn_user(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
-        await event.reply("You're not an admin!")
+        await event.reply(get_string("warns", "user_no_admeme", event.chat_id))
         return
 
     user, reason = await get_user_and_text(event)
     user_id = int(user['user_id'])
     chat_id = event.chat_id
     if user_id in WHITELISTED:
-        await event.reply("This is one of the whitelisted user!")
+        await event.reply(get_string("warns", "usr_whitelist", event.chat_id))
         return
     if user_id in await get_chat_admins(chat_id):
-        await event.reply("Heck, I can't warn the admins!")
+        await event.reply(get_string("warns", "Admin_no_wrn", event.chat_id))
         return
 
     rndm = randomString(15)
@@ -39,9 +40,11 @@ async def warn_user(event):
     admin = mongodb.user_list.find_one({'user_id': admin_id})
     admin_str = await user_link(admin['user_id'])
     user_str = await user_link(user['user_id'])
-    text = "{} have warned {}\n".format(admin_str, user_str)
+    textx = get_string("warns", "warn", event.chat_id)
+    text = textx.format(admin_str, user_str)
     if reason:
-        text += "Reason: `{}`\n".format(reason)
+        textx = get_string("warns", "warn_rsn", event.chat_id)
+        text += textx.format(reason)
 
     old = mongodb.warns.find({
         'user_id': user_id,
@@ -63,13 +66,15 @@ async def warn_user(event):
     if h >= warn_limit:
         if await ban_user(event, user_id, chat_id, None) is False:
             return
-        text += "Warnings has been exceeded! {} has been banned!".format(user_str)
+        textx = get_string("warns", "warn_bun", event.chat_id)
+        text += textx.format(user_str)
         mongodb.warns.delete_many({
             'user_id': user_id,
             'group_id': chat_id
         })
     else:
-        text += "Warns: {}/{}\n".format(h, warn_limit)
+        textx = get_string("warns", "warn_num", event.chat_id)
+        text += textx.format(h, warn_limit)
 
     await event.reply(text, buttons=button, link_preview=False)
 
@@ -79,7 +84,7 @@ async def remove_warn(event):
     user_id = event.query.user_id
     K = await is_user_admin(event.chat_id, user_id)
     if K is False:
-        await event.answer("You're not an admin, Only admins can do!")
+        await event.answer(get_string("warns", "rmv_warn_admin", event.chat_id))
         return
 
     warn_id = re.search(r'remove_warn_(.*)', str(event.data)).group(1)[:-1]
@@ -87,7 +92,8 @@ async def remove_warn(event):
     if warn:
         mongodb.notes.delete_one({'_id': warn['_id']})
     user_str = await user_link(user_id)
-    await event.edit("Warn removed by {}".format(user_str), link_preview=False)
+    textx = get_string("warns", "rmv_sfl", event.chat_id)
+    await event.edit(textx.format(user_str), link_preview=False)
 
 
 @register(incoming=True, pattern="^[!/]warns ?(@{})?(.*)".format(BOT_NICK))
@@ -142,6 +148,30 @@ async def warnlimit(event):
             'num': num
         })
         await event.reply("Warn limit has been updated to {}!".format(num))
+
+
+@register(outgoing=True, pattern="^[!/]resetwarns ?(@{})?(.*)".format(BOT_NICK))
+async def resetwarns(event):
+    K = await is_user_admin(event.chat_id, event.from_id)
+    if K is False:
+        await event.reply(get_string("warns", "user_no_admeme", event.chat_id))
+        return
+
+    user = await get_user(event)
+    user_id = int(user['user_id'])
+    chat_id = event.chat_id
+    admin = event.from_id
+    admin_str = await user_link(admin['user_id'])
+    user_str = await user_link(user_id)
+    chack = mongodb.warns.find({'group_id': chat_id, 'user_id': user_id})
+
+    if chack:
+        mongodb.warns.delete_many({'group_id': chat_id, 'user_id': user_id})
+        text = get_string("warns", "purged_warns", event.chat_id)
+        await event.reply(text.format(admin_str, user_str))
+    else:
+        text = get_string("warns", "usr_no_wrn", event.chat_id)
+        await event.reply(text.format(user_str))
 
 
 def randomString(stringLength):
