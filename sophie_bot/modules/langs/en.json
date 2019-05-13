@@ -25,7 +25,7 @@
         "note_not_found": "Note not found!",
         "note_deleted_by": "Note {} deleted by {}.",
         "user_blocked": "Write /start in my pm and click on the button again!",
-        "note_so_big": "This note bigger than Telegram limit of 200 symbols!",
+        "note_so_big": "This note bigger is than Telegram's limit of 200 characters!",
         "only_admins_can_rmw": "Only admins can remove this message",
         "delmsg_no_arg": "deletemsg button can contain only 'admin' or 'user' argument!"
     },
@@ -53,7 +53,7 @@
     "connections": {
         "can't_find_chat_use_id": "I can't find this chat, try using chat id.",
         "can't_find_chat": "I can't find this chat.",
-        "not_in_group": "You're not in the connecting group, join and send a message.",
+        "not_in_group": "You're not in the group you're trying to connect to, join and send a message.",
         "connected": "Successfully connected to **{}**!",
         "connected_pm_to_me": "Your pm has been successfully connected to **{}**! Write to @rSophieBot to start using connection.",
         "pm_connected": "Your pm has been successfully connected to **{}**!",
@@ -71,16 +71,16 @@
         "cant_find_note": "I can't find this note.",
         "welcome_set_to_note": "Welcome set to note: `{}`",
         "welcome_is_note": "Welcome is note: `{}`",
-        "welcome_is_default": "Welcome is default."
+        "welcome_is_default": "Welcome is set to default."
     },
     "filters": {
         "dont_have_right": "You don't have rights to save filters here!",
         "filter_added": "Filter added\n",
         "filter_keyword": "keyword: **{}**\n",
-        "no_arg_note": "Please write in arguments what note you wanna send on this filter",
+        "no_arg_note": "Please write in arguments what note you want to send on this filter",
         "a_send_note": "Action: **send note** `{}`",
-        "no_arg_tban": "Please write in arguments on what time you want ban user",
-        "a_tban": "Action: **temrotary ban sender for** `{}`",
+        "no_arg_tban": "Please write in arguments how long you want the user to be banned for",
+        "a_tban": "Action: **temporary ban sender for** `{}`",
         "a_del": "Action: **delete message**",
         "a_ban": "Action: **ban sender**",
         "a_mute": "Action: **mute sender**",
@@ -107,7 +107,6 @@
 	"rmv_warn_admin": "You're not an admin, Only admins can do!",
     "rmv_sfl": "Warn removed by {}"
     }
-
  },
  "HELPS": {
     "notes": {
@@ -154,7 +153,7 @@
             "i8": "\nAn example of how to set a new multiword warning:",
             "i9": "`/warn @user Because warning is fun`",
             "i10": "\nThis will warn the user called @user, with a reason of 'Because warning is fun'"
-            }   
         }
     }
  }
+}
