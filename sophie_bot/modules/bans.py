@@ -29,8 +29,10 @@ async def ban(event):
         user_str = await user_link(user['user_id'])
         text = get_string("bans", "user_banned", event.chat_id)
         text += get_string("bans", "reason", event.chat_id)
-        await event.reply(text.format(user_str, admin_str, chat_title, reason),
-                          link_preview=False)
+        await event.reply(text.format(
+            user=user_str, admin=admin_str, chat_name=chat_title, reason=reason),
+            link_preview=False
+        )
 
 
 @command("tban", arg=True)
@@ -92,7 +94,7 @@ async def kick(event):
         admin_str = await user_link(event.from_id)
         user_str = await user_link(user['user_id'])
         text = get_string("bans", "user_kicked", event.chat_id)
-        await event.reply(text.format(admin_str, user_str, chat_title))
+        await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
 @command("unban", arg=True)
@@ -112,7 +114,7 @@ async def unban(event):
         admin_str = await user_link(event.from_id)
         user_str = await user_link(user['user_id'])
         text = get_string("bans", "user_unbanned", event.chat_id)
-        await event.reply(text.format(admin_str, user_str, chat_title))
+        await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
 @command("mute", arg=True)
@@ -132,7 +134,7 @@ async def muter(event):
         admin_str = await user_link(event.from_id)
         user_str = await user_link(user['user_id'])
         text = get_string("bans", "user_mooted", event.chat_id)
-        await event.reply(text.format(admin_str, user_str, chat_title))
+        await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
 @command("unmute", arg=True)
@@ -151,7 +153,7 @@ async def unmoot(event):
         admin_str = await user_link(event.from_id)
         user_str = await user_link(user['user_id'])
         text = get_string("bans", "user_unmooted", event.chat_id)
-        await event.reply(text.format(admin_str, user_str, chat_title))
+        await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
 async def ban_user(event, user_id, chat_id, time_val):
