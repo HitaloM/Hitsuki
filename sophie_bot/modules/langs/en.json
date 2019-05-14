@@ -38,9 +38,11 @@
         "u_dont_have_rights_kick": "You don't have rights to kick users here!",
         "u_dont_have_rights_mute": "You don't have rights to mute users here!",
         "u_dont_have_rights_unban": "You don't have rights to unban users here!",
+        "u_dont_have_rights_unmute": "You don't have rights to unmute users here!",
         "bot_cant_be_kicked": "Are you crazy?! kick myself?!",
         "bot_cant_be_muted": "Are you crazy?! mute myself?!",
         "bot_cant_be_unbanned": "Ehh! I am not banned!!!",
+        "bot_cant_be_unmuted": "Uhh! I am not muted to unmute!?",
         "user_kicked": "{} kicked {} in {}",
         "user_unbanned": "{} unbanned {} in {} successfully",
         "user_admin_ban": "This is an admin, I can't ban him.",
@@ -48,7 +50,8 @@
         "user_admin_kick": "This is an admin, I can't kick him.",
         "user_admin_unban": "Seriously?! How am I supposed to unban an admin?",
         "user_admin_unmute": "Mm?! unmuted",
-        "user_mooted": "{} muted {} in {}"
+        "user_mooted": "{} muted {} in {}",
+        "user_unmooted": "{} unmuted {} in {}"
     },
     "connections": {
         "can't_find_chat_use_id": "I can't find this chat, try using chat id.",
