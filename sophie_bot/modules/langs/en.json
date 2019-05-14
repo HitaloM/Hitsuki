@@ -7,7 +7,7 @@
  "STRINGS": {
     "notes": {
         "notelist_no_notes": "No notes in this chat!",
-        "notelist_header": "**Notes in **{chat_name}**:\n",
+        "notelist_header": "**Notes in {chat_name}**:\n",
         "no_right_save_note": "You don't have rights to save notes here!",
         "saved": "saved",
         "updated": "updated",
@@ -15,7 +15,7 @@
         "you_can_get_note": "You can retrieve this note by using `/get {name}`, or `#{name}`",
         "dont_have_rights_to_save": "You don't have rights to save notes here!",
         "del_note": "Delete note",
-        "note_removed": "Note {note_name} removed!",
+        "note_removed": "Note `{note_name}` removed!",
         "cant_find_note": "I can't find this note!",
         "note_info_title": "**Note info**\n",
         "note_info_note": "Note: `{note_name}`\n",

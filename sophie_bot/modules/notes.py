@@ -154,7 +154,8 @@ async def list_notes(event):
     await event.reply(text)
 
 
-async def send_note(chat_id, group_id, msg_id, note_name, show_none=False, noformat=False):
+async def send_note(chat_id, group_id, msg_id, note_name,
+                    show_none=False, noformat=False, preview=False):
     file_id = None
     note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': note_name})
     if not note and show_none is True:
@@ -193,7 +194,8 @@ async def send_note(chat_id, group_id, msg_id, note_name, show_none=False, nofor
         buttons=buttons,
         parse_mode=format,
         reply_to=msg_id,
-        file=file_id
+        file=file_id,
+        link_preview=preview
     )
 
 
