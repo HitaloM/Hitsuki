@@ -16,6 +16,10 @@ from telethon.tl.custom import Button
 
 @command("save", arg=True)
 async def save_note(event):
+    K = await is_user_admin(event.chat_id, event.from_id)
+    if K is False:
+        await event.reply(get_string("notes", "dont_have_rights_to_save", event.chat_id))
+        return
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
         await event.reply(chat_id)
