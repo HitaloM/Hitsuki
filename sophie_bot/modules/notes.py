@@ -126,7 +126,7 @@ async def clear_note(event):
             "notes", "dont_have_rights_to_save", chat_id))
         return
 
-    note_name = event.pattern_match.group(2)
+    note_name = event.pattern_match.group(1)
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if note:
         mongodb.notes.delete_one({'_id': note['_id']})
