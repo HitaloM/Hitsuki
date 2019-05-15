@@ -14,6 +14,9 @@ from telethon import custom, errors, events, utils
 from telethon.tl.custom import Button
 
 
+RESTRICTED_SYMBOLS = ['*', '_', '`']
+
+
 @command("save", arg=True)
 async def save_note(event):
     K = await is_user_admin(event.chat_id, event.from_id)
@@ -27,6 +30,10 @@ async def save_note(event):
     # send_id = event.chat_id
 
     note_name = event.message.text.split(" ", 2)[1].lower()
+    for sym in RESTRICTED_SYMBOLS:
+        if sym in note_name:
+            await event.reply("Note name can't conatin `{}` !".format(sym))
+            return
     if note_name[0] == "#":
         note_name = note_name[1:]
     file_id = None
