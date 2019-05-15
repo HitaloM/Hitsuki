@@ -96,7 +96,7 @@ async def remove_warn(event):
     warn_id = re.search(r'remove_warn_(.*)', str(event.data)).group(1)[:-1]
     warn = mongodb.warns.find_one({'warn_id': warn_id})
     if warn:
-        mongodb.notes.delete_one({'_id': warn['_id']})
+        mongodb.warns.delete_one({'_id': warn['_id']})
     user_str = await user_link(user_id)
     textx = get_string("warns", "rmv_sfl", event.chat_id)
     await event.edit(textx.format(admin=user_str), link_preview=False)
@@ -125,7 +125,7 @@ async def user_warns(event):
     })
     user_str = await user_link(user_id)
     text = get_string("warns", "warn_list_head", event.chat_id).format(
-        admin=user_str, chat_name=chat_title)
+        user=user_str, chat_name=chat_title)
     H = 0
     for warn in warns:
         H += 1
