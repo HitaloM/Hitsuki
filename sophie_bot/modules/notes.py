@@ -37,10 +37,8 @@ async def save_note(event):
     if note_name[0] == "#":
         note_name = note_name[1:]
     file_id = None
-    if len(event.message.text.split(" ")) > 2:
-        prim_text = event.message.text.split(" ", 1)[1].split(" ", 1)[1]
-    else:
-        prim_text = ""
+    if event.pattern_match.group(1):
+        prim_text = re.sub(note_name, "", event.pattern_match.group(1), count=1, flags=0)
     if event.message.reply_to_msg_id:
         msg = await event.get_reply_message()
         note_text = msg.message
@@ -57,16 +55,35 @@ async def save_note(event):
     old = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     created_date = None
     creator = None
+    format = 'md'
     if old:
         if 'created' in old:
             created_date = old['created']
         if 'creator' in old:
             creator = old['creator']
+        if 'format' in old:
+            format = old['format']
 
         status = get_string("notes", "updated", chat_id)
         mongodb.notes.delete_one({'_id': old['_id']})
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
+    h = re.search(r"(\[format:(.*)\])", event.message.raw_text)
+    if h:
+        note_text = note_text.replace(h.group(1), "")
+        format_raw = h.group(2).lower()
+        print(format_raw)
+
+        if format_raw == 'md' or format_raw == 'markdown':
+            format = 'html'
+        elif format_raw == 'html':
+            format = 'html'
+        elif format_raw == 'none':
+            format = None
+        else:
+            await event.reply("Allowed only `html`, `md` and `none` formats!")
+            return
 
     if not creator:
         creator = event.from_id
@@ -79,11 +96,14 @@ async def save_note(event):
          'created': created_date,
          'updated_by': event.from_id,
          'creator': creator,
+         'format': format,
          'file_id': file_id})
 
     new = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
     text = get_string("notes", "note_saved_or_updated", chat_id).format(
         note_name=note_name, status=status, chat_title=chat_title)
+    if not format == 'md':
+        text += "Formatting: {}\n".format(format)
     text += get_string("notes", "you_can_get_note", chat_id).format(name=note_name)
 
     if status == 'saved':
@@ -126,13 +146,14 @@ async def noteinfo(event):
             "notes", "dont_have_rights", chat_id))
         return
 
-    note_name = event.pattern_match.group(2)
+    note_name = event.pattern_match.group(1)
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if not note:
         text = get_string("notes", "cant_find_note", chat_id)
     else:
         text = get_string("notes", "note_info_title", chat_id)
         text += get_string("notes", "note_info_note", chat_id).format(note_name=note_name)
+        text += "Formatting: {note_format}\n".format(note_format=note['format'])
         text += get_string("notes", "note_info_created", chat_id).format(
             data=note['created'], user=await user_link(note['creator']))
         text += get_string("notes", "note_info_updated", chat_id).format(
@@ -179,16 +200,16 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         file_id = None
 
     if noformat is True:
-        format = 'html'
+        format = None
         string = note['text']
         buttons = ""
     else:
-        format = 'md'
+        format = note['format']
         string, buttons = button_parser(group_id, note['text'])
 
     if len(string.rstrip()) == 0:
         if noformat is True:
-            string = "<b>Note {}</b>\n\n".format(note_name)
+            string = "Note {}\n\n".format(note_name)
         else:
             string = "**Note {}**\n\n".format(note_name)
 
