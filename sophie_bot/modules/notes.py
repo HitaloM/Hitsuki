@@ -204,7 +204,10 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         string = note['text']
         buttons = ""
     else:
-        format = note['format']
+        if 'format' in note:
+            format = note['format']
+        else:
+            format = 'md'
         string, buttons = button_parser(group_id, note['text'])
 
     if len(string.rstrip()) == 0:
