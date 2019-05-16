@@ -40,14 +40,19 @@ async def check_message(event):
 
 @command("filter(?!s)", arg=True)
 async def add_filter(event):
-    chat_id = event.chat_id
+    real_chat_id = event.chat_id
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
-        await event.reply(get_string("filters", "dont_have_right", chat_id))
+        await event.reply(get_string("filters", "dont_have_right", real_chat_id))
         return
     args = event.message.raw_text.split(" ")
     if len(args) < 3:
         await event.reply("args error")
+        return
+    status, chat_id, chat_title = await get_conn_chat(
+        event.from_id, event.chat_id, only_in_groups=True)
+    if status is False:
+        await event.reply(chat_id)
         return
 
     handler = args[1]
@@ -56,35 +61,35 @@ async def add_filter(event):
         arg = args[3]
     else:
         arg = None
-    text = get_string("filters", "filter_added", chat_id)
-    text += get_string("filters", "filter_keyword", chat_id).format(handler)
+    text = get_string("filters", "filter_added", real_chat_id)
+    text += get_string("filters", "filter_keyword", real_chat_id).format(handler)
     if action == 'note':
         if not len(args) > 3:
-            await event.reply(get_string("filters", "no_arg_note", chat_id))
+            await event.reply(get_string("filters", "no_arg_note", real_chat_id))
             return
-        text += get_string("filters", "a_send_note", chat_id).format(arg)
+        text += get_string("filters", "a_send_note", real_chat_id).format(arg)
     elif action == 'tban':
         if not len(args) > 3:
-            await event.reply(get_string("filters", "no_arg_tban", chat_id))
+            await event.reply(get_string("filters", "no_arg_tban", real_chat_id))
             return
-        text += get_string("filters", "no_arg_tban", chat_id).format(str(arg))
+        text += get_string("filters", "no_arg_tban", real_chat_id).format(str(arg))
     elif action == 'delete':
-        text += get_string("filters", "a_del", chat_id)
+        text += get_string("filters", "a_del", real_chat_id)
     elif action == 'ban':
-        text += get_string("filters", "a_ban", chat_id)
+        text += get_string("filters", "a_ban", real_chat_id)
     elif action == 'mute':
-        text += get_string("filters", "a_mute", chat_id)
+        text += get_string("filters", "a_mute", real_chat_id)
     elif action == 'kick':
-        text += get_string("filters", "a_kick", chat_id)
+        text += get_string("filters", "a_kick", real_chat_id)
     else:
-        await event.reply(get_string("filters", "wrong_action", chat_id))
+        await event.reply(get_string("filters", "wrong_action", real_chat_id))
         return
 
     mongodb.filters.insert_one(
-        {"chat_id": event.chat_id,
+        {"chat_id": chat_id,
          "handler": handler.lower(),
          'action': action, 'arg': arg})
-    update_handlers_cache(event.chat_id)
+    update_handlers_cache(chat_id)
     await event.reply(text)
 
 
@@ -100,7 +105,7 @@ async def list_filters(event):
         chat_id = conn[1]
         chat_title = conn[2]
     filters = mongodb.filters.find({'chat_id': chat_id})
-    text = get_string("filters", "filters_in", chat_id).format(chat_title)
+    text = get_string("filters", "filters_in", event.chat_id).format(chat_title)
     H = 0
 
     for filter in filters:
@@ -111,7 +116,7 @@ async def list_filters(event):
         else:
             text += "- {} ({})\n".format(filter['handler'], filter['action'])
     if H == 0:
-        text = get_string("filters", "no_filters_in", chat_id).format(chat_title)
+        text = get_string("filters", "no_filters_in", event.chat_id).format(chat_title)
     await event.reply(text)
 
 
@@ -121,18 +126,19 @@ async def stop_filter(event):
     if K is False:
         await event.reply(get_string("filters", "no_rights_stop", event.chat_id))
         return
+    status, chat_id, chat_title = await get_conn_chat(
+        event.from_id, event.chat_id, admin=True, only_in_groups=True)
 
     handler = event.pattern_match.group(2)
-    print(handler)
-    regx = '{}'.format(handler)
-    filter = mongodb.filters.find_one({'chat_id': event.chat_id,
-                                      "handler": {'$regex': regx}})
+    filter = mongodb.filters.find_one({'chat_id': chat_id,
+                                      "handler": {'$regex': str(handler)}})
     if not filter:
         await event.reply(get_string("filters", "cant_find_filter", event.chat_id))
         return
     mongodb.filters.delete_one({'_id': filter['_id']})
-    update_handlers_cache(event.chat_id)
-    await event.reply(get_string("filters", "filter_deleted", event.chat_id).format(handler))
+    update_handlers_cache(chat_id)
+    await event.reply(get_string("filters", "filter_deleted", event.chat_id).format(
+        filter=handler, chat_name=chat_title))
 
 
 def update_handlers_cache(chat_id):

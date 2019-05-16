@@ -173,9 +173,9 @@ async def list_notes(event):
         return
 
     notes = mongodb.notes.find({'chat_id': chat_id})
-    text = get_string("notes", "notelist_header", chat_id).format(chat_name=chat_title)
+    text = get_string("notes", "notelist_header", event.chat_id).format(chat_name=chat_title)
     if notes.count() == 0:
-        text = get_string("notes", "notelist_no_notes", chat_id)
+        text = get_string("notes", "notelist_no_notes", event.chat_id)
     else:
         for note in notes:
             text += "- `{}`\n".format(note['name'])

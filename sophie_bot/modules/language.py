@@ -45,12 +45,12 @@ async def lang(event):
 
 @command("lang", arg=True)
 async def lang_with_arg(event):
-    if not event.pattern_match.group(2):
+    if not event.pattern_match.group(1):
         return
     if await flood_limit(event, 'lang') is False:
         return
 
-    arg = event.pattern_match.group(2)
+    arg = event.pattern_match.group(1).lower()
 
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
