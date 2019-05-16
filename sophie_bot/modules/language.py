@@ -67,7 +67,17 @@ async def lang_with_arg(event):
 
     mongodb.lang.insert_one({'chat_id': event.chat_id, 'lang': arg})
     redis.set('lang_cache_{}'.format(event.chat_id), arg)
-    await event.reply("Language changed to {}".format(arg))
+
+    text = "Language changed to **{}**".format(arg)
+
+    if 'translators' in LANGUAGES[arg]["language_info"]:
+        text += "\n\n**Translators:**\n"
+        for user in LANGUAGES[arg]["language_info"]['translators']:
+            text += "• "
+            text += await user_link(user)
+            text += '\n'
+
+    await event.reply(text)
 
 
 @bot.on(events.CallbackQuery(data=re.compile(b'select_lang_')))
