@@ -9,7 +9,7 @@ from telethon import custom, events
 from telethon.tl.custom import Button
 
 
-# Genrate help
+# Generate help cached/
 HELP = []
 for module in LANGUAGES['en']['HELPS']:
     HELP.append(module)
@@ -90,11 +90,43 @@ async def get_mod_help_callback(event):
     text = get_string(module, "title", chat_id, dir="HELPS")
     text += '\n'
     lang = get_chat_lang(chat_id)
+    buttons = []
     for string in get_string(module, "text", chat_id, dir="HELPS"):
         if "HELPS" in LANGUAGES[lang]:
             text += LANGUAGES[lang]["HELPS"][module]['text'][string]
         else:
             text += LANGUAGES["en"]["HELPS"][module]['text'][string]
         text += '\n'
-    buttons = [[Button.inline("Back", 'get_help')]]
+    if 'buttons' in LANGUAGES[lang]["HELPS"][module]:
+        counter = 0
+        for btn in LANGUAGES[lang]["HELPS"][module]['buttons']:
+            counter += 1
+            btn_name = LANGUAGES[lang]["HELPS"][module]['buttons'][btn]
+            t = [Button.inline(btn_name, btn)]
+            if counter % 2 == 0:
+                new = buttons[-1] + t
+                buttons = buttons[:-1]
+                buttons.append(new)
+            else:
+                buttons.append(t)
+    buttons += [[Button.inline("Back", 'get_help')]]
     await event.edit(text, buttons=buttons)
+
+
+@bot.on(events.CallbackQuery(data=re.compile(r'help_btn_(.*)')))
+async def get_help_button_callback(event):
+    event_raw = re.search('help_btn_(.*)_(.*)', str(event.data))
+    module = event_raw.group(1)
+    data = event_raw.group(2)[:-1]
+    print(module, data)
+    chat_id = event.chat_id
+    lang = get_chat_lang(chat_id)
+    text = "Help of {}"
+    if data in LANGUAGES[lang]["HELPS"][module]:
+        for btn in get_string(module, data, chat_id, dir="HELPS"):
+            print(btn)
+            text += LANGUAGES[lang]["HELPS"][module][data][btn]
+            text += '\n'
+    buttons = [[Button.inline("Back", 'mod_help_' + module)]]
+    await event.edit(text, buttons=buttons)
+    

@@ -146,6 +146,17 @@
             "i13": "`save word` while replying to a sticker or whatever data you'd like. Now, the note at `#word` contains a sticker which will be sent as a reply.",
             "i14": "\nTip: to retrieve a note without the formatting, use `/get (name) noformat`",
             "i15": "This will retrieve the note and send it without formatting it; getting you the raw markdown, allowing you to make easy edits."
+        },
+        "buttons": {
+            "help_btn_notes_md": "Markdown",
+            "help_btn_purges2": "Buttons"
+        },
+        "md": {
+            "a1": "You can use markdown to make your messages more expressive. This is the markdown currently supported:\n",
+            "a2": "`code words` backticks allow you to wrap your words in monospace fonts. Shows as: `code words`",
+            "a3": "`**bold words**` asterixes are used for bold font. Shows as: **bold words**",
+            "a4": "`__italic words__` underscores are used for italics. Shows as: __italic words__",
+            "a5": "`[hyperlink](example.com)` this is used for hyperlinks, and will show as such: [hyperlink](http://example.com/). Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown."
         }
     },
     "purges": {

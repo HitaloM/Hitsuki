@@ -71,7 +71,6 @@ async def save_note(event):
     if h:
         note_text = note_text.replace(h.group(1), "")
         format_raw = h.group(2).lower()
-        print(format_raw)
 
         if format_raw == 'md' or format_raw == 'markdown':
             format = 'html'
