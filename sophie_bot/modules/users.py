@@ -106,6 +106,16 @@ async def is_user_admin(chat_id, user_id):
         return False
 
 
+async def check_group_admin(event, user_id):
+    chat_id = event.chat_id
+    print(await is_user_admin(chat_id, user_id))
+    if await is_user_admin(chat_id, user_id) is True:
+        return True
+    else:
+        await event.reply("You should be a admin to do it!")
+        return False
+
+
 async def get_chat_admins(chat_id):
     dump = redis.get('admins_cache_{}'.format(chat_id))
     if not dump:

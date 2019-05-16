@@ -8,7 +8,7 @@ from sophie_bot.events import command, register
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import get_string
-from sophie_bot.modules.users import is_user_admin, user_link
+from sophie_bot.modules.users import check_group_admin, user_link
 
 from telethon import custom, errors, events, utils
 from telethon.tl.custom import Button
@@ -19,9 +19,7 @@ RESTRICTED_SYMBOLS = ['*', '_', '`']
 
 @command("save", arg=True)
 async def save_note(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("notes", "dont_have_rights_to_save", event.chat_id))
+    if await check_group_admin(event, event.from_id) is False:
         return
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
@@ -119,11 +117,7 @@ async def save_note(event):
 @command("clear", arg=True)
 async def clear_note(event):
     chat_id = event.chat_id
-
-    K = await is_user_admin(chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string(
-            "notes", "dont_have_rights_to_save", chat_id))
+    if await check_group_admin(event, event.from_id) is False:
         return
 
     note_name = event.pattern_match.group(1)
@@ -139,11 +133,7 @@ async def clear_note(event):
 @command("noteinfo", arg=True)
 async def noteinfo(event):
     chat_id = event.chat_id
-
-    K = await is_user_admin(chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string(
-            "notes", "dont_have_rights", chat_id))
+    if await check_group_admin(event, event.from_id) is False:
         return
 
     note_name = event.pattern_match.group(1)
@@ -233,9 +223,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
 @bot.on(events.CallbackQuery(data=re.compile(b'delnote_')))
 async def del_note_callback(event):
     user_id = event.query.user_id
-    K = await is_user_admin(event.chat_id, user_id)
-    if K is False:
-        await event.answer(get_string("notes", "dont_have_rights_to_save", event.chat_id))
+    if await check_group_admin(event, user_id) is False:
         return
     note_id = re.search(r'delnote_(.*)', str(event.data)).group(1)[:-1]
     note = mongodb.notes.find_one({'_id': ObjectId(note_id)})
@@ -343,10 +331,7 @@ async def del_message_callback(event):
     event_data = re.search(r'get_delete_msg_(.*)_(.*)', data)
     if 'admin' in event_data.group(2):
         user_id = event.query.user_id
-        K = await is_user_admin(event.chat_id, user_id)
-        if K is False:
-            await event.answer(
-                get_string("notes", "only_admins_can_rmw", event.chat_id), alert=True)
+        if await check_group_admin(event, user_id) is False:
             return
     elif 'user' in event_data.group(2):
         pass
