@@ -3,7 +3,7 @@ from time import gmtime, strftime
 
 from bson.objectid import ObjectId
 
-from sophie_bot import bot, mongodb
+from sophie_bot import BOT_NICK, bot, mongodb
 from sophie_bot.events import command, register
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.flood import flood_limit
@@ -247,7 +247,7 @@ async def del_note_callback(event):
         note_name=note['name'], user=link), link_preview=False)
 
 
-@command("get", arg=True)
+@register(incoming=True, pattern="^[/!#](?:get|get@{})(?: |$)(.*)".format(BOT_NICK))
 async def get_note(event):
     raw_text = event.message.raw_text.split()
     note_name = raw_text[1].lower()
