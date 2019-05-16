@@ -25,7 +25,6 @@ SUDO.append(OWNER_ID)
 
 WHITELISTED = list(conf["advanced"]["whitelisted"])
 WHITELISTED = WHITELISTED + SUDO
-#WHITELISTED.append(OWNER_ID)
 
 API_ID = conf["basic"]["app_id"]
 API_HASH = conf["basic"]["app_hash"]

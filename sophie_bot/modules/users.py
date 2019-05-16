@@ -75,8 +75,9 @@ async def update_users(event):
                  'last_name': user.last_name,
                  'username': user.username,
                  'user_lang': user.lang_code})
-    except Exception as err:
-        await event.reply(str(err))
+    except Exception:
+        pass
+        # await event.reply(str(err))
 
 
 async def update_admin_cache(chat_id):
