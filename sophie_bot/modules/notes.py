@@ -36,7 +36,7 @@ async def save_note(event):
         note_name = note_name[1:]
     file_id = None
     if event.pattern_match.group(1):
-        prim_text = re.sub(note_name, "", event.pattern_match.group(1), count=1, flags=0)
+        prim_text = event.message.text.split(" ", 1)[1].split(" ", 1)[1]
     if event.message.reply_to_msg_id:
         msg = await event.get_reply_message()
         note_text = msg.message
