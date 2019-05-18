@@ -30,7 +30,8 @@ async def save_note(event, status, chat_id, chat_title):
     if note_name[0] == "#":
         note_name = note_name[1:]
     file_id = None
-    if event.pattern_match.group(1):
+    prim_text = ""
+    if len(event.message.text.split(" ")) > 2:
         prim_text = event.message.text.split(" ", 1)[1].split(" ", 1)[1]
     if event.message.reply_to_msg_id:
         msg = await event.get_reply_message()
