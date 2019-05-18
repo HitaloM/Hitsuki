@@ -203,10 +203,11 @@ async def send_note(chat_id, group_id, msg_id, note_name,
     )
 
 
+@flood_limit_dec("delnote_handler")
 @bot.on(events.CallbackQuery(data=re.compile(b'delnote_')))
 async def del_note_callback(event):
     user_id = event.query.user_id
-    if await check_group_admin(event, user_id) is False:
+    if await is_user_admin(event.chat_id, user_id) is False:
         return
     note_id = re.search(r'delnote_(.*)', str(event.data)).group(1)[:-1]
     note = mongodb.notes.find_one({'_id': ObjectId(note_id)})
