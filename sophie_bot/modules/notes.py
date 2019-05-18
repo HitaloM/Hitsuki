@@ -10,6 +10,7 @@ from sophie_bot.modules.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import check_group_admin, user_link
 from sophie_bot.modules.helper_func.user_status import is_user_admin
+from sophie_bot.modules.helper_func.dev_tools import benchmark
 
 from telethon import custom, errors, events, utils
 from telethon.tl.custom import Button
@@ -19,6 +20,7 @@ RESTRICTED_SYMBOLS = ['*', '_', '`']
 
 
 @command("save", arg=True)
+@benchmark
 @is_user_admin
 @connection(admin=True)
 async def save_note(event, status, chat_id, chat_title):
@@ -56,22 +58,26 @@ async def save_note(event, status, chat_id, chat_title):
             creator = old['creator']
 
         status = get_string("notes", "updated", chat_id)
-        mongodb.notes.delete_one({'_id': old['_id']})
+        # mongodb.notes.delete_one({'_id': old['_id']})
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
     if not creator:
         creator = event.from_id
 
-    mongodb.notes.insert_one(
-        {'chat_id': chat_id,
-         'name': note_name,
-         'text': note_text,
-         'date': date,
-         'created': created_date,
-         'updated_by': event.from_id,
-         'creator': creator,
-         'file_id': file_id})
+    new = ({'chat_id': chat_id,
+            'name': note_name,
+            'text': note_text,
+            'date': date,
+            'created': created_date,
+            'updated_by': event.from_id,
+            'creator': creator,
+            'file_id': file_id})
+
+    if old:
+        mongodb.notes.update_one({'_id': old['_id']}, {"$set": old}, upsert=False)
+    else:
+        mongodb.notes.insert_one(new)
 
     new = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
     text = get_string("notes", "note_saved_or_updated", chat_id).format(
