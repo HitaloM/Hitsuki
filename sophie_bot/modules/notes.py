@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 from sophie_bot import BOT_NICK, bot, mongodb
 from sophie_bot.events import command, register
 from sophie_bot.modules.connections import get_conn_chat, connection
-from sophie_bot.modules.flood import flood_limit
+from sophie_bot.modules.flood import flood_limit, flood_limit_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import check_group_admin, user_link
 from sophie_bot.modules.helper_func.user_status import is_user_admin
@@ -123,11 +123,9 @@ async def noteinfo(event, status, chat_id, chat_title):
 
 
 @command("notes")
+@flood_limit_dec("notes")
 @connection()
 async def list_notes(event, status, chat_id, chat_title):
-    if await flood_limit(event, 'notes') is False:
-        return
-
     notes = mongodb.notes.find({'chat_id': chat_id})
     text = get_string("notes", "notelist_header", event.chat_id).format(chat_name=chat_title)
     if notes.count() == 0:

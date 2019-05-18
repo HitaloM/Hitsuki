@@ -8,4 +8,3 @@ def is_user_admin(func):
             return
         return await func(event)
     return wrapped
-

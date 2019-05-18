@@ -1,5 +1,4 @@
 import re
-from functools import wraps
 
 from sophie_bot import bot, mongodb, redis
 from sophie_bot.events import command
