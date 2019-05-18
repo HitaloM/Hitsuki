@@ -1,15 +1,12 @@
 from sophie_bot.events import command
-from sophie_bot.modules.flood import flood_limit
+from sophie_bot.modules.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import get_user, user_link
 
 
 @command("id", arg=True)
+@flood_limit_dec("id")
 async def id(event):
-
-    if await flood_limit(event, 'id') is False:
-        return
-
     text = get_string("misc", "your_id", event.chat_id).format(event.from_id)
     text += get_string("misc", "chat_id", event.chat_id).format(event.chat_id)
 

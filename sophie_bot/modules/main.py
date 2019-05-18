@@ -4,7 +4,7 @@ import subprocess
 
 from sophie_bot import mongodb
 from sophie_bot.events import command
-from sophie_bot.modules.flood import flood_limit
+from sophie_bot.modules.flood import flood_limit_dec
 
 
 async def term(command):
@@ -36,9 +36,8 @@ async def chat_term(event, command):
 
 
 @command("botchanges")
+@flood_limit_dec("botchanges")
 async def botchanges(event):
-    if await flood_limit(event, 'botchanges') is False:
-        return
     command = "git log --pretty=format:\"%an: %s\" -30"
     result = "**Bot changes:**\n"
     result += "__Showed last 30 commits__\n"
@@ -47,9 +46,8 @@ async def botchanges(event):
 
 
 @command("stats")
+@flood_limit_dec("stats")
 async def stats(event):
-    if await flood_limit(event, 'stats') is False:
-        return
     text = "**Stats**\n"
     usrs = mongodb.user_list.count()
     chats = mongodb.chat_list.count()

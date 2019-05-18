@@ -1,17 +1,16 @@
 import asyncio
 import os
 
-from sophie_bot import OWNER_ID, bot, mongodb, redis
+from sophie_bot import bot, mongodb, redis
 from sophie_bot.events import command, register
 from sophie_bot.modules.main import chat_term
 from sophie_bot.modules.notes import button_parser
+from sophie_bot.modules.helper_func.user_status import is_user_owner
 
 
 @command("term", arg=True)
+@is_user_owner
 async def term(event):
-    if not event.from_id == OWNER_ID:
-        return
-
     msg = await event.reply("Running...")
     command = str(event.message.text.split(" ", 1)[1])
     result = "**Shell:**\n"
@@ -20,9 +19,8 @@ async def term(event):
 
 
 @command("broadcast", arg=True)
+@is_user_owner
 async def broadcast(event):
-    if not event.from_id == OWNER_ID:
-        return
     chats = mongodb.chat_list.find({})
     raw_text = event.message.text.split(" ", 1)[1]
     text, buttons = button_parser(event.chat_id, raw_text)
@@ -46,9 +44,8 @@ async def broadcast(event):
 
 
 @command("sbroadcast", arg=True)
+@is_user_owner
 async def sbroadcast(event):
-    if not event.from_id == OWNER_ID:
-        return
     text = event.message.text.split(" ", 1)[1]
     # Add chats to sbroadcast list
     chats = mongodb.chat_list.find({})
@@ -90,9 +87,8 @@ async def check_message_for_smartbroadcast(event):
 
 
 @command("backup", arg=True)
+@is_user_owner
 async def backup(event):
-    if not event.from_id == OWNER_ID:
-        return
     msg = await event.reply("Running...")
     date = await chat_term(event, "date \"+%Y-%m-%d.%H:%M:%S\"")
     await chat_term(event, "mongodbdump --gzip --archive > Backups/dump_{}.gz".format(date))
@@ -100,22 +96,21 @@ async def backup(event):
 
 
 @command("purgecaches?(s)", arg=True)
+@is_user_owner
 async def purge_caches(event):
-    if not event.from_id == OWNER_ID:
-        return
     redis.flushdb()
     await event.reply("redis cache was cleaned.")
 
 
 @command("botstop", arg=True)
+@is_user_owner
 async def bot_stop(event):
-    if not event.from_id == OWNER_ID:
-        return
     await event.reply("Goodbye...")
     exit(1)
 
 
 @command("upload", arg=True)
+@is_user_owner
 async def upload_file(event):
     input_str = event.pattern_match.group(1)
     if os.path.exists(input_str):
