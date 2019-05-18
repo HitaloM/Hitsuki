@@ -20,7 +20,6 @@ RESTRICTED_SYMBOLS = ['*', '_', '`']
 
 
 @command("save", arg=True)
-@benchmark
 @is_user_admin
 @connection(admin=True)
 async def save_note(event, status, chat_id, chat_title):
@@ -58,7 +57,6 @@ async def save_note(event, status, chat_id, chat_title):
             creator = old['creator']
 
         status = get_string("notes", "updated", chat_id)
-        # mongodb.notes.delete_one({'_id': old['_id']})
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
