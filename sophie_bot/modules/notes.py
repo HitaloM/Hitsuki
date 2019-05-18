@@ -9,6 +9,7 @@ from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import check_group_admin, user_link
+from sophie_bot.modules.helper_func.user_status import is_user_admin
 
 from telethon import custom, errors, events, utils
 from telethon.tl.custom import Button
@@ -18,9 +19,8 @@ RESTRICTED_SYMBOLS = ['*', '_', '`']
 
 
 @command("save", arg=True)
+@is_user_admin
 async def save_note(event):
-    if await check_group_admin(event, event.from_id) is False:
-        return
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     if status is False:
         await event.reply(chat_id)
@@ -93,11 +93,9 @@ async def save_note(event):
 
 
 @command("clear", arg=True)
+@is_user_admin
 async def clear_note(event):
     chat_id = event.chat_id
-    if await check_group_admin(event, event.from_id) is False:
-        return
-
     note_name = event.pattern_match.group(1)
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if note:
@@ -109,11 +107,9 @@ async def clear_note(event):
 
 
 @command("noteinfo", arg=True)
+@is_user_admin
 async def noteinfo(event):
     chat_id = event.chat_id
-    if await check_group_admin(event, event.from_id) is False:
-        return
-
     note_name = event.pattern_match.group(1)
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if not note:

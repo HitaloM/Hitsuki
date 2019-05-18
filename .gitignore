@@ -3,8 +3,7 @@ __pycache__/*
 *.session-journal
 sophie_bot/__pycache__/*
 sophie_bot/modules/__pycache__/*
-sophie_bot/modules/lang/__pycache__/*
-sophie_bot/modules/sql_helper/__pycache__/*
+sophie_bot/modules/*/__pycache__/*
 sophie_bot/bot_conf.json
 output.txt
 Backups/
