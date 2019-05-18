@@ -173,13 +173,11 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         buttons = ""
     else:
         string, buttons = button_parser(group_id, note['text'])
-        h = re.search(r"(\[format:(.*)\])", string)
+        h = re.search(r"(\[format:(markdown|md|html|none)\])", string)
         if h:
-            print('wow')
             string = string.replace(h.group(1), "")
             format_raw = h.group(2).lower()
-            print(format_raw)
-            if format_raw == 'markdown':
+            if format_raw == 'markdown' or format_raw == 'md':
                 format = 'md'
             elif format_raw == 'html':
                 format = 'html'
@@ -187,6 +185,16 @@ async def send_note(chat_id, group_id, msg_id, note_name,
                 format = None
         else:
             format = 'md'
+
+        r = re.search(r"(\[preview:(yes|no)\])", string)
+        if r:
+            string = string.replace(r.group(1), "")
+            preview_raw = r.group(2).lower()
+            print(preview_raw)
+            if preview_raw == "yes":
+                preview = True
+            elif preview_raw == "no":
+                preview = False
 
     if len(string.rstrip()) == 0:
         if noformat is True:
