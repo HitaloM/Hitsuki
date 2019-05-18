@@ -30,6 +30,7 @@ async def save_note(event, status, chat_id, chat_title):
     if note_name[0] == "#":
         note_name = note_name[1:]
     file_id = None
+    buttons = None
     prim_text = ""
     if len(event.message.text.split(" ")) > 2:
         prim_text = event.message.text.split(" ", 1)[1].split(" ", 1)[1]
@@ -54,7 +55,6 @@ async def save_note(event, status, chat_id, chat_title):
             created_date = old['created']
         if 'creator' in old:
             creator = old['creator']
-
         status = get_string("notes", "updated", chat_id)
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -72,21 +72,18 @@ async def save_note(event, status, chat_id, chat_title):
             'file_id': file_id})
 
     if old:
-        mongodb.notes.update_one({'_id': old['_id']}, {"$set": old}, upsert=False)
+        mongodb.notes.update_one({'_id': old['_id']}, {"$set": new}, upsert=False)
+        new = None
     else:
-        mongodb.notes.insert_one(new)
+        new = mongodb.notes.insert_one(new).inserted_id
 
-    new = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
-    text = get_string("notes", "note_saved_or_updated", chat_id).format(
-        note_name=note_name, status=status, chat_title=chat_title)
-    text += get_string("notes", "you_can_get_note", chat_id).format(name=note_name)
-
-    if status == 'saved':
         buttons = [
             [Button.inline(get_string("notes", "del_note", chat_id), 'delnote_{}'.format(new))]
         ]
-    else:
-        buttons = None
+
+    text = get_string("notes", "note_saved_or_updated", chat_id).format(
+        note_name=note_name, status=status, chat_title=chat_title)
+    text += get_string("notes", "you_can_get_note", chat_id).format(name=note_name)
 
     await event.reply(text, buttons=buttons)
 
@@ -179,7 +176,6 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         if r:
             string = string.replace(r.group(1), "")
             preview_raw = r.group(2).lower()
-            print(preview_raw)
             if preview_raw == "yes":
                 preview = True
             elif preview_raw == "no":
