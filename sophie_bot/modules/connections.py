@@ -1,4 +1,5 @@
 import re
+from functools import wraps
 
 from sophie_bot import bot, mongodb, redis
 from sophie_bot.events import command
@@ -185,3 +186,16 @@ async def get_conn_chat(user_id, chat_id, admin=False, only_in_groups=False):
                 "connections", "u_should_be_admin", event.chat_id).format(chat_title), None
 
     return True, int(group_id), chat_title
+
+
+def connection(**kwargs):
+    def wrapped(func):
+        async def wrapped_1(event, **kwargs):
+            status, chat_id, chat_title = await get_conn_chat(
+                event.from_id, event.chat_id, **kwargs)
+            if status is False:
+                await event.reply(chat_id)
+                return
+            return await func(event, status, chat_id, chat_title)
+        return wrapped_1
+    return wrapped

@@ -5,7 +5,7 @@ from bson.objectid import ObjectId
 
 from sophie_bot import BOT_NICK, bot, mongodb
 from sophie_bot.events import command, register
-from sophie_bot.modules.connections import get_conn_chat
+from sophie_bot.modules.connections import get_conn_chat, connection
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import check_group_admin, user_link
@@ -20,13 +20,8 @@ RESTRICTED_SYMBOLS = ['*', '_', '`']
 
 @command("save", arg=True)
 @is_user_admin
-async def save_note(event):
-    status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
-    # send_id = event.chat_id
-
+@connection(admin=True)
+async def save_note(event, status, chat_id, chat_title):
     note_name = event.message.text.split(" ", 2)[1].lower()
     for sym in RESTRICTED_SYMBOLS:
         if sym in note_name:
@@ -94,22 +89,23 @@ async def save_note(event):
 
 @command("clear", arg=True)
 @is_user_admin
-async def clear_note(event):
-    chat_id = event.chat_id
+@connection(admin=True)
+async def clear_note(event, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if note:
         mongodb.notes.delete_one({'_id': note['_id']})
-        text = get_string("notes", "note_removed", chat_id).format(note_name=note_name)
+        text = get_string("notes", "note_removed", chat_id).format(
+            note_name=note_name, chat_name=chat_title)
     else:
-        text = get_string("notes", "cant_find_note", chat_id)
+        text = get_string("notes", "cant_find_note", chat_id).format(chat_name=chat_title)
     await event.reply(text)
 
 
 @command("noteinfo", arg=True)
 @is_user_admin
-async def noteinfo(event):
-    chat_id = event.chat_id
+@connection(admin=True)
+async def noteinfo(event, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if not note:
@@ -127,12 +123,8 @@ async def noteinfo(event):
 
 
 @command("notes")
-async def list_notes(event):
-    status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
-
+@connection()
+async def list_notes(event, status, chat_id, chat_title):
     if await flood_limit(event, 'notes') is False:
         return
 
