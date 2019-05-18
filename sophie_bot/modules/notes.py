@@ -53,34 +53,16 @@ async def save_note(event):
     old = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     created_date = None
     creator = None
-    format = 'md'
     if old:
         if 'created' in old:
             created_date = old['created']
         if 'creator' in old:
             creator = old['creator']
-        if 'format' in old:
-            format = old['format']
 
         status = get_string("notes", "updated", chat_id)
         mongodb.notes.delete_one({'_id': old['_id']})
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-
-    h = re.search(r"(\[format:(.*)\])", event.message.raw_text)
-    if h:
-        note_text = note_text.replace(h.group(1), "")
-        format_raw = h.group(2).lower()
-
-        if format_raw == 'md' or format_raw == 'markdown':
-            format = 'html'
-        elif format_raw == 'html':
-            format = 'html'
-        elif format_raw == 'none':
-            format = None
-        else:
-            await event.reply("Allowed only `html`, `md` and `none` formats!")
-            return
 
     if not creator:
         creator = event.from_id
@@ -93,14 +75,11 @@ async def save_note(event):
          'created': created_date,
          'updated_by': event.from_id,
          'creator': creator,
-         'format': format,
          'file_id': file_id})
 
     new = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})['_id']
     text = get_string("notes", "note_saved_or_updated", chat_id).format(
         note_name=note_name, status=status, chat_title=chat_title)
-    if not format == 'md':
-        text += "Formatting: {}\n".format(format)
     text += get_string("notes", "you_can_get_note", chat_id).format(name=note_name)
 
     if status == 'saved':
@@ -193,11 +172,21 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         string = note['text']
         buttons = ""
     else:
-        if 'format' in note:
-            format = note['format']
+        string, buttons = button_parser(group_id, note['text'])
+        h = re.search(r"(\[format:(.*)\])", string)
+        if h:
+            print('wow')
+            string = string.replace(h.group(1), "")
+            format_raw = h.group(2).lower()
+            print(format_raw)
+            if format_raw == 'markdown':
+                format = 'md'
+            elif format_raw == 'html':
+                format = 'html'
+            elif format_raw == 'none':
+                format = None
         else:
             format = 'md'
-        string, buttons = button_parser(group_id, note['text'])
 
     if len(string.rstrip()) == 0:
         if noformat is True:
