@@ -1,7 +1,6 @@
 import re
 
-from sophie_bot import mongodb, redis
-from sophie_bot.events import command, register
+from sophie_bot import mongodb, redis, Decorator
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import get_string
@@ -11,7 +10,7 @@ from sophie_bot.modules.users import is_user_admin
 import ujson
 
 
-@register(incoming=True)
+@Decorator.insurgent()
 async def check_message(event):
     cache = redis.get('filters_cache_{}'.format(event.chat_id))
     try:
@@ -38,7 +37,7 @@ async def check_message(event):
                 await event.delete()
 
 
-@command("filter(?!s)", arg=True)
+@Decorator.command("filter(?!s)", arg=True)
 async def add_filter(event):
     real_chat_id = event.chat_id
     K = await is_user_admin(event.chat_id, event.from_id)
@@ -93,7 +92,7 @@ async def add_filter(event):
     await event.reply(text)
 
 
-@command("filters", arg=True)
+@Decorator.command("filters", arg=True)
 async def list_filters(event):
     if await flood_limit(event, 'filters') is False:
         return
@@ -120,7 +119,7 @@ async def list_filters(event):
     await event.reply(text)
 
 
-@command("stop", arg=True)
+@Decorator.command("stop", arg=True)
 async def stop_filter(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:

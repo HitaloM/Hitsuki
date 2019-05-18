@@ -1,7 +1,7 @@
 import time
 
 from sophie_bot import WHITELISTED, bot
-from sophie_bot.events import command
+from sophie_bot import Decorator
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import (get_user, get_user_and_text,
                                       is_user_admin, user_link)
@@ -11,7 +11,7 @@ from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
 
-@command("ban", arg=True)
+@Decorator.command("ban", arg=True)
 async def ban(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -35,7 +35,7 @@ async def ban(event):
         )
 
 
-@command("tban", arg=True)
+@Decorator.command("tban", arg=True)
 async def tban(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -77,7 +77,7 @@ async def tban(event):
         await event.reply(text, link_preview=False)
 
 
-@command("kick", arg=True)
+@Decorator.command("kick", arg=True)
 async def kick(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -97,7 +97,7 @@ async def kick(event):
         await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
-@command("unban", arg=True)
+@Decorator.command("unban", arg=True)
 async def unban(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -117,7 +117,7 @@ async def unban(event):
         await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
-@command("mute", arg=True)
+@Decorator.command("mute", arg=True)
 async def muter(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -137,7 +137,7 @@ async def muter(event):
         await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
-@command("unmute", arg=True)
+@Decorator.command("unmute", arg=True)
 async def unmoot(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:

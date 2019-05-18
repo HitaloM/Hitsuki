@@ -3,8 +3,7 @@ from time import gmtime, strftime
 
 from bson.objectid import ObjectId
 
-from sophie_bot import BOT_NICK, bot, mongodb
-from sophie_bot.events import command, register
+from sophie_bot import BOT_NICK, bot, mongodb, Decorator
 from sophie_bot.modules.connections import get_conn_chat, connection
 from sophie_bot.modules.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
@@ -12,14 +11,14 @@ from sophie_bot.modules.users import check_group_admin, user_link
 from sophie_bot.modules.helper_func.user_status import is_user_admin
 from sophie_bot.modules.helper_func.dev_tools import benchmark
 
-from telethon import custom, errors, events, utils
+from telethon import custom, errors, utils
 from telethon.tl.custom import Button
 
 
 RESTRICTED_SYMBOLS = ['*', '_', '`']
 
 
-@command("save", arg=True)
+@Decorator.command("save", arg=True)
 @is_user_admin
 @connection(admin=True)
 async def save_note(event, status, chat_id, chat_title):
@@ -92,7 +91,7 @@ async def save_note(event, status, chat_id, chat_title):
     await event.reply(text, buttons=buttons)
 
 
-@command("clear", arg=True)
+@Decorator.command("clear", arg=True)
 @is_user_admin
 @connection(admin=True)
 async def clear_note(event, status, chat_id, chat_title):
@@ -106,7 +105,7 @@ async def clear_note(event, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@command("noteinfo", arg=True)
+@Decorator.command("noteinfo", arg=True)
 @is_user_admin
 @connection(admin=True)
 async def noteinfo(event, status, chat_id, chat_title):
@@ -126,7 +125,7 @@ async def noteinfo(event, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@command("notes")
+@Decorator.command("notes")
 @flood_limit_dec("notes")
 @connection()
 async def list_notes(event, status, chat_id, chat_title):
@@ -206,8 +205,8 @@ async def send_note(chat_id, group_id, msg_id, note_name,
     )
 
 
+@Decorator.CallBackQuery(b'delnote_', compile=True)
 @flood_limit_dec("delnote_handler")
-@bot.on(events.CallbackQuery(data=re.compile(b'delnote_')))
 async def del_note_callback(event):
     user_id = event.query.user_id
     if await is_user_admin(event.chat_id, user_id) is False:
@@ -222,7 +221,7 @@ async def del_note_callback(event):
         note_name=note['name'], user=link), link_preview=False)
 
 
-@register(incoming=True, pattern="^[/!#](?:get|get@{})(?: |$)(.*)".format(BOT_NICK))
+@Decorator.StrictCommand("^[/!#](?:get|get@{})(?: |$)(.*)".format(BOT_NICK))
 async def get_note(event):
     raw_text = event.message.raw_text.split()
     note_name = raw_text[1].lower()
@@ -238,7 +237,7 @@ async def get_note(event):
             show_none=True, noformat=noformat)
 
 
-@register(incoming=True, pattern="^#(.*)")
+@Decorator.StrictCommand("^#(.*)")
 async def check_hashtag(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id)
     real_chat_id = event.chat_id
@@ -278,7 +277,7 @@ def button_parser(chat_id, texts):
     return text, buttons
 
 
-@bot.on(events.CallbackQuery(data=re.compile(b'get_note_')))
+@Decorator.CallBackQuery(b'get_note_')
 async def get_note_callback(event):
     data = str(event.data)
     event_data = re.search(r'get_note_(.*)_(.*)', data)
@@ -293,7 +292,7 @@ async def get_note_callback(event):
             get_string("notes", "user_blocked", event.chat_id), alert=True)
 
 
-@bot.on(events.CallbackQuery(data=re.compile(b'get_alert_')))
+@Decorator.CallBackQuery(b'get_alert_')
 async def get_alert_callback(event):
     data = str(event.data)
     event_data = re.search(r'get_alert_(.*)_(.*)', data)
@@ -312,7 +311,7 @@ async def get_alert_callback(event):
     await event.answer(text, alert=True)
 
 
-@bot.on(events.CallbackQuery(data=re.compile(b'get_delete_msg_')))
+@Decorator.CallBackQuery(b'get_delete_msg_')
 async def del_message_callback(event):
     data = str(event.data)
     event_data = re.search(r'get_delete_msg_(.*)_(.*)', data)

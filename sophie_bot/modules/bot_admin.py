@@ -1,14 +1,13 @@
 import asyncio
 import os
 
-from sophie_bot import bot, mongodb, redis
-from sophie_bot.events import command, register
+from sophie_bot import bot, mongodb, redis, Decorator
 from sophie_bot.modules.main import chat_term
 from sophie_bot.modules.notes import button_parser
 from sophie_bot.modules.helper_func.user_status import is_user_owner
 
 
-@command("term", arg=True)
+@Decorator.command("term", arg=True)
 @is_user_owner
 async def term(event):
     msg = await event.reply("Running...")
@@ -18,7 +17,7 @@ async def term(event):
     await msg.edit(result)
 
 
-@command("broadcast", arg=True)
+@Decorator.command("broadcast", arg=True)
 @is_user_owner
 async def broadcast(event):
     chats = mongodb.chat_list.find({})
@@ -43,7 +42,7 @@ async def broadcast(event):
 `{}` didn't received message.".format(num_succ, num_fail))
 
 
-@command("sbroadcast", arg=True)
+@Decorator.command("sbroadcast", arg=True)
 @is_user_owner
 async def sbroadcast(event):
     text = event.message.text.split(" ", 1)[1]
@@ -62,7 +61,7 @@ async def sbroadcast(event):
         "Smart broadcast planned for `{}` chats".format(chats.count()))
 
 # Check on smart broadcast
-@register(incoming=True)
+@Decorator.insurgent()
 async def check_message_for_smartbroadcast(event):
     chat_id = event.chat_id
     match = mongodb.sbroadcast_list.find_one({'chat_id': chat_id})
@@ -86,7 +85,7 @@ async def check_message_for_smartbroadcast(event):
             }, upsert=False)
 
 
-@command("backup", arg=True)
+@Decorator.command("backup", arg=True)
 @is_user_owner
 async def backup(event):
     msg = await event.reply("Running...")
@@ -95,21 +94,21 @@ async def backup(event):
     await msg.edit("**Done!**\nBackup under `Backups/dump_{}.gz`".format(date))
 
 
-@command("purgecaches?(s)", arg=True)
+@Decorator.command("purgecaches?(s)", arg=True)
 @is_user_owner
 async def purge_caches(event):
     redis.flushdb()
     await event.reply("redis cache was cleaned.")
 
 
-@command("botstop", arg=True)
+@Decorator.command("botstop", arg=True)
 @is_user_owner
 async def bot_stop(event):
     await event.reply("Goodbye...")
     exit(1)
 
 
-@command("upload", arg=True)
+@Decorator.command("upload", arg=True)
 @is_user_owner
 async def upload_file(event):
     input_str = event.pattern_match.group(1)

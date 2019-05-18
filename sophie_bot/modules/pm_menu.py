@@ -1,11 +1,10 @@
 import re
 
-from sophie_bot import BOT_NICK, bot, logger
-from sophie_bot.events import register
+from sophie_bot import logger, Decorator
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import LANGUAGES, get_chat_lang, get_string, lang_info
 
-from telethon import custom, events
+from telethon import custom
 from telethon.tl.custom import Button
 
 
@@ -17,7 +16,7 @@ HELP = sorted(HELP)
 logger.info("Help loaded for: {}".format(HELP))
 
 
-@register(incoming=True, pattern="^[/!]start ?(@)?(?(1){})$".format(BOT_NICK))
+@Decorator.command('start', arg=True)
 async def start(event):
     if await flood_limit(event, 'start') is False:
         return
@@ -28,7 +27,7 @@ async def start(event):
     await event.reply(text, buttons=buttons)
 
 
-@bot.on(events.CallbackQuery(data='get_start'))
+@Decorator.CallBackQuery(b'get_start')
 async def get_start_callback(event):
     text, buttons = get_start(event)
     await event.edit(text, buttons=buttons)
@@ -44,7 +43,7 @@ def get_start(event):
     return text, buttons
 
 
-@bot.on(events.CallbackQuery(data='set_lang'))
+@Decorator.CallBackQuery(b'set_lang')
 async def set_lang_callback(event):
     text, buttons = lang_info(event.chat_id, pm=True)
     buttons.append([
@@ -56,7 +55,7 @@ async def set_lang_callback(event):
         await event.reply(text, buttons=buttons)
 
 
-@bot.on(events.CallbackQuery(data='get_help'))
+@Decorator.CallBackQuery(b'get_help')
 async def get_help_callback(event):
     text, buttons = get_help(event)
     try:
@@ -83,7 +82,7 @@ def get_help(event):
     return text, buttons
 
 
-@bot.on(events.CallbackQuery(data=re.compile(r'mod_help_(.*)')))
+@Decorator.CallBackQuery(r'mod_help_(.*)', compile=True)
 async def get_mod_help_callback(event):
     chat_id = event.chat_id
     module = re.search('mod_help_(.*)', str(event.data)).group(1)[:-1]
@@ -113,7 +112,7 @@ async def get_mod_help_callback(event):
     await event.edit(text, buttons=buttons)
 
 
-@bot.on(events.CallbackQuery(data=re.compile(r'help_btn_(.*)')))
+@Decorator.CallBackQuery('help_btn_(.*)', compile=True)
 async def get_help_button_callback(event):
     event_raw = re.search('help_btn_(.*)_(.*)', str(event.data))
     module = event_raw.group(1)
@@ -129,4 +128,3 @@ async def get_help_button_callback(event):
             text += '\n'
     buttons = [[Button.inline("Back", 'mod_help_' + module)]]
     await event.edit(text, buttons=buttons)
-    

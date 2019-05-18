@@ -2,8 +2,7 @@ import asyncio
 import math
 import subprocess
 
-from sophie_bot import mongodb
-from sophie_bot.events import command
+from sophie_bot import mongodb, Decorator
 from sophie_bot.modules.flood import flood_limit_dec
 
 
@@ -35,7 +34,7 @@ async def chat_term(event, command):
     return result
 
 
-@command("botchanges")
+@Decorator.command("botchanges")
 @flood_limit_dec("botchanges")
 async def botchanges(event):
     command = "git log --pretty=format:\"%an: %s\" -30"
@@ -45,7 +44,7 @@ async def botchanges(event):
     await event.reply(result)
 
 
-@command("stats")
+@Decorator.command("stats")
 @flood_limit_dec("stats")
 async def stats(event):
     text = "**Stats**\n"
