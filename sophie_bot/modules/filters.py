@@ -23,7 +23,6 @@ async def check_message(event):
     for filter in lst:
         for word in text:
             match = re.fullmatch(filter, word, flags=re.IGNORECASE)
-            print(match)
             if not match:
                 return
             H = mongodb.filters.find_one(
@@ -110,7 +109,6 @@ async def list_filters(event, status, chat_id, chat_title):
 @connection(admin=True)
 async def stop_filter(event, status, chat_id, chat_title):
     handler = event.message.text.split(" ", 2)[1]
-    print(handler)
     filter = mongodb.filters.find_one({'chat_id': chat_id,
                                       "handler": {'$regex': str(handler)}})
     if not filter:
