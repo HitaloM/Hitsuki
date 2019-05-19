@@ -89,6 +89,7 @@
         "a_mute": "Action: **mute sender**",
         "a_kick": "Action: **kick sender**",
         "wrong_action": "Wrong action! Read the help.",
+        "filters_in": "Filters in **{chat_name}**:\n",
 
         "no_filters_in": "No filters in **{}**!",
         "filtes_in": "**Filters in {}:**\n",

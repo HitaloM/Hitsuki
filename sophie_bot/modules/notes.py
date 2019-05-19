@@ -9,7 +9,6 @@ from sophie_bot.modules.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import check_group_admin, user_link
 from sophie_bot.modules.helper_func.user_status import is_user_admin
-from sophie_bot.modules.helper_func.dev_tools import benchmark
 
 from telethon import custom, errors, utils
 from telethon.tl.custom import Button

@@ -1,11 +1,11 @@
 import re
 
 from sophie_bot import mongodb, redis, Decorator
-from sophie_bot.modules.connections import get_conn_chat
-from sophie_bot.modules.flood import flood_limit
+from sophie_bot.modules.connections import connection
+from sophie_bot.modules.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.notes import send_note
-from sophie_bot.modules.users import is_user_admin
+from sophie_bot.modules.helper_func.user_status import is_user_admin
 
 import ujson
 
@@ -23,14 +23,13 @@ async def check_message(event):
     for filter in lst:
         for word in text:
             match = re.fullmatch(filter, word, flags=re.IGNORECASE)
+            print(match)
             if not match:
                 return
             H = mongodb.filters.find_one(
                 {'chat_id': event.chat_id, "handler": {'$regex': str(filter)}})
 
             if H['action'] == 'note':
-                if await flood_limit(event, 'filter_handler_{}'.format(filter)) is False:
-                    return
                 await send_note(event.chat_id, event.chat_id, event.message.id,
                                 H['arg'], show_none=True)
             elif H['action'] == 'delete':
@@ -38,20 +37,14 @@ async def check_message(event):
 
 
 @Decorator.command("filter(?!s)", arg=True)
-async def add_filter(event):
+@flood_limit_dec("filter")
+@is_user_admin
+@connection(admin=True)
+async def add_filter(event, status, chat_id, chat_title):
     real_chat_id = event.chat_id
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("filters", "dont_have_right", real_chat_id))
-        return
     args = event.message.raw_text.split(" ")
     if len(args) < 3:
         await event.reply("args error")
-        return
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, only_in_groups=True)
-    if status is False:
-        await event.reply(chat_id)
         return
 
     handler = args[1]
@@ -93,18 +86,11 @@ async def add_filter(event):
 
 
 @Decorator.command("filters", arg=True)
-async def list_filters(event):
-    if await flood_limit(event, 'filters') is False:
-        return
-    conn = await get_conn_chat(event.from_id, event.chat_id)
-    if not conn[0] is True:
-        await event.reply(conn[1])
-        return
-    else:
-        chat_id = conn[1]
-        chat_title = conn[2]
+@flood_limit_dec("filters")
+@connection()
+async def list_filters(event, status, chat_id, chat_title):
     filters = mongodb.filters.find({'chat_id': chat_id})
-    text = get_string("filters", "filters_in", event.chat_id).format(chat_title)
+    text = get_string("filters", "filters_in", event.chat_id).format(chat_name=chat_title)
     H = 0
 
     for filter in filters:
@@ -120,15 +106,11 @@ async def list_filters(event):
 
 
 @Decorator.command("stop", arg=True)
-async def stop_filter(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("filters", "no_rights_stop", event.chat_id))
-        return
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, admin=True, only_in_groups=True)
-
-    handler = event.pattern_match.group(2)
+@is_user_admin
+@connection(admin=True)
+async def stop_filter(event, status, chat_id, chat_title):
+    handler = event.message.text.split(" ", 2)[1]
+    print(handler)
     filter = mongodb.filters.find_one({'chat_id': chat_id,
                                       "handler": {'$regex': str(handler)}})
     if not filter:
@@ -136,8 +118,9 @@ async def stop_filter(event):
         return
     mongodb.filters.delete_one({'_id': filter['_id']})
     update_handlers_cache(chat_id)
-    await event.reply(get_string("filters", "filter_deleted", event.chat_id).format(
-        filter=handler, chat_name=chat_title))
+    text = str(get_string("filters", "filter_deleted", event.chat_id))
+    # text = text.format(filter=handler, chat_name=chat_title) #FIXME
+    await event.reply(text)
 
 
 def update_handlers_cache(chat_id):
