@@ -108,7 +108,6 @@ async def is_user_admin(chat_id, user_id):
 
 async def check_group_admin(event, user_id):
     chat_id = event.chat_id
-    print(await is_user_admin(chat_id, user_id))
     if await is_user_admin(chat_id, user_id) is True:
         return True
     else:

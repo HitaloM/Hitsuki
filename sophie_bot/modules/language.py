@@ -144,7 +144,6 @@ def lang_info(chat_id, pm=False):
         text += "Your locale - `{}`".format(locale)
     buttons = []
     for lang in LANGS:
-        print(lang)
         lang_name = LANGUAGES[lang]["language_info"]["name"]
         lang_flag = LANGUAGES[lang]["language_info"]["flag"]
         lang_code = LANGUAGES[lang]["language_info"]["code"]
