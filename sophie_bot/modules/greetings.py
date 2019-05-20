@@ -62,7 +62,7 @@ async def setwelcome(event):
     if status is False:
         await event.reply(chat_id)
         return
-    note_name = event.pattern_match.group(2)
+    note_name = event.pattern_match.group(1)
     note = mongodb.notes.find_one({
         'chat_id': chat_id,
         'name': note_name
@@ -84,7 +84,7 @@ async def setwelcome(event):
 @Decorator.command("setwelcome", arg=True)
 async def setwelcome_withot_args(event):
     # FIXME: We use arg=True workarond to check if not args.
-    if not event.pattern_match.group(2):
+    if not event.pattern_match.group(1):
         return
     chat = event.chat_id
     chat = mongodb.chat_list.find_one({'chat_id': int(chat)})

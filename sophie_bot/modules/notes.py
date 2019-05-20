@@ -35,6 +35,11 @@ async def save_note(event, status, chat_id, chat_title):
         prim_text = event.message.text.split(" ", 1)[1].split(" ", 1)[1]
     if event.message.reply_to_msg_id:
         msg = await event.get_reply_message()
+        if not msg:
+            await event.reply(
+                "I'm sorry, i can't get this message, probably this a other bot's message."
+                "I can't save it.")
+            return
         note_text = msg.message
         if prim_text:
             note_text += prim_text
