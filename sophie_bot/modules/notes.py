@@ -17,11 +17,11 @@ from telethon.tl.custom import Button
 RESTRICTED_SYMBOLS = ['*', '_', '`']
 
 
-@Decorator.command("save", arg=True)
+@Decorator.cust_command(incoming=True, pattern=r"^[/#]save (\w*)")
 @is_user_admin
 @connection(admin=True)
 async def save_note(event, status, chat_id, chat_title):
-    note_name = event.message.text.split(" ", 2)[1].lower()
+    note_name = event.pattern_match.group(1)
     for sym in RESTRICTED_SYMBOLS:
         if sym in note_name:
             await event.reply("Note name can't conatin `{}` !".format(sym))
@@ -32,7 +32,7 @@ async def save_note(event, status, chat_id, chat_title):
     buttons = None
     prim_text = ""
     if len(event.message.text.split(" ")) > 2:
-        prim_text = event.message.text.split(" ", 1)[1].split(" ", 1)[1]
+        prim_text = event.text.partition(note_name)[2]
     if event.message.reply_to_msg_id:
         msg = await event.get_reply_message()
         if not msg:

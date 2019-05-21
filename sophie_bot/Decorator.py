@@ -15,6 +15,13 @@ def command(command, arg=False, additional=""):
     return decorator
 
 
+def cust_command(*args, **kwargs):
+    def decorator(func):
+        bot.add_event_handler(func, events.NewMessage(*args, **kwargs))
+        bot.add_event_handler(func, events.MessageEdited(*args, **kwargs))
+    return decorator
+
+
 def CallBackQuery(data, compile=True):
     def decorator(func):
         if compile is True:
