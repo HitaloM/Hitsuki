@@ -92,7 +92,7 @@ async def check_message_for_smartbroadcast(event):
             }, upsert=False)
 
 
-@decorator.command("backup", arg=True, from_users=OWNER_ID)
+@decorator.command("backup", from_users=OWNER_ID)
 async def backup(event):
     msg = await event.reply("Running...")
     date = await chat_term(event, "date \"+%Y-%m-%d.%H:%M:%S\"")
@@ -100,13 +100,13 @@ async def backup(event):
     await msg.edit("**Done!**\nBackup under `Backups/dump_{}.gz`".format(date))
 
 
-@decorator.command("purgecaches?(s)", arg=True, from_users=OWNER_ID)
+@decorator.command("purgecaches?(s)", from_users=OWNER_ID)
 async def purge_caches(event):
     redis.flushdb()
     await event.reply("redis cache was cleaned.")
 
 
-@decorator.command("botstop", arg=True, from_users=OWNER_ID)
+@decorator.command("botstop", from_users=OWNER_ID)
 async def bot_stop(event):
     await event.reply("Goodbye...")
     exit(1)
