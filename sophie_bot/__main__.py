@@ -1,3 +1,4 @@
+import asyncio
 from importlib import import_module
 
 from sophie_bot import TOKEN, bot, logger
@@ -11,7 +12,8 @@ logger.info("Modules loaded!")
 bot.start(bot_token=TOKEN)
 logger.info("Bot is alive!")
 
+# Catch up missed updates
+asyncio.ensure_future(bot.catch_up())
 
-# =========================
+# Run loop
 bot.run_until_disconnected()
-# =========================
