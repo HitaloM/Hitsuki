@@ -36,7 +36,7 @@ async def update_users(event):
         for old_chat in old_chats:
             mongodb.chat_list.delete_one({'_id': old_chat['_id']})
 
-    if not chat.username:
+    if not hasattr(chat, 'username'):
         chatnick = None
     else:
         chatnick = chat.username

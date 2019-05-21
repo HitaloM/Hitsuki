@@ -1,11 +1,16 @@
 import re
-from sophie_bot import BOT_NICK, bot
+
+from sophie_bot import ALLOW_F_COMMANDS, BOT_NICK, bot
 
 from telethon import events
 
 
 def command(command, arg=False, additional="", **kwargs):
     def decorator(func):
+
+        if 'forwards' not in kwargs:
+            kwargs['forwards'] = ALLOW_F_COMMANDS
+
         if arg is True:
             cmd = "^[/!](?:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_NICK, additional)
         else:
