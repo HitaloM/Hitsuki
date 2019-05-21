@@ -16,7 +16,7 @@ logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-fh = logging.FileHandler('sophie.log', mode='w', encoding='utf-8')
+fh = logging.FileHandler('sophie.log', encoding='utf-8')
 fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 logger.addHandler(fh)
