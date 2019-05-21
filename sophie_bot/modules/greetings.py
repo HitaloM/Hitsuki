@@ -4,6 +4,7 @@ from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_link
+from sophie_bot.modules.helper_func.user_status import is_user_admin
 
 
 @decorator.ChatAction()
@@ -18,6 +19,9 @@ async def welcome_trigger(event):
             return  # Do not welcome yourselve
         chat_id = event.action_message.chat_id
         welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
+        cleaner = mongodb.clean_service.find({'chat_id': chat})
+        if cleaner:
+            await event.delete()
         if not welcome:
             await event.reply(get_string("greetings", "welcome_hay", chat))
         elif welcome['enabled'] is False:
@@ -101,3 +105,31 @@ async def setwelcome_withot_args(event):
         await event.reply(get_string("greetings", "welcome_is_note", chat).format(note_name))
     else:
         await event.reply(get_string("greetings", "welcome_is_default", chat))
+
+
+@decorator.command('cleanservice', arg=True)
+@is_user_admin
+async def cleanservice(event):
+    args = event.pattern_match.group(1)
+    chat_id = event.chat_id
+    enable = ['yes', 'on', 'enable']
+    disable = ['no', 'disable']
+    bool = args.lower()
+    old = mongodb.clean_service.find_one({'chat_id': chat_id})
+    if bool:
+        if bool in enable:
+            new = {'chat_id': chat_id, 'service': True}
+            if old:
+                mongodb.clean_service.update_one({'_id': old['_id']}, {"$set": new}, upsert=False)
+            else:
+                mongodb.clean_service.insert_one(new)
+            await event.reply(get_string("greetings", "serv_yes", chat_id))
+        elif bool in disable:
+            mongodb.clean_service.delete_one({'_id': old['_id']})
+            await event.reply(get_string("greetings", "serv_no", chat_id))
+        else:
+            await event.reply(get_string("greetings", "no_args_serv", chat_id))
+            return
+    else:
+        await event.reply(get_string("greetings", "no_args_serv", chat_id))
+        return
