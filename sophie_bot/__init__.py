@@ -8,12 +8,24 @@ from telethon import TelegramClient
 
 import ujson
 
-# logging
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO)
+# logger = logging.getLogger(__name__)
 
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger('logger')
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+fh = logging.FileHandler('sophie.log', mode='w', encoding='utf-8')
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
 
 f = open('sophie_bot/bot_conf.json', "r")
 conf = ujson.load(f)
