@@ -3,5 +3,5 @@ https://github.com/LonamiWebs/Telethon/archive/master.zip
 ujson
 redis
 pymongo
-dnspython
+# dnspython - needed to connect to cloud MongoDB instances
 teleredis
