@@ -16,7 +16,7 @@ HELP = sorted(HELP)
 logger.info("Help loaded for: {}".format(HELP))
 
 
-@decorator.command('start', arg=True)
+@decorator.command('start')
 @flood_limit_dec("start")
 async def start(event):
     if not event.from_id == event.chat_id:

@@ -13,7 +13,11 @@ bot.start(bot_token=TOKEN)
 
 # Catch up missed updates
 logger.info("Catch up missed updates..")
-asyncio.ensure_future(bot.catch_up())
+
+try:
+    asyncio.ensure_future(bot.catch_up())
+except Exception as err:
+    logger.error(err)
 
 # Run loop
 logger.info("Running loop..")
