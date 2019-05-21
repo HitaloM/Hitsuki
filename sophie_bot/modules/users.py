@@ -1,4 +1,4 @@
-from sophie_bot import SUDO, bot, mongodb, redis, decorator
+from sophie_bot import SUDO, logger, bot, mongodb, redis, decorator
 from sophie_bot.modules.flood import flood_limit
 
 from telethon.tl.functions.users import GetFullUserRequest
@@ -74,8 +74,8 @@ async def update_users(event):
                  'last_name': user.last_name,
                  'username': user.username,
                  'user_lang': user.lang_code})
-    except Exception:
-        pass
+    except Exception as err:
+        logger.error(err)
         # await event.reply(str(err))
 
 
@@ -175,8 +175,8 @@ async def get_user(event):
                 # Add user in database
                 if user:
                     user = add_user_to_db(user)
-            except Exception:
-                pass
+            except Exception as err:
+                logger.error(err)
     else:
         if len(msg) > 1:
             msg_1 = msg[1]
@@ -213,8 +213,8 @@ async def get_user(event):
                 user = await event.client(GetFullUserRequest(msg_1))
                 # Add user in database
                 user = await add_user_to_db(user)
-            except Exception:
-                pass
+            except Exception as err:
+                logger.error(err)
 
         # Still didn't find? Lets try get entities
         if mention_entity:
@@ -243,7 +243,7 @@ async def get_user(event):
                 if user:
                     user = await add_user_to_db(user)
             except Exception as err:
-                await event.reply(str(err))
+                logger.error(err)
                 return None
     if not user:
         await event.reply("I can't find this user in whole Telegram.")
