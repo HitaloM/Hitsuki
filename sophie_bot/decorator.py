@@ -5,7 +5,7 @@ from sophie_bot import ALLOW_F_COMMANDS, BOT_NICK, bot
 from telethon import events
 
 
-def command(command, arg=False, additional="", **kwargs):
+def command(command, arg="", word_arg="", additional="", **kwargs):
     def decorator(func):
 
         if 'forwards' not in kwargs:
@@ -13,6 +13,8 @@ def command(command, arg=False, additional="", **kwargs):
 
         if arg is True:
             cmd = "^[/!](?:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_NICK, additional)
+        elif word_arg is True:
+            cmd = "^[/!](?:{0}|{0}@{1})(?: |$)(\w*){2}".format(command, BOT_NICK, additional)
         else:
             cmd = "^[/!](?:{0}|{0}@{1})$".format(command, BOT_NICK, additional)
         bot.add_event_handler(func, events.NewMessage(incoming=True, pattern=cmd, **kwargs))

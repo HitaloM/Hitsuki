@@ -17,7 +17,7 @@ from telethon.tl.custom import Button
 RESTRICTED_SYMBOLS = ['*', '_', '`']
 
 
-@decorator.cust_command(incoming=True, pattern=r"^[/#]save (\w*)")
+@decorator.command("save", word_arg=True)
 @is_user_admin
 @connection(admin=True)
 async def save_note(event, status, chat_id, chat_title):
