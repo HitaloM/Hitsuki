@@ -17,7 +17,7 @@ async def term(event):
     await msg.edit(result)
 
 
-@decorator.command("broadcast", arg=True)
+@decorator.command("broadcast", arg=True) # from_users
 @is_user_owner
 async def broadcast(event):
     chats = mongodb.chat_list.find({})

@@ -4,6 +4,8 @@ from pymongo import MongoClient
 
 import redis
 
+from teleredis import RedisSession
+
 from telethon import TelegramClient
 
 import ujson
@@ -46,11 +48,13 @@ MONGO_PORT = conf["basic"]["mongo_port"]
 NAME = TOKEN.split(':')[0]
 BOT_NICK = conf["basic"]["bot_nick"]
 
-bot = TelegramClient(NAME, API_ID, API_HASH)
-
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie
 
 # Init Redis
 redis = redis.StrictRedis(
     host='localhost', port=6379, db='1')  # decode_respone=True
+
+session = RedisSession(NAME, redis)
+
+bot = TelegramClient(session, API_ID, API_HASH)

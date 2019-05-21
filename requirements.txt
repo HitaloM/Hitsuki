@@ -4,4 +4,4 @@ ujson
 redis
 pymongo
 dnspython
-python-dotenv
+teleredis
