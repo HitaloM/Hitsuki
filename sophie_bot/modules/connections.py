@@ -1,6 +1,6 @@
 import re
 
-from sophie_bot import bot, mongodb, redis, Decorator
+from sophie_bot import bot, mongodb, redis, decorator
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import is_user_admin
 
@@ -8,7 +8,7 @@ from telethon import errors
 from telethon.tl.custom import Button
 
 
-@Decorator.command("connect", arg=True)
+@decorator.command("connect", arg=True)
 async def connect_with_arg(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
@@ -95,7 +95,7 @@ async def connect_with_arg(event):
         await event.reply(get_string("connections", "pm_connected", chat).format(chat_title))
 
 
-@Decorator.command("connect")
+@decorator.command("connect")
 async def connect(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
@@ -123,7 +123,7 @@ async def connect(event):
     await event.reply(text, buttons=buttons)
 
 
-@Decorator.command("disconnect", arg=True)
+@decorator.command("disconnect", arg=True)
 async def disconnect(event):
     user_id = event.from_id
     old = mongodb.connections.find_one({'user_id': user_id})
@@ -136,7 +136,7 @@ async def disconnect(event):
     await event.reply(get_string("connections", "disconnected", event.chat_id).format(chat_title))
 
 
-@Decorator.CallBackQuery(b'connect_')
+@decorator.CallBackQuery(b'connect_')
 async def event(event):
     user_id = event.original_update.user_id
     chat_id = re.search(r'connect_(.*)', str(event.data)).group(1)[:-1]

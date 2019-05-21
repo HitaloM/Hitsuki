@@ -2,7 +2,7 @@ import random
 import re
 import string
 
-from sophie_bot import WHITELISTED, mongodb, Decorator
+from sophie_bot import WHITELISTED, mongodb, decorator
 from sophie_bot.modules.bans import ban_user
 from sophie_bot.modules.users import (get_chat_admins, get_user_and_text,
                                       is_user_admin, user_link, get_user)
@@ -12,7 +12,7 @@ from sophie_bot.modules.connections import get_conn_chat
 from telethon.tl.custom import Button
 
 
-@Decorator.command("warn(?!(\w))", arg=True)
+@decorator.command("warn(?!(\w))", arg=True)
 async def warn_user(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -83,7 +83,7 @@ async def warn_user(event):
     await event.reply(text, buttons=button, link_preview=False)
 
 
-@Decorator.CallBackQuery(b'remove_warn_')
+@decorator.CallBackQuery(b'remove_warn_')
 async def remove_warn(event):
     user_id = event.query.user_id
     K = await is_user_admin(event.chat_id, user_id)
@@ -100,7 +100,7 @@ async def remove_warn(event):
     await event.edit(textx.format(admin=user_str), link_preview=False)
 
 
-@Decorator.command("warns", arg=True)
+@decorator.command("warns", arg=True)
 async def user_warns(event):
     status, chat_id, chat_title = await get_conn_chat(
         event.from_id, event.chat_id, admin=True, only_in_groups=True)
@@ -138,7 +138,7 @@ async def user_warns(event):
     await event.reply(text)
 
 
-@Decorator.command("warnlimit", arg=True)
+@decorator.command("warnlimit", arg=True)
 async def warnlimit(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -169,7 +169,7 @@ async def warnlimit(event):
         await event.reply(get_string("warns", "warn_limit_upd", event.chat_id).format(num))
 
 
-@Decorator.command("resetwarns", arg=True)
+@decorator.command("resetwarns", arg=True)
 async def resetwarns(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:

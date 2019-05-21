@@ -1,6 +1,6 @@
 import re
 
-from sophie_bot import mongodb, redis, Decorator
+from sophie_bot import mongodb, redis, decorator
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
@@ -10,7 +10,7 @@ from sophie_bot.modules.helper_func.user_status import is_user_admin
 import ujson
 
 
-@Decorator.insurgent()
+@decorator.insurgent()
 async def check_message(event):
     cache = redis.get('filters_cache_{}'.format(event.chat_id))
     try:
@@ -35,7 +35,7 @@ async def check_message(event):
                 await event.delete()
 
 
-@Decorator.command("filter(?!s)", arg=True)
+@decorator.command("filter(?!s)", arg=True)
 @flood_limit_dec("filter")
 @is_user_admin
 @connection(admin=True)
@@ -84,7 +84,7 @@ async def add_filter(event, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@Decorator.command("filters", arg=True)
+@decorator.command("filters", arg=True)
 @flood_limit_dec("filters")
 @connection()
 async def list_filters(event, status, chat_id, chat_title):
@@ -104,7 +104,7 @@ async def list_filters(event, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@Decorator.command("stop", arg=True)
+@decorator.command("stop", arg=True)
 @is_user_admin
 @connection(admin=True)
 async def stop_filter(event, status, chat_id, chat_title):

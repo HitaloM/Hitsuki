@@ -1,7 +1,7 @@
 import os
 import re
 
-from sophie_bot import logger, mongodb, redis, Decorator
+from sophie_bot import logger, mongodb, redis, decorator
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.users import is_user_admin, user_link
 
@@ -22,7 +22,7 @@ for filename in os.listdir('sophie_bot/modules/langs'):
 logger.info("Languages loaded: {}".format(LANGS))
 
 
-@Decorator.command("lang")
+@decorator.command("lang")
 async def lang(event):
     if await flood_limit(event, 'lang') is False:
         return
@@ -41,7 +41,7 @@ async def lang(event):
     await event.reply(text, buttons=buttons)
 
 
-@Decorator.command("lang", arg=True)
+@decorator.command("lang", arg=True)
 async def lang_with_arg(event):
     if not event.pattern_match.group(1):
         return
@@ -78,7 +78,7 @@ async def lang_with_arg(event):
     await event.reply(text)
 
 
-@Decorator.CallBackQuery(b'select_lang_')
+@decorator.CallBackQuery(b'select_lang_')
 async def set_lang_callback(event):
     chat = event.chat_id
     K = await is_user_admin(chat, event.original_update.user_id)

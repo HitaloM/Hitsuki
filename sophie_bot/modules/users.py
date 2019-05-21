@@ -1,4 +1,4 @@
-from sophie_bot import SUDO, bot, mongodb, redis, Decorator
+from sophie_bot import SUDO, bot, mongodb, redis, decorator
 from sophie_bot.modules.flood import flood_limit
 
 from telethon.tl.functions.users import GetFullUserRequest
@@ -8,7 +8,7 @@ from telethon.tl.types import MessageEntityMentionName
 import ujson
 
 
-@Decorator.BotDo()
+@decorator.BotDo()
 async def do_update_users(event):
     await update_users(event)
 
@@ -125,7 +125,7 @@ async def get_chat_admins(chat_id):
     return admins
 
 
-@Decorator.command("adminlist", arg=True)
+@decorator.command("adminlist", arg=True)
 async def adminlist(event):
     if await flood_limit(event.chat_id, 'adminlist') is False:
         return
