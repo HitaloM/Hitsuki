@@ -56,6 +56,17 @@ async def sbroadcast(event):
     await event.reply(
         "Smart broadcast planned for `{}` chats".format(chats.count()))
 
+
+@decorator.command("stopsbroadcast", from_users=OWNER_ID)
+async def stop_sbroadcast(event):
+    old = mongodb.sbroadcast_settings.find_one({})
+    mongodb.sbroadcast_list.drop()
+    mongodb.sbroadcast_settings.drop()
+    await event.reply("Smart broadcast stopped."
+                      "It was sended to `{}` chats.".format(
+                          old['recived_chats']))
+
+
 # Check on smart broadcast
 @decorator.insurgent()
 async def check_message_for_smartbroadcast(event):
