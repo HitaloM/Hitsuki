@@ -13,6 +13,8 @@ WORKDIR /opt/sophie_bot
 
 # Port
 EXPOSE 443
+EXPOSE 6379
+EXPOSE 27017
 
 # Install pip
 RUN wget https://bootstrap.pypa.io/get-pip.py
