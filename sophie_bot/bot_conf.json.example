@@ -13,6 +13,7 @@
     "sudo": [483808054, 782229305, 654839744],
     "whitelisted": [123456789, 928173281],
 
-    "allow_forwards_commands": false
+    "allow_forwards_commands": false,
+    "allow_commands_with_!": false
  }
 }

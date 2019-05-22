@@ -1,6 +1,6 @@
 import re
 
-from sophie_bot import ALLOW_F_COMMANDS, BOT_NICK, bot
+from sophie_bot import ALLOW_F_COMMANDS, ALLOW_COMMANDS_FROM_EXC, BOT_NICK, bot
 
 from telethon import events
 
@@ -11,12 +11,18 @@ def command(command, arg="", word_arg="", additional="", **kwargs):
         if 'forwards' not in kwargs:
             kwargs['forwards'] = ALLOW_F_COMMANDS
 
-        if arg is True:
-            cmd = "^[/!](?:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_NICK, additional)
-        elif word_arg is True:
-            cmd = "^[/!](?:{0}|{0}@{1})(?: |$)(\w*){2}".format(command, BOT_NICK, additional)
+        if ALLOW_COMMANDS_FROM_EXC is True:
+            P = '[/!]'
         else:
-            cmd = "^[/!](?:{0}|{0}@{1})$".format(command, BOT_NICK, additional)
+            P = '/'
+
+        if arg is True:
+            cmd = "^{P}(?:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_NICK, additional, P=P)
+        elif word_arg is True:
+            cmd = "^{P}(?:{0}|{0}@{1})(?: |$)(\w*){2}".format(command, BOT_NICK, additional, P=P)
+        else:
+            cmd = "^{P}(?:{0}|{0}@{1})$".format(command, BOT_NICK, additional, P=P)
+
         bot.add_event_handler(func, events.NewMessage(incoming=True, pattern=cmd, **kwargs))
         bot.add_event_handler(func, events.MessageEdited(incoming=True, pattern=cmd, **kwargs))
     return decorator

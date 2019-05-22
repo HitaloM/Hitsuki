@@ -45,6 +45,7 @@ NAME = TOKEN.split(':')[0]
 BOT_NICK = conf["basic"]["bot_nick"]
 
 ALLOW_F_COMMANDS = conf["advanced"]["allow_forwards_commands"]
+ALLOW_COMMANDS_FROM_EXC = conf["advanced"]["allow_commands_with_!"]
 
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie
