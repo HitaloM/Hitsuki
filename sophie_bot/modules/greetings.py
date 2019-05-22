@@ -60,6 +60,8 @@ async def welcome_trigger(event):
 
 @decorator.command("setwelcome", arg=True)
 async def setwelcome(event):
+    if not event.pattern_match.group(1):
+        return
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
     chat = event.chat_id
     chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
@@ -85,11 +87,8 @@ async def setwelcome(event):
     await event.reply(get_string("greetings", "welcome_set_to_note", chat).format(note_name))
 
 
-@decorator.command("setwelcome", arg=True)
+@decorator.command("setwelcome")
 async def setwelcome_withot_args(event):
-    # FIXME: We use arg=True workarond to check if not args.
-    if not event.pattern_match.group(1):
-        return
     chat = event.chat_id
     chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
     if await flood_limit(event, 'setwelcome') is False:
