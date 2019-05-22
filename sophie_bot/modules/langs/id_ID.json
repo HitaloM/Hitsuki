@@ -8,18 +8,18 @@
     "STRINGS": {
         "notes": {
             "notelist_no_notes": "Tidak ada catatan di obrolan ini!",
-            "notelist_header": "**Catatan di **{chat_name}:\n",
+            "notelist_header": "**Catatan di {chat_name}**:\n",
             "no_right_save_note": "Anda tidak punya kewenangan untuk menyimpan catatan disini!",
             "saved": "disimpan",
             "updated": "diperbarui",
-            "note_saved_or_updated": "**Catatan {note_name} {status} di {chat_title}!**\n",
+            "note_saved_or_updated": "**Catatan {} {} di {}!**\n",
             "you_can_get_note": "Anda bisa mengambil catatan dengan `/get {name}, atau `#{name}`",
             "dont_have_rights_to_save": "Anda tidak memiliki izin untuk menyimpan catatan disini!",
             "del_note": "Menghapus catatan",
-            "note_removed": "Catatan {note_name} dihapus!",
-            "cant_find_note": "Saya tidak dapat menemukan catatan ini!",
+            "note_removed": "Catatan `{note_name}` dihapus di **{chat_name}**!",
+            "cant_find_note": "Saya tidak bisa menemukan catatan ini di **{chat_name}**!",
             "note_info_title": "**Info catatan**\n",
-            "note_info_note": "Catatan: `{note_name}`\n",
+            "note_info_note": "Catatan: `{}`\n",
             "note_info_updated": "Pembaruan terbaru pada: `{}` oleh {}\n",
             "note_info_created": "Catatan dibuat pada: `{}` oleh {}\n",
             "note_info_crt_not_cached": "Pembuat tidak tercache, Saya tidak bisa menemukannya .\n",
@@ -31,7 +31,7 @@
             "delmsg_no_arg": "tombol deletemsg hanya dapat mengandung argumen admin dan pengguna!"
         },
         "bans": {
-            "user_banned": "User {user} banned by {admin} in {chat_name}!\n",
+            "user_banned": "Pengguna {user} diblokir oleh {admin} di {chat_name}!\n",
             "reason": "Alasan: {reason}",
             "u_dont_have_rights": "Anda tidak mempunyai kewenangan untuk memblokir disini!",
             "time_var_incorrect": "Satuan waktu tidak benar!",
@@ -39,9 +39,11 @@
             "u_dont_have_rights_kick": "Anda tidak memiliki izin untuk mengeluarkan pengguna disini!",
             "u_dont_have_rights_mute": "Anda tidak memiliki izin untuk membisukan pengguna disini!",
             "u_dont_have_rights_unban": "Anda tidak memiliki izin untuk membuka blokir disini!",
+            "u_dont_have_rights_unmute": "Anda tidak memiliki izin untuk tidak membisukan orang disini!",
             "bot_cant_be_kicked": "Apakah anda gila?! mengeluarkan saya?!",
             "bot_cant_be_muted": "Apakah anda gila?! membisukan saya?!",
             "bot_cant_be_unbanned": "Eh! Saya tidak terblokir!!!",
+            "bot_cant_be_unmuted": "Uhh! Saya tidak bisu untuk tidak dibisukan!?",
             "user_kicked": "{admin} mengeluarkan {user} di {chat_name}",
             "user_unbanned": "Berhasil membuka blokir {admin} oleh {user} di {chat_name}",
             "user_admin_ban": "Ini adalah admin, Saya tidak bisa memblokir dia.",
@@ -49,7 +51,8 @@
             "user_admin_kick": "Ini adalah admin, Saya tidak bisa mengeluarkannya.",
             "user_admin_unban": "Serius?! Bagaimana saya membuka blokir seorang admin?",
             "user_admin_unmute": "Mm?! Tidak dibisukan",
-            "user_mooted": "{admin} membisukan {user} di {chat_name}"
+            "user_mooted": "{admin} membisukan {user} di {chat_name}",
+            "user_unmooted": "{admin} tidak membisukan {user} di {chat_name}"
         },
         "connections": {
             "can't_find_chat_use_id": "Saya tidak bisa menemukan obrolan ini, coba gunakan id obrolan tersebut.",
@@ -72,7 +75,10 @@
             "cant_find_note": "Saya tidak bisa menemukan catatan ini.",
             "welcome_set_to_note": "Pesan sambutan diatur ke catatan: `{}`",
             "welcome_is_note": "Pesan sambutan menggunakan catatan: `{}`",
-            "welcome_is_default": "Pesan sambutan diatur ke default."
+            "welcome_is_default": "Pesan sambutan diatur ke default.",
+            "no_args_serv": "Berikan saya argumen yes/no untuk menyalakan/mematikan Layanan Pembersihan",
+            "serv_yes": "Layanan Pembersihan berhasil dinyalakan di obrolan ini!",
+            "serv_no": "Layanan Pembersihan berhasil dimatikan di obrolan ini!"
         },
         "filters": {
             "dont_have_right": "Anda tidak punya izin untuk menyimpan filter disini!",
@@ -87,24 +93,29 @@
             "a_mute": "Aksi: **membisukan pengirim**",
             "a_kick": "Aksi: **mengeluarkan pengirim**",
             "wrong_action": "Tindakan yang salah! Baca panduan.",
+            "filters_in": "Filter di **{chat_name}**:\n",
             "no_filters_in": "Tidak ada filter di **{}**!",
             "filtes_in": "**Filter di {}:**\n",
             "no_rights_stop": "Anda tidak punya izin untuk memberhentikan filter disini!",
             "cant_find_filter": "Saya tidak bisa menemukan filter ini!",
-            "filter_deleted": "Filter `{}` dihapus!"
+            "filter_deleted": "Filter `{filter}` di {chat_name} dihapus!"
         },
         "warns": {
             "user_no_admeme": "Anda bukanlah admin",
-            "purged_warns": "{} berhasil mengatur ulang peringatan {}!",
-            "usr_no_wrn": "{} tidak mempunyai peringatan untuk diatur ulang!",
+            "purged_warns": "{admin} berhasil mengatur ulang peringatan {user}!",
+            "usr_no_wrn": "{user} tidak mempunyai peringatan untuk diatur ulang!",
             "usr_whitelist": "Ini adalah salah satu orang yang ada di daftar putih!",
             "Admin_no_wrn": "Maaf, saya tidak bisa memberi peringatan kepada admin!",
-            "warn": "{} telah memberi peringatan {}\n",
-            "warn_rsn": "Alasan: `{}`\n",
-            "warn_bun": "Peringatan telah melebihi batas! {} telah diblokir!",
-            "warn_num": "Peringatan: {}/{}\n",
+            "warn": "{admin} memberi peringatan {user} di {chat_name}\n",
+            "warn_rsn": "Alasan: `{reason}`\n",
+            "warn_bun": "Peringatan telah melebihi batas! {user} telah diblokir!",
+            "warn_num": "Peringatan: {curr_warns}/{max_warns}\n",
             "rmv_warn_admin": "Anda bukanlah admin, Hanya admin yang bisa!",
-            "rmv_sfl": "Peringatan dihapus oleh {}"
+            "rmv_sfl": "Peringatan dicabut oleh {admin}",
+            "warn_list_head": "**Peringatan** {user} **di {chat_name}**\n",
+            "user_hasnt_warned": "{user} Belum pernah diberi peringatan di **{chat_name}**!",
+            "warn_limit": "Batas peringatan di {chat_name} adalah: `{num}`",
+            "warn_limit_upd": "Batas peringatan telah diatur ke {}!"
         },
         "msg_deleting": {
             "no_rights_purge": "Anda tidak punya izin untuk membersihkan disini!",
@@ -138,6 +149,17 @@
                 "i13": "`save word` saat membalas stiker atau data apa pun yang Anda inginkan. Sekarang, catatan di `#word` adalah stiker yang akan dikirim sebagai sebuah balasan.",
                 "i14": "\nTip: untuk mengambil catatan tanpa pemformatan, gunakan `/get (nama catatan) noformat`",
                 "i15": "Ini akan mengambil catatan dan mengirimkannya tanpa memformatnya; memberi Anda markdown mentah, memungkinkan Anda untuk mengedit dengan mudah."
+            },
+            "buttons": {
+                "help_btn_notes_md": "Markdown",
+                "help_btn_notes_btns": "Tombol"
+            },
+            "md": {
+                "a1": "Anda bisa menggunakan markdown untuk membuat pesan anda lebih ekspresif. Berikut adalah beberapa markdown yang didukung:\n",
+                "a2": "`code words` backticks allow you to wrap your words in monospace fonts. Shows as: `code words`",
+                "a3": "`**bold words**` asterixes are used for bold font. Shows as: **bold words**",
+                "a4": "`__italic words__` underscores are used for italics. Shows as: __italic words__",
+                "a5": "`[hyperlink](example.com)` this is used for hyperlinks, and will show as such: [hyperlink](http://example.com/). Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown."
             }
         },
         "purges": {
@@ -163,6 +185,36 @@
                 "i8": "\nSebuah contoh tentang bagaimana cara mengatur peringatan multiword:",
                 "i9": "`/warn @pengguna Karena peringatan itu menyenangkan`",
                 "i10": "\nIni akan memberi peringatan ke @pengguna, dengan alasan `Memberi peringatan itu menyenangkan`"
+            }
+        },
+        "misc": {
+            "btn": "Lainnya",
+            "title": "An \"odds and ends\" module for small, simple commands which don't really fit anywhere",
+            "text": {
+                "i1": "\nPerintah yang tersedia:",
+                "i2": "- /id: dapatkan id user atau obrolan.",
+                "i3": "- /stats: Memberikan statistik bot.",
+                "i4": "- /botchanges: Memberikan perubahan terakhir bot (histori perubahan)"
+            }
+        },
+        "connections": {
+            "btn": "Koneksi",
+            "title": "Sometimes, you just want to add some notes and filters to a group chat, but you don't want everyone to see; This is where connections come in...",
+            "text": {
+                "i0": "This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)",
+                "i1": "\nPerintah yang tersedia:",
+                "i2": "- /connect <chat>: connect to the chat with chat username/ID, allowing you to view/edit contents.",
+                "i3": "- /connect: show last 3 chats to fast connect.",
+                "i4": "\nYou can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids."
+            }
+        },
+        "greetings": {
+            "btn": "Pesan Sambutan",
+            "title": "Give your members a warm welcome with the greetings module! Or a sad goodbye... Depends!",
+            "text": {
+                "i1": "\nPerintah yang tersedia:",
+                "i2": "- /setwelcome <note>: sets your new welcome note!",
+                "i3": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat."
             }
         }
     }
