@@ -1,6 +1,6 @@
 import re
 
-from sophie_bot import bot, mongodb, redis, decorator
+from sophie_bot import bot, decorator, mongodb, redis
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import is_user_admin
 

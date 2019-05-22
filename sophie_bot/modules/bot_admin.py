@@ -1,7 +1,7 @@
 import asyncio
 import os
 
-from sophie_bot import OWNER_ID, bot, mongodb, redis, decorator
+from sophie_bot import OWNER_ID, bot, decorator, mongodb, redis
 from sophie_bot.modules.main import chat_term
 from sophie_bot.modules.notes import button_parser
 

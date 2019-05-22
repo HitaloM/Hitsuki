@@ -2,10 +2,10 @@ import time
 
 from sophie_bot import WHITELISTED, bot
 from sophie_bot import decorator
+from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import (get_user, get_user_and_text,
                                       is_user_admin, user_link)
-from sophie_bot.modules.connections import get_conn_chat
 
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights

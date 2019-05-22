@@ -1,6 +1,6 @@
 import re
 
-from sophie_bot import logger, decorator
+from sophie_bot import decorator, logger
 from sophie_bot.modules.flood import flood_limit_dec
 from sophie_bot.modules.language import LANGUAGES, get_chat_lang, get_string, lang_info
 
