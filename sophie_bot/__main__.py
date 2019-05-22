@@ -8,6 +8,7 @@ from sophie_bot import TOKEN, bot, redis, logger
 from sophie_bot.modules import ALL_MODULES
 
 for module_name in ALL_MODULES:
+    logger.debug("Importing " + module_name)
     imported_module = import_module("sophie_bot.modules." + module_name)
 
 logger.info("Modules loaded!")

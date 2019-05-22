@@ -11,6 +11,7 @@ from telethon.tl.custom import Button
 # Generate help cached/
 HELP = []
 for module in LANGUAGES['en']['HELPS']:
+    logger.debug("Loading help for " + module)
     HELP.append(module)
 HELP = sorted(HELP)
 logger.info("Help loaded for: {}".format(HELP))

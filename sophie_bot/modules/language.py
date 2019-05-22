@@ -14,6 +14,7 @@ LANGUAGES = {}
 LANGS = []
 
 for filename in os.listdir('sophie_bot/modules/langs'):
+    logger.debug("Loading language file " + filename)
     f = open('sophie_bot/modules/langs/' + filename, "r")
     lang = ujson.load(f)
     exec("LANGUAGES[\"" + lang['language_info']['code'] + "\"] = lang")
