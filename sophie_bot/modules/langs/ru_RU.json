@@ -3,13 +3,12 @@
         "name": "Russian",
         "small_name": "rus",
         "flag": "🇷🇺",
-        "code": "ru",
-        "translators": [483808054]
+        "code": "ru"
     },
     "STRINGS": {
         "notes": {
             "notelist_no_notes": "Нет заметок в этом чате!",
-            "notelist_header": "**Заметки в **{chat_name}**:\n",
+            "notelist_header": "**Заметки в {chat_name}**:\n",
             "no_right_save_note": "Вы не имеете заметок в этом чате!!",
             "saved": "сохранена",
             "updated": "обновлена",
@@ -17,8 +16,8 @@
             "you_can_get_note": "Вы можете получить заметку используя `/get {name}`, или `{name}`",
             "dont_have_rights_to_save": "Вы не имеете прав сохранять заметки здесь!",
             "del_note": "Удалить заметку",
-            "note_removed": "Заметка {note_name} удалена!",
-            "cant_find_note": "Я не могу получить эту заметку!",
+            "note_removed": "Заметка `{note_name}` удалена в **{chat_name}**!",
+            "cant_find_note": "Я не могу найти эту заметку в **{chat_name}**!",
             "note_info_title": "**Информация про заметку**\n",
             "note_info_note": "Заметка: `{note_name}`\n",
             "note_info_updated": "Последнее обновление: `{data}` создатель: {user}\n",
@@ -51,7 +50,7 @@
             "user_admin_mute": "Это админ, я не могу замутить его.",
             "user_admin_kick": "Это админ, я не могу кикнуть его.",
             "user_admin_unban": "Серьезно?! Как я могу разблокировать админа?",
-            "user_admin_unmute": "Мм?! размучен",
+            "user_admin_unmute": "Мм?! Размученю.",
             "user_mooted": "{admin} заткнул {user} в {chat_name}",
             "user_unmooted": "{admin} размутил {user} в {chat_name}"
         },
@@ -76,7 +75,10 @@
             "cant_find_note": "Я не могу получить эту заметку.",
             "welcome_set_to_note": "Приветствие настроено на заметку: `{}`",
             "welcome_is_note": "Приветствие настроено на заметку: `{}`",
-            "welcome_is_default": "Приветствие не настроено."
+            "welcome_is_default": "Приветствие не настроено.",
+            "no_args_serv": "Please give me yes/no to Enable/Disable Clean Service",
+            "serv_yes": "Clean Service is successfully enabled in this chat!",
+            "serv_no": "Clean Service is successfully disabled in this chat!"
         },
         "filters": {
             "dont_have_right": "Вы не имеете прав сохранять фильтры здесь!",
@@ -91,24 +93,29 @@
             "a_mute": "Действие: **мут отправителя**",
             "a_kick": "Действие: **кик отправителя**",
             "wrong_action": "Неправильное действие! Прочитайте справку.",
+            "filters_in": "Filters in **{chat_name}**:\n",
             "no_filters_in": "Нет фильтров в **{}**!",
             "filtes_in": "**Фильтры в {}:**\n",
             "no_rights_stop": "Вы не имеете прав останавливать фильтры здесь!",
             "cant_find_filter": "Я не могу получить этот фильтр!",
-            "filter_deleted": "Фильтр `{}` был удален!"
+            "filter_deleted": "Фильтр `{filter}` в {chat_name} удален!"
         },
         "warns": {
             "user_no_admeme": "Вы не админ",
-            "purged_warns": "{} снял все предупреждение {} успешно!",
-            "usr_no_wrn": "У {} не было предупреждений до сброса!",
+            "purged_warns": "{admin} удалил все варны {user}!",
+            "usr_no_wrn": "{user} не имеет варны!",
             "usr_whitelist": "Это один из пользователей в белом списке!",
             "Admin_no_wrn": "Эй, я не могу дать варн админу!",
-            "warn": "{} предупредил {}\n",
-            "warn_rsn": "Причина: `{}`\n",
-            "warn_bun": "Предупреждения превышены! {} был забанен!",
-            "warn_num": "Предупреждений: {}/{}\n",
+            "warn": "{admin} удалил варны {user} в {chat_name}\n",
+            "warn_rsn": "Причина: `{reason}`\n",
+            "warn_bun": "Warnings has been exceeded! {user} has been banned!",
+            "warn_num": "Варны: {curr_warns}/{max_warns}\n",
             "rmv_warn_admin": "Вы не администратор, только администраторы могут это сделать!",
-            "rmv_sfl": "Варн удален {}"
+            "rmv_sfl": "Warn removed by {admin}",
+            "warn_list_head": "{user}'s **warnings in {chat_name}:**\n",
+            "user_hasnt_warned": "{user} hasn't been warned in **{chat_name}** before!",
+            "warn_limit": "Warn limit in {chat_name} is currently: `{num}`",
+            "warn_limit_upd": "Warn limit has been updated to {}!"
         },
         "msg_deleting": {
             "no_rights_purge": "Вы не имеете прав чистить здесь!",
@@ -142,6 +149,17 @@
                 "i13": "`save word` while replying to a sticker or whatever data you'd like. Now, the note at `#word` contains a sticker which will be sent as a reply.",
                 "i14": "\nTip: to retrieve a note without the formatting, use `/get (name) noformat`",
                 "i15": "This will retrieve the note and send it without formatting it; getting you the raw markdown, allowing you to make easy edits."
+            },
+            "buttons": {
+                "help_btn_notes_md": "Markdown",
+                "help_btn_notes_btns": "Buttons"
+            },
+            "md": {
+                "a1": "You can use markdown to make your messages more expressive. This is the markdown currently supported:\n",
+                "a2": "`code words` backticks allow you to wrap your words in monospace fonts. Shows as: `code words`",
+                "a3": "`**bold words**` asterixes are used for bold font. Shows as: **bold words**",
+                "a4": "`__italic words__` underscores are used for italics. Shows as: __italic words__",
+                "a5": "`[hyperlink](example.com)` this is used for hyperlinks, and will show as such: [hyperlink](http://example.com/). Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown."
             }
         },
         "purges": {
@@ -167,6 +185,36 @@
                 "i8": "\nAn example of how to set a new multiword warning:",
                 "i9": "`/warn @user Because warning is fun`",
                 "i10": "\nThis will warn the user called @user, with a reason of 'Because warning is fun'"
+            }
+        },
+        "misc": {
+            "btn": "Misc",
+            "title": "An \"odds and ends\" module for small, simple commands which don't really fit anywhere",
+            "text": {
+                "i1": "\nAvailable commands are:",
+                "i2": "- /id: get a id of user and chat.",
+                "i3": "- /stats: show bot stats.",
+                "i4": "- /botchanges: show bot changes (commit history)"
+            }
+        },
+        "connections": {
+            "btn": "Connections",
+            "title": "Sometimes, you just want to add some notes and filters to a group chat, but you don't want everyone to see; This is where connections come in...",
+            "text": {
+                "i0": "This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)",
+                "i1": "\nAvailable commands are:",
+                "i2": "- /connect <chat>: connect to the chat with chat username/ID, allowing you to view/edit contents.",
+                "i3": "- /connect: show last 3 chats to fast connect.",
+                "i4": "\nYou can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids."
+            }
+        },
+        "greetings": {
+            "btn": "Greetings",
+            "title": "Give your members a warm welcome with the greetings module! Or a sad goodbye... Depends!",
+            "text": {
+                "i1": "\nAvailable commands are:",
+                "i2": "- /setwelcome <note>: sets your new welcome note!",
+                "i3": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat."
             }
         }
     }
