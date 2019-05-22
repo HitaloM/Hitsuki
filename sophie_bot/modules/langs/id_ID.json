@@ -3,7 +3,8 @@
         "name": "Indonesian",
         "small_name": "indo",
         "flag": "🇮🇩",
-        "code": "id"
+        "code": "id",
+        "translators": [492124491, 515778556]
     },
     "STRINGS": {
         "notes": {
