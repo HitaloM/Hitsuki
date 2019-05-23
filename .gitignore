@@ -4,7 +4,7 @@ __pycache__/*
 sophie_bot/__pycache__/*
 sophie_bot/modules/__pycache__/*
 sophie_bot/modules/*/__pycache__/*
-sophie_bot/modules/components/*
+#sophie_bot/modules/components/
 sophie_bot/bot_conf.json
 output.txt
 Backups/
