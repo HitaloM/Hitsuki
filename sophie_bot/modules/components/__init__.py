@@ -1,4 +1,4 @@
-from sophie_bot import logger
+from sophie_bot import NO_LOAD_COMPONENTS, logger
 
 
 def list_all_components():
@@ -15,5 +15,9 @@ def list_all_components():
 
 
 ALL_COMPONENTS = sorted(list_all_components())
+
+for component in ALL_COMPONENTS:
+    if component in NO_LOAD_COMPONENTS:
+        ALL_COMPONENTS.remove(component)
 logger.info("Components to load: %s", str(ALL_COMPONENTS))
 __all__ = ALL_COMPONENTS + ["ALL_COMPONENTS"]

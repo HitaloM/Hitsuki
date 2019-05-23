@@ -47,6 +47,9 @@ BOT_NICK = conf["basic"]["bot_nick"]
 ALLOW_F_COMMANDS = conf["advanced"]["allow_forwards_commands"]
 ALLOW_COMMANDS_FROM_EXC = conf["advanced"]["allow_commands_with_!"]
 
+LOAD_COMPONENTS = conf["advanced"]["load_components"]
+NO_LOAD_COMPONENTS = conf["advanced"]["not_load_this_components"]
+
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie
 

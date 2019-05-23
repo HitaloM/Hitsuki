@@ -14,6 +14,9 @@
     "whitelisted": [123456789, 928173281],
 
     "allow_forwards_commands": false,
-    "allow_commands_with_!": false
+    "allow_commands_with_!": false,
+
+    "load_components": true,
+    "not_load_this_components": ["fox"]
  }
 }

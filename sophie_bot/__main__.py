@@ -4,7 +4,7 @@ import signal
 
 from importlib import import_module
 
-from sophie_bot import TOKEN, bot, redis, logger
+from sophie_bot import TOKEN, LOAD_COMPONENTS, bot, redis, logger
 from sophie_bot.modules import ALL_MODULES
 from sophie_bot.modules.components import ALL_COMPONENTS
 
@@ -14,11 +14,14 @@ for module_name in ALL_MODULES:
 
 logger.info("Modules loaded!")
 
-for module_name in ALL_COMPONENTS:
-    logger.debug("Importing " + module_name)
-    imported_module = import_module("sophie_bot.modules.components." + module_name)
+if LOAD_COMPONENTS is True:
+    for module_name in ALL_COMPONENTS:
+        logger.debug("Importing " + module_name)
+        imported_module = import_module("sophie_bot.modules.components." + module_name)
 
-logger.info("Components loaded!")
+    logger.info("Components loaded!")
+else:
+    logger.info("Components disabled, not loaded")
 
 bot.start(bot_token=TOKEN)
 
