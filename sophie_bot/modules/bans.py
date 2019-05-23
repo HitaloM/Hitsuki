@@ -2,27 +2,19 @@ import time
 
 from sophie_bot import WHITELISTED, bot
 from sophie_bot import decorator
-from sophie_bot.modules.connections import get_conn_chat
+from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import (get_user, get_user_and_text,
-                                      is_user_admin, user_link)
+                                      user_admin_dec, user_link, is_user_admin)
 
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
 
 @decorator.command("ban", arg=True)
-async def ban(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights",
-                          event.chat_id))
-        return
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, admin=True, only_in_groups=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
+async def ban(event, status, chat_id, chat_title):
     user, reason = await get_user_and_text(event)
     if await ban_user(event, user['user_id'], chat_id, None) is True:
         admin_str = await user_link(event.from_id)
@@ -36,17 +28,9 @@ async def ban(event):
 
 
 @decorator.command("tban", arg=True)
-async def tban(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights",
-                          event.chat_id))
-        return
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, admin=True, only_in_groups=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
+async def tban(event, status, chat_id, chat_title):
     user, data = await get_user_and_text(event)
     data = data.split(' ', 2)
     reason = data[1]
@@ -78,17 +62,9 @@ async def tban(event):
 
 
 @decorator.command("kick", arg=True)
-async def kick(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights_kick",
-                          event.chat_id))
-        return
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, admin=True, only_in_groups=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
+async def kick(event, status, chat_id, chat_title):
     user = await get_user(event)
     if await kick_user(event, user['user_id'], chat_id) is True:
         admin_str = await user_link(event.from_id)
@@ -98,17 +74,9 @@ async def kick(event):
 
 
 @decorator.command("unban", arg=True)
-async def unban(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights_unban",
-                          event.chat_id))
-        return
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, admin=True, only_in_groups=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
+async def unban(event, status, chat_id, chat_title):
     user, data = await get_user_and_text(event)
     if await unban_user(event, user['user_id'], chat_id):
         admin_str = await user_link(event.from_id)
@@ -118,17 +86,9 @@ async def unban(event):
 
 
 @decorator.command("mute", arg=True)
-async def muter(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights_mute",
-                          event.chat_id))
-        return
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, admin=True, only_in_groups=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
+async def muter(event, status, chat_id, chat_title):
     user, data = await get_user_and_text(event)
     if await mute_user(event, user['user_id'], chat_id):
         admin_str = await user_link(event.from_id)
@@ -138,16 +98,9 @@ async def muter(event):
 
 
 @decorator.command("unmute", arg=True)
-async def unmoot(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights_unmute", event.chat_id))
-        return
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, admin=True, only_in_groups=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
+async def unmute(event, status, chat_id, chat_title):
     user = get_user(event)
     if await unmute_user(event, user['user_id'], chat_id):
         admin_str = await user_link(event.from_id)
@@ -156,12 +109,8 @@ async def unmoot(event):
         await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
+@user_admin_dec
 async def ban_user(event, user_id, chat_id, time_val):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights",
-                          event.chat_id))
-        return
 
     banned_rights = ChatBannedRights(
         until_date=time_val,
@@ -207,12 +156,9 @@ async def ban_user(event, user_id, chat_id, time_val):
     return True
 
 
+@user_admin_dec
 async def kick_user(event, user_id, chat_id):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights_kick",
-                          event.chat_id))
-        return
+
     banned_rights = ChatBannedRights(
         until_date=None,
         send_messages=True,
@@ -259,12 +205,8 @@ async def kick_user(event, user_id, chat_id):
     return True
 
 
+@user_admin_dec
 async def unban_user(event, user_id, chat_id):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string(
-            "bans", "u_dont_have_rights_unban", event.chat_id))
-        return
 
     unbanned_rights = ChatBannedRights(
         until_date=None,
@@ -303,12 +245,9 @@ async def unban_user(event, user_id, chat_id):
     return True
 
 
+@user_admin_dec
 async def mute_user(event, user_id, chat_id):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights",
-                          event.chat_id))
-        return
+
     muted_rights = ChatBannedRights(
         until_date=None,
         send_messages=True
@@ -339,11 +278,9 @@ async def mute_user(event, user_id, chat_id):
     return True
 
 
+@user_admin_dec
 async def unmute_user(event, user_id, chat_id):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("bans", "u_dont_have_rights_unmute", event.chat_id))
-        return
+
     muted_rights = ChatBannedRights(
         until_date=None,
         send_messages=False
