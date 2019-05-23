@@ -3,8 +3,7 @@ from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.flood import flood_limit
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.notes import send_note
-from sophie_bot.modules.users import user_link
-from sophie_bot.modules.helper_func.user_status import is_user_admin
+from sophie_bot.modules.users import user_link, user_admin_dec
 
 
 @decorator.ChatAction()
@@ -107,7 +106,7 @@ async def setwelcome_withot_args(event):
 
 
 @decorator.command('cleanservice', arg=True)
-@is_user_admin
+@user_admin_dec
 async def cleanservice(event):
     args = event.pattern_match.group(1)
     chat_id = event.chat_id

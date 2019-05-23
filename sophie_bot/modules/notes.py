@@ -7,8 +7,7 @@ from sophie_bot import BOT_NICK, bot, mongodb, decorator
 from sophie_bot.modules.connections import get_conn_chat, connection
 from sophie_bot.modules.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
-from sophie_bot.modules.users import check_group_admin, user_link
-from sophie_bot.modules.helper_func.user_status import is_user_admin
+from sophie_bot.modules.users import check_group_admin, user_link, is_user_admin, user_admin_dec
 
 from telethon import custom, errors, utils
 from telethon.tl.custom import Button
@@ -18,7 +17,7 @@ RESTRICTED_SYMBOLS = ['*', '_', '`']
 
 
 @decorator.command("save", word_arg=True)
-@is_user_admin
+@user_admin_dec
 @connection(admin=True)
 async def save_note(event, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
@@ -93,7 +92,7 @@ async def save_note(event, status, chat_id, chat_title):
 
 
 @decorator.command("clear", arg=True)
-@is_user_admin
+@user_admin_dec
 @connection(admin=True)
 async def clear_note(event, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
@@ -107,7 +106,7 @@ async def clear_note(event, status, chat_id, chat_title):
 
 
 @decorator.command("noteinfo", arg=True)
-@is_user_admin
+@user_admin_dec
 @connection(admin=True)
 async def noteinfo(event, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)

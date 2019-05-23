@@ -1,4 +1,4 @@
-from sophie_bot import SUDO, logger, bot, mongodb, redis, decorator
+from sophie_bot import SUDO, OWNER_ID, logger, bot, mongodb, redis, decorator
 from sophie_bot.modules.flood import flood_limit
 
 from telethon.tl.functions.users import GetFullUserRequest
@@ -305,3 +305,28 @@ async def user_link(user_id):
     user_link = "[{}](tg://user?id={})".format(
         user['first_name'], user['user_id'])
     return user_link
+
+
+def user_admin_dec(func):
+    async def wrapped(event):
+        if await check_group_admin(event, event.from_id) is False:
+            await event.reply("You should be admin to do it!")
+            return
+        return await func(event)
+    return wrapped
+
+
+def user_sudo_dec(func):
+    async def wrapped(event):
+        if event.from_id not in SUDO:
+            return
+        return await func(event)
+    return wrapped
+
+
+def user_owner_dec(func):
+    async def wrapped(event):
+        if not event.from_id == OWNER_ID:
+            return
+        return await func(event)
+    return wrapped

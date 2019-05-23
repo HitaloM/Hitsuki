@@ -8,7 +8,7 @@ from telethon import custom
 from telethon.tl.custom import Button
 
 
-# Generate help cached/
+# Generate help cache
 HELP = []
 for module in LANGUAGES['en']['HELPS']:
     logger.debug("Loading help for " + module)

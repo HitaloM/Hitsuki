@@ -3,7 +3,7 @@ import re
 from sophie_bot import decorator, mongodb, redis
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.flood import flood_limit_dec
-from sophie_bot.modules.helper_func.user_status import is_user_admin
+from sophie_bot.modules.users import user_admin_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.notes import send_note
 
@@ -37,7 +37,7 @@ async def check_message(event):
 
 @decorator.command("filter(?!s)", arg=True)
 @flood_limit_dec("filter")
-@is_user_admin
+@user_admin_dec
 @connection(admin=True)
 async def add_filter(event, status, chat_id, chat_title):
     real_chat_id = event.chat_id
@@ -105,7 +105,7 @@ async def list_filters(event, status, chat_id, chat_title):
 
 
 @decorator.command("stop", arg=True)
-@is_user_admin
+@user_admin_dec
 @connection(admin=True)
 async def stop_filter(event, status, chat_id, chat_title):
     handler = event.message.text.split(" ", 2)[1]
