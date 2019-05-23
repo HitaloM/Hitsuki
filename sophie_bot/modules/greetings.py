@@ -1,6 +1,6 @@
 from sophie_bot import bot, mongodb, decorator
 from sophie_bot.modules.connections import get_conn_chat
-from sophie_bot.modules.flood import flood_limit
+from sophie_bot.modules.helper_func.flood import flood_limit
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_link, user_admin_dec

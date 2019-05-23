@@ -2,7 +2,7 @@ import os
 import re
 
 from sophie_bot import logger, mongodb, redis, decorator
-from sophie_bot.modules.flood import flood_limit
+from sophie_bot.modules.helper_func.flood import flood_limit
 from sophie_bot.modules.users import is_user_admin, user_link
 
 from telethon.tl.custom import Button

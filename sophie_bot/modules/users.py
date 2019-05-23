@@ -1,5 +1,5 @@
 from sophie_bot import SUDO, OWNER_ID, logger, bot, mongodb, redis, decorator
-from sophie_bot.modules.flood import flood_limit
+from sophie_bot.modules.helper_func.flood import flood_limit
 
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import ChannelParticipantsAdmins

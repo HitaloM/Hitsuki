@@ -5,7 +5,7 @@ from bson.objectid import ObjectId
 
 from sophie_bot import BOT_NICK, bot, mongodb, decorator
 from sophie_bot.modules.connections import get_conn_chat, connection
-from sophie_bot.modules.flood import flood_limit_dec
+from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import check_group_admin, user_link, is_user_admin, user_admin_dec
 

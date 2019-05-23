@@ -3,7 +3,7 @@ import math
 import subprocess
 
 from sophie_bot import mongodb, decorator
-from sophie_bot.modules.flood import flood_limit_dec
+from sophie_bot.modules.helper_func.flood import flood_limit_dec
 
 
 async def term(command):
