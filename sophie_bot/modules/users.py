@@ -46,7 +46,7 @@ async def update_users(event):
         if old_chat:
             mongodb.notes.update_one({'_id': old_chat['_id']}, {"$set": chat_new}, upsert=False)
         else:
-            mongodb.chat_list.insert_one()
+            mongodb.chat_list.insert_one(chat_new)
         logger.debug(f"chat {chat_id} updated")
 
     user_new = {
@@ -150,7 +150,7 @@ async def get_chat_admins(chat_id):
     return admins
 
 
-@decorator.command("adminlist", arg=True)
+@decorator.command("adminlist")
 async def adminlist(event):
     if await flood_limit(event.chat_id, 'adminlist') is False:
         return

@@ -1,11 +1,6 @@
 from sophie_bot import logger
 
 
-logger.info("--------------------")
-logger.info("|     SophieBot    |")
-logger.info("--------------------")
-
-
 def list_all_modules():
     from os.path import dirname, basename, isfile
     import glob
