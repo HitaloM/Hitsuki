@@ -56,7 +56,7 @@ async def get_user(event):
 async def check_afk(event):
     user_afk = mongodb.afk.find_one({'user': event.from_id})
     if user_afk:
-        rerere = re.findall('[!/]afk(.*)', event.text)
+        rerere = re.findall('[!/]afk(.*)|brb ?(.*)', event.text)
         if not rerere:
             await event.reply("{} is not AFK anymore!".format(await user_link(event.from_id)))
             mongodb.afk.delete_one({'_id': user_afk['_id']})

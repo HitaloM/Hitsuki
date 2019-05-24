@@ -316,7 +316,7 @@ async def del_message_callback(event):
     event_data = re.search(r'get_delete_msg_(.*)_(.*)', data)
     if 'admin' in event_data.group(2):
         user_id = event.query.user_id
-        if await check_group_admin(event, user_id) is False:
+        if await check_group_admin(event, user_id, no_msg=True) is False:
             return
     elif 'user' in event_data.group(2):
         pass
