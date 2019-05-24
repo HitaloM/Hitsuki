@@ -1,7 +1,8 @@
 import re
 from collections import defaultdict, deque
 
-from sophie_bot import bot
+from sophie_bot import bot, decorator
+from sophie_bot.modules.helper_func.flood import flood_limit_dec
 
 from telethon import events
 
@@ -67,8 +68,8 @@ async def doit(message, match):
         await message.reply('fuck me\n' + str(e))
 
 
-@bot.on(events.NewMessage(pattern=SED_PATTERN))
-@bot.on(events.MessageEdited(pattern=SED_PATTERN))
+@decorator.StrictCommand(SED_PATTERN)
+@flood_limit_dec("sed")
 async def sed(event):
     message = await doit(event.message, event.pattern_match)
     if message:
