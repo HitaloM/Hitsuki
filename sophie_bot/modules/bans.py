@@ -109,6 +109,15 @@ async def unmute(event, status, chat_id, chat_title):
         await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
+@decorator.command("kickme")
+async def kickme(event):
+    user = event.from_id
+    chat = event.chat_id
+
+    if await kick_self(event, chat, user) is True:
+        await event.reply(get_string("bans", "kickme_success", chat))
+
+
 @user_admin_dec
 async def ban_user(event, user_id, chat_id, time_val):
 
@@ -306,5 +315,48 @@ async def unmute_user(event, user_id, chat_id):
 
     except Exception as err:
         print(str(err))
+        return False
+    return True
+
+
+async def kick_self(event, chat, user):
+    K = await is_user_admin(chat, user)
+    if K is True:
+        await event.reply(get_string("bans", "kickme_admin", chat))
+        return
+    if str(user) in WHITELISTED:
+        await event.reply(get_string("bans", "whitelisted", chat))
+        return
+
+    banned_rights = ChatBannedRights(
+        until_date=None,
+        send_messages=True,
+        view_messages=True
+    )
+
+    unbanned_rights = ChatBannedRights(
+        until_date=None,
+        view_messages=False,
+        send_messages=False
+    )
+
+    try:
+        await event.client(
+            EditBannedRequest(
+                chat,
+                user,
+                banned_rights
+            )
+        )
+
+        await event.client(
+            EditBannedRequest(
+                chat,
+                user,
+                unbanned_rights
+            )
+        )
+
+    except Exception:
         return False
     return True
