@@ -4,6 +4,8 @@ ujson
 redis
 pymongo
 dnspython # needed to connect to cloud MongoDB instances
+crypttg
+pillow
 
 # TEMP
 bs4
