@@ -118,7 +118,6 @@ async def kickme(event):
         await event.reply(get_string("bans", "kickme_success", chat))
 
 
-@user_admin_dec
 async def ban_user(event, user_id, chat_id, time_val):
 
     banned_rights = ChatBannedRights(

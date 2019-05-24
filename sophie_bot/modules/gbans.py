@@ -1,7 +1,7 @@
 from time import gmtime, strftime
 
 from sophie_bot import SUDO, decorator, mongodb, logger
-from sophie_bot.modules.users import user_admin_dec, get_user_and_text, get_user, user_link
+from sophie_bot.modules.users import user_admin_dec, get_user_and_text, get_user, user_link, user_sudo_dec
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.bans import ban_user, unban_user
 
@@ -40,6 +40,15 @@ async def switch_antispam(event, status, chat_id, chat_title):
 
 
 @decorator.command("gban", arg=True, from_users=SUDO)
+async def gban_1(event):
+    await blacklist_user(event)
+
+
+@decorator.command("fban", arg=True, from_users=172811422)
+async def gban_2(event):
+    await blacklist_user(event)
+
+
 async def blacklist_user(event):
     chat_id = event.chat_id
     user, reason = await get_user_and_text(event)
@@ -47,10 +56,11 @@ async def blacklist_user(event):
         await event.reply("You can't blacklist user without a reason blyat!")
         return
     try:
-        a
+        await ban_user(event, user['user_id'], event.chat_id, None)
     except Exception as err:
         await event.reply(err)
         logger.error(err)
+        return
     old = mongodb.blacklisted_users.find_one({'user': user['user_id']})
     if old:
         new = {
