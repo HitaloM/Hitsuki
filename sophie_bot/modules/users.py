@@ -35,14 +35,14 @@ async def update_users(event):
     else:
         chatnick = chat.username
 
-    chat_new = {
-        "chat_id": chat_id,
-        "chat_title": chat.title,
-        "chat_nick": chatnick
-    }
-
     # Chats with no title is pm
     if hasattr(chat, 'title'):
+        chat_new = {
+            "chat_id": chat_id,
+            "chat_title": chat.title,
+            "chat_nick": chatnick
+        }
+
         if old_chat:
             mongodb.notes.update_one({'_id': old_chat['_id']}, {"$set": chat_new}, upsert=False)
         else:

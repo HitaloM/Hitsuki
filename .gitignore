@@ -1,11 +1,9 @@
-__pycache__/*
+__pycache__/
+*.py[cod]
+*.pyc
 *.session
 *.session-journal
-sophie_bot/__pycache__/*
-sophie_bot/modules/__pycache__/*
-sophie_bot/modules/*/__pycache__/*
-#sophie_bot/modules/components/
-sophie_bot/bot_conf.json
+*/bot_conf.json
 output.txt
 Backups/
 .stignore
