@@ -1,8 +1,11 @@
 import re
 
-from sophie_bot import ALLOW_F_COMMANDS, ALLOW_COMMANDS_FROM_EXC, BOT_NICK, bot
+from sophie_bot import CONFIG, BOT_NICK, bot
 
 from telethon import events
+
+ALLOW_F_COMMANDS = CONFIG["advanced"]["allow_forwards_commands"]
+ALLOW_COMMANDS_FROM_EXC = CONFIG["advanced"]["allow_commands_with_!"]
 
 
 def command(command, arg="", word_arg="", additional="", **kwargs):

@@ -1,10 +1,12 @@
-from sophie_bot import NO_LOAD_COMPONENTS, logger
+from os.path import dirname, basename, isfile
+import glob
+
+from sophie_bot import CONFIG, logger
+
+NO_LOAD_COMPONENTS = CONFIG["advanced"]["not_load_this_components"]
 
 
 def list_all_components():
-    from os.path import dirname, basename, isfile
-    import glob
-
     mod_paths = glob.glob(dirname(__file__) + "/*.py")
     all_components = [
         basename(f)[:-3]

