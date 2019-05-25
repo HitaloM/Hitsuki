@@ -164,7 +164,6 @@ async def ban_user(event, user_id, chat_id, time_val):
     return True
 
 
-@user_admin_dec
 async def kick_user(event, user_id, chat_id):
 
     banned_rights = ChatBannedRights(
@@ -213,7 +212,6 @@ async def kick_user(event, user_id, chat_id):
     return True
 
 
-@user_admin_dec
 async def unban_user(event, user_id, chat_id):
 
     unbanned_rights = ChatBannedRights(
@@ -253,7 +251,6 @@ async def unban_user(event, user_id, chat_id):
     return True
 
 
-@user_admin_dec
 async def mute_user(event, user_id, chat_id):
 
     muted_rights = ChatBannedRights(
@@ -286,7 +283,6 @@ async def mute_user(event, user_id, chat_id):
     return True
 
 
-@user_admin_dec
 async def unmute_user(event, user_id, chat_id):
 
     muted_rights = ChatBannedRights(
