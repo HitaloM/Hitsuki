@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 from sophie_bot import BOT_NICK, bot, mongodb, decorator
 from sophie_bot.modules.connections import get_conn_chat, connection
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
-from sophie_bot.modules.language import get_string
+from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import check_group_admin, user_link, is_user_admin, user_admin_dec
 
 from telethon import custom, errors, utils
@@ -19,11 +19,12 @@ RESTRICTED_SYMBOLS = ['*', '_', '`']
 @decorator.command("save", word_arg=True)
 @user_admin_dec
 @connection(admin=True)
-async def save_note(event, status, chat_id, chat_title):
+@get_strings_dec("notes")
+async def save_note(event, strings, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
     for sym in RESTRICTED_SYMBOLS:
         if sym in note_name:
-            await event.reply(get_string("notes", "notename_cant_contain", chat_id).format(sym))
+            await event.reply(strings["notename_cant_contain"].format(sym))
             return
     if note_name[0] == "#":
         note_name = note_name[1:]
@@ -35,7 +36,7 @@ async def save_note(event, status, chat_id, chat_title):
     if event.message.reply_to_msg_id:
         msg = await event.get_reply_message()
         if not msg:
-            await event.reply(get_string("notes", "bot_msg", chat_id))
+            await event.reply(strings["bot_msg"])
             return
         note_text = msg.message
         if prim_text:
@@ -47,7 +48,7 @@ async def save_note(event, status, chat_id, chat_title):
     else:
         note_text = prim_text
 
-    status = get_string("notes", "saved", chat_id)
+    status = strings["saved"]
     old = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     created_date = None
     creator = None
@@ -56,7 +57,7 @@ async def save_note(event, status, chat_id, chat_title):
             created_date = old['created']
         if 'creator' in old:
             creator = old['creator']
-        status = get_string("notes", "updated", chat_id)
+        status = strings["updated"]
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
@@ -79,12 +80,12 @@ async def save_note(event, status, chat_id, chat_title):
         new = mongodb.notes.insert_one(new).inserted_id
 
         buttons = [
-            [Button.inline(get_string("notes", "del_note", chat_id), 'delnote_{}'.format(new))]
+            [Button.inline(strings["del_note"], 'delnote_{}'.format(new))]
         ]
 
-    text = get_string("notes", "note_saved_or_updated", chat_id).format(
+    text = strings["note_saved_or_updated"].format(
         note_name=note_name, status=status, chat_title=chat_title)
-    text += get_string("notes", "you_can_get_note", chat_id).format(name=note_name)
+    text += strings["you_can_get_note"].format(name=note_name)
 
     await event.reply(text, buttons=buttons)
 
