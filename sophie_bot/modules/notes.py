@@ -50,7 +50,8 @@ async def save_note(event, strings, status, chat_id, chat_title):
 
     status = strings["saved"]
     old = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
-    created_date = None
+    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    created_date = date
     creator = None
     if old:
         if 'created' in old:
@@ -58,8 +59,6 @@ async def save_note(event, strings, status, chat_id, chat_title):
         if 'creator' in old:
             creator = old['creator']
         status = strings["updated"]
-
-    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
     if not creator:
         creator = event.from_id
