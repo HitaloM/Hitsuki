@@ -6,7 +6,7 @@ from telethon.tl.types import MessageEntityMentionName
 from sophie_bot.modules.users import user_link
 
 
-@decorator.command("afk", arg=True)
+@decorator.command("afk ?(.*)", arg=True)
 @flood_limit_dec("afk")
 async def afk(event):
     if not event.pattern_match.group(1):
@@ -26,6 +26,8 @@ async def get_user(event):
         replied_user = await event.client(GetFullUserRequest(previous_message.from_id))
     else:
         user = re.search('@(\w*)', event.text)
+        if not user:
+            return
         user = user.group(0)
 
         if user.isnumeric():
@@ -62,6 +64,8 @@ async def check_afk(event):
             mongodb.afk.delete_one({'_id': user_afk['_id']})
 
     user = await get_user(event)
+    if not user:
+        return
     user_afk = mongodb.afk.find_one({'user': user.user.id})
     if user_afk:
         await event.reply("{} is AFK!\nReason: {}".format(

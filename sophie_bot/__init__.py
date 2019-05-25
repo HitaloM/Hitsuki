@@ -1,5 +1,4 @@
 import logging
-import sys
 
 from pymongo import MongoClient
 import redis
@@ -8,24 +7,12 @@ import ujson
 from telethon import TelegramClient
 
 
-logger = logging.getLogger('logger')
-logger.setLevel(logging.DEBUG)
+# enable logging
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s: %(message)s",
+    level=logging.INFO)
 
-formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s")
-
-fh = logging.FileHandler('sophie.log', encoding='utf-8')
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(formatter)
-logger.addHandler(fh)
-
-ch = logging.StreamHandler()
-
-if len(sys.argv) > 1 and sys.argv[1] == 'debug':
-    ch.setLevel(logging.DEBUG)
-else:
-    ch.setLevel(logging.INFO)
-ch.setFormatter(formatter)
-logger.addHandler(ch)
+logger = logging.getLogger(__name__)
 
 
 f = open('sophie_bot/bot_conf.json', "r")

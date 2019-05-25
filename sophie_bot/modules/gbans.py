@@ -108,14 +108,14 @@ async def un_blacklist_user(event):
 
 
 @decorator.insurgent()
-async def welcome_trigger(event):
-    user_id = event.action_message.from_id
+async def gban_trigger(event):
+    user_id = event.from_id
     K = mongodb.blacklisted_users.find_one({'user': user_id})
     if K:
         try:
             await ban_user(event, K['user_id'], event.chat_id, None)
         except Exception as err:
-            await event.reply(err)
+            await event.reply(str(err))
             logger.error(err)
         await event.reply(get_string("gbans", "user_is_blacklisted", event.chat_id).format(
-            user_link(user_id), K['reason']))
+            await user_link(user_id), K['reason']))
