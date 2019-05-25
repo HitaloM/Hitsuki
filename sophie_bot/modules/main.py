@@ -50,13 +50,15 @@ async def stats(event):
     text = "**Stats**\n"
     usrs = mongodb.user_list.count()
     chats = mongodb.chat_list.count()
-    text += "{} total users, in {} chats\n".format(usrs, chats)
+    text += "* `{}` total users, in `{}` chats\n".format(usrs, chats)
+    text += "* `{}` total notes\n".format(mongodb.notes.count())
+    text += "* `{}` total gbanned users\n".format(mongodb.blacklisted_users.count())
     db = mongodb.command("dbstats")
-    if hasattr(db, 'fsTotalSize'):
-        text += 'Database size is {}, free {}'.format(
+    if 'fsTotalSize' in db:
+        text += '* Database size is `{}`, free `{}`'.format(
             convert_size(db['dataSize']), convert_size(db['fsTotalSize'] - db['fsUsedSize']))
     else:
-        text += 'Database size is {}, free 512M'.format(
+        text += '* Database size is `{}`, free `512M`'.format(
             convert_size(db['storageSize']))
     await event.reply(text)
 
