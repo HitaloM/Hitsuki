@@ -1,12 +1,11 @@
 import logging
+import sys
 
 from pymongo import MongoClient
-
 import redis
+import ujson
 
 from telethon import TelegramClient
-
-import ujson
 
 
 logger = logging.getLogger('logger')
@@ -20,7 +19,11 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
+
+if len(sys.argv) > 1 and sys.argv[1] == 'debug':
+    ch.setLevel(logging.DEBUG)
+else:
+    ch.setLevel(logging.INFO)
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
