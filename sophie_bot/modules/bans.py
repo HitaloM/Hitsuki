@@ -101,7 +101,7 @@ async def muter(event, status, chat_id, chat_title):
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 async def unmute(event, status, chat_id, chat_title):
-    user = get_user(event)
+    user = await get_user(event)
     if await unmute_user(event, user['user_id'], chat_id):
         admin_str = await user_link(event.from_id)
         user_str = await user_link(user['user_id'])
