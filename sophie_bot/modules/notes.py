@@ -92,31 +92,33 @@ async def save_note(event, strings, status, chat_id, chat_title):
 @decorator.command("clear", arg=True)
 @user_admin_dec
 @connection(admin=True)
-async def clear_note(event, status, chat_id, chat_title):
+@get_strings_dec("notes")
+async def clear_note(event, strings, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
     note = mongodb.notes.delete_one({'chat_id': chat_id, "name": note_name})
     if note:
-        text = get_string("notes", "note_removed", chat_id).format(
+        text = strings["note_removed"].format(
             note_name=note_name, chat_name=chat_title)
     else:
-        text = get_string("notes", "cant_find_note", chat_id).format(chat_name=chat_title)
+        text = strings["cant_find_note"].format(chat_name=chat_title)
     await event.reply(text)
 
 
 @decorator.command("noteinfo", arg=True)
 @user_admin_dec
 @connection(admin=True)
-async def noteinfo(event, status, chat_id, chat_title):
+@get_strings_dec("notes")
+async def noteinfo(event, strings, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if not note:
-        text = get_string("notes", "cant_find_note", chat_id)
+        text = strings["cant_find_note"]
     else:
-        text = get_string("notes", "note_info_title", chat_id)
-        text += get_string("notes", "note_info_note", chat_id).format(note_name=note_name)
-        text += get_string("notes", "note_info_created", chat_id).format(
+        text = strings["note_info_title"]
+        text += strings["note_info_note"].format(note_name=note_name)
+        text += strings["note_info_created"].format(
             data=note['created'], user=await user_link(note['creator']))
-        text += get_string("notes", "note_info_updated", chat_id).format(
+        text += strings["note_info_updated"].format(
             data=note['date'], user=await user_link(note['updated_by']))
 
     await event.reply(text)
@@ -125,11 +127,12 @@ async def noteinfo(event, status, chat_id, chat_title):
 @decorator.command("notes")
 @flood_limit_dec("notes")
 @connection()
-async def list_notes(event, status, chat_id, chat_title):
+@get_strings_dec("notes")
+async def list_notes(event, strings, status, chat_id, chat_title):
     notes = mongodb.notes.find({'chat_id': chat_id})
-    text = get_string("notes", "notelist_header", event.chat_id).format(chat_name=chat_title)
+    text = strings["notelist_header"].format(chat_name=chat_title)
     if notes.count() == 0:
-        text = get_string("notes", "notelist_no_notes", event.chat_id)
+        text = strings["notelist_no_notes"]
     else:
         for note in notes:
             text += "- `{}`\n".format(note['name'])
