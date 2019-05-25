@@ -55,7 +55,7 @@ mongodb = MongoClient(MONGO_CONN).sophie
 redis = redis.StrictRedis(
     host='localhost', port=6379, db='1')  # decode_respone=True
 
-bot = TelegramClient(NAME, API_ID, API_HASH)
+bot = TelegramClient('ds', API_ID, API_HASH)
 
 logger.info("--------------------")
 logger.info("|     SophieBot    |")

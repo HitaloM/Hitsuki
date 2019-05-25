@@ -4,13 +4,13 @@
         "small_name": "rus",
         "flag": "🇷🇺",
         "code": "ru",
-        "translators": [483808054]
+        "translators": [483808054, 552517449, 458207731]
     },
     "STRINGS": {
         "notes": {
             "notelist_no_notes": "Нет заметок в этом чате!",
             "notelist_header": "**Заметки в {chat_name}**:\n",
-            "no_right_save_note": "Вы не имеете заметок в этом чате!!",
+            "no_right_save_note": "Вы не имеете права оставлять заметки в этом чате!",
             "saved": "сохранена",
             "updated": "обновлена",
             "note_saved_or_updated": "**Заметка {note_name} {status} в {chat_title}!**\n",
@@ -19,7 +19,7 @@
             "del_note": "Удалить заметку",
             "note_removed": "Заметка `{note_name}` удалена в **{chat_name}**!",
             "cant_find_note": "Я не могу найти эту заметку в **{chat_name}**!",
-            "note_info_title": "**Информация про заметку**\n",
+            "note_info_title": "**Информация о заметке**\n",
             "note_info_note": "Заметка: `{note_name}`\n",
             "note_info_updated": "Последнее обновление: `{data}` создатель: {user}\n",
             "note_info_created": "Заметка создана в: `{data}`, создатель: {user}\n",
@@ -29,7 +29,10 @@
             "user_blocked": "Напишите /start в мою личку и нажмите на кнопку снова!",
             "note_so_big": "Эта заметка больше чем лимит Telegram в 200 символов!",
             "only_admins_can_rmw": "Только админы могут удалять заметки",
-            "delmsg_no_arg": "Кнопка deletemsg может иметь только аргумент 'admin' или 'user'!"
+            "delmsg_no_arg": "Кнопка deletemsg может иметь только аргумент 'admin' или 'user'!",
+            "bot_msg": "Извините, я не могу получить это сообщение, возможно это сообщение другого бота. Я не могу сохранить его.",
+            "pmed_note": "Я написала вам в личные сообщения!",
+            "notename_cant_contain": "Имя заметки не может содержать `{}` !"
         },
         "bans": {
             "user_banned": "Админ {user} забанил {admin} в {chat_name}!\n",
@@ -53,7 +56,10 @@
             "user_admin_unban": "Серьезно?! Как я могу разблокировать админа?",
             "user_admin_unmute": "Мм?! Размученю.",
             "user_mooted": "{admin} заткнул {user} в {chat_name}",
-            "user_unmooted": "{admin} размутил {user} в {chat_name}"
+            "user_unmooted": "{admin} размутил {user} в {chat_name}",
+            "kickme_admin": "Я не могу кикнуть тебя!",
+            "whitelisted": "Ха-ха-ха - нет! Вы в белом списке!",
+            "kickme_success": "Хорошо.. нет проблем!"
         },
         "connections": {
             "can't_find_chat_use_id": "Я не могу найти этот чат, попробуйте использовать id чата.",
@@ -78,8 +84,8 @@
             "welcome_is_note": "Приветствие настроено на заметку: `{}`",
             "welcome_is_default": "Приветствие не настроено.",
             "no_args_serv": "Please give me yes/no to Enable/Disable Clean Service",
-            "serv_yes": "Clean Service is successfully enabled in this chat!",
-            "serv_no": "Clean Service is successfully disabled in this chat!"
+            "serv_yes": "Служба очистки успешно включена в этом чате!",
+            "serv_no": "Служба очистки успешно включена в этом чате!"
         },
         "filters": {
             "dont_have_right": "Вы не имеете прав сохранять фильтры здесь!",
@@ -94,7 +100,7 @@
             "a_mute": "Действие: **мут отправителя**",
             "a_kick": "Действие: **кик отправителя**",
             "wrong_action": "Неправильное действие! Прочитайте справку.",
-            "filters_in": "Filters in **{chat_name}**:\n",
+            "filters_in": "Заметки в **{chat_name}**:\n",
             "no_filters_in": "Нет фильтров в **{}**!",
             "filtes_in": "**Фильтры в {}:**\n",
             "no_rights_stop": "Вы не имеете прав останавливать фильтры здесь!",
@@ -109,14 +115,14 @@
             "Admin_no_wrn": "Эй, я не могу дать варн админу!",
             "warn": "{admin} удалил варны {user} в {chat_name}\n",
             "warn_rsn": "Причина: `{reason}`\n",
-            "warn_bun": "Warnings has been exceeded! {user} has been banned!",
+            "warn_bun": "Предупреждения превышены! {user} был забанен!",
             "warn_num": "Варны: {curr_warns}/{max_warns}\n",
             "rmv_warn_admin": "Вы не администратор, только администраторы могут это сделать!",
-            "rmv_sfl": "Warn removed by {admin}",
-            "warn_list_head": "{user}'s **warnings in {chat_name}:**\n",
-            "user_hasnt_warned": "{user} hasn't been warned in **{chat_name}** before!",
-            "warn_limit": "Warn limit in {chat_name} is currently: `{num}`",
-            "warn_limit_upd": "Warn limit has been updated to {}!"
+            "rmv_sfl": "Предупреждение удалено {admin}",
+            "warn_list_head": "{user}'s **предупреждений в {chat_name}:**\n",
+            "user_hasnt_warned": "{user} не имел предупреждений в **{chat_name}** до этого!",
+            "warn_limit": "Превышен лимит в {chat_name}: `{num}`",
+            "warn_limit_upd": "Лимит предупреждений обновлен до {}!"
         },
         "msg_deleting": {
             "no_rights_purge": "Вы не имеете прав чистить здесь!",
@@ -128,12 +134,22 @@
             "your_id": "Ваш id: `{}`\n",
             "chat_id": "Id чата: `{}`\n",
             "user_id": "Id пользователя {}: `{}`\n"
+        },
+        "gbans": {
+            "user_is_blacklisted": "Пользователь {} в черном списке.\nПричина: {}"
+        },
+        "pm_menu": {
+            "start_hi": "Привет! Меня зовут Sophie :3, я помогу вам управлять вашей группой и многое другое!",
+            "btn_help": "Помощь",
+            "btn_lang": "Язык",
+            "btn_group": "Группа",
+            "btn_channel": "Канал"
         }
     },
     "HELPS": {
         "notes": {
             "btn": "Заметки",
-            "title": "Notes are great to save random tidbits of information; a phone number, a nice gif, a funny picture - anything!",
+            "title": "Заметки хороши для сохранения любой важной для вас информации; номер телефона, прикольная gif, смешная картинка - всё что угодно!",
             "text": {
                 "i1": "\nДоступные команды:",
                 "i2": "- /save (имя) (данные): Ответьте на сообщение чтобы сохранить это сообщение. Даже работает на медиа!",
@@ -146,17 +162,17 @@
                 "i9": "`/save дата Это тестовая заметка!`",
                 "i10": "\nIf you want a button write /markdownhelp to get a help with it.",
                 "i11": "\nТеперь каждый, кто напишет `/get дата`, или `#дата` будет получать `Это тестовая заметка!`.",
-                "i12": "\nIf you want to save an image, gif, or sticker, or any other data, do the following:",
+                "i12": "\nЕсли вы хотите сохранить изображение, gif, стикер или любые другие данные, сделайте следующее:",
                 "i13": "`save word` while replying to a sticker or whatever data you'd like. Now, the note at `#word` contains a sticker which will be sent as a reply.",
-                "i14": "\nTip: to retrieve a note without the formatting, use `/get (name) noformat`",
-                "i15": "This will retrieve the note and send it without formatting it; getting you the raw markdown, allowing you to make easy edits."
+                "i14": "\nСовет: чтобы получить заметку без форматирования, используйте формат /get имя_вашей_заметки_сыр",
+                "i15": "Вывод заметки для редактирования."
             },
             "buttons": {
-                "help_btn_notes_md": "Markdown",
-                "help_btn_notes_btns": "Buttons"
+                "help_btn_notes_md": "Разметка",
+                "help_btn_notes_btns": "Кнопки"
             },
             "md": {
-                "a1": "You can use markdown to make your messages more expressive. This is the markdown currently supported:\n",
+                "a1": "Вы можете использовать разметку для того, чтобы сделать ваши сообщения более выразительными. Это разметка, которая в настоящее время поддерживается:\n",
                 "a2": "`code words` backticks allow you to wrap your words in monospace fonts. Shows as: `code words`",
                 "a3": "`**bold words**` asterixes are used for bold font. Shows as: **bold words**",
                 "a4": "`__italic words__` underscores are used for italics. Shows as: __italic words__",
@@ -174,47 +190,47 @@
         },
         "warns": {
             "btn": "Предупреждения",
-            "title": "Keep your members in check with warnings; stop them getting out of control!",
+            "title": "Держите членов вашей группы в узде с помощью предупреждений; помешайте им выходить из-под контроля!",
             "text": {
-                "i1": "\nAvailable commands are:",
-                "i2": "- /warn (reason): warn a user for the specified reason .",
-                "i3": "- /warns: returns the list of warns, with reasons, for that user.",
-                "i4": "- /rmwarn: remove the latest warn for that user. #TODO",
-                "i5": "- /resetwarns: reset all of a user's warns. #TODO",
-                "i6": "- /setwarnlimit: sets the number of warns before an action is taken upon the user.",
-                "i7": "\nIf you're looking for a way to automatically warn users when they say certain things, go to the blacklists module.",
-                "i8": "\nAn example of how to set a new multiword warning:",
-                "i9": "`/warn @user Because warning is fun`",
-                "i10": "\nThis will warn the user called @user, with a reason of 'Because warning is fun'"
+                "i1": "\nДоступные команды:",
+                "i2": "- /warn (причина): предупреждайте пользователя по указанной причине.",
+                "i3": "- /warns: возвращает список предупреждений пользователя.",
+                "i4": "- /rmwarn: удалите последнее предупреждение для этого пользователя. #СДЕЛАТЬ_НАДО",
+                "i5": "- /resetwarns: сбросить все предупреждения пользователя. #ЯША_ЛЕНИВЫЙ_И_НЕ_ДЕЛАЕТ",
+                "i6": "- /setwarnlimit: устанавливает количество предупреждений перед принятием действия пользователем.",
+                "i7": "\nЕсли вы ищете способ автоматического предупреждения пользователей, когда они говорят некоторые вещи, перейдите в модуль черных списков.",
+                "i8": "\nПример того, как сделать новое многословное предупреждение:",
+                "i9": "`/warn @user Люблю варнить просто так, я же админ`",
+                "i10": "\nЭто предупредит пользователя, вызванного @user, с целью 'Люблю варнить просто так, я же админ'"
             }
         },
         "misc": {
-            "btn": "Misc",
-            "title": "An \"odds and ends\" module for small, simple commands which don't really fit anywhere",
+            "btn": "Прочее",
+            "title": "Модуль \"всякая всячина\" для небольших простых команд, которые, на самом деле, никуда не годятся",
             "text": {
-                "i1": "\nAvailable commands are:",
-                "i2": "- /id: get a id of user and chat.",
-                "i3": "- /stats: show bot stats.",
-                "i4": "- /botchanges: show bot changes (commit history)"
+                "i1": "\nДоступные команды:",
+                "i2": "- /id: получить идентификатор пользователя и чата.",
+                "i3": "- /stats: показать статистику бота.",
+                "i4": "- /botchanges: показать изменения бота (история коммитов)"
             }
         },
         "connections": {
-            "btn": "Connections",
+            "btn": "Соединения",
             "title": "Sometimes, you just want to add some notes and filters to a group chat, but you don't want everyone to see; This is where connections come in...",
             "text": {
-                "i0": "This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)",
-                "i1": "\nAvailable commands are:",
-                "i2": "- /connect <chat>: connect to the chat with chat username/ID, allowing you to view/edit contents.",
-                "i3": "- /connect: show last 3 chats to fast connect.",
-                "i4": "\nYou can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids."
+                "i0": "Это позволяет вам подключиться к базе данных чата и добавлять в нее вещи без сообщений, которые знают об этом! По очевидным причинам, вам нужно быть администратором для добавления вещей; но любой участник может просматривать ваши данные. (забаненные/кикнутые пользователи не могут!)",
+                "i1": "\nДоступные команды:",
+                "i2": "- /connect <chat>: подключитесь к чату с именем пользователя/ID чата, позволяя вам просматривать/редактировать содержимое.",
+                "i3": "- /connect: показать последние 3 чата для быстрого подключения.",
+                "i4": "\nВы можете получить идентификатор чата, используя команду /id в вашем чате. Не удивляйтесь, если id отрицательный; у всех супергрупп отрицательный идентификатор."
             }
         },
         "greetings": {
-            "btn": "Greetings",
-            "title": "Give your members a warm welcome with the greetings module! Or a sad goodbye... Depends!",
+            "btn": "Приветствие",
+            "title": "Дайте своим членам теплое приветствие с модулем приветствия! Или грустное прощание... :(",
             "text": {
-                "i1": "\nAvailable commands are:",
-                "i2": "- /setwelcome <note>: sets your new welcome note!",
+                "i1": "\nДоступные команды:",
+                "i2": "- /setwelcome <note>: задает приглашение!",
                 "i3": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat."
             }
         }
