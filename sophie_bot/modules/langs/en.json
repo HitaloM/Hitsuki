@@ -57,7 +57,8 @@
         "user_unmooted": "{admin} unmuted {user} in {chat_name}",
         "kickme_admin": "I can't kick you!",
         "whitelisted": "Haha NO! You is whitelisted!",
-        "kickme_success": "Okay.. no problem!"
+        "kickme_success": "Okay.. no problem!",
+        "tmute_sucess": "Admin {admin} muted {user} for {time} {unit} !"
     },
     "connections": {
         "can't_find_chat_use_id": "I can't find this chat, try using chat id.",

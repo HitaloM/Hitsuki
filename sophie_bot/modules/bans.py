@@ -90,7 +90,7 @@ async def unban(event, status, chat_id, chat_title):
 @connection(admin=True, only_in_groups=True)
 async def muter(event, status, chat_id, chat_title):
     user, data = await get_user_and_text(event)
-    if await mute_user(event, user['user_id'], chat_id):
+    if await mute_user(event, user['user_id'], chat_id, None):
         admin_str = await user_link(event.from_id)
         user_str = await user_link(user['user_id'])
         text = get_string("bans", "user_mooted", event.chat_id)
@@ -116,6 +116,38 @@ async def kickme(event):
 
     if await kick_self(event, chat, user) is True:
         await event.reply(get_string("bans", "kickme_success", chat))
+
+
+@decorator.command("tmute", arg=True)
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
+async def tmute(event, status, chat_id, chat_title):
+    user, data = await get_user_and_text(event)
+    data = data.split(' ', 2)
+    time_val = data[0]
+
+    unit = time_val[-1]
+    if any(time_val.endswith(unit) for unit in ('m', 'h', 'd')):
+        time_num = time_val[:-1]  # type: str
+        if unit == 'm':
+            mutetime = int(time.time() + int(time_num) * 60)
+            unit_str = 'minutes'
+        elif unit == 'h':
+            mutetime = int(time.time() + int(time_num) * 60 * 60)
+            unit_str = 'hours'
+        elif unit == 'd':
+            mutetime = int(time.time() + int(time_num) * 24 * 60 * 60)
+            unit_str = 'days'
+        else:
+            await event.reply(get_string("bans", "time_var_incorrect",
+                              event.chat_id))
+            return
+
+        if await mute_user(event, user['user_id'], event.chat_id, mutetime) is True:
+            admin_str = await user_link(event.from_id)
+            user_str = await user_link(user['user_id'])
+            await event.reply(get_string("bans", "tmute_sucess", event.chat_id).format(
+                                admin=admin_str, user=user_str, time=time_val[:-1], unit=unit_str))
 
 
 async def ban_user(event, user_id, chat_id, time_val):
@@ -251,10 +283,10 @@ async def unban_user(event, user_id, chat_id):
     return True
 
 
-async def mute_user(event, user_id, chat_id):
+async def mute_user(event, user_id, chat_id, time_val):
 
     muted_rights = ChatBannedRights(
-        until_date=None,
+        until_date=time_val,
         send_messages=True
     )
 
