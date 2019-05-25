@@ -43,11 +43,13 @@ async def get_start_callback(event):
 
 
 def get_start(event):
-    text = "Hey there! My name is Sophie :3, I help you manage your group and more!"
-    buttons = [[Button.inline('❔ Help', 'get_help')]]
-    buttons += [[Button.inline("🇷🇺 Language", 'set_lang')]]
-    buttons += [[custom.Button.url('👥 Group', 'https://t.me/YanaBotGroup'),
-                 custom.Button.url('📡 Channel', 'https://t.me/YanaBotNEWS')]]
+    text = get_string("pm_menu", "start_hi", event.chat_id)
+    buttons = [[Button.inline(get_string("pm_menu", "btn_help", event.chat_id), 'get_help')]]
+    buttons += [[Button.inline(get_string("pm_menu", "btn_lang", event.chat_id), 'set_lang')]]
+    buttons += [[custom.Button.url(get_string("pm_menu", "btn_chat", event.chat_id),
+                'https://t.me/YanaBotGroup'),
+                 custom.Button.url(get_string("pm_menu", "btn_channel", event.chat_id),
+                 'https://t.me/YanaBotNEWS')]]
 
     return text, buttons
 

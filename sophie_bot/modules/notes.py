@@ -23,7 +23,7 @@ async def save_note(event, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
     for sym in RESTRICTED_SYMBOLS:
         if sym in note_name:
-            await event.reply("Note name can't conatin `{}` !".format(sym))
+            await event.reply(get_string("notes", "notename_cant_contain", chat_id).format(sym))
             return
     if note_name[0] == "#":
         note_name = note_name[1:]
@@ -35,9 +35,7 @@ async def save_note(event, status, chat_id, chat_title):
     if event.message.reply_to_msg_id:
         msg = await event.get_reply_message()
         if not msg:
-            await event.reply(
-                "I'm sorry, i can't get this message, probably this a other bot's message."
-                "I can't save it.")
+            await event.reply(get_string("notes", "bot_msg", chat_id))
             return
         note_text = msg.message
         if prim_text:
@@ -285,7 +283,7 @@ async def get_note_callback(event):
     user_id = event.original_update.user_id
     try:
         await send_note(user_id, group_id, None, notename)
-        await event.answer("I pm'ed note to you!")
+        await event.answer(get_string("notes", "pmed_note", event.chat_id))
     except errors.rpcerrorlist.UserIsBlockedError or errors.rpcerrorlist.PeerIdInvalidError:
         await event.answer(
             get_string("notes", "user_blocked", event.chat_id), alert=True)

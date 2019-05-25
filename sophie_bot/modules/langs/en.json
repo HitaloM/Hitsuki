@@ -27,7 +27,10 @@
         "user_blocked": "Write /start in my pm and click on the button again!",
         "note_so_big": "This note bigger is than Telegram's limit of 200 characters!",
         "only_admins_can_rmw": "Only admins can remove this message",
-        "delmsg_no_arg": "deletemsg button can contain only 'admin' or 'user' argument!"
+        "delmsg_no_arg": "deletemsg button can contain only 'admin' or 'user' argument!",
+        "bot_msg" : "I'm sorry, i can't get this message, probably this a other bot's message. I can't save it.",
+        "pmed_note": "I pm'ed note to you!",
+        "notename_cant_contain": "Note name can't conatin `{}` !"
     },
     "bans": {
         "user_banned": "User {user} banned by {admin} in {chat_name}!\n",
@@ -131,6 +134,16 @@
         "your_id": "Your id: `{}`\n",
         "chat_id": "Chat id: `{}`\n",
         "user_id": "{}'s user id: `{}`\n"
+    },
+    "gbans": {
+        "user_is_blacklisted": "User {} blacklisted.\nReason: {}"
+    },
+    "pm_menu": {
+        "start_hi": "Hey there! My name is Sophie :3, I help you manage your group and more!",
+        "btn_help": "❔ Help",
+        "btn_lang": "🇷🇺 Language",
+        "btn_group": "👥 Group",
+        "btn_channel": "📡 Channel"
     }
  },
  "HELPS": {

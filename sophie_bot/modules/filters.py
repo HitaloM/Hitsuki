@@ -43,7 +43,7 @@ async def add_filter(event, status, chat_id, chat_title):
     real_chat_id = event.chat_id
     args = event.message.raw_text.split(" ")
     if len(args) < 3:
-        await event.reply("args error")
+        await event.reply(get_string("filters", "wrong_action", real_chat_id))
         return
 
     handler = args[1]

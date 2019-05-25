@@ -1,7 +1,9 @@
 from time import gmtime, strftime
 
 from sophie_bot import SUDO, decorator, mongodb, logger
-from sophie_bot.modules.users import user_admin_dec, get_user_and_text, get_user, user_link, user_sudo_dec
+from sophie_bot.modules.users import (user_admin_dec, get_user_and_text,
+                                      get_user, user_link)
+from sophie_bot.modules.language import get_string
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.bans import ban_user, unban_user
 
@@ -50,7 +52,6 @@ async def gban_2(event):
 
 
 async def blacklist_user(event):
-    chat_id = event.chat_id
     user, reason = await get_user_and_text(event)
     if not reason:
         await event.reply("You can't blacklist user without a reason blyat!")
@@ -116,5 +117,5 @@ async def welcome_trigger(event):
         except Exception as err:
             await event.reply(err)
             logger.error(err)
-        await event.reply("User {} blacklisted.\nReason: {}".format(
+        await event.reply(get_string("gbans", "user_is_blacklisted", event.chat_id).format(
             user_link(user_id), K['reason']))
