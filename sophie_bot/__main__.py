@@ -40,8 +40,7 @@ except Exception as err:
 def exit_gracefully(signum, frame):
     logger.info("Bye!")
     redis.bgsave()
-    asyncio.ensure_future(bot.disconnect())
-    logger.info("--------------------")
+    logger.info("----------------------")
     sys.exit(1)
 
 

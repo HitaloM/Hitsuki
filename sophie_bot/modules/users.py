@@ -44,7 +44,7 @@ async def update_users(event):
         }
 
         if old_chat:
-            mongodb.notes.update_one({'_id': old_chat['_id']}, {"$set": chat_new}, upsert=False)
+            mongodb.user_list.update_one({'_id': old_chat['_id']}, {"$set": chat_new}, upsert=False)
         else:
             mongodb.chat_list.insert_one(chat_new)
         logger.debug(f"chat {chat_id} updated")
@@ -59,7 +59,7 @@ async def update_users(event):
     }
 
     if old_user:
-        mongodb.notes.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
+        mongodb.user_list.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
     else:
         mongodb.user_list.insert_one(user_new)
     logger.debug(f"user {user_id} updated")

@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 f = open('sophie_bot/bot_conf.json', "r")
+
+SOPHIE_VER = "0.2"
 CONFIG = ujson.load(f)
 
 OWNER_ID = int(CONFIG["basic"]["owner_id"])
@@ -44,6 +46,6 @@ redis = redis.StrictRedis(
 
 bot = TelegramClient('ds', API_ID, API_HASH)
 
-logger.info("--------------------")
-logger.info("|     SophieBot    |")
-logger.info("--------------------")
+logger.info("----------------------")
+logger.info("|    SophieBot {}   |".format(SOPHIE_VER))
+logger.info("----------------------")
