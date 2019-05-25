@@ -115,7 +115,6 @@ async def noteinfo(event, status, chat_id, chat_title):
     else:
         text = get_string("notes", "note_info_title", chat_id)
         text += get_string("notes", "note_info_note", chat_id).format(note_name=note_name)
-        text += "Formatting: {note_format}\n".format(note_format=note['format'])
         text += get_string("notes", "note_info_created", chat_id).format(
             data=note['created'], user=await user_link(note['creator']))
         text += get_string("notes", "note_info_updated", chat_id).format(
