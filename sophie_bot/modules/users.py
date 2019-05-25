@@ -137,7 +137,8 @@ async def check_group_admin(event, user_id, no_msg=False):
         return True
     else:
         if no_msg is False:
-            await event.reply("You should be a admin to do it!")
+            if flood_limit(event, "admin-check") is True:
+                await event.reply("You should be a admin to do it!")
         return False
 
 

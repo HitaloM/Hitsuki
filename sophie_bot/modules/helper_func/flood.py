@@ -24,6 +24,7 @@ async def flood_limit(event, command):
     else:
         return True
 
+
 def flood_limit_dec(*args):
     def wrapped(func):
         async def wrapped_1(event, *args):
