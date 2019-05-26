@@ -2,9 +2,11 @@ from sophie_bot import decorator
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import get_user, user_link
+from sophie_bot.modules.disable import disablable_dec
 
 
 @decorator.command("id", arg=True)
+@disablable_dec("id")
 @flood_limit_dec("id")
 async def id(event):
     text = get_string("misc", "your_id", event.chat_id).format(event.from_id)

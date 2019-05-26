@@ -4,6 +4,7 @@ import subprocess
 
 from sophie_bot import mongodb, decorator
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
+from sophie_bot.modules.disable import disablable_dec
 
 
 async def term(command):
@@ -35,6 +36,7 @@ async def chat_term(event, command):
 
 
 @decorator.command("botchanges")
+@disablable_dec("botchanges")
 @flood_limit_dec("botchanges")
 async def botchanges(event):
     command = "git log --pretty=format:\"%an: %s\" -30"
@@ -45,6 +47,7 @@ async def botchanges(event):
 
 
 @decorator.command("stats")
+@disablable_dec("stats")
 @flood_limit_dec("stats")
 async def stats(event):
     text = "**Stats**\n"

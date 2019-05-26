@@ -6,6 +6,7 @@ from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.users import user_admin_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.notes import send_note
+from sophie_bot.modules.disable import disablable_dec
 
 import ujson
 
@@ -85,6 +86,7 @@ async def add_filter(event, status, chat_id, chat_title):
 
 
 @decorator.command("filters", arg=True)
+@disablable_dec("filters")
 @flood_limit_dec("filters")
 @connection()
 async def list_filters(event, status, chat_id, chat_title):

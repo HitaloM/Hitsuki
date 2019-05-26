@@ -145,6 +145,15 @@
         "btn_lang": "🇷🇺 Language",
         "btn_chat": "👥 Group",
         "btn_channel": "📡 Channel"
+    },
+    "disable": {
+        "wot_to_disable": "What you wanna disable?",
+        "already_disabled": "This command is already disabled!",
+        "disabled": "Command `{}` disabled in **{}**!",
+
+        "wot_to_enable": "What you wanna enable?",
+        "already_enabled": "This command isn't disabled!",
+        "enabled": "Command `{}` enabled in **{}**!"
     }
  },
  "HELPS": {
