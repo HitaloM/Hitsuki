@@ -196,8 +196,6 @@ async def send_note(chat_id, group_id, msg_id, note_name,
     if not buttons:
         buttons = None
 
-    print('owo')
-
     if from_id:
         user = mongodb.user_list.find_one({"user_id": from_id})
         if not user:
@@ -229,8 +227,6 @@ async def send_note(chat_id, group_id, msg_id, note_name,
             chatname=chatname['chat_title'],
             rules='Will be later'
         )
-
-    print("owowo")
 
     await bot.send_message(
         chat_id,
@@ -278,14 +274,13 @@ async def get_note(event):
 @decorator.StrictCommand("^#(.*)")
 async def check_hashtag(event):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id)
-    real_chat_id = event.chat_id
     if status is False:
         await event.reply(chat_id)
         return
     note_name = event.message.raw_text[1:].lower()
     if len(note_name) > 1:
         await send_note(
-            real_chat_id, chat_id, event.message.id, note_name,
+            event.chat_id, event.chat_id, event.message.id, note_name,
             from_id=event.from_id)
 
 

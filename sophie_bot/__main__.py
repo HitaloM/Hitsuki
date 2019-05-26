@@ -49,4 +49,6 @@ logger.info("Running loop..")
 logger.info("Bot is alive!")
 original_sigint = signal.getsignal(signal.SIGINT)
 signal.signal(signal.SIGINT, exit_gracefully)
-bot.run_until_disconnected()
+# bot.run_until_complete()
+
+asyncio.get_event_loop().run_forever()
