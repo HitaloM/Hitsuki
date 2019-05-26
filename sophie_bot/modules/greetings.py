@@ -31,6 +31,8 @@ async def welcome_trigger(event):
                 return  # TODO: Add user in db
             if 'last_name' in user:
                 last_name = user['last_name']
+                if not last_name:
+                    last_name = ""
                 full_name = user['first_name'] + " " + last_name
             else:
                 last_name = None
