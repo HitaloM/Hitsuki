@@ -351,10 +351,11 @@ async def kick_self(event, chat, user):
     K = await is_user_admin(chat, user)
     if K is True:
         await event.reply(get_string("bans", "kickme_admin", chat))
-        return
+        return False
     if str(user) in WHITELISTED:
+        print(str(user))
         await event.reply(get_string("bans", "whitelisted", chat))
-        return
+        return False
 
     banned_rights = ChatBannedRights(
         until_date=None,
