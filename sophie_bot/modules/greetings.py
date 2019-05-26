@@ -26,8 +26,12 @@ async def welcome_trigger(event):
         elif welcome['enabled'] is False:
             return
         else:
-            await send_note(event, event.chat_id, chat_id, event.action_message.id,
-                            welcome['note'], show_none=True, from_id=event.from_id)
+            if hasattr(event.action_message.action, 'users'):
+                from_id = event.action_message.action.users[0]
+            else:
+                from_id = event.action_message.from_id
+            await send_note(event.chat_id, chat_id, event.action_message.id,
+                            welcome['note'], show_none=True, from_id=from_id)
 
 
 @decorator.command("setwelcome", arg=True)
