@@ -3,7 +3,7 @@ from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.helper_func.flood import flood_limit
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.notes import send_note
-from sophie_bot.modules.users import user_link, user_admin_dec
+from sophie_bot.modules.users import user_admin_dec
 
 
 @decorator.ChatAction()
@@ -18,45 +18,16 @@ async def welcome_trigger(event):
             return  # Do not welcome yourselve
         chat_id = event.action_message.chat_id
         welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
-        cleaner = mongodb.clean_service.find({'chat_id': chat})
-        if cleaner:
+        cleaner = mongodb.clean_service.find_one({'chat_id': chat})
+        if cleaner and cleaner['service'] is True:
             await event.delete()
         if not welcome:
             await event.reply(get_string("greetings", "welcome_hay", chat))
         elif welcome['enabled'] is False:
             return
         else:
-            user = mongodb.user_list.find_one({'user_id': user_id})
-            if not user:
-                return  # TODO: Add user in db
-            if 'last_name' in user:
-                last_name = user['last_name']
-                if not last_name:
-                    last_name = ""
-                full_name = user['first_name'] + " " + last_name
-            else:
-                last_name = None
-                full_name = user['first_name']
-
-            if 'username' in user:
-                username = user['username']
-            else:
-                username = None
-
-            chatname = mongodb.chat_list.find_one({'chat_id': chat_id})
-
-            text = welcome['note'].format(
-                first=user['first_name'],
-                last=last_name,
-                fullname=full_name,
-                username=username,
-                mention=await user_link(user_id),
-                id=user_id,
-                chatname=chatname['chat_title'],
-                rules='Will be later'
-            )
-            await send_note(
-                event.chat_id, chat_id, event.action_message.id, text, show_none=True)
+            await send_note(event, event.chat_id, chat_id, event.action_message.id,
+                            welcome['note'], show_none=True, from_id=event.from_id)
 
 
 @decorator.command("setwelcome", arg=True)

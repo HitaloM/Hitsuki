@@ -142,7 +142,8 @@ async def list_notes(event, strings, status, chat_id, chat_title):
 
 
 async def send_note(chat_id, group_id, msg_id, note_name,
-                    show_none=False, noformat=False, preview=False):
+                    show_none=False, noformat=False, preview=False,
+                    from_id=""):
     file_id = None
     note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': note_name})
     if not note and show_none is True:
@@ -195,6 +196,42 @@ async def send_note(chat_id, group_id, msg_id, note_name,
     if not buttons:
         buttons = None
 
+    print('owo')
+
+    if from_id:
+        user = mongodb.user_list.find_one({"user_id": from_id})
+        if not user:
+            return  # TODO: Add user in db
+        if 'last_name' in user:
+            last_name = user['last_name']
+            if not last_name:
+                last_name = ""
+            full_name = user['first_name'] + " " + last_name
+        else:
+            last_name = None
+            full_name = user['first_name']
+
+        if 'username' in user:
+            username = user['username']
+        else:
+            username = None
+
+        chatname = mongodb.chat_list.find_one({'chat_id': group_id})
+
+        # Format vars
+        string = string.format(
+            first=user['first_name'],
+            last=last_name,
+            fullname=full_name,
+            username=username,
+            mention=await user_link(from_id),
+            id=from_id,
+            chatname=chatname['chat_title'],
+            rules='Will be later'
+        )
+
+    print("owowo")
+
     await bot.send_message(
         chat_id,
         string,
@@ -235,7 +272,7 @@ async def get_note(event):
     if len(note_name) > 1:
         await send_note(
             event.chat_id, event.chat_id, event.message.id, note_name,
-            show_none=True, noformat=noformat)
+            show_none=True, noformat=noformat, from_id=event.from_id)
 
 
 @decorator.StrictCommand("^#(.*)")
@@ -248,7 +285,8 @@ async def check_hashtag(event):
     note_name = event.message.raw_text[1:].lower()
     if len(note_name) > 1:
         await send_note(
-            real_chat_id, chat_id, event.message.id, note_name)
+            real_chat_id, chat_id, event.message.id, note_name,
+            from_id=event.from_id)
 
 
 def button_parser(chat_id, texts):

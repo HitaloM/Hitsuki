@@ -147,7 +147,8 @@ async def tmute(event, status, chat_id, chat_title):
             admin_str = await user_link(event.from_id)
             user_str = await user_link(user['user_id'])
             await event.reply(get_string("bans", "tmute_sucess", event.chat_id).format(
-                                admin=admin_str, user=user_str, time=time_val[:-1], unit=unit_str))
+                admin=admin_str, user=user_str,
+                time=time_val[:-1], unit=unit_str))
 
 
 async def ban_user(event, user_id, chat_id, time_val):
