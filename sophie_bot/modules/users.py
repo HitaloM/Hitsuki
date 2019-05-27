@@ -1,9 +1,9 @@
-from sophie_bot import SUDO, OWNER_ID, logger, bot, mongodb, redis, decorator
-from sophie_bot.modules.helper_func.flood import flood_limit
-
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import ChannelParticipantsAdmins
 from telethon.tl.types import MessageEntityMentionName
+
+from sophie_bot import SUDO, OWNER_ID, logger, bot, mongodb, redis, decorator
+from sophie_bot.modules.helper_func.flood import flood_limit, flood_limit_dec
 
 import ujson
 
@@ -153,22 +153,34 @@ async def get_chat_admins(chat_id):
 
 
 @decorator.command("adminlist")
-async def adminlist(event):
-    if await flood_limit(event.chat_id, 'adminlist') is False:
-        return
+@flood_limit_dec("adminlist")
+async def event(event):
     msg = await event.reply("Updating cache now...")
-    admin_list = await bot.get_participants(
-        int(event.chat_id), filter=ChannelParticipantsAdmins())
+    await update_admin_cache(event.chat_id)
+    dump = redis.get('admins_cache_{}'.format(event.chat_id))
+    admins = ujson.decode(dump)
     text = '**Admin in this group:**\n'
-    for admin in admin_list:
-        text += '- {} ({})'.format(admin.first_name, admin.id)
-        if admin.bot:
-            text += " (bot)"
-        if admin.creator:
-            text += " (creator)"
-        text += '\n'
+    for admin in admins:
+        H = mongodb.user_list.find_one({'user_id': admin})
+        if H:
+            text += '- {} ({})\n'.format(await user_link(H['user_id']), H['user_id'])
 
     await msg.edit(text)
+
+
+@decorator.command("info")
+@flood_limit_dec("info")
+async def user_info(event):
+    user = await get_user(event)
+    text = "**User info:**\n"
+    text += f"ID: `{user['user_id']}`"
+    text += "\nFirst name: " + user['first_name']
+    if 'last_name' in user:
+        text += "\nLast name: " + user['last_name']
+    if 'username' in user:
+        text += "\nUsername: @" + user['username']
+    text += "\nUser link: " + await user_link(user['user_id'])
+    await event.reply(text)
 
 
 async def get_user_and_text(event):

@@ -1,5 +1,5 @@
 import requests
-from sophie_bot import decorator, TOKEN
+from sophie_bot import TOKEN, decorator, logger
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import get_user, user_link, user_admin_dec
@@ -49,14 +49,23 @@ async def pinMessage(event):
     else:
         d1 = {'disable_notification': True}
         data.update(d1)
-    requests.post(base_url, data)  # TODO: catch error | Wait for telethon support pin :D
+    try:
+        requests.post(base_url, data)  # TODO: Wait for telethon support pin :D
+    except Exception as err:
+        await event.reply(err)
+        logger.error(err)
 # CatchError=bot API throw error{error: chat_not_modified}[not in shell] if pin on already pined msg
     await event.reply(get_string('misc', 'pinned_success', event.chat_id))
 
 
 @decorator.command("unpin")
+@user_admin_dec
 async def unpinMessage(event):
     base_url = 'https://api.telegram.org/bot{}/unpinChatMessage'.format(TOKEN)
     data = {'chat_id': event.chat_id}
-    requests.post(base_url, data)  # TODO: CatchError
+    try:
+        requests.post(base_url, data)
+    except Exception as err:
+        await event.reply(err)
+        logger.error(err)
     await event.reply(get_string('misc', 'unpin_success', event.chat_id))

@@ -31,10 +31,10 @@ bot.start(bot_token=CONFIG["basic"]["bot_token"])
 # Catch up missed updates
 logger.info("Catch up missed updates..")
 
-try:
-    asyncio.ensure_future(bot.catch_up())
-except Exception as err:
-    logger.error(err)
+#try:
+#    asyncio.ensure_future(bot.catch_up())
+#except Exception as err:
+#    logger.error(err)
 
 
 def exit_gracefully(signum, frame):
