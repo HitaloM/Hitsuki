@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 f = open('data/bot_conf.json', "r")
 
-SOPHIE_VER = "0.2"
+SOPHIE_VER = "0.3"
 CONFIG = ujson.load(f)
 
 OWNER_ID = int(CONFIG["basic"]["owner_id"])
