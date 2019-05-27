@@ -134,7 +134,10 @@
     "misc": {
         "your_id": "Your id: `{}`\n",
         "chat_id": "Chat id: `{}`\n",
-        "user_id": "{}'s user id: `{}`\n"
+        "user_id": "{}'s user id: `{}`\n",
+        "pinned_success": "Successfully pinned",
+        "no_reply_msg": "Please me any message to pin",
+        "unpin_success": "Successfully unpinned!"
     },
     "gbans": {
         "user_is_blacklisted": "User {} blacklisted.\nReason: {}"
