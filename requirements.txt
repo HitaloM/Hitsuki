@@ -4,7 +4,7 @@ ujson
 redis
 pymongo
 dnspython # needed to connect to cloud MongoDB instances
-crypttg
+cryptg
 pillow
 
 # TEMP

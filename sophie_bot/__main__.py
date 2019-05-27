@@ -4,7 +4,7 @@ import signal
 
 from importlib import import_module
 
-from sophie_bot import TOKEN, CONFIG, bot, redis, logger
+from sophie_bot import CONFIG, bot, redis, logger
 from sophie_bot.modules import ALL_MODULES
 
 LOAD_COMPONENTS = CONFIG["advanced"]["load_components"]
@@ -26,7 +26,7 @@ if LOAD_COMPONENTS is True:
 else:
     logger.info("Components disabled!")
 
-bot.start(bot_token=TOKEN)
+bot.start(bot_token=CONFIG["basic"]["bot_token"])
 
 # Catch up missed updates
 logger.info("Catch up missed updates..")

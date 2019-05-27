@@ -7,7 +7,10 @@
 
     "owner_id": "YOUR_ID",
     "mongo_port": "27017",
-    "mongo_conn": "localhost"
+    "mongo_conn": "localhost",
+
+    "redis_conn": "localhost",
+    "redis_port": 6379
 },
  "advanced":{
     "sudo": [483808054, 782229305, 654839744],

@@ -1,17 +1,18 @@
 # start from base
-FROM python:3.8-rc-alpine
+FROM python:3.7.3-stretch
 
 # install system-wide deps for python and node
-RUN apk add gcc wget musl-dev
+RUN apt install gcc wget
 
 # copy our application code
 ADD . /opt/sophie_bot
 WORKDIR /opt/sophie_bot
 
+RUN rm -rf /opt/sophie_bot/data
+RUN rm -rf /data
+
 # Port
-EXPOSE 443
-EXPOSE 6379
-EXPOSE 27017
+#EXPOSE 443
 
 # Install pip
 RUN wget https://bootstrap.pypa.io/get-pip.py

@@ -1,5 +1,37 @@
 # SophieBot
 
+SophieBot can be runned by 2 ways, so
+# Docker way (reccomended)
+
+## Requirements
++ Installed git
++ Installed docker and docker-tools
+
+## Cloning this repo
+    git clone https://github.com/MrYacha/SophieBot
+
+## Setting config
+
++ Go to SophieBot/data
++ Rename bot_conf.json.example to bot_conf.json
++ Open in text editor
++ Set mongo_conn to "mongo-server"
++ Set redis_conn to "redis-server"
++ Set other configs
+
+## Creating bridge
+    docker network create sophiebot-net
+
+## Running Redis and MongoDB
+    docker run -d --rm --name redis-server --network sophiebot-net redis:alpine
+    docker run -d --rm --name mongo-server --network sophiebot-net mongo:latest
+
+## Start a SophieBot
+    docker run -d -v /home/yacha/SophieBot/data/:/opt/sophie_bot/data --network sophiebot-net sophie 
+
+
+# Local way 
+
 ## Requirements
 + Installed git
 + Installed Python3.6+
@@ -28,7 +60,7 @@ for ArchLinux:
 
 ## Setting config
 
-+ Go to SophieBot/sophie_bot
++ Go to SophieBot/data
 + Rename bot_conf.json.example to bot_conf.json
 + Open in text editor
 + Set basic config
