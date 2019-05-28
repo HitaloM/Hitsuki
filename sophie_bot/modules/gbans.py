@@ -70,7 +70,7 @@ async def blacklist_user(event):
             'by': old['by'],
             'reason': reason
         }
-        mongodb.notes.update_one({'_id': old['_id']}, {"$set": new}, upsert=False)
+        mongodb.blacklisted_users.update_one({'_id': old['_id']}, {"$set": new}, upsert=False)
         await event.reply("This user already blacklisted! I'll update the reason.")
         return
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
