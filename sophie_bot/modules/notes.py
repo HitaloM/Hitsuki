@@ -3,7 +3,7 @@ from time import gmtime, strftime
 
 from bson.objectid import ObjectId
 
-from sophie_bot import BOT_NICK, bot, mongodb, decorator
+from sophie_bot import BOT_USERNAME, bot, mongodb, decorator
 from sophie_bot.modules.connections import get_conn_chat, connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import check_group_admin, user_link, is_user_admin, user_admin_dec
@@ -255,7 +255,7 @@ async def del_note_callback(event):
         note_name=note['name'], user=link), link_preview=False)
 
 
-@decorator.StrictCommand("^[/!#](?:get|get@{})(?: |$)(.*)".format(BOT_NICK))
+@decorator.StrictCommand("^[/!#](?:get|get@{})(?: |$)(.*)".format(BOT_USERNAME))
 async def get_note(event):
     raw_text = event.message.raw_text.split()
     note_name = raw_text[1].lower()

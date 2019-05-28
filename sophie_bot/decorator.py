@@ -1,7 +1,6 @@
 import re
 
-from sophie_bot import CONFIG, BOT_NICK, bot
-
+from sophie_bot import CONFIG, BOT_USERNAME, bot
 from telethon import events
 
 ALLOW_F_COMMANDS = CONFIG["advanced"]["allow_forwards_commands"]
@@ -20,11 +19,11 @@ def command(command, arg="", word_arg="", additional="", **kwargs):
             P = '/'
 
         if arg is True:
-            cmd = "^{P}(?:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_NICK, additional, P=P)
+            cmd = "^{P}(?:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_USERNAME, additional, P=P)
         elif word_arg is True:
-            cmd = "^{P}(?:{0}|{0}@{1})(?: |$)(\w*){2}".format(command, BOT_NICK, additional, P=P)
+            cmd = "^{P}(?:{0}|{0}@{1})(?: |$)(\w*){2}".format(command, BOT_USERNAME, additional, P=P)
         else:
-            cmd = "^{P}(?:{0}|{0}@{1})$".format(command, BOT_NICK, additional, P=P)
+            cmd = "^{P}(?:{0}|{0}@{1})$".format(command, BOT_USERNAME, additional, P=P)
 
         bot.add_event_handler(func, events.NewMessage(incoming=True, pattern=cmd, **kwargs))
         bot.add_event_handler(func, events.MessageEdited(incoming=True, pattern=cmd, **kwargs))

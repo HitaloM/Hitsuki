@@ -1,4 +1,5 @@
 import logging
+import asyncio
 
 from pymongo import MongoClient
 import redis
@@ -36,8 +37,7 @@ MONGO_PORT = CONFIG["basic"]["mongo_port"]
 REDIS_COMM = CONFIG["basic"]["redis_conn"]
 REDIS_PORT = CONFIG["basic"]["redis_port"]
 TOKEN = CONFIG["basic"]["bot_token"]
-NAME = TOKEN.split(':')[0]
-BOT_NICK = CONFIG["basic"]["bot_nick"]
+NAME = TOKEN.split(':')[0] + 'owo'
 
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie
@@ -47,6 +47,13 @@ redis = redis.StrictRedis(
     host=REDIS_COMM, port=REDIS_PORT, db='1')  # decode_respone=True
 
 bot = TelegramClient(NAME, API_ID, API_HASH)
+
+# Init the bot
+bot.start(bot_token=CONFIG["basic"]["bot_token"])
+
+bot_info = asyncio.get_event_loop().run_until_complete(bot.get_me())
+BOT_USERNAME = bot_info.username
+
 
 logger.info("----------------------")
 logger.info("|    SophieBot {}   |".format(SOPHIE_VER))

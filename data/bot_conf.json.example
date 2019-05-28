@@ -3,8 +3,6 @@
     "app_hash": "APP_HASH",
     "bot_token": "BOT_TOKEN",
 
-    "bot_nick": "BOT_NICK",
-
     "owner_id": "YOUR_ID",
     "mongo_port": "27017",
     "mongo_conn": "localhost",
@@ -13,6 +11,8 @@
     "redis_port": 6379
 },
  "advanced":{
+    "catch_up": false,
+    
     "sudo": [483808054, 782229305, 654839744],
     "whitelisted": [123456789, 928173281],
 

@@ -9,6 +9,8 @@ from sophie_bot.modules import ALL_MODULES
 
 LOAD_COMPONENTS = CONFIG["advanced"]["load_components"]
 
+
+# Import modules
 for module_name in ALL_MODULES:
     logger.debug("Importing " + module_name)
     imported_module = import_module("sophie_bot.modules." + module_name)
@@ -26,20 +28,25 @@ if LOAD_COMPONENTS is True:
 else:
     logger.info("Components disabled!")
 
-bot.start(bot_token=CONFIG["basic"]["bot_token"])
 
 # Catch up missed updates
-logger.info("Catch up missed updates..")
+if CONFIG["advanced"]["catch_up"] is True:
+    logger.info("Catch up missed updates..")
 
-#try:
-#    asyncio.ensure_future(bot.catch_up())
-#except Exception as err:
-#    logger.error(err)
+    try:
+        asyncio.ensure_future(bot.catch_up())
+    except Exception as err:
+        logger.error(err)
 
 
 def exit_gracefully(signum, frame):
     logger.info("Bye!")
-    redis.bgsave()
+    try:
+        redis.bgsave()
+    except Exception as err:
+        logger.info("Redis error, exiting immediately!")
+        logger.error(err)
+        exit(1)
     logger.info("----------------------")
     sys.exit(1)
 
@@ -47,8 +54,6 @@ def exit_gracefully(signum, frame):
 # Run loop
 logger.info("Running loop..")
 logger.info("Bot is alive!")
-original_sigint = signal.getsignal(signal.SIGINT)
 signal.signal(signal.SIGINT, exit_gracefully)
-# bot.run_until_complete()
 
 asyncio.get_event_loop().run_forever()
