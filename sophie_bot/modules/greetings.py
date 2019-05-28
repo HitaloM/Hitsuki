@@ -1,13 +1,19 @@
+import re
+import time
 from sophie_bot import bot, mongodb, decorator
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.helper_func.flood import flood_limit
-from sophie_bot.modules.language import get_string
+from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.notes import send_note
-from sophie_bot.modules.users import user_admin_dec
+from sophie_bot.modules.users import user_admin_dec, user_link
+from sophie_bot.modules.bans import mute_user, unmute_user
+
+from telethon.tl.custom import Button
 
 
 @decorator.ChatAction()
-async def welcome_trigger(event):
+@get_strings_dec("greetings")
+async def welcome_trigger(event, strings):
     if event.user_joined is True or event.user_added is True:
         chat = event.chat_id
         chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
@@ -32,6 +38,22 @@ async def welcome_trigger(event):
                 from_id = event.action_message.from_id
             await send_note(event.chat_id, chat_id, event.action_message.id,
                             welcome['note'], show_none=True, from_id=from_id)
+        welcome_security = mongodb.welcome_security.find_one({'chat_id': chat_id})
+        if welcome_security['security'] == 'soft':
+            buttons = [
+                [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(user_id, chat_id))]
+            ]
+            time_val = int(time.time() + 60 * 60)  # Mute 1 hour
+            await mute_user(event, user_id, chat_id, time_val)
+            text = strings['wlcm_sec'].format(mention=await user_link(user_id))
+            await event.reply(text, buttons=buttons)
+        elif welcome_security['security'] == 'hard':
+            buttons = [
+                [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(user_id, chat_id))]
+            ]
+            await mute_user(event, user_id, chat_id, None)
+            text = strings['wlcm_sec'].format(mention=await user_link(user_id))
+            await event.reply(text, buttons=buttons)
 
 
 @decorator.command("setwelcome", arg=True)
@@ -108,3 +130,53 @@ async def cleanservice(event):
     else:
         await event.reply(get_string("greetings", "no_args_serv", chat_id))
         return
+
+
+@decorator.command('welcomesecurity', arg=True)
+@get_strings_dec("greetings")
+async def welcomeSecurity(event, strings):
+    arg = event.pattern_match.group(1)
+    args = arg.lower()
+    hard = ['hard', 'high']
+    soft = ['soft', 'low']
+    off = ['off', 'no']
+    chat = event.chat_id
+    old = mongodb.welcome_security.find_one({'chat_id': chat})
+    if not args:
+        await event.reply(strings['wlcm_sec_noArgs'])
+        return
+    if args in hard:
+        if old:
+            mongodb.welcome_security.update_one({'_id': old['_id']}, {'$set': {'security': 'hard'}})
+        else:
+            mongodb.welcome_security.insert_one({'chat_id': chat, 'security': 'hard'})
+        await event.reply(strings['wlcm_sec_hard'])
+    elif args in soft:
+        if old:
+            mongodb.welcome_security.update_one({'$set': {'security': 'soft'}})
+        else:
+            mongodb.welcome_security.insert_one({'chat_id': chat, 'security': 'soft'})
+        await event.reply(strings['wlcm_sec_soft'])
+    elif args in off:
+        mongodb.welcome_security.delete_one({'chat_id': chat})
+        await event.reply(strings['wlcm_sec_off'])
+
+
+@decorator.CallBackQuery('wlcm_')
+@get_strings_dec("greetings")
+async def welcm_btn_callback(event, strings):
+    data = str(event.data)
+    details = re.search(r'wlcm_(.*)_(.*)', data)
+    target_user = details.group(1)
+    target_group = details.group(2)[:-1]
+    user = event.query.user_id
+    chat = event.chat_id
+    if target_group == chat is False:
+        return
+    if user == target_user is False:
+        print(user == target_user)
+        await event.answer(strings['not_trgt'])
+        return
+    await unmute_user(event, user, chat)
+    await event.answer(strings['trgt_success'])
+    await event.delete()

@@ -9,3 +9,4 @@ Backups/
 .stignore
 sophie.log
 *.zip
+.vscode

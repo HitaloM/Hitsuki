@@ -7,7 +7,12 @@ async def flood_limit(event, command):
     else:
         chat_id = event.from_id
 
-    if event.from_id in SUDO:
+    if not hasattr(event, 'from_id'):
+        check = event.query.user_id
+    else:
+        check = event.from_id
+
+    if check in SUDO:
         return True
 
     db_name = 'flood_command_{}_{}'.format(chat_id, command)
