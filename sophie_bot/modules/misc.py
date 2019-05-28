@@ -1,15 +1,17 @@
 import requests
 import random
-from sophie_bot import decorator, TOKEN
+
+from sophie_bot import TOKEN, decorator, logger
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import get_user, user_link, user_admin_dec
 from sophie_bot.modules.disable import disablable_dec
-from telethon.errors import BadRequestError, ChatAdminRequiredError
+from telethon.errors import BadRequestError
 from telethon.tl.types import ChatAdminRights
 from telethon.tl.functions.channels import EditAdminRequest
 
-RUN_STRINGS = ( # Thanks PaulSonOfLars
+
+RUN_STRINGS = (  # Thanks PaulSonOfLars
     "Where do you think you're going?",
     "Huh? what? did they get away?",
     "ZZzzZZzz... Huh? what? oh, just them again, nevermind.",
@@ -40,7 +42,8 @@ RUN_STRINGS = ( # Thanks PaulSonOfLars
     "Here, take this ring and head to Mordor while you're at it.",
     "Legend has it, they're still running...",
     "Unlike Harry Potter, your parents can't protect you from me.",
-    "Fear leads to anger. Anger leads to hate. Hate leads to suffering. If you keep running in fear, you might "
+    "Fear leads to anger. Anger leads to hate. Hate leads to suffering."
+    "If you keep running in fear, you might "
     "be the next Vader.",
     "Multiple calculations later, I have decided my interest in your shenanigans is exactly 0.",
     "Legend has it, they're still running.",
@@ -54,41 +57,14 @@ RUN_STRINGS = ( # Thanks PaulSonOfLars
     "Frankly, my dear, I don't give a damn.",
     "My milkshake brings all the boys to yard... So run faster!",
     "You can't HANDLE the truth!",
-    "A long time ago, in a galaxy far far away... Someone would've cared about that. Not anymore though.",
+    "A long time ago, in a galaxy far far away... "
+    "Someone would've cared about that. Not anymore though.",
     "Hey, look at them! They're running from the inevitable banhammer... Cute.",
     "Han shot first. So will I.",
     "What are you running after, a white rabbit?",
     "As The Doctor would say... RUN!",
 )
 
-async def get_user_from_event(event):
-    """ Get the user from argument or replied message. """
-    if event.reply_to_msg_id:
-        previous_message = await event.get_reply_message()
-        user_obj = await event.client.get_entity(previous_message.from_id)
-    else:
-        user = event.pattern_match.group(1)
-
-        if user.isnumeric():
-            user = int(user)
-
-        if not user:
-            return
-
-        if event.message.entities is not None:
-            probable_user_mention_entity = event.message.entities[0]
-
-            if isinstance(probable_user_mention_entity, MessageEntityMentionName):
-                user_id = probable_user_mention_entity.user_id
-                user_obj = await event.client.get_entity(user_id)
-                return user_obj
-        try:
-            user_obj = await event.client.get_entity(user)
-        except (TypeError, ValueError) as err:
-            await event.edit(str(err))
-            return None
-
-    return user_obj
 
 @decorator.command("id", arg=True)
 @disablable_dec("id")
@@ -141,13 +117,15 @@ async def pinMessage(event):
 # CatchError=bot API throw error{error: chat_not_modified}[not in shell] if pin on already pined msg
     await event.reply(get_string('misc', 'pinned_success', event.chat_id))
 
+
 @decorator.command("runs")
-async def unpinMessage(event):
-   await event.reply(random.choice(RUN_STRINGS))
+async def runs(event):
+    await event.reply(random.choice(RUN_STRINGS))
+
 
 @decorator.command("unpin")
 @user_admin_dec
-async def unpinMessage(event):
+async def unpin_message(event):
     base_url = 'https://api.telegram.org/bot{}/unpinChatMessage'.format(TOKEN)
     data = {'chat_id': event.chat_id}
     try:
@@ -161,12 +139,15 @@ async def unpinMessage(event):
 @decorator.command("promote")
 @user_admin_dec
 async def promote(event):
+<<<<<<< HEAD
 
     chat = await event.get_chat()
     admin = chat.admin_rights
     creator = chat.creator
+=======
+>>>>>>> 5563df9... Improve code style
 
-    user = await get_user_from_event(event)
+    user = await get_user(event)
     if user:
         pass
     else:
@@ -181,8 +162,6 @@ async def promote(event):
         pin_messages=True
     )
 
-
-    # Try to promote if current user is admin or creator
     try:
         await event.client(
             EditAdminRequest(
@@ -197,15 +176,13 @@ async def promote(event):
         await event.reply(get_string('misc', 'promote_failed', event.chat_id))
         return
 
+
 @decorator.command("demote")
 @user_admin_dec
 async def demote(event):
     # Admin right check
-    chat = await event.get_chat()
-    admin = chat.admin_rights
-    creator = chat.creator
 
-    user = await get_user_from_event(event)
+    user = await get_user(event)
     if user:
         pass
     else:
