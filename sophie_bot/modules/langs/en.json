@@ -146,7 +146,11 @@
         "user_id": "{}'s user id: `{}`\n",
         "pinned_success": "Successfully pinned",
         "no_reply_msg": "Please me any message to pin",
-        "unpin_success": "Successfully unpinned!"
+        "unpin_success": "Successfully unpinned!",
+        "promote_success": "Successfully promoted!",
+        "promote_failed": "Promotion failed! Check if I have rights to",
+        "demote_success": "Demoted.",
+        "demote_failed": "Demotion failed. Check if I have proper rights"
     },
     "gbans": {
         "user_is_blacklisted": "User {} blacklisted.\nReason: {}"
