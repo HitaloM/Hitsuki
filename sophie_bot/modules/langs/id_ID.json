@@ -29,7 +29,10 @@
             "user_blocked": "Tulis /start pada pm saya dan klik tombol lagi!",
             "note_so_big": "Catatan ini lebih besar dari batasan telegram yaitu 200 karakter!",
             "only_admins_can_rmw": "Hanya admin yang dapat menghapus pesan ini",
-            "delmsg_no_arg": "tombol deletemsg hanya dapat mengandung argumen admin dan pengguna!"
+            "delmsg_no_arg": "tombol deletemsg hanya dapat mengandung argumen admin dan pengguna!",
+            "bot_msg": "I'm sorry, i can't get this message, probably this a other bot's message. I can't save it.",
+            "pmed_note": "I pm'ed note to you!",
+            "notename_cant_contain": "Note name can't conatin `{}` !"
         },
         "bans": {
             "user_banned": "Pengguna {user} diblokir oleh {admin} di {chat_name}!\n",
@@ -53,7 +56,10 @@
             "user_admin_unban": "Serius?! Bagaimana saya membuka blokir seorang admin?",
             "user_admin_unmute": "Mm?! Tidak dibisukan",
             "user_mooted": "{admin} membisukan {user} di {chat_name}",
-            "user_unmooted": "{admin} tidak membisukan {user} di {chat_name}"
+            "user_unmooted": "{admin} tidak membisukan {user} di {chat_name}",
+            "kickme_admin": "I can't kick you!",
+            "whitelisted": "Haha NO! You is whitelisted!",
+            "kickme_success": "Okay.. no problem!"
         },
         "connections": {
             "can't_find_chat_use_id": "Saya tidak bisa menemukan obrolan ini, coba gunakan id obrolan tersebut.",
@@ -128,6 +134,16 @@
             "your_id": "Id Anda adalah: `{}`\n",
             "chat_id": "Id Obrolan ini: `{}`\n",
             "user_id": "Id pengguna {}: `{}`\n"
+        },
+        "gbans": {
+            "user_is_blacklisted": "User {} blacklisted.\nReason: {}"
+        },
+        "pm_menu": {
+            "start_hi": "Hey there! My name is Sophie :3, I help you manage your group and more!",
+            "btn_help": "❔ Help",
+            "btn_lang": "🇷🇺 Language",
+            "btn_group": "👥 Group",
+            "btn_channel": "📡 Channel"
         }
     },
     "HELPS": {
@@ -157,10 +173,10 @@
             },
             "md": {
                 "a1": "Anda bisa menggunakan markdown untuk membuat pesan anda lebih ekspresif. Berikut adalah beberapa markdown yang didukung:\n",
-                "a2": "`code words` backticks allow you to wrap your words in monospace fonts. Shows as: `code words`",
-                "a3": "`**bold words**` asterixes are used for bold font. Shows as: **bold words**",
-                "a4": "`__italic words__` underscores are used for italics. Shows as: __italic words__",
-                "a5": "`[hyperlink](example.com)` this is used for hyperlinks, and will show as such: [hyperlink](http://example.com/). Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown."
+                "a2": "`kata` tanda petik terbalik dapat membuat kata - kata Anda menjadi monospace. Contoh: `Halo Dunia`",
+                "a3": "`**kata tebal**` tanda asteriks digunakan untuk menebalkan fonta. Contoh: **Halo Dunia**",
+                "a4": "`__kata miring__` simbol garis bawah digunakan untuk memiringkan fonta. Contoh: __Halo Dunia__",
+                "a5": "`[hyperlink](example.com)` ini digunakan untuk hyperlink, dan akan ditampilkan seperti itu: [hyperlink](http://example.com/). Pastikan untuk tidak menambahkan spasi tambahan antara \"]\" dan \"(\" atau itu tidak akan menjadi sebuah markdown yang valid."
             }
         },
         "purges": {
@@ -190,7 +206,7 @@
         },
         "misc": {
             "btn": "Lainnya",
-            "title": "An \"odds and ends\" module for small, simple commands which don't really fit anywhere",
+            "title": "Sebuah module kecil, perintah mudah yang tidak masuk ke seksi lainnya",
             "text": {
                 "i1": "\nPerintah yang tersedia:",
                 "i2": "- /id: dapatkan id user atau obrolan.",
@@ -200,22 +216,22 @@
         },
         "connections": {
             "btn": "Koneksi",
-            "title": "Sometimes, you just want to add some notes and filters to a group chat, but you don't want everyone to see; This is where connections come in...",
+            "title": "Terkadang, Anda hanya ingin menambahkan beberapa catatan dan filter ke obrolan grup, tetapi Anda tidak ingin semua orang melihatnya; Di sinilah modul koneksi berfungsi...",
             "text": {
-                "i0": "This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)",
+                "i0": "Ini memungkinkan Anda untuk terhubung ke database obrolan, dan menambahkan sesuatu ke dalamnya tanpa harus mengetiknya di obrolan yang dituju! Untuk alasan yang jelas, Anda harus menjadi admin untuk menambahkan sesuatu; tetapi setiap anggota dapat melihat data Anda. (pengguna yang diblokir / ditendang tidak bisa menggunakannya!)",
                 "i1": "\nPerintah yang tersedia:",
-                "i2": "- /connect <chat>: connect to the chat with chat username/ID, allowing you to view/edit contents.",
-                "i3": "- /connect: show last 3 chats to fast connect.",
-                "i4": "\nYou can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids."
+                "i2": "-/connect <chat>: hubungkan ke sebuah obrolan dengan ID/username obrolan. Anda dapat melihat atau menyunting konten obrolan tersebut.",
+                "i3": "-/connect: menunjukan 3 riwayat koneksi terakhir.",
+                "i4": "\nAnda bisa menerima id obrolan dengan menggunakan perintah /id di obrolan anda. Jangan terkejut apabila id nya negatif; semua supergrup memiliki id negatif."
             }
         },
         "greetings": {
             "btn": "Pesan Sambutan",
-            "title": "Give your members a warm welcome with the greetings module! Or a sad goodbye... Depends!",
+            "title": "Memberikan anggota baru anda sebuah pesan sambutan dengan modul pesan sambutan! Atau mungkin sebuah pesan selamat tinggal...",
             "text": {
                 "i1": "\nPerintah yang tersedia:",
-                "i2": "- /setwelcome <note>: sets your new welcome note!",
-                "i3": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat."
+                "i2": "/setwelcome <note>: mengatur pesan catatan baru Anda!",
+                "i3": "/cleanservice: Hapus pesan Telegram ketika anggota baru masuk atau meninggalkan obrolan."
             }
         }
     }
