@@ -1,14 +1,15 @@
-import requests
 import random
 
-from sophie_bot import TOKEN, decorator, logger
+from sophie_bot import bot, decorator
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
-from sophie_bot.modules.language import get_string
+from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import get_user, user_link, user_admin_dec
 from sophie_bot.modules.disable import disablable_dec
 from telethon.errors import BadRequestError
 from telethon.tl.types import ChatAdminRights
 from telethon.tl.functions.channels import EditAdminRequest
+from telethon.tl.functions.messages import UpdatePinnedMessageRequest
+from telethon.errors import ChatNotModifiedError
 
 
 RUN_STRINGS = (  # Thanks PaulSonOfLars
@@ -92,29 +93,25 @@ async def id(event):
 
 @decorator.command("pin", arg=True)
 @user_admin_dec
-async def pinMessage(event):
+@get_strings_dec('misc')
+async def pinMessage(event, strings):
     tagged_message = await event.get_reply_message()
     if not tagged_message:
         await event.reply(get_string('misc', 'no_reply_msg', event.chat_id))
         return
     msg_2_pin = tagged_message.id
-    base_url = 'https://api.telegram.org/bot{}/pinChatMessage'.format(TOKEN)
-    data = {'chat_id': event.chat_id, 'message_id': msg_2_pin}
     chk = event.pattern_match.group(1)
     args = chk.lower()
     tru_txt = ['loud', 'notify']
     if args in tru_txt:
-        d1 = {'disable_notification': False}  # Thats How mafia Works! :P
-        data.update(d1)
+        silence = False
     else:
-        d1 = {'disable_notification': True}
-        data.update(d1)
+        silence = True
     try:
-        requests.post(base_url, data)  # TODO: Wait for telethon support pin :D
-    except Exception as err:
-        await event.reply(err)
-        logger.error(err)
-# CatchError=bot API throw error{error: chat_not_modified}[not in shell] if pin on already pined msg
+        await bot(UpdatePinnedMessageRequest(event.to_id, msg_2_pin, silence))
+    except ChatNotModifiedError:
+        await event.reply(strings['chat_not_modified_pin'])
+        return
     await event.reply(get_string('misc', 'pinned_success', event.chat_id))
 
 
@@ -125,14 +122,13 @@ async def runs(event):
 
 @decorator.command("unpin")
 @user_admin_dec
-async def unpin_message(event):
-    base_url = 'https://api.telegram.org/bot{}/unpinChatMessage'.format(TOKEN)
-    data = {'chat_id': event.chat_id}
+@get_strings_dec('misc')
+async def unpin_message(event, strings):
     try:
-        requests.post(base_url, data)
-    except Exception as err:
-        await event.reply(err)
-        logger.error(err)
+        await bot(UpdatePinnedMessageRequest(event.to_id, 0))  # 0 is None for int
+    except ChatNotModifiedError:
+        await event.reply(strings['chat_not_modified_unpin'])
+        return
     await event.reply(get_string('misc', 'unpin_success', event.chat_id))
 
 
