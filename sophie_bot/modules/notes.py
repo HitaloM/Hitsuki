@@ -2,17 +2,16 @@ import re
 from time import gmtime, strftime
 
 from bson.objectid import ObjectId
-
-from sophie_bot import BOT_USERNAME, bot, mongodb, decorator
-from sophie_bot.modules.connections import get_conn_chat, connection
-from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import check_group_admin, user_link, is_user_admin, user_admin_dec
-from sophie_bot.modules.helper_func.flood import flood_limit_dec
-from sophie_bot.modules.disable import disablable_dec
-
 from telethon import custom, errors, utils
 from telethon.tl.custom import Button
 
+from sophie_bot import BOT_USERNAME, bot, decorator, mongodb
+from sophie_bot.modules.connections import connection, get_conn_chat
+from sophie_bot.modules.disable import disablable_dec
+from sophie_bot.modules.helper_func.flood import flood_limit_dec
+from sophie_bot.modules.language import get_string, get_strings_dec
+from sophie_bot.modules.users import (check_group_admin, is_user_admin,
+                                      user_admin_dec, user_link)
 
 RESTRICTED_SYMBOLS = ['*', '_', '`']
 

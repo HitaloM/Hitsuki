@@ -1,7 +1,8 @@
 import re
 
-from sophie_bot import CONFIG, BOT_USERNAME, bot
 from telethon import events
+
+from sophie_bot import BOT_USERNAME, CONFIG, bot
 
 ALLOW_F_COMMANDS = CONFIG["advanced"]["allow_forwards_commands"]
 ALLOW_COMMANDS_FROM_EXC = CONFIG["advanced"]["allow_commands_with_!"]

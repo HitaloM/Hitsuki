@@ -1,14 +1,15 @@
 import re
 import time
-from sophie_bot import bot, mongodb, decorator
+
+from telethon.tl.custom import Button
+
+from sophie_bot import bot, decorator, mongodb
+from sophie_bot.modules.bans import mute_user, unmute_user
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.helper_func.flood import flood_limit
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_admin_dec, user_link
-from sophie_bot.modules.bans import mute_user, unmute_user
-
-from telethon.tl.custom import Button
 
 
 @decorator.ChatAction()

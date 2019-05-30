@@ -1,12 +1,10 @@
-import logging
 import asyncio
+import logging
 
-from pymongo import MongoClient
 import redis
 import ujson
-
+from pymongo import MongoClient
 from telethon import TelegramClient
-
 
 # enable logging
 logging.basicConfig(

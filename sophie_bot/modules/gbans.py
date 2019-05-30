@@ -1,11 +1,11 @@
 from time import gmtime, strftime
 
-from sophie_bot import SUDO, decorator, mongodb, logger
-from sophie_bot.modules.users import (user_admin_dec, get_user_and_text,
-                                      get_user, user_link)
-from sophie_bot.modules.language import get_string
-from sophie_bot.modules.connections import connection
+from sophie_bot import SUDO, decorator, logger, mongodb
 from sophie_bot.modules.bans import ban_user, unban_user
+from sophie_bot.modules.connections import connection
+from sophie_bot.modules.language import get_string
+from sophie_bot.modules.users import (get_user, get_user_and_text,
+                                      user_admin_dec, user_link)
 
 
 @decorator.command("antispam", arg=True)

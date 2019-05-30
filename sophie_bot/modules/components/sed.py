@@ -1,10 +1,10 @@
 import re
 from collections import defaultdict, deque
 
+from telethon import events
+
 from sophie_bot import bot, decorator
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
-
-from telethon import events
 
 SED_PATTERN = r'^s/((?:\\/|[^/])+)/((?:\\/|[^/])*)(/.*)?'
 

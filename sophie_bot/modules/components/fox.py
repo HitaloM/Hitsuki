@@ -1,9 +1,7 @@
 import re
 
 import requests
-
 from bs4 import BeautifulSoup
-
 from telethon import custom
 
 from sophie_bot import decorator, logger

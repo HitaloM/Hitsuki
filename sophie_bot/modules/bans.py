@@ -1,14 +1,13 @@
 import time
 
-from sophie_bot import WHITELISTED, bot
-from sophie_bot import decorator
+from telethon.tl.functions.channels import EditBannedRequest
+from telethon.tl.types import ChatBannedRights
+
+from sophie_bot import WHITELISTED, bot, decorator
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import (get_user, get_user_and_text,
-                                      user_admin_dec, user_link, is_user_admin)
-
-from telethon.tl.functions.channels import EditBannedRequest
-from telethon.tl.types import ChatBannedRights
+                                      is_user_admin, user_admin_dec, user_link)
 
 
 @decorator.command("ban", arg=True)

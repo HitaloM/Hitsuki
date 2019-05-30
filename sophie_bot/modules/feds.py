@@ -1,4 +1,5 @@
 import uuid
+
 from sophie_bot import decorator, mongodb
 from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.users import user_link

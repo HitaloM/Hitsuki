@@ -1,16 +1,15 @@
 import random
 
-from sophie_bot import bot, decorator
-from sophie_bot.modules.helper_func.flood import flood_limit_dec
-from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import get_user, user_link, user_admin_dec
-from sophie_bot.modules.disable import disablable_dec
-from telethon.errors import BadRequestError
-from telethon.tl.types import ChatAdminRights
+from telethon.errors import BadRequestError, ChatNotModifiedError
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.functions.messages import UpdatePinnedMessageRequest
-from telethon.errors import ChatNotModifiedError
+from telethon.tl.types import ChatAdminRights
 
+from sophie_bot import bot, decorator
+from sophie_bot.modules.disable import disablable_dec
+from sophie_bot.modules.helper_func.flood import flood_limit_dec
+from sophie_bot.modules.language import get_string, get_strings_dec
+from sophie_bot.modules.users import get_user, user_admin_dec, user_link
 
 RUN_STRINGS = (  # Thanks PaulSonOfLars
     "Where do you think you're going?",
@@ -132,7 +131,7 @@ async def unpin_message(event, strings):
     await event.reply(get_string('misc', 'unpin_success', event.chat_id))
 
 
-@decorator.command("promote")
+@decorator.command("promote", arg=True)
 @user_admin_dec
 async def promote(event):
 <<<<<<< HEAD
