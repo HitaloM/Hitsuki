@@ -161,13 +161,13 @@ async def promote(event):
         await event.client(
             EditAdminRequest(
                 event.chat_id,
-                user.id,
+                user['user_id'],
                 new_rights
             )
         )
         await event.reply(get_string('misc', 'promote_success', event.chat_id))
 
-    except BadRequestError:
+    except BadRequestError:  # TODO(Better exception)
         await event.reply(get_string('misc', 'promote_failed', event.chat_id))
         return
 
@@ -181,6 +181,10 @@ async def demote(event):
     if user:
         pass
     else:
+        return
+
+    bot_id = bot.get_me().id
+    if bot_id == user['user_id']:
         return
 
     # New rights after demotion
@@ -197,7 +201,7 @@ async def demote(event):
         await event.client(
             EditAdminRequest(
                 event.chat_id,
-                user.id,
+                user['user_id'],
                 newrights
             )
         )

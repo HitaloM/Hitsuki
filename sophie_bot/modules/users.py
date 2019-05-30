@@ -173,12 +173,12 @@ async def user_info(event):
     user = await get_user(event)
     text = "**User info:**\n"
     text += f"ID: `{user['user_id']}`"
-    text += "\nFirst name: " + user['first_name']
+    text += "\nFirst name: " + str(user['first_name'])
     if 'last_name' in user:
-        text += "\nLast name: " + user['last_name']
+        text += "\nLast name: " + str(user['last_name'])
     if 'username' in user:
-        text += "\nUsername: @" + user['username']
-    text += "\nUser link: " + await user_link(user['user_id'])
+        text += "\nUsername: @" + str(user['username'])
+    text += "\nUser link: " + str(await user_link(user['user_id']))
     await event.reply(text)
 
 
