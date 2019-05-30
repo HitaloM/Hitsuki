@@ -22,7 +22,7 @@ def command(command, arg="", word_arg="", additional="", **kwargs):
         if arg is True:
             cmd = "^{P}(?:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_USERNAME, additional, P=P)
         elif word_arg is True:
-            cmd = "^{P}(?:{0}|{0}@{1})(?: |$)(\w*){2}".format(command, BOT_USERNAME, additional, P=P)
+            cmd = "^{P}(?:{0}|{0}@{1})(?: |$)(\S*){2}".format(command, BOT_USERNAME, additional, P=P)
         else:
             cmd = "^{P}(?:{0}|{0}@{1})$".format(command, BOT_USERNAME, additional, P=P)
 

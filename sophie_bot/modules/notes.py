@@ -13,7 +13,7 @@ from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (check_group_admin, is_user_admin,
                                       user_admin_dec, user_link)
 
-RESTRICTED_SYMBOLS = ['*', '_', '`']
+RESTRICTED_SYMBOLS = ['**', '__', '`']
 
 
 @decorator.command("save", word_arg=True)
@@ -26,6 +26,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
         if sym in note_name:
             await event.reply(strings["notename_cant_contain"].format(sym))
             return
+    print(note_name)
     if note_name[0] == "#":
         note_name = note_name[1:]
     file_id = None
