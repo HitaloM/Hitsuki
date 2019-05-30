@@ -172,6 +172,9 @@
         "wot_to_enable": "What you wanna enable?",
         "already_enabled": "This command isn't disabled!",
         "enabled": "Command `{}` enabled in **{}**!"
+    },
+    "bot_rights": {
+        "not_right_del_msg": "I don't have rights to delete messages here."
     }
  },
  "HELPS": {
