@@ -26,16 +26,16 @@ async def newFed(event, strings):
 
 @decorator.command('joinfed', arg=True)
 @get_strings_dec("feds")
-async def joinFedcmd(event, strings):
+async def join_fed_comm(event, strings):
     fed_id = event.pattern_match.group(1)
     chat = event.chat_id
     user = event.from_id
-    if await joinFed(event, chat, fed_id, user) is True:
+    if await join_fed(event, chat, fed_id, user) is True:
         fed_name = mongodb.fed_list.find_one({'fed_id': fed_id})['fed_name']
         await event.reply(strings['join_fed_success'].format(name=fed_name))
 
 
-async def joinFed(event, chat_id, fed_id, user):
+async def join_fed(event, chat_id, fed_id, user):
 
     peep = await bot(
         GetParticipantRequest(
