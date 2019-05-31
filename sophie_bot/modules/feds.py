@@ -8,6 +8,26 @@ from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import user_link, get_user_and_text
 
 
+def get_user_and_fed_dec(func):
+    @get_strings_dec("feds")
+    async def wrapped_1(event, strings, *args, **kwargs):
+        chat_id = event.chat_id
+        user, fed_id = await get_user_and_text(event)
+        if not fed_id:
+            chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
+            if not chat_fed:
+                await event.reply(strings['chat_not_in_fed'])
+                return
+            fed = mongodb.fed_list.find_one({'fed_id': chat_fed['fed_id']})
+        else:
+            fed = mongodb.fed_list.find_one({'fed_id': fed_id.lower()})
+            if not fed:
+                await event.reply(strings['fed_id_invalid'])
+                return
+        return await func(event, user, fed, *args, **kwargs)
+    return wrapped_1
+
+
 @decorator.command('newfed', arg=True)
 @get_strings_dec("feds")
 async def newFed(event, strings):
@@ -46,21 +66,10 @@ async def leave_fed_comm(event, strings):
 
 @decorator.command('fpromote', arg=True)
 @get_strings_dec("feds")
-async def promote_to_fed(event, strings):
-    chat_id = event.chat_id
+@get_user_and_fed_dec
+async def promote_to_fed(event, user, fed, strings):
     user_id = event.from_id
-    user, fed_id = await get_user_and_text(event)
-    if not fed_id:
-        chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
-        if not chat_fed:
-            await event.reply(strings['chat_not_in_fed'])
-            return
-        fed = mongodb.fed_list.find_one({'fed_id': chat_fed['fed_id']})
-    else:
-        fed = mongodb.fed_list.find_one({'fed_id': fed_id.lower()})
-        if not fed:
-            await event.reply(strings['fed_id_invalid'])
-            return
+
     if not user_id == fed["creator"]:
         await event.reply(strings["only_creator_promote"])
         return
@@ -74,6 +83,13 @@ async def promote_to_fed(event, strings):
     mongodb.fed_admins.insert_one(data)
     await event.reply(strings["admin_added_to_fed"].format(
         user=await user_link(user['user_id']), name=fed['fed_name']))
+
+
+@decorator.command('fchatlist', arg=True)
+@get_strings_dec("feds")
+async def promote_to_fed(event, strings):
+    pass
+
 
 
 async def join_fed(event, chat_id, fed_id, user):
