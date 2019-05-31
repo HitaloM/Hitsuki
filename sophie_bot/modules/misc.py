@@ -2,7 +2,6 @@ import random
 
 from telethon.errors import BadRequestError, ChatNotModifiedError
 from telethon.tl.functions.channels import EditAdminRequest
-from telethon.tl.functions.messages import UpdatePinnedMessageRequest
 from telethon.tl.types import ChatAdminRights
 
 from sophie_bot import bot, decorator
@@ -102,12 +101,13 @@ async def pinMessage(event, strings):
     chk = event.pattern_match.group(1)
     args = chk.lower()
     tru_txt = ['loud', 'notify']
+    chat = event.chat_id
     if args in tru_txt:
-        silence = False
+        notify = True
     else:
-        silence = True
+        notify = False
     try:
-        await bot(UpdatePinnedMessageRequest(event.to_id, msg_2_pin, silence))
+        await bot.pin_message(chat, msg_2_pin, notify=notify)
     except ChatNotModifiedError:
         await event.reply(strings['chat_not_modified_pin'])
         return
@@ -124,7 +124,7 @@ async def runs(event):
 @get_strings_dec('misc')
 async def unpin_message(event, strings):
     try:
-        await bot(UpdatePinnedMessageRequest(event.to_id, 0))  # 0 is None for int
+        await bot.pin_message(event.chat_id, None)
     except ChatNotModifiedError:
         await event.reply(strings['chat_not_modified_unpin'])
         return
