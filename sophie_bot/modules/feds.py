@@ -35,6 +35,15 @@ async def join_fed_comm(event, strings):
         await event.reply(strings['join_fed_success'].format(name=fed_name))
 
 
+@decorator.command('leavefed')
+@get_strings_dec("feds")
+async def join_fed_comm(event, strings):
+    chat = event.chat_id
+    user = event.from_id
+    if await leave_fed(event, chat, user) is True:
+        await event.reply(strings['leave_fed_success'])
+
+
 async def join_fed(event, chat_id, fed_id, user):
 
     peep = await bot(
@@ -59,4 +68,24 @@ async def join_fed(event, chat_id, fed_id, user):
     join_data = {'chat_id': chat_id, 'fed_id': fed_id}
 
     mongodb.fed_groups.insert_one(join_data)
+    return True
+
+
+async def leave_fed(event, chat_id, user):
+
+    peep = await bot(
+        GetParticipantRequest(
+            channel=chat_id, user_id=user,
+        )
+    )
+    if not peep.participant == ChannelParticipantCreator(user_id=user):
+        await event.reply(get_string('feds', 'only_creators', chat_id))
+        return
+
+    old = mongodb.fed_groups.delete_one({'chat_id': chat_id}).deleted_count
+
+    if old < 1:  # If chat not was in any federation
+        await event.reply(get_string('feds', 'leaved_fed_already', chat_id))
+        return
+
     return True
