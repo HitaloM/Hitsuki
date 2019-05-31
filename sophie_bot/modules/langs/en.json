@@ -189,7 +189,15 @@
 
         "only_creator_promote": "Only Federation creator can fpromote users.",
         "admin_already_in_fed": "User {user} already admin in **{name}** Federation",
-        "admin_added_to_fed": "User {user} added to **{name}** Federation admins"
+        "admin_added_to_fed": "User {user} added to **{name}** Federation admins",
+
+        "chats_in_fed": "**Chats connected to {name} Federation:**\n",
+
+        "fed_info": "**Federation info**:\n",
+        "fed_name": "**Name:** {name}\n",
+        "fed_id": "**ID:** {id}\n",
+        "fed_creator": "**Creator:** {user}\n",
+        "chats_in_fed_info": "**Chats in the fed:** {num}\n"
 
     }
  },

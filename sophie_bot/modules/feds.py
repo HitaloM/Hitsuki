@@ -1,4 +1,5 @@
 import uuid
+import subprocess
 
 from telethon.tl.functions.channels import GetParticipantRequest
 from telethon.tl.types import ChannelParticipantCreator
@@ -25,6 +26,26 @@ def get_user_and_fed_dec(func):
                 await event.reply(strings['fed_id_invalid'])
                 return
         return await func(event, user, fed, *args, **kwargs)
+    return wrapped_1
+
+
+def get_fed_dec(func):
+    @get_strings_dec("feds")
+    async def wrapped_1(event, strings, *args, **kwargs):
+        chat_id = event.chat_id
+        fed_id = event.pattern_match.group(1)
+        if not fed_id:
+            chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
+            if not chat_fed:
+                await event.reply(strings['chat_not_in_fed'])
+                return
+            fed = mongodb.fed_list.find_one({'fed_id': chat_fed['fed_id']})
+        else:
+            fed = mongodb.fed_list.find_one({'fed_id': fed_id.lower()})
+            if not fed:
+                await event.reply(strings['fed_id_invalid'])
+                return
+        return await func(event, fed, *args, **kwargs)
     return wrapped_1
 
 
@@ -87,9 +108,39 @@ async def promote_to_fed(event, user, fed, strings):
 
 @decorator.command('fchatlist', arg=True)
 @get_strings_dec("feds")
-async def promote_to_fed(event, strings):
-    pass
+@get_fed_dec
+async def fed_chat_list(event, fed, strings):
+    text = strings['chats_in_fed'].format(name=fed['fed_name'])
+    chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
+    for fed in chats:
+        chat = mongodb.chat_list.find_one({'chat_id': fed['chat_id']})
+        text += '* {} (`{}`)\n'.format(chat["chat_title"], fed['chat_id'])
+    if len(text) > 4096:
+        output = open("output.txt", "w+")
+        output.write(text)
+        output.close()
+        await event.client.send_file(
+            event.chat_id,
+            "output.txt",
+            reply_to=event.id,
+            caption="`Output too large, sending as file`",
+        )
+        subprocess.run(["rm", "output.txt"], stdout=subprocess.PIPE)
+        return
+    await event.reply(text)
 
+
+@decorator.command('finfo', arg=True)
+@get_strings_dec("feds")
+@get_fed_dec
+async def fed_info(event, fed, strings):
+    text = strings['fed_info']
+    text += strings['fed_name'].format(name=fed['fed_name'])
+    text += strings['fed_id'].format(id=fed['fed_id'])
+    text += strings['fed_creator'].format(user=await user_link(fed['creator']))
+    chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
+    text += strings['chats_in_fed_info'].format(num=chats.count())
+    await event.reply(text)
 
 
 async def join_fed(event, chat_id, fed_id, user):
