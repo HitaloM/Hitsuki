@@ -197,7 +197,10 @@
         "fed_name": "**Name:** {name}\n",
         "fed_id": "**ID:** {id}\n",
         "fed_creator": "**Creator:** {user}\n",
-        "chats_in_fed_info": "**Chats in the fed:** {num}\n"
+        "chats_in_fed_info": "**Chats in the fed:** {num}\n",
+
+        "fban_self": "Try fban yourselve, thats will be a show!",
+        "need_admin_to_fban": "You should be Federation admin to use fban for {name} Fedearion"
 
     }
  },

@@ -6,46 +6,98 @@ from telethon.tl.types import ChannelParticipantCreator
 
 from sophie_bot import bot, decorator, mongodb
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import user_link, get_user_and_text
+from sophie_bot.modules.users import user_link, get_user_and_text, get_user
+
+
+def get_user_and_fed_and_text_dec(func):
+    async def wrapped_1(event, *args, **kwargs):
+        user = await get_user(event)
+        # Count of - in group(2) to see if its a fed id
+        F = 0
+        text = ""
+        for a in event.pattern_match.group(2):
+            if a == "-":
+                F += 1
+        if F == 4:  # group(2) is id
+            print('ogogo')
+            fed = await get_chat_fed(event, event.pattern_match.group(2))
+            if fed is False:
+                return
+        else:
+            print('owowo')
+            fed = mongodb.fed_groups.find_one({'chat_id': event.chat_id})
+            if not fed:
+                await event.reply(get_string("feds", 'chat_not_in_fed', event.chat_id))
+                return
+            text += event.pattern_match.group(2)
+            text += " "
+        if event.pattern_match.group(3):
+            text += event.pattern_match.group(3)
+
+        return await func(event, user, fed, text, *args, **kwargs)
+    return wrapped_1
 
 
 def get_user_and_fed_dec(func):
-    @get_strings_dec("feds")
-    async def wrapped_1(event, strings, *args, **kwargs):
+    async def wrapped_1(event, *args, **kwargs):
         chat_id = event.chat_id
         user, fed_id = await get_user_and_text(event)
         if not fed_id:
             chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
             if not chat_fed:
-                await event.reply(strings['chat_not_in_fed'])
+                await event.reply(get_string("feds", 'chat_not_in_fed', chat_id))
                 return
             fed = mongodb.fed_list.find_one({'fed_id': chat_fed['fed_id']})
         else:
             fed = mongodb.fed_list.find_one({'fed_id': fed_id.lower()})
             if not fed:
-                await event.reply(strings['fed_id_invalid'])
+                await event.reply(get_string("feds", 'fed_id_invalid', chat_id))
                 return
         return await func(event, user, fed, *args, **kwargs)
     return wrapped_1
 
 
-def get_fed_dec(func):
-    @get_strings_dec("feds")
-    async def wrapped_1(event, strings, *args, **kwargs):
-        chat_id = event.chat_id
+def get_chat_fed_dec(func):
+    async def wrapped_1(event, *args, **kwargs):
         fed_id = event.pattern_match.group(1)
-        if not fed_id:
-            chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
-            if not chat_fed:
-                await event.reply(strings['chat_not_in_fed'])
-                return
-            fed = mongodb.fed_list.find_one({'fed_id': chat_fed['fed_id']})
-        else:
-            fed = mongodb.fed_list.find_one({'fed_id': fed_id.lower()})
-            if not fed:
-                await event.reply(strings['fed_id_invalid'])
-                return
+        fed = await get_chat_fed(event, fed_id)
+        if fed is False:
+            return
         return await func(event, fed, *args, **kwargs)
+    return wrapped_1
+
+
+async def get_chat_fed(event, fed_id):
+    chat_id = event.chat_id
+    print(fed_id)
+    if not fed_id:
+        chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
+        if not chat_fed:
+            await event.reply(get_string("feds", 'chat_not_in_fed', event.chat_id))
+            return False
+        fed = mongodb.fed_list.find_one({'fed_id': chat_fed['fed_id']})
+    else:
+        fed = mongodb.fed_list.find_one({'fed_id': fed_id})
+        if not fed:
+            await event.reply(get_string("feds", 'fed_id_invalid', event.chat_id))
+            return False
+    return fed
+
+
+def user_is_fed_admin(func):
+    async def wrapped_1(event, *args, **kwargs):
+        group_fed = mongodb.fed_groups.find_one({'chat_id': event.chat_id})
+        if not group_fed:
+            await event.reply(get_string("feds", 'chat_not_in_fed', event.chat_id))
+            return False
+        fed = mongodb.fed_list.find_one({'fed_id': group_fed['fed_id']})
+        user_id = event.from_id
+        if not user_id == fed['creator']:
+            fadmins = mongodb.fed_admins.find({'fed_id': fed['fed_id'], 'admin': user_id})
+            if not fadmins:
+                await event.reply(get_string("feds", 'need_admin_to_fban', event.chat_id).format(
+                    name=fed['fed_name']))
+        return await func(event, *args, **kwargs)
     return wrapped_1
 
 
@@ -108,7 +160,7 @@ async def promote_to_fed(event, user, fed, strings):
 
 @decorator.command('fchatlist', arg=True)
 @get_strings_dec("feds")
-@get_fed_dec
+@get_chat_fed_dec
 async def fed_chat_list(event, fed, strings):
     text = strings['chats_in_fed'].format(name=fed['fed_name'])
     chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
@@ -132,7 +184,7 @@ async def fed_chat_list(event, fed, strings):
 
 @decorator.command('finfo', arg=True)
 @get_strings_dec("feds")
-@get_fed_dec
+@get_chat_fed_dec
 async def fed_info(event, fed, strings):
     text = strings['fed_info']
     text += strings['fed_name'].format(name=fed['fed_name'])
@@ -141,6 +193,16 @@ async def fed_info(event, fed, strings):
     chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
     text += strings['chats_in_fed_info'].format(num=chats.count())
     await event.reply(text)
+
+
+@decorator.command('fban', word_arg=True, additional=" ?(\S*) ?(.*)")
+@get_strings_dec("feds")
+@get_user_and_fed_and_text_dec
+@user_is_fed_admin
+async def gban_user(event, user, fed, reason, strings):
+    bot_id = await bot.get_me()
+    if user == bot_id:
+        await event.reply(strings['fban_self'])
 
 
 async def join_fed(event, chat_id, fed_id, user):
