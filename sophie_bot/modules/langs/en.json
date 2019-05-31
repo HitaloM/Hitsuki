@@ -175,6 +175,15 @@
     },
     "bot_rights": {
         "not_right_del_msg": "I don't have rights to delete messages here."
+    },
+    "feds": {
+        "no_args": "Please give me Federation name to create Federation!",
+        "only_creators": "Only group creators can join Federation!",
+        "created_fed": "Congratz! You have been successfully created Federation \n\n **NAME :** {name} \n **ID :** `{id}` \n **CREATOR :** {cr} \n",
+        "fed_id_invalid": "The given Federation ID is invalid! Please give me Valid ID. ",
+        "joined_fed_already": "This chat has already joined a Federation! Please use /leavefed to leave that federation",
+        "join_fed_success": "Great! This chat's Federation is now **{name}**!"
+
     }
  },
  "HELPS": {
