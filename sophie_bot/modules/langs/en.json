@@ -184,8 +184,12 @@
         "joined_fed_already": "This chat has already joined a Federation! Please use /leavefed to leave that federation",
         "join_fed_success": "Great! This chat's Federation is now **{name}**!",
 
-        "leaved_fed_already": "This chat not in any federation.",
-        "leave_fed_success": "Chat left the federation."
+        "chat_not_in_fed": "This chat not in any federation.",
+        "leave_fed_success": "Chat left the federation.",
+
+        "only_creator_promote": "Only Federation creator can fpromote users.",
+        "admin_already_in_fed": "User {user} already admin in **{name}** Federation",
+        "admin_added_to_fed": "User {user} added to **{name}** Federation admins"
 
     }
  },
