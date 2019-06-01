@@ -1,4 +1,5 @@
 import ujson
+
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import (ChannelParticipantsAdmins,
                                MessageEntityMentionName)
@@ -43,7 +44,7 @@ async def update_users(event):
         }
 
         if old_chat:
-            mongodb.user_list.update_one({'_id': old_chat['_id']}, {"$set": chat_new}, upsert=False)
+            mongodb.chat_list.update_one({'_id': old_chat['_id']}, {"$set": chat_new}, upsert=False)
         else:
             mongodb.chat_list.insert_one(chat_new)
         logger.debug(f"chat {chat_id} updated")
@@ -97,7 +98,7 @@ async def update_users(event):
             'user_lang': user.lang_code
         }
         if old_user:
-            mongodb.notes.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
+            mongodb.user_list.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
         else:
             mongodb.user_list.insert_one(new_user)
         logger.debug(f"forwarded user {user_id} updated")
