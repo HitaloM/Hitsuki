@@ -1,12 +1,13 @@
-import uuid
 import subprocess
+import uuid
 
-from telethon.tl.functions.channels import GetParticipantRequest
-from telethon.tl.types import ChannelParticipantCreator
+from telethon.tl.functions.channels import (EditBannedRequest,
+                                            GetParticipantRequest)
+from telethon.tl.types import ChannelParticipantCreator, ChatBannedRights
 
 from sophie_bot import bot, decorator, mongodb
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import user_link, get_user_and_text, get_user
+from sophie_bot.modules.users import get_user, get_user_and_text, user_link
 
 
 def get_user_and_fed_and_text_dec(func):
@@ -199,10 +200,42 @@ async def fed_info(event, fed, strings):
 @get_strings_dec("feds")
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin
-async def gban_user(event, user, fed, reason, strings):
+async def fban_user(event, user, fed, reason, strings):
+    banned_rights = ChatBannedRights(
+        until_date=None,
+        view_messages=True,
+        send_messages=True,
+        send_media=True,
+        send_stickers=True,
+        send_gifs=True,
+        send_games=True,
+        send_inline=True,
+        embed_links=True,
+    )
     bot_id = await bot.get_me()
     if user == bot_id:
         await event.reply(strings['fban_self'])
+
+    check = mongodb.fbanned_users.find_one({'user': user['user_id'], 'fed_id': fed['fed_id']})
+    if check:
+        await event.reply(strings['already_fbanned'].format(
+                          user=await user_link(user['user_id'])))
+        return
+    mongodb.fbanned_users.insert_one({'user': user['user_id'], 'fed_id': fed['fed_id']})
+
+    chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
+    if chats:
+        for chat in chats:
+            try:
+                await event.client(
+                    EditBannedRequest(
+                        chat['chat_id'],
+                        user['user_id'],
+                        banned_rights
+                    )
+                )
+            except Exception:
+                pass
 
 
 async def join_fed(event, chat_id, fed_id, user):
