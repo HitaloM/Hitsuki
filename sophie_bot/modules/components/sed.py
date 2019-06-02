@@ -11,7 +11,7 @@ SED_PATTERN = r'^s/((?:\\/|[^/])+)/((?:\\/|[^/])*)(/.*)?'
 last_msgs = defaultdict(lambda: deque(maxlen=10))
 
 
-async def doit(message, match):
+async def doit(event, message, match):
     fr = match.group(1)
     to = match.group(2)
     to = (to
@@ -62,7 +62,11 @@ async def doit(message, match):
                     break
 
         if substitution is not None:
-            await message.reply(substitution)
+            if not message.is_reply:
+                await message.reply(substitution)
+            else:
+                msg = await event.get_reply_message()
+                await bot.send_message(event.chat_id, substitution, reply_to=msg.id)
 
     except Exception as e:
         await message.reply('fuck me\n' + str(e))
@@ -71,7 +75,7 @@ async def doit(message, match):
 @decorator.StrictCommand(SED_PATTERN)
 @flood_limit_dec("sed")
 async def sed(event):
-    message = await doit(event.message, event.pattern_match)
+    message = await doit(event, event.message, event.pattern_match)
     if message:
         last_msgs[event.chat_id].append(message)
 
