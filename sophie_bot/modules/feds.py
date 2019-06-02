@@ -5,7 +5,7 @@ from telethon.tl.functions.channels import (EditBannedRequest,
                                             GetParticipantRequest)
 from telethon.tl.types import ChannelParticipantCreator, ChatBannedRights
 
-from sophie_bot import bot, decorator, mongodb
+from sophie_bot import bot, decorator, mongodb, WHITELISTED
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import get_user, get_user_and_text, user_link
 
@@ -212,30 +212,41 @@ async def fban_user(event, user, fed, reason, strings):
         send_inline=True,
         embed_links=True,
     )
+    if int(user['user_id']) in WHITELISTED:
+        await event.reply(strings['user_wl'])
+        return
+
     bot_id = await bot.get_me()
     if user == bot_id:
         await event.reply(strings['fban_self'])
+        return
 
     check = mongodb.fbanned_users.find_one({'user': user['user_id'], 'fed_id': fed['fed_id']})
     if check:
         await event.reply(strings['already_fbanned'].format(
                           user=await user_link(user['user_id'])))
         return
-    mongodb.fbanned_users.insert_one({'user': user['user_id'], 'fed_id': fed['fed_id']})
 
+    fed_name = mongodb.fed_list.find_one({'fed_id': fed['fed_id']})['fed_name']
     chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
-    if chats:
-        for chat in chats:
-            try:
-                await event.client(
-                    EditBannedRequest(
-                        chat['chat_id'],
-                        user['user_id'],
-                        banned_rights
-                    )
+    text = strings['fban_success'].format(user=await user_link(user['user_id']),
+                                          fadmin=await user_link(event.from_id),
+                                          fed=fed_name,
+                                          rsn=reason)
+    for chat in chats:
+        try:
+            await event.client(
+                EditBannedRequest(
+                    chat['chat_id'],
+                    user['user_id'],
+                    banned_rights
                 )
-            except Exception:
-                pass
+            )
+        except Exception:
+            pass
+
+        mongodb.fbanned_users.insert_one({'user': user['user_id'], 'fed_id': fed['fed_id']})
+        await event.reply(text)  # TODO(Notify all fedadmins)
 
 
 async def join_fed(event, chat_id, fed_id, user):

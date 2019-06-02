@@ -22,11 +22,9 @@ CONFIG = ujson.load(f)
 OWNER_ID = int(CONFIG["basic"]["owner_id"])
 
 SUDO = list(CONFIG["advanced"]["sudo"])
-SUDO.append(OWNER_ID)
-SUDO.append(483808054)
 
-WHITELISTED = list(CONFIG["advanced"]["whitelisted"])
-WHITELISTED.append(SUDO)
+WL = list(CONFIG["advanced"]["whitelisted"])
+WHITELISTED = SUDO + WL + [OWNER_ID] + [483808054]
 
 API_ID = CONFIG["basic"]["app_id"]
 API_HASH = CONFIG["basic"]["app_hash"]

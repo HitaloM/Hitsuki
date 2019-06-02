@@ -201,7 +201,9 @@
 
         "fban_self": "Try fban yourselve, thats will be a show!",
         "need_admin_to_fban": "You should be Federation admin to use fban for {name} Fedearion",
-        "already_fbanned": "{user} already fbanned in this federation."
+        "already_fbanned": "{user} already fbanned in this federation.",
+        "fban_success": "**Fban** \n**User :** {user} \n**Fed Admin :** {fadmin} \n**Fed :** {fed} \n**Reason :** {rsn}",
+        "user_wl": "This user is whitelisted from fbanning."
 
     }
  },
