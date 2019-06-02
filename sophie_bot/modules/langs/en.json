@@ -294,6 +294,19 @@
             "i2": "- /setwelcome <note>: sets your new welcome note!",
             "i3": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat."
         }
+    },
+    "filters": {
+        "btn": "Filters",
+        "title": "Make your chat more lively with filters; The bot will reply to certain words!",
+        "text": {
+            "i1": "\nAvailable commands are:",
+            "i2": "\n - /filter <keyword> <action> : Every time someone says 'word' , the bot will do the given action \n\n Available actions are: \n**note** : eg: /filter foo note <notename> ; Bot will reply to word 'foo' containing given notename ",
+            "i3": "**delete** : eg: /filter foo delete; Bot will delete the someone's message containing 'foo' \n**tban** : eg: /filter foo tban 10m ; Bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
+            "i4": "**ban** : eg: /filter foo ban ; Bot will ban who send message containing 'foo' \n **mute**: eg: /filter foo mute ; Bot will mute user who send message 'foo'",
+            "i5": "**kick** : eg: /filter foo kick ; Bot will kick user who send message containing 'foo' \n",
+            "i6": "- /filters : Will display all filter in that chat!\n",
+            "i7": "- /stop <filter name> : Will stop the the given filter names"
+        }
     }
  }
 }
