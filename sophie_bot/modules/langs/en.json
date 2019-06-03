@@ -115,7 +115,7 @@
 
         "no_rights_stop": "You don't have rights to stop filters here!",
         "cant_find_filter": "I can't find this filter!",
-        "filter_deleted": "Filter `{filter}` in {chat_name} deleted!"
+        "filter_deleted": "Filter `{filter}` in **{chat_name}** deleted!"
     },
     "warns": {
         "user_no_admeme": "You're not an admin",

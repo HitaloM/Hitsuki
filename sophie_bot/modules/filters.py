@@ -119,7 +119,7 @@ async def stop_filter(event, status, chat_id, chat_title):
     mongodb.filters.delete_one({'_id': filter['_id']})
     update_handlers_cache(chat_id)
     text = str(get_string("filters", "filter_deleted", event.chat_id))
-    # text = text.format(filter=handler, chat_name=chat_title) #FIXME
+    text = text.format(filter=handler, chat_name=chat_title)
     await event.reply(text)
 
 
