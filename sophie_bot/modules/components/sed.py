@@ -6,7 +6,7 @@ from telethon import events
 from sophie_bot import bot, decorator
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 
-SED_PATTERN = r'^s/((?:\\/|[^/])+)/((?:\\/|[^/])*)(/.*)?'
+SED_PATTERN = r'^(?i)s/((?:\\/|[^/])+)/((?:\\/|[^/])*)(/.*)?'
 
 last_msgs = defaultdict(lambda: deque(maxlen=10))
 
