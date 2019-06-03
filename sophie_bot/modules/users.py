@@ -322,7 +322,7 @@ async def user_link(user_id):
 
 
 def user_admin_dec(func):
-    async def wrapped(event, ):
+    async def wrapped(event):
         if await check_group_admin(event, event.from_id) is False:
             await event.reply("You should be admin to do it!")
             return

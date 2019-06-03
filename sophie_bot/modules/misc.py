@@ -9,6 +9,8 @@ from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import get_user, user_admin_dec, user_link
+import sophie_bot.modules.helper_func.bot_rights as bot_rights
+
 
 RUN_STRINGS = (  # Thanks PaulSonOfLars
     "Where do you think you're going?",
@@ -91,6 +93,7 @@ async def id(event):
 
 @decorator.command("pin", arg=True)
 @user_admin_dec
+@bot_rights.pin_messages()
 @get_strings_dec('misc')
 async def pinMessage(event, strings):
     tagged_message = await event.get_reply_message()
@@ -121,6 +124,7 @@ async def runs(event):
 
 @decorator.command("unpin")
 @user_admin_dec
+@bot_rights.pin_messages()
 @get_strings_dec('misc')
 async def unpin_message(event, strings):
     try:
@@ -133,6 +137,7 @@ async def unpin_message(event, strings):
 
 @decorator.command("promote", arg=True)
 @user_admin_dec
+@bot_rights.add_admins()
 async def promote(event):
 <<<<<<< HEAD
 
@@ -174,6 +179,7 @@ async def promote(event):
 
 @decorator.command("demote")
 @user_admin_dec
+@bot_rights.add_admins()
 async def demote(event):
     # Admin right check
 

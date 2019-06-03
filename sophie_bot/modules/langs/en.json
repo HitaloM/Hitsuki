@@ -174,7 +174,12 @@
         "enabled": "Command `{}` enabled in **{}**!"
     },
     "bot_rights": {
-        "not_right_del_msg": "I don't have rights to delete messages here."
+        "change_info": "I don't have rights to change group info, please make me admin with that right.",
+        "edit_messages": "I don't have right to edit channel messages!",
+        "delete_messages": "I don't have rights to delete messages here.",
+        "ban_user": "I don't have rights to ban users, please make me admin with that right.",
+        "pin_messages": "I don't have rights to pin messages, please make me admin with that right.",
+        "add_admins": "I don't have rights to add admin, please make me admin with that right."
     },
     "feds": {
         "no_args": "Please give me Federation name to create Federation!",
