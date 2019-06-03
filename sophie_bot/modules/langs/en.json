@@ -152,7 +152,10 @@
         "demote_success": "Demoted.",
         "demote_failed": "Demotion failed. Check if I have proper rights",
         "chat_not_modified_pin": "You are pinning already pinned message!",
-        "chat_not_modified_unpin": "There is no pinned message to unpin!"
+        "chat_not_modified_unpin": "There is no pinned message to unpin!",
+
+        "help_btn": "Click me for help!",
+        "help_txt": "Click below button for help!"
     },
     "gbans": {
         "user_is_blacklisted": "User {} blacklisted.\nReason: {}"

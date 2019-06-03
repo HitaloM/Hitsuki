@@ -1,10 +1,11 @@
 import random
 
 from telethon.errors import BadRequestError, ChatNotModifiedError
+from telethon.tl.custom import Button
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChatAdminRights
 
-from sophie_bot import bot, decorator
+from sophie_bot import bot, decorator, BOT_USERNAME
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
@@ -218,3 +219,13 @@ async def demote(event):
         await event.reply(get_string('misc', 'demote_failed', event.chat_id))
         return
     await event.reply(get_string('misc', 'demote_success', event.chat_id))
+
+
+@decorator.command('help')
+@get_strings_dec('misc')
+async def help(event, strings):
+    buttons = [
+        [Button.url(strings['help_btn'], url='https://t.me/{}?start=start'.format(BOT_USERNAME))]
+    ]
+    text = strings['help_txt']
+    await event.reply(text, buttons=buttons)
