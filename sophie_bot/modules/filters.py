@@ -2,13 +2,16 @@ import re
 
 import ujson
 
-from sophie_bot import decorator, mongodb, redis
+from telethon.tl.functions.channels import EditBannedRequest
+from telethon.tl.types import ChatBannedRights
+
+from sophie_bot import WHITELISTED, bot, decorator, mongodb, redis
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.notes import send_note
-from sophie_bot.modules.users import user_admin_dec
+from sophie_bot.modules.users import is_user_admin, user_admin_dec, user_link
 
 
 @decorator.insurgent()
@@ -34,6 +37,8 @@ async def check_message(event):
                                 H['arg'], show_none=True)
             elif H['action'] == 'delete':
                 await event.delete()
+            elif H['action'] == 'ban':
+                await filter_ban(event, filter, None)
 
 
 @decorator.command("filter(?!s)", arg=True)
@@ -130,3 +135,49 @@ def update_handlers_cache(chat_id):
         lst.append(filter['handler'])
     dump = ujson.dumps(lst)
     redis.set('filters_cache_{}'.format(chat_id), dump)
+
+
+async def filter_ban(event, filter, time):
+    chat = event.chat_id
+    user = event.from_id
+
+    if await is_user_admin(chat, user) is True:
+        return
+
+    if int(user) in WHITELISTED:
+        return
+
+    bot_id = await bot.get_me()
+    if user == bot_id.id:
+        return
+
+    banned_rights = ChatBannedRights(
+        until_date=time,
+        view_messages=True,
+        send_messages=True,
+        send_media=True,
+        send_stickers=True,
+        send_gifs=True,
+        send_games=True,
+        send_inline=True,
+        embed_links=True,
+    )
+
+    try:
+        await event.client(
+            EditBannedRequest(
+                chat,
+                user,
+                banned_rights
+            )
+        )
+
+    except Exception:
+        pass
+
+    text = get_string('filters', 'filter_ban_success', chat).format(user=await user_link(user),
+                                                                    filter=filter)
+    await bot.send_message(
+        chat,
+        text
+    )
