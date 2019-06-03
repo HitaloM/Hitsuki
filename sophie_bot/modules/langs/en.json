@@ -77,7 +77,7 @@
         "usage_only_in_groups": "Usage limited only in groups!"
     },
     "greetings": {
-        "welcome_hay": "Welcome! How are you?",
+        "welcome_hay": "Welcome {mention}! How are you?",
         "cant_find_note": "I can't find this note.",
         "welcome_set_to_note": "Welcome set to note: `{}`",
         "welcome_is_note": "Welcome is note: `{}`",

@@ -23,37 +23,44 @@ async def welcome_trigger(event, strings):
         bot_id = await bot.get_me()
         if bot_id.id == user_id:
             return  # Do not welcome yourselve
+
         chat_id = event.action_message.chat_id
-        welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
-        cleaner = mongodb.clean_service.find_one({'chat_id': chat})
-        if cleaner and cleaner['service'] is True:
+        cleaner = mongodb.clean_service.find_one({'chat_id': chat_id})
+        if cleaner and cleaner['service']:
             await event.delete()
+
+        if hasattr(event.action_message.action, 'users'):
+            from_id = event.action_message.action.users[0]
+        else:
+            from_id = event.action_message.from_id
+
+        welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
         if not welcome:
-            await event.reply(get_string("greetings", "welcome_hay", chat))
+            await event.reply(strings['welcome_hay'].format(mention=await user_link(from_id)))
         elif welcome['enabled'] is False:
             return
         else:
-            if hasattr(event.action_message.action, 'users'):
-                from_id = event.action_message.action.users[0]
-            else:
-                from_id = event.action_message.from_id
             await send_note(event.chat_id, chat_id, event.action_message.id,
                             welcome['note'], show_none=True, from_id=from_id)
+
         welcome_security = mongodb.welcome_security.find_one({'chat_id': chat_id})
-        if welcome_security['security'] == 'soft':
+        if welcome_security and welcome_security['security'] == 'soft':
             buttons = [
-                [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(user_id, chat_id))]
+                [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(from_id, chat_id))]
             ]
             time_val = int(time.time() + 60 * 60)  # Mute 1 hour
             await mute_user(event, user_id, chat_id, time_val)
-            text = strings['wlcm_sec'].format(mention=await user_link(user_id))
+
+            text = strings['wlcm_sec'].format(mention=await user_link(from_id))
             await event.reply(text, buttons=buttons)
-        elif welcome_security['security'] == 'hard':
+
+        elif welcome_security and welcome_security['security'] == 'hard':
             buttons = [
-                [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(user_id, chat_id))]
+                [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(from_id, chat_id))]
             ]
             await mute_user(event, user_id, chat_id, None)
-            text = strings['wlcm_sec'].format(mention=await user_link(user_id))
+
+            text = strings['wlcm_sec'].format(mention=await user_link(from_id))
             await event.reply(text, buttons=buttons)
 
 
@@ -174,8 +181,7 @@ async def welcm_btn_callback(event, strings):
     chat = event.chat_id
     if target_group == chat is False:
         return
-    if user == target_user is False:
-        print(user == target_user)
+    if user != target_user:
         await event.answer(strings['not_trgt'])
         return
     await unmute_user(event, user, chat)
