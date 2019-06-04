@@ -5,9 +5,8 @@ from telethon.tl.custom import Button
 
 from sophie_bot import bot, decorator, mongodb
 from sophie_bot.modules.bans import mute_user, unmute_user
-from sophie_bot.modules.connections import get_conn_chat
+from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.helper_func.flood import flood_limit
-from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_admin_dec, user_link
@@ -50,7 +49,7 @@ async def welcome_trigger(event, strings):
             ]
             time_val = int(time.time() + 60 * 60)  # Mute 1 hour
             try:
-                await mute_user(event, user_id, chat_id, time_val)
+                await mute_user(event, int(from_id), chat_id, time_val)
             except Exception as err:
                 await event.reply(err)
 
@@ -62,7 +61,7 @@ async def welcome_trigger(event, strings):
                 [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(from_id, chat_id))]
             ]
             try:
-                await mute_user(event, user_id, chat_id, None)
+                await mute_user(event, int(from_id), chat_id, None)
             except Exception as err:
                 await event.reply(err)
 
@@ -230,9 +229,9 @@ async def welcm_btn_callback(event, strings):
     target_group = details.group(2)[:-1]
     user = event.query.user_id
     chat = event.chat_id
-    if target_group == chat is False:
+    if int(target_group) == int(chat) is False:
         return
-    if user != target_user:
+    if int(user) != int(target_user):
         await event.answer(strings['not_trgt'])
         return
     await unmute_user(event, user, chat)
