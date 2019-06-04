@@ -1,8 +1,7 @@
+from telethon.tl.functions.channels import GetParticipantRequest
+
 from sophie_bot import bot
 from sophie_bot.modules.language import get_string
-
-from telethon.tl.functions.channels import GetParticipantRequest
-import sophie_bot.modules.helper_func.bot_rights as bot_rights
 
 # Help
 # change_info = rights.change_info

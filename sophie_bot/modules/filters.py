@@ -69,7 +69,7 @@ async def add_filter(event, status, chat_id, chat_title):
         if not len(args) > 3:
             await event.reply(get_string("filters", "no_arg_tban", real_chat_id))
             return
-        text += get_string("filters", "no_arg_tban", real_chat_id).format(str(arg))
+        text += get_string("filters", "a_tban", real_chat_id).format(str(arg))
     elif action == 'delete':
         text += get_string("filters", "a_del", real_chat_id)
     elif action == 'ban':
