@@ -1,7 +1,7 @@
 import asyncio
 import os
 
-from sophie_bot import OWNER_ID, bot, decorator, mongodb, redis
+from sophie_bot import OWNER_ID, bot, decorator, mongodb, redis, logger
 from sophie_bot.modules.main import chat_term
 from sophie_bot.modules.notes import button_parser
 
@@ -80,7 +80,7 @@ async def check_message_for_smartbroadcast(event):
                 buttons = None
             await bot.send_message(chat_id, text, buttons=buttons)
         except Exception as err:
-            print(err)
+            logger.error(err)
         mongodb.sbroadcast_list.delete_one({'chat_id': chat_id})
         old = mongodb.sbroadcast_settings.find_one({})
         num = old['recived_chats'] + 1

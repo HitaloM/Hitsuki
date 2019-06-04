@@ -3,7 +3,7 @@ import time
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
-from sophie_bot import WHITELISTED, bot, decorator
+from sophie_bot import WHITELISTED, bot, decorator, logger
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import (get_user, get_user_and_text,
@@ -239,7 +239,7 @@ async def kick_user(event, user_id, chat_id):
         )
 
     except Exception as err:
-        print(str(err))
+        logger.error(str(err))
         return False
     return True
 
@@ -278,7 +278,7 @@ async def unban_user(event, user_id, chat_id):
             )
         )
     except Exception as err:
-        print(str(err))
+        logger.error(str(err))
         return False
     return True
 
@@ -310,7 +310,7 @@ async def mute_user(event, user_id, chat_id, time_val):
         )
 
     except Exception as err:
-        print(str(err))
+        logger.error(str(err))
         return False
     return True
 
@@ -341,7 +341,7 @@ async def unmute_user(event, user_id, chat_id):
         )
 
     except Exception as err:
-        print(str(err))
+        logger.error(str(err))
         return False
     return True
 
@@ -352,7 +352,7 @@ async def kick_self(event, chat, user):
         await event.reply(get_string("bans", "kickme_admin", chat))
         return False
     if str(user) in WHITELISTED:
-        print(str(user))
+        logger.error(str(user))
         await event.reply(get_string("bans", "whitelisted", chat))
         return False
 

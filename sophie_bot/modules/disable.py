@@ -28,7 +28,6 @@ async def disable_command(event, strings, status, chat_id, chat_title):
     cmd = event.pattern_match.group(1).lower()
     if cmd[0] == '/' or cmd[0] == '!':
         cmd = cmd[1:]
-    print(cmd)
     if cmd not in DISABLABLE_COMMANDS:
         await event.reply(strings["wot_to_disable"])
         return

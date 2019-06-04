@@ -21,12 +21,10 @@ def get_user_and_fed_and_text_dec(func):
             if a == "-":
                 F += 1
         if F == 4:  # group(2) is id
-            print('ogogo')
             fed = await get_chat_fed(event, event.pattern_match.group(2))
             if fed is False:
                 return
         else:
-            print('owowo')
             fed = mongodb.fed_groups.find_one({'chat_id': event.chat_id})
             if not fed:
                 await event.reply(get_string("feds", 'chat_not_in_fed', event.chat_id))
@@ -71,7 +69,6 @@ def get_chat_fed_dec(func):
 
 async def get_chat_fed(event, fed_id):
     chat_id = event.chat_id
-    print(fed_id)
     if not fed_id:
         chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
         if not chat_fed:

@@ -43,7 +43,6 @@ async def welcome_trigger(event, strings):
         else:
             welc_msg = await send_note(event.chat_id, chat_id, event.action_message.id,
                                        welcome['note'], show_none=True, from_id=from_id)
-            print(welc_msg)
         welcome_security = mongodb.welcome_security.find_one({'chat_id': chat_id})
         if welcome_security and welcome_security['security'] == 'soft':
             buttons = [
@@ -78,7 +77,6 @@ async def welcome_trigger(event, strings):
                 'last_msg': welc_msg.id
             }
             if 'last_msg' in clean_welcome:
-                print('m tri')
                 owo = []
                 owo.append(clean_welcome['last_msg'])
                 await event.client.delete_messages(chat_id, owo)

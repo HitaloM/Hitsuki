@@ -26,7 +26,6 @@ async def save_note(event, strings, status, chat_id, chat_title):
         if sym in note_name:
             await event.reply(strings["notename_cant_contain"].format(sym))
             return
-    print(note_name)
     if note_name[0] == "#":
         note_name = note_name[1:]
     file_id = None
