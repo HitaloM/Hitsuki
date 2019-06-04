@@ -172,14 +172,26 @@ async def event(event):
 @flood_limit_dec("info")
 async def user_info(event):
     user = await get_user(event)
+
+    check = mongodb.blacklisted_users.find_one({'user': user['user_id']})
+    if check is True:
+        gban_stat = "Yes"
+    else:
+        gban_stat = "No"
+
     text = "**User info:**\n"
-    text += f"ID: `{user['user_id']}`"
-    text += "\nFirst name: " + str(user['first_name'])
-    if 'last_name' in user:
-        text += "\nLast name: " + str(user['last_name'])
-    if 'username' in user:
-        text += "\nUsername: @" + str(user['username'])
-    text += "\nUser link: " + str(await user_link(user['user_id']))
+    text += f"**ID:** `{user['user_id']}`"
+    text += "\n**First name:** " + str(user['first_name'])
+
+    if user['last_name'] is not None:
+        text += "\n**Last name:** " + str(user['last_name'])
+
+    if user['username'] is not None:
+        text += "\n**Username:** @" + str(user['username'])
+
+    text += "\n**User link:** " + str(await user_link(user['user_id']))
+    text += "\n\n **Globally banned:** " + str(gban_stat)
+
     await event.reply(text)
 
 
