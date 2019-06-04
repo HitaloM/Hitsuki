@@ -228,7 +228,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
             rules='Will be later'
         )
 
-    await bot.send_message(
+    msg = await bot.send_message(
         chat_id,
         string,
         buttons=buttons,
@@ -237,6 +237,8 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         file=file_id,
         link_preview=preview
     )
+
+    return msg
 
 
 @decorator.CallBackQuery(b'delnote_', compile=True)

@@ -85,7 +85,7 @@
         "no_args_serv": "Please give me yes/no to Enable/Disable Clean Service",
         "serv_yes": "Clean Service is successfully enabled in this chat!",
         "serv_no": "Clean Service is successfully disabled in this chat!",
-        "wlcm_sec_noArgs": "Please give any option",
+        "noArgs": "Please give any option",
         "wlcm_sec_hard": "Welcome Security is set to **HARD** in this chat!",
         "wlcm_sec_soft": "Welcome Security is set to **SOFT** in this chat!",
         "wlcm_sec_off": "Welcome Security is disabled in this chat!",
@@ -93,7 +93,15 @@
         "wlcm_sec": "Hey {mention}, Please click below button to prove that you aren't a Bot!",
         "not_trgt_usr": "You're not supposed to click this button!",
         "trgt_success": "Great! you have been unmuted!",
-        "not_trgt": "You are not supposed to click this button"
+        "not_trgt": "You are not supposed to click this button",
+
+        "cln_wel_alr_enabled": "Cleaning welcomes already enabled for **{chat_name}**!",
+        "cln_wel_alr_disabled": "Cleaning welcomes was not enabled for **{chat_name}**",
+        "cln_wel_disabled": "Cleaning welcomes is `disabled` for **{chat_name}**.",
+        "cln_wel_enabled": "Cleaning welcomes is `enabled` for **{chat_name}**.",
+
+        "cln_wel_s_enabled": "Cleaning welcomes enabled for **{chat_name}**.",
+        "cln_wel_s_disabled": "Cleaning welcomes disabled for **{chat_name}**."
     },
     "filters": {
         "dont_have_right": "You don't have rights to save filters here!",

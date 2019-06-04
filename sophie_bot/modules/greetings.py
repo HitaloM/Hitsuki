@@ -7,6 +7,7 @@ from sophie_bot import bot, decorator, mongodb
 from sophie_bot.modules.bans import mute_user, unmute_user
 from sophie_bot.modules.connections import get_conn_chat
 from sophie_bot.modules.helper_func.flood import flood_limit
+from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_admin_dec, user_link
@@ -38,18 +39,21 @@ async def welcome_trigger(event, strings):
         if not welcome:
             await event.reply(strings['welcome_hay'].format(mention=await user_link(from_id)))
         elif welcome['enabled'] is False:
-            return
+            pass
         else:
-            await send_note(event.chat_id, chat_id, event.action_message.id,
-                            welcome['note'], show_none=True, from_id=from_id)
-
+            welc_msg = await send_note(event.chat_id, chat_id, event.action_message.id,
+                                       welcome['note'], show_none=True, from_id=from_id)
+            print(welc_msg)
         welcome_security = mongodb.welcome_security.find_one({'chat_id': chat_id})
         if welcome_security and welcome_security['security'] == 'soft':
             buttons = [
                 [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(from_id, chat_id))]
             ]
             time_val = int(time.time() + 60 * 60)  # Mute 1 hour
-            await mute_user(event, user_id, chat_id, time_val)
+            try:
+                await mute_user(event, user_id, chat_id, time_val)
+            except Exception as err:
+                await event.reply(err)
 
             text = strings['wlcm_sec'].format(mention=await user_link(from_id))
             await event.reply(text, buttons=buttons)
@@ -58,10 +62,28 @@ async def welcome_trigger(event, strings):
             buttons = [
                 [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(from_id, chat_id))]
             ]
-            await mute_user(event, user_id, chat_id, None)
+            try:
+                await mute_user(event, user_id, chat_id, None)
+            except Exception as err:
+                await event.reply(err)
 
             text = strings['wlcm_sec'].format(mention=await user_link(from_id))
             await event.reply(text, buttons=buttons)
+
+        clean_welcome = mongodb.clean_welcome.find_one({'chat_id': chat_id})
+        if clean_welcome:
+            new = {
+                'chat_id': chat_id,
+                'enabled': True,
+                'last_msg': welc_msg.id
+            }
+            if 'last_msg' in clean_welcome:
+                print('m tri')
+                owo = []
+                owo.append(clean_welcome['last_msg'])
+                await event.client.delete_messages(chat_id, owo)
+
+            mongodb.clean_welcome.update_one({'_id': clean_welcome['_id']}, {'$set': new})
 
 
 @decorator.command("setwelcome", arg=True)
@@ -141,6 +163,7 @@ async def cleanservice(event):
 
 
 @decorator.command('welcomesecurity', arg=True)
+@user_admin_dec
 @get_strings_dec("greetings")
 async def welcomeSecurity(event, strings):
     arg = event.pattern_match.group(1)
@@ -151,7 +174,7 @@ async def welcomeSecurity(event, strings):
     chat = event.chat_id
     old = mongodb.welcome_security.find_one({'chat_id': chat})
     if not args:
-        await event.reply(strings['wlcm_sec_noArgs'])
+        await event.reply(strings['noArgs'])
         return
     if args in hard:
         if old:
@@ -168,6 +191,36 @@ async def welcomeSecurity(event, strings):
     elif args in off:
         mongodb.welcome_security.delete_one({'chat_id': chat})
         await event.reply(strings['wlcm_sec_off'])
+
+
+@decorator.command('cleanwelcome', arg=True)
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
+@get_strings_dec("greetings")
+async def clean_welcome(event, strings, status, chat_id, chat_title):
+    arg = event.pattern_match.group(1)
+    args = arg.lower()
+    on = ['on', 'yes', 'enable']
+    off = ['off', 'no', 'disable']
+    old = mongodb.clean_welcome.find_one({'chat_id': chat_id})
+    if not args:
+        if old:
+            await event.reply(strings["cln_wel_enabled"].format(chat_name=chat_title))
+        else:
+            await event.reply(strings["cln_wel_disabled"].format(chat_name=chat_title))
+    if args in on:
+        if old:
+            await event.reply(strings["cln_wel_alr_enabled"].format(chat_name=chat_title))
+            return
+        else:
+            mongodb.clean_welcome.insert_one({"chat_id": chat_id, "enabled": True})
+        await event.reply(strings['cln_wel_s_enabled'].format(chat_name=chat_title))
+    elif args in off:
+        check = mongodb.clean_welcome.delete_one({'chat_id': chat_id})
+        if check.deleted_count < 1:
+            await event.reply(strings['cln_wel_alr_disabled'].format(chat_name=chat_title))
+            return
+        await event.reply(strings['cln_wel_s_disabled'].format(chat_name=chat_title))
 
 
 @decorator.CallBackQuery('wlcm_')
