@@ -51,14 +51,14 @@
         "user_admin_ban": "This is an admin, I can't ban him.",
         "user_admin_mute": "This is an admin, I can't mute him.",
         "user_admin_kick": "This is an admin, I can't kick him.",
-        "user_admin_unban": "Seriously?! How am I supposed to unban an admin?",
         "user_admin_unmute": "Mm?! unmuted",
         "user_mooted": "{admin} muted {user} in {chat_name}",
         "user_unmooted": "{admin} unmuted {user} in {chat_name}",
         "kickme_admin": "I can't kick you!",
         "whitelisted": "Haha NO! You is whitelisted!",
         "kickme_success": "Okay.. no problem!",
-        "tmute_sucess": "Admin {admin} muted {user} for {time} {unit} !"
+        "tmute_sucess": "Admin {admin} muted {user} for {time} {unit} !",
+        "user_in_group": "How can I supposed to unban a user that is already in group?!!"
     },
     "connections": {
         "can't_find_chat_use_id": "I can't find this chat, try using chat id.",
