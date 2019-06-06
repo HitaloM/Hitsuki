@@ -212,20 +212,20 @@ async def gban_helper_2(event):
                 embed_links=True,
             )
 
-        try:
-            ban = await event.client(
-                EditBannedRequest(
-                    event.chat_id,
-                    from_id,
-                    banned_rights
+            try:
+                ban = await event.client(
+                    EditBannedRequest(
+                        event.chat_id,
+                        from_id,
+                        banned_rights
+                    )
                 )
-            )
 
-            if ban:
-                mongodb.gbanned_groups.insert_one({'user': from_id, 'chat': event.chat_id})
-                await event.reply(get_string("gbans", "user_is_blacklisted", event.chat_id).format(
-                                  await user_link(from_id), K['reason']))
+                if ban:
+                    mongodb.gbanned_groups.insert_one({'user': from_id, 'chat': event.chat_id})
+                    await event.reply(get_string("gbans", "user_is_blacklisted", event.chat_id).format(
+                                      await user_link(from_id), K['reason']))
 
-        except Exception as err:
-            logger.info(f'Error on gbanning {from_id} in {event.chat_id} \n {err}')
-            pass
+            except Exception as err:
+                logger.info(f'Error on gbanning {from_id} in {event.chat_id} \n {err}')
+                pass
