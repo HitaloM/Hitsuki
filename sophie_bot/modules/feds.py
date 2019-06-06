@@ -1,4 +1,5 @@
 import subprocess
+import asyncio
 import uuid
 
 from telethon.tl.functions.channels import (EditBannedRequest,
@@ -9,6 +10,7 @@ from sophie_bot import WHITELISTED, bot, decorator, mongodb
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
                                       is_user_admin, user_link)
+from sophie_bot.modules.bans import unban_user
 
 
 def get_user_and_fed_and_text_dec(func):
@@ -21,18 +23,20 @@ def get_user_and_fed_and_text_dec(func):
             if a == "-":
                 F += 1
         if F == 4:  # group(2) is id
-            fed = await get_chat_fed(event, event.pattern_match.group(2))
-            if fed is False:
+            chat_fed = await get_chat_fed(event, event.pattern_match.group(2))
+            if chat_fed is False:
                 return
         else:
-            fed = mongodb.fed_groups.find_one({'chat_id': event.chat_id})
-            if not fed:
+            chat_fed = mongodb.fed_groups.find_one({'chat_id': event.chat_id})
+            if not chat_fed:
                 await event.reply(get_string("feds", 'chat_not_in_fed', event.chat_id))
                 return
             text += event.pattern_match.group(2)
             text += " "
         if event.pattern_match.group(3):
             text += event.pattern_match.group(3)
+
+        fed = mongodb.fed_list.find_one({'fed_id': chat_fed['fed_id']})
 
         return await func(event, user, fed, text, *args, **kwargs)
     return wrapped_1
@@ -224,6 +228,48 @@ async def fban_user(event, user, fed, reason, strings):
     mongodb.fbanned_users.insert_one({'user': user['user_id'], 'fed_id': fed['fed_id'],
                                       'reason': reason})
     await event.reply(text)  # TODO(Notify all fedadmins)
+
+
+@decorator.command('unfban', word_arg=True, additional=" ?(\S*) ?(.*)")
+@get_strings_dec("feds")
+@get_user_and_fed_and_text_dec
+@user_is_fed_admin
+async def unfban_user(event, user, fed, reason, strings):
+    from_id = event.from_id
+
+    bot_id = await bot.get_me()
+    if user == bot_id:
+        await event.reply(strings['unfban_self'])
+        return
+
+    check = mongodb.fbanned_users.find_one({'user': user['user_id'], 'fed_id': fed['fed_id']})
+    if not check:
+        await event.reply(strings['user_not_fbanned'].format(
+                          user=await user_link(user['user_id'])))
+        return
+
+    fed_chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
+
+    msg = await event.reply(strings["unfban_started"].format(
+        user=await user_link(user['user_id']),
+        fed_name=fed["fed_name"],
+        admin=await user_link(from_id)
+    ))
+
+    for chat in fed_chats:
+        await asyncio.sleep(1)  # Do not slow down other updates
+        try:
+            await unban_user(event, user['user_id'], chat["chat_id"])
+        except Exception as err:
+            await msg.edit(err)
+
+    mongodb.fbanned_users.delete_one({'_id': check['_id']})
+
+    await msg.edit(strings["unfban_completed"].format(
+        user=await user_link(user['user_id']),
+        fed_name=fed["fed_name"],
+        admin=await user_link(from_id)
+    ))
 
 
 async def join_fed(event, chat_id, fed_id, user):
