@@ -168,7 +168,7 @@ async def event(event):
     await msg.edit(text)
 
 
-@decorator.command("info")
+@decorator.command("info", arg=True)
 @flood_limit_dec("info")
 async def user_info(event):
     user = await get_user(event)
@@ -213,6 +213,7 @@ async def get_user_and_text(event):
 
 
 async def get_user(event):
+    print('owowo')
     msg = event.message.raw_text.split()
     if event.reply_to_msg_id:
         msg = await event.get_reply_message()
