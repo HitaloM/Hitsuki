@@ -34,8 +34,16 @@ async def welcome_trigger(event, strings):
             return  # Do not welcome yourselve
 
         blacklisted = mongodb.blacklisted_users.find_one({'user': from_id})
-        if blacklisted:
+        if blacklisted:  # Don't welcome blacklisted users
             return
+
+        chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
+        if chat_fed:
+            print(chat_fed)
+            fed_id = chat_fed['fed_id']
+            is_banned = mongodb.fbanned_users.find_one({'user': from_id, 'fed_id': fed_id})
+            if is_banned:  # Don't welcome fbanned users
+                return
 
         welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
         if not welcome:

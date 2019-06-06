@@ -168,7 +168,7 @@
         "help_txt": "Click below button for help!"
     },
     "gbans": {
-        "user_is_blacklisted": "User {} blacklisted.\nReason: {}"
+        "user_is_blacklisted": "User {user} is blacklisted so has been removed. \nReason: __{rsn}__"
     },
     "pm_menu": {
         "start_hi": "Hey there! My name is Sophie :3, I help you manage your group and more!",
@@ -222,7 +222,7 @@
         "already_fbanned": "{user} already fbanned in this federation.",
         "fban_success_reply": "**Fban** \n**User :** {user} \n**Fed Admin :** {fadmin} \n**Fed :** {fed} \n**Reason :** {rsn}",
         "user_wl": "This user is whitelisted from fbanning.",
-        "fban_usr_rmvd": "User {user} is fbanned in current federation {fed}.So has been removed! \n Reason: {rsn}",
+        "fban_usr_rmvd": "User {user} is fbanned in current federation **{fed}**.So has been removed! \nReason: __{rsn}__",
 
         "unfban_self": "I can't unfban myselve, think of something to have fun instead of this.",
         "user_not_fbanned": "{user} didn't fbanned in this federation.",

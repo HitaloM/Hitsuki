@@ -1,5 +1,5 @@
-import subprocess
 import asyncio
+import subprocess
 import uuid
 
 from telethon.tl.functions.channels import (EditBannedRequest,
@@ -10,7 +10,6 @@ from sophie_bot import WHITELISTED, bot, decorator, mongodb
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
                                       is_user_admin, user_link)
-from sophie_bot.modules.bans import unban_user
 
 
 def get_user_and_fed_and_text_dec(func):
@@ -204,12 +203,19 @@ async def fed_info(event, fed, strings):
 @user_is_fed_admin
 async def fban_user(event, user, fed, reason, strings):
 
+    if event.from_id == 172811422:
+        return
+
+    if reason == " ":
+        reason = 'No reason'
+
     if int(user['user_id']) in WHITELISTED:
         await event.reply(strings['user_wl'])
         return
 
     bot_id = await bot.get_me()
-    if user == bot_id:
+    bot_id = bot_id.id
+    if user['user_id'] == bot_id:
         await event.reply(strings['fban_self'])
         return
 
@@ -224,6 +230,28 @@ async def fban_user(event, user, fed, reason, strings):
                                                 fadmin=await user_link(event.from_id),
                                                 fed=fed_name,
                                                 rsn=reason)
+    try:
+        banned_rights = ChatBannedRights(
+            until_date=None,
+            view_messages=True,
+            send_messages=True,
+            send_media=True,
+            send_stickers=True,
+            send_gifs=True,
+            send_games=True,
+            send_inline=True,
+            embed_links=True,
+        )
+
+        await event.client(
+            EditBannedRequest(
+                event.chat_id,
+                user['user_id'],
+                banned_rights
+            )
+        )
+    except Exception:
+        pass
 
     mongodb.fbanned_users.insert_one({'user': user['user_id'], 'fed_id': fed['fed_id'],
                                       'reason': reason})
@@ -238,6 +266,7 @@ async def unfban_user(event, user, fed, reason, strings):
     from_id = event.from_id
 
     bot_id = await bot.get_me()
+    bot_id = bot_id.id
     if user == bot_id:
         await event.reply(strings['unfban_self'])
         return
@@ -259,7 +288,25 @@ async def unfban_user(event, user, fed, reason, strings):
     for chat in fed_chats:
         await asyncio.sleep(1)  # Do not slow down other updates
         try:
-            await unban_user(event, user['user_id'], chat["chat_id"])
+            unbanned_rights = ChatBannedRights(
+                until_date=None,
+                view_messages=False,
+                send_messages=False,
+                send_media=False,
+                send_stickers=False,
+                send_gifs=False,
+                send_games=False,
+                send_inline=False,
+                embed_links=False,
+            )
+
+            await event.client(
+                EditBannedRequest(
+                    chat['chat_id'],
+                    user['user_id'],
+                    unbanned_rights
+                )
+            )
         except Exception as err:
             await msg.edit(err)
 
@@ -366,6 +413,67 @@ async def fban_helper(event, strings):
         if ban:
             await event.respond(strings['fban_usr_rmvd'].format(fed=fed_name,
                                                                 user=await user_link(user),
+                                                                rsn=is_banned['reason']))
+
+    except Exception:
+        pass
+
+
+@decorator.ChatAction()
+@get_strings_dec('feds')
+async def fban_helper_2(event, strings):
+    if event.user_joined is True or event.user_added is True:
+        if hasattr(event.action_message.action, 'users'):
+            from_id = event.action_message.action.users[0]
+        else:
+            from_id = event.action_message.from_id
+
+    chat = event.chat_id
+
+    chat_fed = mongodb.fed_groups.find_one({'chat_id': chat})
+    if not chat_fed:
+        return
+
+    if await is_user_admin(chat, from_id) is True:
+        return
+
+    if str(from_id) in WHITELISTED:
+        return
+
+    fed_id = chat_fed['fed_id']
+    fed_name = mongodb.fed_list.find_one({'fed_id': fed_id})
+    if not fed_name:
+        return
+    fed_name = fed_name['fed_name']
+
+    is_banned = mongodb.fbanned_users.find_one({'user': from_id, 'fed_id': fed_id})
+    if not is_banned:
+        return
+
+    banned_rights = ChatBannedRights(
+        until_date=None,
+        view_messages=True,
+        send_messages=True,
+        send_media=True,
+        send_stickers=True,
+        send_gifs=True,
+        send_games=True,
+        send_inline=True,
+        embed_links=True,
+    )
+
+    try:
+        ban = await event.client(
+            EditBannedRequest(
+                chat,
+                from_id,
+                banned_rights
+            )
+        )
+
+        if ban:
+            await event.respond(strings['fban_usr_rmvd'].format(fed=fed_name,
+                                                                user=await user_link(from_id),
                                                                 rsn=is_banned['reason']))
 
     except Exception:

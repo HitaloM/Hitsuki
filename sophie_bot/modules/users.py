@@ -213,7 +213,6 @@ async def get_user_and_text(event):
 
 
 async def get_user(event):
-    print('owowo')
     msg = event.message.raw_text.split()
     if event.reply_to_msg_id:
         msg = await event.get_reply_message()
@@ -277,7 +276,6 @@ async def get_user(event):
             if not user:
                 if not isinstance(probable_user_mention_entity, MessageEntityMentionName):
                     user_id = await event.client.get_entity(input_str)
-                    return
                 else:
                     user_id = probable_user_mention_entity.user_id
                 if user_id:
