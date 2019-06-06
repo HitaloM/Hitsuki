@@ -1,7 +1,8 @@
 import time
 
-from telethon.tl.functions.channels import EditBannedRequest, GetParticipantRequest
-from telethon.tl.types import ChatBannedRights
+from telethon.tl.functions.channels import (EditBannedRequest,
+                                            GetParticipantRequest)
+from telethon.tl.types import ChatBannedRights, ChannelParticipantBanned
 
 from sophie_bot import WHITELISTED, bot, decorator, logger
 from sophie_bot.modules.connections import connection
@@ -265,15 +266,18 @@ async def unban_user(event, user_id, chat_id):
         await event.reply(get_string("bans", "bot_cant_be_unbanned",
                           event.chat_id))
         return False
-
-    peep = await bot(
-        GetParticipantRequest(
-            chat_id, user_id
+    try:
+        peep = await bot(
+            GetParticipantRequest(
+                chat_id, user_id
+            )
         )
-    )
-    if peep:  # Assume user is unbanned if he/she in group.
-        await event.reply(get_string('bans', 'user_in_group', chat_id))
-        return False
+
+        if not isinstance(peep.participant, ChannelParticipantBanned):
+            await event.reply(get_string('bans', 'usernt_banned', chat_id))
+            return False
+    except Exception:
+        pass
 
     try:
         await event.client(

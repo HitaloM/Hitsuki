@@ -58,7 +58,7 @@
         "whitelisted": "Haha NO! You is whitelisted!",
         "kickme_success": "Okay.. no problem!",
         "tmute_sucess": "Admin {admin} muted {user} for {time} {unit} !",
-        "user_in_group": "How can I supposed to unban a user that is already in group?!!"
+        "usernt_banned": "This user isn't banned to unban!!"
     },
     "connections": {
         "can't_find_chat_use_id": "I can't find this chat, try using chat id.",
