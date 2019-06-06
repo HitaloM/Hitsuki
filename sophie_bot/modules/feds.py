@@ -334,6 +334,8 @@ async def fban_helper(event, strings):
 
     fed_id = chat_fed['fed_id']
     fed_name = mongodb.fed_list.find_one({'fed_id': fed_id})
+    if not fed_name:
+        return
     fed_name = fed_name['fed_name']
 
     is_banned = mongodb.fbanned_users.find_one({'user': user, 'fed_id': fed_id})
