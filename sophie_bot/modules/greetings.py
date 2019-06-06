@@ -33,6 +33,10 @@ async def welcome_trigger(event, strings):
         if bot_id.id == from_id:
             return  # Do not welcome yourselve
 
+        blacklisted = mongodb.blacklisted_users.find_one({'user': from_id})
+        if blacklisted:
+            return
+
         welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
         if not welcome:
             await event.reply(strings['welcome_hay'].format(mention=await user_link(from_id)))

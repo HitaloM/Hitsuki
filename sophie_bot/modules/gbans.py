@@ -1,7 +1,9 @@
 from time import gmtime, strftime
 
+from telethon.tl.functions.channels import EditBannedRequest
+from telethon.tl.types import ChatBannedRights
+
 from sophie_bot import SUDO, decorator, logger, mongodb
-from sophie_bot.modules.bans import ban_user, unban_user
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import (get_user, get_user_and_text,
@@ -57,7 +59,26 @@ async def blacklist_user(event):
         await event.reply("You can't blacklist user without a reason blyat!")
         return
     try:
-        await ban_user(event, user['user_id'], event.chat_id, None)
+        banned_rights = ChatBannedRights(
+            until_date=None,
+            view_messages=True,
+            send_messages=True,
+            send_media=True,
+            send_stickers=True,
+            send_gifs=True,
+            send_games=True,
+            send_inline=True,
+            embed_links=True,
+        )
+
+        await event.client(
+            EditBannedRequest(
+                event.chat_id,
+                user,
+                banned_rights
+            )
+        )
+
     except Exception as err:
         await event.reply(err)
         logger.error(err)
@@ -92,7 +113,32 @@ async def un_blacklist_user(event):
     chat_id = event.chat_id
     user = await get_user(event)
     try:
-        await unban_user(event, user['user_id'], chat_id)
+        unbanned_rights = ChatBannedRights(
+            until_date=None,
+            view_messages=False,
+            send_messages=False,
+            send_media=False,
+            send_stickers=False,
+            send_gifs=False,
+            send_games=False,
+            send_inline=False,
+            embed_links=False,
+        )
+
+        precheck = mongodb.gbanned_groups.find({'user': user})
+        if precheck:
+            chats = mongodb.gbanned_groups.find({'user': user})
+        else:
+            chats = chat_id
+        for chat in chats:
+            await event.client(
+                EditBannedRequest(
+                    chat['chat'],
+                    user,
+                    unbanned_rights
+                )
+            )
+
     except Exception as err:
         await event.reply(err)
         logger.error(err)
@@ -110,12 +156,76 @@ async def un_blacklist_user(event):
 @decorator.insurgent()
 async def gban_trigger(event):
     user_id = event.from_id
+
     K = mongodb.blacklisted_users.find_one({'user': user_id})
     if K:
+        banned_rights = ChatBannedRights(
+            until_date=None,
+            view_messages=True,
+            send_messages=True,
+            send_media=True,
+            send_stickers=True,
+            send_gifs=True,
+            send_games=True,
+            send_inline=True,
+            embed_links=True,
+        )
+
         try:
-            await ban_user(event, K['user_id'], event.chat_id, None)
+            ban = await event.client(
+                EditBannedRequest(
+                    event.chat_id,
+                    user_id,
+                    banned_rights
+                )
+            )
+
+            if ban:
+                mongodb.gbanned_groups.insert_one({'user': user_id, 'chat': event.chat_id})
+                await event.reply(get_string("gbans", "user_is_blacklisted", event.chat_id).format(
+                                  await user_link(user_id), K['reason']))
+
         except Exception as err:
-            await event.reply(str(err))
-            logger.error(err)
-        await event.reply(get_string("gbans", "user_is_blacklisted", event.chat_id).format(
-            await user_link(user_id), K['reason']))
+            logger.info(f'Error on gbanning {user_id} in {event.chat_id} \n {err}')
+            pass
+
+
+@decorator.ChatAction()
+async def gban_helper_2(event):
+    if event.user_joined is True or event.user_added is True:
+        if hasattr(event.action_message.action, 'users'):
+            from_id = event.action_message.action.users[0]
+        else:
+            from_id = event.action_message.from_id
+
+        K = mongodb.blacklisted_users.find_one({'user': from_id})
+        if K:
+            banned_rights = ChatBannedRights(
+                until_date=None,
+                view_messages=True,
+                send_messages=True,
+                send_media=True,
+                send_stickers=True,
+                send_gifs=True,
+                send_games=True,
+                send_inline=True,
+                embed_links=True,
+            )
+
+        try:
+            ban = await event.client(
+                EditBannedRequest(
+                    event.chat_id,
+                    from_id,
+                    banned_rights
+                )
+            )
+
+            if ban:
+                mongodb.gbanned_groups.insert_one({'user': from_id, 'chat': event.chat_id})
+                await event.reply(get_string("gbans", "user_is_blacklisted", event.chat_id).format(
+                                  await user_link(from_id), K['reason']))
+
+        except Exception as err:
+            logger.info(f'Error on gbanning {from_id} in {event.chat_id} \n {err}')
+            pass
