@@ -19,11 +19,6 @@ async def welcome_trigger(event, strings):
         chat = event.chat_id
         chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
 
-        user_id = event.action_message.from_id
-        bot_id = await bot.get_me()
-        if bot_id.id == user_id:
-            return  # Do not welcome yourselve
-
         chat_id = event.action_message.chat_id
         cleaner = mongodb.clean_service.find_one({'chat_id': chat_id})
         if cleaner and cleaner['service']:
@@ -33,6 +28,10 @@ async def welcome_trigger(event, strings):
             from_id = event.action_message.action.users[0]
         else:
             from_id = event.action_message.from_id
+
+        bot_id = await bot.get_me()
+        if bot_id.id == from_id:
+            return  # Do not welcome yourselve
 
         welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
         if not welcome:
