@@ -257,7 +257,8 @@ async def del_note_callback(event):
 
 
 @decorator.StrictCommand("^[/!#](?:get|get@{})(?: |$)(.*)".format(BOT_USERNAME))
-async def get_note(event):
+@connection()
+async def get_note(event, status, chat_id, chat_title):
     raw_text = event.message.raw_text.split()
     note_name = raw_text[1].lower()
     if note_name[0] == "#":
@@ -268,12 +269,13 @@ async def get_note(event):
         noformat = False
     if len(note_name) > 1:
         await send_note(
-            event.chat_id, event.chat_id, event.message.id, note_name,
+            event.chat_id, chat_id, event.message.id, note_name,
             show_none=True, noformat=noformat, from_id=event.from_id)
 
 
 @decorator.StrictCommand("^#(.*)")
-async def check_hashtag(event):
+@connection()
+async def check_hashtag(event, status, chat_id, chat_title):
     status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id)
     if status is False:
         await event.reply(chat_id)
@@ -281,7 +283,7 @@ async def check_hashtag(event):
     note_name = event.message.raw_text[1:].lower()
     if len(note_name) > 1:
         await send_note(
-            event.chat_id, event.chat_id, event.message.id, note_name,
+            event.chat_id, chat_id, event.message.id, note_name,
             from_id=event.from_id)
 
 
