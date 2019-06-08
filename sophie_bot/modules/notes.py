@@ -10,6 +10,7 @@ from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
+from sophie_bot.modules.feds import get_chat_fed_dec
 from sophie_bot.modules.users import (check_group_admin, is_user_admin,
                                       user_admin_dec, user_link)
 
@@ -21,32 +22,7 @@ RESTRICTED_SYMBOLS = ['**', '__', '`']
 @connection(admin=True)
 @get_strings_dec("notes")
 async def save_note(event, strings, status, chat_id, chat_title):
-    note_name = event.pattern_match.group(1)
-    for sym in RESTRICTED_SYMBOLS:
-        if sym in note_name:
-            await event.reply(strings["notename_cant_contain"].format(sym))
-            return
-    if note_name[0] == "#":
-        note_name = note_name[1:]
-    file_id = None
-    buttons = None
-    prim_text = ""
-    if len(event.message.text.split(" ")) > 2:
-        prim_text = event.text.partition(note_name)[2]
-    if event.message.reply_to_msg_id:
-        msg = await event.get_reply_message()
-        if not msg:
-            await event.reply(strings["bot_msg"])
-            return
-        note_text = msg.message
-        if prim_text:
-            note_text += prim_text
-        if hasattr(msg.media, 'photo'):
-            file_id = utils.pack_bot_file_id(msg.media)
-        if hasattr(msg.media, 'document'):
-            file_id = utils.pack_bot_file_id(msg.media)
-    else:
-        note_text = prim_text
+    note_name, file_id, note_text = await save_get_new_note(event, strings, chat_id)
 
     status = strings["saved"]
     old = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
@@ -72,6 +48,8 @@ async def save_note(event, strings, status, chat_id, chat_title):
             'creator': creator,
             'file_id': file_id})
 
+    buttons = None
+
     if old:
         mongodb.notes.update_one({'_id': old['_id']}, {"$set": new}, upsert=False)
         new = None
@@ -84,6 +62,69 @@ async def save_note(event, strings, status, chat_id, chat_title):
 
     text = strings["note_saved_or_updated"].format(
         note_name=note_name, status=status, chat_title=chat_title)
+    text += strings["you_can_get_note"].format(name=note_name)
+
+    await event.reply(text, buttons=buttons)
+
+
+@decorator.command("fsave", word_arg=True)
+@user_admin_dec
+@connection(admin=True)
+@get_chat_fed_dec(current_only=True)
+@get_strings_dec("notes")
+async def fed_save_note(event, strings, fed, status, chat_id, chat_title):
+    print(fed)
+    note_name, file_id, note_text = await save_get_new_note(event, strings, chat_id)
+
+    fed_chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
+
+    for chat in fed_chats:
+        print(chat)
+        old = mongodb.notes.find_one({'chat_id': chat['chat_id'], 'name': note_name})
+        if old:
+            real_chat = mongodb.chat_list.find_one({'chat_id': chat['chat_id']})
+            await event.reply(strings["note_already_in_chat"].format(
+                note_name=note_name, chat_name=real_chat['chat_title']))
+            return
+
+    status = strings["saved"]
+    old = mongodb.fed_notes.find_one({'fed_id': fed["fed_id"], "name": note_name})
+    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    created_date = date
+    creator = None
+    if old:
+        if 'created' in old:
+            created_date = old['created']
+        if 'creator' in old:
+            creator = old['creator']
+        status = strings["updated"]
+
+    if not creator:
+        creator = event.from_id
+
+    new = {'fed_id': fed["fed_id"],
+           'name': note_name,
+           'text': note_text,
+           'date': date,
+           'created': created_date,
+           'updated_by': event.from_id,
+           'creator': creator,
+           'file_id': file_id}
+
+    buttons = None
+
+    if old:
+        mongodb.fed_notes.update_one({'_id': old['_id']}, {"$set": new}, upsert=False)
+        new = None
+    else:
+        new = mongodb.fed_notes.insert_one(new).inserted_id
+
+        buttons = [
+            [Button.inline(strings["del_note"], 'delnote_{}'.format(new))]
+        ]
+
+    text = strings["note_saved_or_updated_in_fed"].format(
+        note_name=note_name, status=status, fed_name=fed['fed_name'])
     text += strings["you_can_get_note"].format(name=note_name)
 
     await event.reply(text, buttons=buttons)
@@ -124,12 +165,14 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@decorator.command("notes")
+@decorator.command("notes ?(.*)")
 @flood_limit_dec("notes")
 @disablable_dec("notes")
 @connection()
+@get_chat_fed_dec(allow_no_fed=True)
 @get_strings_dec("notes")
-async def list_notes(event, strings, status, chat_id, chat_title):
+async def list_notes(event, strings, fed, status, chat_id, chat_title):
+    print(fed)
     notes = mongodb.notes.find({'chat_id': chat_id})
     text = strings["notelist_header"].format(chat_name=chat_title)
     if notes.count() == 0:
@@ -137,6 +180,16 @@ async def list_notes(event, strings, status, chat_id, chat_title):
     else:
         for note in notes:
             text += "- `#{}`\n".format(note['name'])
+    if fed:
+        fed_notes = mongodb.fed_notes.find({'fed_id': fed['fed_id']})
+        if not fed_notes:
+            text += "\nNo notes in **{fed_name}** Federation".format(fed_name=fed["fed_name"])
+        else:
+            text += "\n**Notes in {fed_name} Federation:**\n".format(fed_name=fed["fed_name"])
+            print(fed_notes)
+            for note in fed_notes:
+                print(note)
+                text += "- `#{}`\n".format(note['name'])
     await event.reply(text)
 
 
@@ -364,3 +417,33 @@ async def del_message_callback(event):
         return
 
     await event.delete()
+
+
+async def save_get_new_note(event, strings, chat_id):
+    note_name = event.pattern_match.group(1)
+    for sym in RESTRICTED_SYMBOLS:
+        if sym in note_name:
+            await event.reply(strings["notename_cant_contain"].format(sym))
+            return
+    if note_name[0] == "#":
+        note_name = note_name[1:]
+    file_id = None
+    prim_text = ""
+    if len(event.message.text.split(" ")) > 2:
+        prim_text = event.text.partition(note_name)[2]
+    if event.message.reply_to_msg_id:
+        msg = await event.get_reply_message()
+        if not msg:
+            await event.reply(strings["bot_msg"])
+            return
+        note_text = msg.message
+        if prim_text:
+            note_text += prim_text
+        if hasattr(msg.media, 'photo'):
+            file_id = utils.pack_bot_file_id(msg.media)
+        if hasattr(msg.media, 'document'):
+            file_id = utils.pack_bot_file_id(msg.media)
+    else:
+        note_text = prim_text
+
+    return note_name, file_id, note_text

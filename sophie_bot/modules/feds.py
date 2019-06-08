@@ -60,14 +60,20 @@ def get_user_and_fed_dec(func):
     return wrapped_1
 
 
-def get_chat_fed_dec(func):
-    async def wrapped_1(event, *args, **kwargs):
-        fed_id = event.pattern_match.group(1)
-        fed = await get_chat_fed(event, fed_id)
-        if fed is False:
-            return
-        return await func(event, fed, *args, **kwargs)
-    return wrapped_1
+def get_chat_fed_dec(allow_no_fed=False, current_only=False):
+    def wrapped_0(func):
+        async def wrapped_1(event, *args, **kwargs):
+            fed_id = event.pattern_match.group(1)
+            if current_only is True:
+                fed_id = None
+            fed = await get_chat_fed(event, fed_id)
+            if fed is False and allow_no_fed is False:
+                return
+            elif fed is False and allow_no_fed is True:
+                fed = None
+            return await func(event, fed, *args, **kwargs)
+        return wrapped_1
+    return wrapped_0
 
 
 async def get_chat_fed(event, fed_id):
@@ -162,7 +168,7 @@ async def promote_to_fed(event, user, fed, strings):
 
 @decorator.command('fchatlist', arg=True)
 @get_strings_dec("feds")
-@get_chat_fed_dec
+@get_chat_fed_dec()
 async def fed_chat_list(event, fed, strings):
     text = strings['chats_in_fed'].format(name=fed['fed_name'])
     chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
@@ -186,7 +192,7 @@ async def fed_chat_list(event, fed, strings):
 
 @decorator.command('finfo', arg=True)
 @get_strings_dec("feds")
-@get_chat_fed_dec
+@get_chat_fed_dec()
 async def fed_info(event, fed, strings):
     text = strings['fed_info']
     text += strings['fed_name'].format(name=fed['fed_name'])

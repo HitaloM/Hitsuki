@@ -11,7 +11,7 @@
         "no_right_save_note": "You don't have rights to save notes here!",
         "saved": "saved",
         "updated": "updated",
-        "note_saved_or_updated" :"**Note {note_name} {status} in {chat_title}!**\n",
+        "note_saved_or_updated": "**Note {note_name} {status} in {chat_title}!**\n",
         "you_can_get_note": "You can retrieve this note by using `/get {name}`, or `#{name}`",
         "dont_have_rights_to_save": "You don't have rights to save notes here!",
         "del_note": "Delete note",
@@ -30,7 +30,10 @@
         "delmsg_no_arg": "deletemsg button can contain only 'admin' or 'user' argument!",
         "bot_msg" : "I'm sorry, i can't get this message, probably this a other bot's message. I can't save it.",
         "pmed_note": "I pm'ed note to you!",
-        "notename_cant_contain": "Note name can't conatin `{}` !"
+        "notename_cant_contain": "Note name can't conatin `{}` !",
+
+        "note_saved_or_updated_in_fed": "**Note {note_name} {status} in {fed_name} Federation!**\n",
+        "note_already_in_chat": "Note `{note_name}` already exits in **{chat_name}** chat, remove it before trying save."
     },
     "bans": {
         "user_banned": "User {user} banned by {admin} in {chat_name}!\n",
