@@ -1,15 +1,19 @@
 import asyncio
 import subprocess
 import uuid
+from time import gmtime, strftime
 
 from telethon.tl.functions.channels import (EditBannedRequest,
                                             GetParticipantRequest)
 from telethon.tl.types import ChannelParticipantCreator, ChatBannedRights
+from telethon.tl.custom import Button
 
 from sophie_bot import WHITELISTED, bot, decorator, mongodb
+from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
-                                      is_user_admin, user_link)
+                                      is_user_admin, user_link, user_admin_dec)
+from sophie_bot.modules.helper_func.notes import save_get_new_note
 
 
 def get_user_and_fed_and_text_dec(func):
@@ -424,6 +428,67 @@ async def subfedlist(event, strings):
         text += strings['list_data'].format(fedname=fedname)
 
         await event.reply(text)
+
+
+@decorator.command("fsave", word_arg=True)
+@user_admin_dec
+@connection(admin=True)
+@get_chat_fed_dec(current_only=True)
+@get_strings_dec("notes")
+async def fed_save_note(event, strings, fed, status, chat_id, chat_title):
+    note_name, file_id, note_text = await save_get_new_note(event, strings, chat_id)
+
+    fed_chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
+
+    for chat in fed_chats:
+        old = mongodb.notes.find_one({'chat_id': chat['chat_id'], 'name': note_name})
+        if old:
+            real_chat = mongodb.chat_list.find_one({'chat_id': chat['chat_id']})
+            await event.reply(strings["note_already_in_chat"].format(
+                note_name=note_name, chat_name=real_chat['chat_title']))
+            return
+
+    status = strings["saved"]
+    old = mongodb.fed_notes.find_one({'fed_id': fed["fed_id"], "name": note_name})
+    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    created_date = date
+    creator = None
+    if old:
+        if 'created' in old:
+            created_date = old['created']
+        if 'creator' in old:
+            creator = old['creator']
+        status = strings["updated"]
+
+    if not creator:
+        creator = event.from_id
+
+    new = {'fed_id': fed["fed_id"],
+           'name': note_name,
+           'text': note_text,
+           'date': date,
+           'created': created_date,
+           'updated_by': event.from_id,
+           'creator': creator,
+           'file_id': file_id}
+
+    buttons = None
+
+    if old:
+        mongodb.fed_notes.update_one({'_id': old['_id']}, {"$set": new}, upsert=False)
+        new = None
+    else:
+        new = mongodb.fed_notes.insert_one(new).inserted_id
+
+        buttons = [
+            [Button.inline(strings["del_note"], 'delnote_{}'.format(new))]
+        ]
+
+    text = strings["note_saved_or_updated_in_fed"].format(
+        note_name=note_name, status=status, fed_name=fed['fed_name'])
+    text += strings["you_can_get_note"].format(name=note_name)
+
+    await event.reply(text, buttons=buttons)
 
 
 async def join_fed(event, chat_id, fed_id, user):
