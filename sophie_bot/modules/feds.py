@@ -333,7 +333,7 @@ async def subfed(event, strings):
     user = event.from_id
     creator = mongodb.fed_list.find_one({'fed_id': fed_id})
     creator = creator['creator']
-    if user != creator:  # only fed creator can subscribe
+    if int(user) != int(creator):  # only fed creator can subscribe
         await event.reply(strings['only_creator'])
         return
 
@@ -342,8 +342,8 @@ async def subfed(event, strings):
         return
 
     subfed_id = event.pattern_match.group(1)  # get details of subscribing fed id and check fed id
-    check = mongodb.fed_list.find_one({'fed_id': subfed_id})
-    if not check:
+    check1 = mongodb.fed_list.find_one({'fed_id': subfed_id})
+    if not check1:
         await event.reply(strings['invalid_fedid'])
         return
 
@@ -353,9 +353,71 @@ async def subfed(event, strings):
         await event.reply(strings['already_subfed'])
         return
 
-    fedname = check['fed_name']
+    fedname = check1['fed_name']
     await event.reply(strings['subfed_success'].format(fedname=fedname))
     mongodb.subfed_list.insert_one(data)
+
+
+@decorator.command('unsubfed', arg=True)
+@get_strings_dec('feds')
+async def unsubfed(event, strings):
+    chat = event.chat_id
+
+    chatfed = mongodb.fed_groups.find_one({'chat_id': chat})
+    if not chatfed:
+        await event.reply(strings['no_fed_3'])
+        return
+
+    fed_id = chatfed['fed_id']
+    user = event.from_id
+    creator = mongodb.fed_list.find_one({'fed_id': fed_id})
+    creator = creator['creator']
+    if int(user) != int(creator):
+        await event.reply(strings['only_creator_2'])
+        return
+
+    if not event.pattern_match.group(1):
+        await event.reply(strings['no_arg_given_2'])
+        return
+
+    subfed = event.pattern_match.group(1)
+    data = {'fed_id': fed_id, 'subfed_id': subfed}
+    check = mongodb.subfed_list.find_one(data)
+    if not check:
+        await event.reply("fed_n'tsubscribed")
+        return
+
+    check = mongodb.fed_list.find_one({'fed_id': fed_id})
+    fedname = check['fed_name']
+    await event.reply(strings['unsub_success'].format(fedname=fedname))
+    mongodb.subfed_list.delete_one(data)
+
+
+@decorator.command('fedsubs')
+@get_strings_dec('feds')
+@user_is_fed_admin
+async def subfedlist(event, strings):
+    chat = event.chat_id
+
+    chatfed = mongodb.fed_groups.find_one({'chat_id': chat})
+    if not chatfed:
+        await event.reply(strings['no_fed_4'])
+        return
+
+    fed_id = chatfed['fed_id']
+    subfeds = mongodb.subfed_list.find({'fed_id': fed_id})
+    if subfeds.count() == 0:
+        await event.reply(strings['no_subfeds'])
+        return
+
+    for subfed in subfeds:
+        fed_details = mongodb.fed_list.find_one({'fed_id': subfed['subfed_id']})
+        fedname = fed_details['fed_name']
+
+        text = strings['list_head']
+        text += strings['list_data'].format(fedname=fedname)
+
+        await event.reply(text)
 
 
 async def join_fed(event, chat_id, fed_id, user):

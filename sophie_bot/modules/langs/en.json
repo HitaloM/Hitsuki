@@ -228,13 +228,24 @@
         "user_not_fbanned": "{user} didn't fbanned in this federation.",
         "unfban_started": "Unbanning {user} in {fed_name} Federation by {admin} started..",
         "unfban_completed": "{user} unbanned in {fed_name} Federation by {admin}",
+
         "no_fed_2": "This chat is not in any federation to subscribe to any federation.",
         "no_arg_given": "How can I subscribe to any federation without Fed ID?!",
         "only_creator": "Only fed creator can subscribe to any federation.",
         "invalid_fedid": "The given Fed ID is invalid!",
         "subfed_success": "This federation successfully subscribed to **{fedname}** fed.",
-        "already_subfed": "This federation already subscribed to given federation."
+        "already_subfed": "This federation already subscribed to given federation.",
 
+        "no_fed_3": "This chat is not in any federation to unsubscribe to any federation.",
+        "no_arg_given_2": "How can I unsubscribe any federation without their fed ID",
+        "only_creator_2": "Only fed creator can unsubscribe any federation",
+        "fed_n'tsubscribed": "Given Fed ID isn't subscribed to unsubscribe!",
+        "unsub_success": "This federation successfully unsubscribed to **{fedname}** fed.",
+
+        "no_fed_4": "This chat is not in any federation to list the subscribed federations!",
+        "no_subfeds": "This federation isn't subscribed to any federations!",
+        "list_head": "Subscribed federations are: \n",
+        "list_data": "- **{fedname}**"
     }
  },
  "HELPS": {
