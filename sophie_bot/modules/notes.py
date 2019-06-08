@@ -136,7 +136,7 @@ async def list_notes(event, strings, status, chat_id, chat_title):
         text = strings["notelist_no_notes"]
     else:
         for note in notes:
-            text += "- `{}`\n".format(note['name'])
+            text += "- `#{}`\n".format(note['name'])
     await event.reply(text)
 
 
