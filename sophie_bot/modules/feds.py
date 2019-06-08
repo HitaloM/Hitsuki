@@ -319,6 +319,45 @@ async def unfban_user(event, user, fed, reason, strings):
     ))
 
 
+@decorator.command('subfed', arg=True)
+@get_strings_dec('feds')
+async def subfed(event, strings):
+    chat = event.chat_id
+
+    chat_fed = mongodb.fed_groups.find_one({'chat_id': chat})
+    if not chat_fed:  # find chatfed
+        await event.reply(strings['no_fed_2'])
+        return
+
+    fed_id = chat_fed['fed_id']
+    user = event.from_id
+    creator = mongodb.fed_list.find_one({'fed_id': fed_id})
+    creator = creator['creator']
+    if user != creator:  # only fed creator can subscribe
+        await event.reply(strings['only_creator'])
+        return
+
+    if not event.pattern_match.group(1):  # check if fed id given
+        await event.reply(strings['no_arg_given'])
+        return
+
+    subfed_id = event.pattern_match.group(1)  # get details of subscribing fed id and check fed id
+    check = mongodb.fed_list.find_one({'fed_id': subfed_id})
+    if not check:
+        await event.reply(strings['invalid_fedid'])
+        return
+
+    data = {'fed_id': fed_id, 'subfed_id': subfed_id}
+    check = mongodb.subfed_list.find_one(data)
+    if check:
+        await event.reply(strings['already_subfed'])
+        return
+
+    fedname = check['fed_name']
+    await event.reply(strings['subfed_success'].format(fedname=fedname))
+    mongodb.subfed_list.insert_one(data)
+
+
 async def join_fed(event, chat_id, fed_id, user):
     peep = await bot(
         GetParticipantRequest(

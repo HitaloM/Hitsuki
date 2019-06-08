@@ -10,3 +10,4 @@ Backups/
 sophie.log
 *.zip
 .vscode
+XDG_CACHE_HOME
