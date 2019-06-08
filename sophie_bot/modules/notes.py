@@ -279,7 +279,10 @@ def button_parser(chat_id, texts):
     text = re.sub(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', '', texts)
     for raw_button in raw_buttons:
         if raw_button[1] == 'url':
-            t = [custom.Button.url(raw_button[0], raw_button[2])]
+            url = raw_button[2]
+            if url[0] == '/' and url[0] == '/':
+                url = url[2:]
+            t = [custom.Button.url(raw_button[0], url)]
         elif raw_button[1] == 'note':
             t = [Button.inline(raw_button[0], 'get_note_{}_{}'.format(
                 chat_id, raw_button[2]))]
@@ -296,6 +299,8 @@ def button_parser(chat_id, texts):
             buttons.append(new)
         else:
             buttons.append(t)
+
+        print(url)
 
     return text, buttons
 
