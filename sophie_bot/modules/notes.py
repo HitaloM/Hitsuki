@@ -267,7 +267,7 @@ async def get_note(event, status, chat_id, chat_title):
         noformat = True
     else:
         noformat = False
-    if len(note_name) > 1:
+    if len(note_name) >= 1:
         await send_note(
             event.chat_id, chat_id, event.message.id, note_name,
             show_none=True, noformat=noformat, from_id=event.from_id)
@@ -281,7 +281,7 @@ async def check_hashtag(event, status, chat_id, chat_title):
         await event.reply(chat_id)
         return
     note_name = event.message.raw_text[1:].lower()
-    if len(note_name) > 1:
+    if len(note_name) >= 1:
         await send_note(
             event.chat_id, chat_id, event.message.id, note_name,
             from_id=event.from_id)

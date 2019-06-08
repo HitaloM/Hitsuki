@@ -384,7 +384,7 @@ async def unsubfed(event, strings):
     data = {'fed_id': fed_id, 'subfed_id': subfed}
     check = mongodb.subfed_list.find_one(data)
     if not check:
-        await event.reply("fed_n'tsubscribed")
+        await event.reply(strings["fed_n'tsubscribed"])
         return
 
     check = mongodb.fed_list.find_one({'fed_id': fed_id})
@@ -528,6 +528,8 @@ async def fban_helper_2(event, strings):
             from_id = event.action_message.action.users[0]
         else:
             from_id = event.action_message.from_id
+    else:
+        return  # ?
 
     chat = event.chat_id
 
