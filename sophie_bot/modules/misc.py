@@ -224,8 +224,9 @@ async def demote(event):
 @decorator.command('help')
 @get_strings_dec('misc')
 async def help(event, strings):
-    buttons = [
-        [Button.url(strings['help_btn'], url='https://t.me/{}?start=start'.format(BOT_USERNAME))]
-    ]
-    text = strings['help_txt']
-    await event.reply(text, buttons=buttons)
+    if event.chat_id != event.from_id:
+        buttons = [
+            [Button.url(strings['help_btn'], url='https://t.me/{}?start=help'.format(BOT_USERNAME))]
+        ]
+        text = strings['help_txt']
+        await event.reply(text, buttons=buttons)
