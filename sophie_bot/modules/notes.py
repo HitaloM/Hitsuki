@@ -108,7 +108,7 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
 @get_chat_fed_dec(allow_no_fed=True)
 @get_strings_dec("notes")
 async def list_notes(event, strings, fed, status, chat_id, chat_title):
-    notes = mongodb.notes.find({'chat_id': chat_id})
+    notes = mongodb.notes.find({'chat_id': chat_id}).sort("name", 1)
     text = strings["notelist_header"].format(chat_name=chat_title)
     if notes.count() == 0:
         text = strings["notelist_no_notes"]
@@ -116,7 +116,7 @@ async def list_notes(event, strings, fed, status, chat_id, chat_title):
         for note in notes:
             text += "- `#{}`\n".format(note['name'])
     if fed:
-        fed_notes = mongodb.fed_notes.find({'fed_id': fed['fed_id']})
+        fed_notes = mongodb.fed_notes.find({'fed_id': fed['fed_id']}).sort("name", 1)
         if not fed_notes:
             text += "\nNo notes in **{fed_name}** Federation".format(fed_name=fed["fed_name"])
         else:
