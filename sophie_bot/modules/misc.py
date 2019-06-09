@@ -5,13 +5,12 @@ from telethon.tl.custom import Button
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChatAdminRights
 
-from sophie_bot import bot, decorator, BOT_USERNAME
+import sophie_bot.modules.helper_func.bot_rights as bot_rights
+from sophie_bot import BOT_USERNAME, bot, decorator, mongodb
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import get_user, user_admin_dec, user_link
-import sophie_bot.modules.helper_func.bot_rights as bot_rights
-
 
 RUN_STRINGS = (  # Thanks PaulSonOfLars
     "Where do you think you're going?",
@@ -230,3 +229,52 @@ async def help(event, strings):
         ]
         text = strings['help_txt']
         await event.reply(text, buttons=buttons)
+
+
+@decorator.command('setrules', arg=True)
+@user_admin_dec
+@get_strings_dec('misc')
+async def setrules(event, strings):
+    reply_msg = await event.get_reply_message()
+    if reply_msg:
+        rule = str(reply_msg.message)
+    else:
+        rule = str(event.text[10:])
+
+    chat = event.chat_id
+
+    if rule == " ":
+        await event.reply(strings['rule_empty'])
+        return
+
+    old_rules = mongodb.rules.find_one({'chat': chat})
+    if old_rules:
+        mongodb.rules.update_one({'_id': old_rules['_id']}, {'$set': {'rule': rule}})
+        await event.reply(strings['rule_updated'])
+    else:
+        mongodb.rules.insert_one({'chat': chat, 'rule': rule})
+        await event.reply(strings['rules_inserted'])
+
+
+@decorator.command('rules')
+@get_strings_dec('misc')
+async def rules(event, strings):
+    rule = mongodb.rules.find_one({'chat': event.chat_id})
+    if rule:
+        buttons = [
+            [Button.url(strings['rules_btn'], url='https://t.me/{}?start=rules{}'.format(
+                        BOT_USERNAME, event.chat_id))]
+        ]
+        text = strings['rules_text']
+        await event.reply(text, buttons=buttons)
+    else:
+        await event.reply(strings['no_rules'])  # thank paul for dis string :/
+
+
+@decorator.command('clearrules')
+@user_admin_dec
+@get_strings_dec('misc')
+async def clear_rules(event, strings):
+    chat = event.chat_id
+    mongodb.rules.delete_one({'chat': chat})
+    await event.reply(strings['clrd_rules'])

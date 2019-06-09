@@ -168,7 +168,16 @@
         "chat_not_modified_unpin": "There is no pinned message to unpin!",
 
         "help_btn": "Click me for help!",
-        "help_txt": "Click below button for help!"
+        "help_txt": "Click below button for help!",
+
+        "rule_empty": "Rules can't be empty.",
+        "rule_updated": "Rules for this chat is updated!",
+        "rules_inserted": "Set rules for this chat!",
+        "rules_btn": "Rules",
+        "rules_text": "Click below button to read chat rules!",
+        "no_rules": "This chat doesn't seem to have had any rules set yet... I wouldn't take that as an invitation though.",
+
+        "clrd_rules": "Rules for this chat cleared successfully!"
     },
     "gbans": {
         "user_is_blacklisted": "User {user} is blacklisted so has been removed. \nReason: __{rsn}__"

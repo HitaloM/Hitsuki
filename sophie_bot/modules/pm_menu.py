@@ -3,7 +3,7 @@ import re
 from telethon import custom
 from telethon.tl.custom import Button
 
-from sophie_bot import decorator, logger
+from sophie_bot import decorator, logger, mongodb
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import (LANGUAGES, get_chat_lang, get_string,
                                          lang_info)
@@ -146,3 +146,13 @@ async def get_help_button_callback(event):
 @decorator.command('start help')  # '/start help' is cmd gen by help button
 async def help_btn(event):
     await help_handler(event)
+
+
+@decorator.command('start rules(.*)')
+async def rules_handler(event):
+    if event.from_id == event.chat_id:
+        chat = event.pattern_match.group(1)
+        rules1 = mongodb.rules.find_one({'chat': int(chat)})
+        rules = rules1['rule']
+
+        await event.respond(rules)
