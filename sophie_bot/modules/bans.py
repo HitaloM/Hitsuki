@@ -191,7 +191,7 @@ async def ban_user(event, user_id, chat_id, time_val):
         )
 
     except Exception as err:
-        await event.edit(str(err))
+        await event.reply(str(err))
         return False
 
     return True

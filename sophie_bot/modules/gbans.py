@@ -80,14 +80,15 @@ async def blacklist_user(event):
         await event.client(
             EditBannedRequest(
                 event.chat_id,
-                user['user_id'],
+                int(user['user_id']),
                 banned_rights
             )
         )
 
     except Exception as err:
         logger.error(str(err))
-        return
+        await event.reply(str(err))
+
     old = mongodb.blacklisted_users.find_one({'user': user['user_id']})
     if old:
         new = {
