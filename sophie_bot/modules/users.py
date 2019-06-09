@@ -174,8 +174,8 @@ async def user_info(event):
     user = await get_user(event)
 
     check = mongodb.blacklisted_users.find_one({'user': user['user_id']})
-    if check is True:
-        gban_stat = "Yes"
+    if check:
+        gban_stat = f"Yes\n* Gban data: `{check['date']}`\n* Reason: `{check['reason']}`"
     else:
         gban_stat = "No"
 
@@ -190,7 +190,7 @@ async def user_info(event):
         text += "\n**Username:** @" + str(user['username'])
 
     text += "\n**User link:** " + str(await user_link(user['user_id']))
-    text += "\n\n **Globally banned:** " + str(gban_stat)
+    text += "\n\n**Globally banned:** " + str(gban_stat)
 
     await event.reply(text)
 
@@ -214,6 +214,7 @@ async def get_user_and_text(event):
 
 async def get_user(event):
     msg = event.message.raw_text.split()
+    user = None
     if event.reply_to_msg_id:
         msg = await event.get_reply_message()
         user = mongodb.user_list.find_one(
@@ -257,7 +258,7 @@ async def get_user(event):
             user = mongodb.user_list.find_one(
                 {'username': input_str}
             )
-
+        
         # If we didn't find user in database will ask Telegram.
         if not user:
             try:
@@ -265,26 +266,29 @@ async def get_user(event):
                 # Add user in database
                 user = await add_user_to_db(user)
             except Exception as err:
-                logger.error(err)
+                pass
 
         # Still didn't find? Lets try get entities
-        if mention_entity:
-            if len(mention_entity) > 1:
-                probable_user_mention_entity = mention_entity[1]
-            else:
-                probable_user_mention_entity = mention_entity[0]
-            if not user:
-                if not isinstance(probable_user_mention_entity, MessageEntityMentionName):
-                    user_id = await event.client.get_entity(input_str)
+        try:
+            if mention_entity:
+                if len(mention_entity) > 1:
+                    probable_user_mention_entity = mention_entity[1]
                 else:
-                    user_id = probable_user_mention_entity.user_id
-                if user_id:
-                    userf = await event.client(GetFullUserRequest(int(user_id)))
-                    user = mongodb.user_list.find_one(
-                        {'user_id': int(userf.user.id)}
-                    )
-                    if not user and userf:
-                        user = await add_user_to_db(userf)
+                    probable_user_mention_entity = mention_entity[0]
+                if not user:
+                    if not isinstance(probable_user_mention_entity, MessageEntityMentionName):
+                        user_id = await event.client.get_entity(input_str)
+                    else:
+                        user_id = probable_user_mention_entity.user_id
+                    if user_id:
+                        userf = await event.client(GetFullUserRequest(int(user_id)))
+                        user = mongodb.user_list.find_one(
+                            {'user_id': int(userf.user.id)}
+                        )
+                        if not user and userf:
+                            user = await add_user_to_db(userf)
+        except Exception as err:
+            pass
 
         if not user:
             # Last try before fail
@@ -293,7 +297,7 @@ async def get_user(event):
                 if user:
                     user = await add_user_to_db(user)
             except Exception as err:
-                logger.error(err)
+                pass
                 return None
     if not user:
         await event.reply("I can't find this user in whole Telegram.")

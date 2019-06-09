@@ -43,6 +43,8 @@ def update_devices():
                 continue
             if build == "device_info.txt":
                 continue
+            if build == "README.md":
+                continue
             last_build = build
             modified = facts['modify']
             break
@@ -73,6 +75,8 @@ def update_devices():
             if not facts["type"] == "file":
                 continue
             if build == "device_info.txt":
+                continue
+            if build == "README.md":
                 continue
             last_build = build
             modified = facts['modify']

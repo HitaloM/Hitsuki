@@ -117,12 +117,13 @@ async def list_notes(event, strings, fed, status, chat_id, chat_title):
             text += "- `#{}`\n".format(note['name'])
     if fed:
         fed_notes = mongodb.fed_notes.find({'fed_id': fed['fed_id']}).sort("name", 1)
-        if not fed_notes:
-            text += "\nNo notes in **{fed_name}** Federation".format(fed_name=fed["fed_name"])
-        else:
-            text += "\n**Notes in {fed_name} Federation:**\n".format(fed_name=fed["fed_name"])
-            for note in fed_notes:
-                text += "- `#{}`\n".format(note['name'])
+        if not fed_notes.count() == 0:
+            if not fed_notes:
+                text += "\nNo notes in **{fed_name}** Federation".format(fed_name=fed["fed_name"])
+            else:
+                text += "\n**Notes in {fed_name} Federation:**\n".format(fed_name=fed["fed_name"])
+                for note in fed_notes:
+                    text += "- `#{}`\n".format(note['name'])
     await event.reply(text)
 
 
