@@ -1,5 +1,7 @@
 import random
 
+from requests import get, post, exceptions
+
 from telethon.errors import BadRequestError, ChatNotModifiedError
 from telethon.tl.custom import Button
 from telethon.tl.functions.channels import EditAdminRequest
@@ -278,3 +280,38 @@ async def clear_rules(event, strings):
     chat = event.chat_id
     mongodb.rules.delete_one({'chat': chat})
     await event.reply(strings['clrd_rules'])
+
+
+@decorator.command('paste', arg=True)
+@get_strings_dec('misc')
+async def paste_deldog(event, strings):
+    DOGBIN_URL = "https://del.dog/"
+    dogbin_final_url = None
+    to_paste = None
+    reply_msg = await event.get_reply_message()
+
+    if reply_msg:
+        to_paste = str(reply_msg.message)
+    else:
+        to_paste = event.text[6:]
+
+    if not to_paste:
+        await event.reply(strings['paste_no_text'])
+        return
+
+    resp = post(DOGBIN_URL + "documents", data=to_paste.encode('utf-8'))
+
+    if resp.status_code == 200:
+        response = resp.json()
+        key = response['key']
+        dogbin_final_url = DOGBIN_URL + key
+
+        if response['isUrl']:
+            full_url = "{}v/{}".format(DOGBIN_URL, key)
+            reply_text = (strings["paste_success_extra"].format(dogbin_final_url, full_url))
+        else:
+            reply_text = (strings["paste_success"].format(dogbin_final_url))
+    else:
+        reply_text = (strings["paste_fail"])
+
+    await event.reply(reply_text, link_preview=False)

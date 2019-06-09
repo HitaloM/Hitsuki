@@ -177,7 +177,12 @@
         "rules_text": "Click below button to read chat rules!",
         "no_rules": "This chat doesn't seem to have had any rules set yet... I wouldn't take that as an invitation though.",
 
-        "clrd_rules": "Rules for this chat cleared successfully!"
+        "clrd_rules": "Rules for this chat cleared successfully!",
+        
+        "paste_success_extra": "**Pasted successfully!**\nShortened url: {}\nOriginal Dogbin URL: {}",
+        "paste_success": "**Pasted successfully!**\nDogbin URL: {}",
+        "paste_fail": "Failed to reach Dogbin!",
+        "paste_no_text": "You haven't supplied text to paste!"
     },
     "gbans": {
         "user_is_blacklisted": "User {user} is blacklisted so has been removed. \nReason: __{rsn}__"
