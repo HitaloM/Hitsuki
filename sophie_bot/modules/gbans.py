@@ -54,17 +54,15 @@ async def gban_2(event):
 
 
 async def blacklist_user(event):
-    try:
-        user, reason = await get_user_and_text(event)
-    except Exception:
-        user = None
+    user, reason = await get_user_and_text(event, send_text=False)
 
     probably_id = event.pattern_match.group(1).split()[0]
-    probably_reason = event.pattern_match.group(1).split()[1]
 
     if user:
         user_id = int(user['user_id'])
     if not user and probably_id.isdigit():
+        probably_reason = event.pattern_match.group(1).split()[1]
+
         user_id = int(probably_id)
         reason = probably_reason
 
@@ -128,7 +126,15 @@ async def blacklist_user(event):
 @decorator.command("ungban", arg=True, from_users=SUDO)
 async def un_blacklist_user(event):
     chat_id = event.chat_id
-    user = await get_user(event)
+    user = await get_user(event, send_text=False)
+
+    probably_id = event.pattern_match.group(1).split(" ")[0]
+
+    if user:
+        user_id = int(user['user_id'])
+    if not user and probably_id.isdigit():
+        user_id = int(probably_id)
+
     try:
         unbanned_rights = ChatBannedRights(
             until_date=None,
@@ -151,18 +157,17 @@ async def un_blacklist_user(event):
             await event.client(
                 EditBannedRequest(
                     chat['chat'],
-                    int(user["user_id"]),
+                    user_id,
                     unbanned_rights
                 )
             )
 
     except Exception as err:
         logger.error(str(err))
-    old = mongodb.blacklisted_users.find_one({'user': user['user_id']})
+    old = mongodb.blacklisted_users.find_one({'user': user_id})
     if not old:
         await event.reply("This user isn't blacklisted!")
         return
-    user_id = user['user_id']
     logger.info(f'user {user_id} ungbanned by {event.from_id}')
     mongodb.blacklisted_users.delete_one({'_id': old['_id']})
     await event.reply("Sudo {} unblacklisted {}.".format(
