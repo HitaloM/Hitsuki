@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 f = open('data/bot_conf.json', "r")
 
-SOPHIE_VER = "0.3"
+SOPHIE_VER = "0.4"
 CONFIG = ujson.load(f)
 
 OWNER_ID = int(CONFIG["basic"]["owner_id"])
@@ -33,7 +33,7 @@ MONGO_PORT = CONFIG["basic"]["mongo_port"]
 REDIS_COMM = CONFIG["basic"]["redis_conn"]
 REDIS_PORT = CONFIG["basic"]["redis_port"]
 TOKEN = CONFIG["basic"]["bot_token"]
-NAME = TOKEN.split(':')[0] + 'owo'
+NAME = TOKEN.split(':')[0]
 
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie
