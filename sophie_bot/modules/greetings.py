@@ -57,11 +57,13 @@ async def do_cleanwelcome(event, chat_id, welc_msg):
         mongodb.clean_welcome.update_one({'_id': clean_welcome['_id']}, {'$set': new})
 
 
-
 @decorator.ChatAction()
 @get_strings_dec("greetings")
 async def welcome_trigger(event, strings):
-    if event.user_joined or event.user_added \
+    print(event)
+    print('\n=================================')
+    if event.user_joined \
+            or event.user_added \
             or isinstance(event.action_message.action, MessageActionChatJoinedByLink):
         chat = event.chat_id
         chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
@@ -91,6 +93,17 @@ async def welcome_trigger(event, strings):
         if bot_id.id == from_id:
             return
 
+        reply = event.action_message.id
+
+        print(chat_id)
+        print(event.chat_id)
+
+        # Cleanservice
+        cleaner = mongodb.clean_service.find_one({'chat_id': chat_id})
+        if cleaner and cleaner['service']:
+            await event.delete()
+            reply = None
+
         welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
         if not welcome:
             welc_msg = await event.reply(strings['welcome_hay'].format(
@@ -99,20 +112,18 @@ async def welcome_trigger(event, strings):
         elif welcome['enabled'] is False:
             welc_msg = None
         else:
-            welc_msg = await send_note(event.chat_id, chat_id, event.action_message.id,
-                                       welcome['note'], show_none=True, from_id=from_id)
+            welc_msg = await send_note(
+                chat_id, chat_id, reply, welcome['note'],
+                show_none=True, from_id=from_id
+            )
         print(welc_msg)
 
         # Welcomesecurity
         await do_welcomesecurity(event, strings, from_id, chat_id)
 
         # Cleanwelcome
-        await do_cleanwelcome(event, chat_id, welc_msg)
-
-        # Cleanservice
-        cleaner = mongodb.clean_service.find_one({'chat_id': chat_id})
-        if cleaner and cleaner['service']:
-            await event.delete()
+        if welc_msg:
+            await do_cleanwelcome(event, chat_id, welc_msg)
 
 
 @decorator.command("setwelcome", arg=True)

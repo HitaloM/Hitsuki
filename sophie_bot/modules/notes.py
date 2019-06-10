@@ -5,7 +5,7 @@ from bson.objectid import ObjectId
 from telethon import custom, errors
 from telethon.tl.custom import Button
 
-from sophie_bot import BOT_USERNAME, bot, decorator, mongodb
+from sophie_bot import BOT_USERNAME, bot, decorator, mongodb, logger
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
@@ -214,15 +214,19 @@ async def send_note(chat_id, group_id, msg_id, note_name,
             rules='Will be later'
         )
 
-    return await bot.send_message(
-        chat_id,
-        string,
-        buttons=buttons,
-        parse_mode=format,
-        reply_to=msg_id,
-        file=file_id,
-        link_preview=preview
-    )
+    try:
+        return await bot.send_message(
+            chat_id,
+            string,
+            buttons=buttons,
+            parse_mode=format,
+            reply_to=msg_id,
+            file=file_id,
+            link_preview=preview
+        )
+    except Exception as err:
+        await bot.send_message(chat_id, str(err))
+        logger.error("Error in send_note/send_message: " + str(err))
 
 
 @decorator.CallBackQuery(b'delnote_', compile=True)

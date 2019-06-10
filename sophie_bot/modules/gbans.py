@@ -54,9 +54,21 @@ async def gban_2(event):
 
 
 async def blacklist_user(event):
-    user, reason = await get_user_and_text(event)
+    try:
+        user, reason = await get_user_and_text(event)
+    except Exception:
+        user = None
 
-    if int(user['user_id']) in WHITELISTED:
+    probably_id = event.pattern_match.group(1).split()[0]
+    probably_reason = event.pattern_match.group(1).split()[1]
+
+    if user:
+        user_id = int(user['user_id'])
+    if not user and probably_id.isdigit():
+        user_id = int(probably_id)
+        reason = probably_reason
+
+    if user_id in WHITELISTED:
         await event.reply("You can't blacklist a Whitelisted user")
         return
 
@@ -80,7 +92,7 @@ async def blacklist_user(event):
         await event.client(
             EditBannedRequest(
                 event.chat_id,
-                int(user['user_id']),
+                user_id,
                 banned_rights
             )
         )
@@ -89,10 +101,10 @@ async def blacklist_user(event):
         logger.error(str(err))
         await event.reply(str(err))
 
-    old = mongodb.blacklisted_users.find_one({'user': user['user_id']})
+    old = mongodb.blacklisted_users.find_one({'user': user_id})
     if old:
         new = {
-            'user': user['user_id'],
+            'user': user_id,
             'date': old['date'],
             'by': old['by'],
             'reason': reason
@@ -102,16 +114,15 @@ async def blacklist_user(event):
         return
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     new = {
-        'user': user['user_id'],
+        'user': user_id,
         'date': date,
         'reason': reason,
         'by': event.from_id
     }
-    user_id = user['user_id']
     logger.info(f'user {user_id} gbanned by {event.from_id}')
     mongodb.blacklisted_users.insert_one(new)
     await event.reply("Sudo {} blacklisted {}.\nDate: `{}`\nReason: `{}`".format(
-        await user_link(event.from_id), await user_link(user['user_id']), date, reason))
+        await user_link(event.from_id), await user_link(user_id), date, reason))
 
 
 @decorator.command("ungban", arg=True, from_users=SUDO)
