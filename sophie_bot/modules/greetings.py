@@ -13,87 +13,106 @@ from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_admin_dec, user_link
 
 
+async def do_welcomesecurity(event, strings, from_id, chat_id):
+    welcome_security = mongodb.welcome_security.find_one({'chat_id': chat_id})
+    if welcome_security and welcome_security['security'] == 'soft':
+        buttons = [
+            [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(from_id, chat_id))]
+        ]
+        time_val = int(time.time() + 60 * 60)  # Mute 1 hour
+        try:
+            await mute_user(event, int(from_id), chat_id, time_val)
+        except Exception as err:
+            await event.reply(err)
+
+        text = strings['wlcm_sec'].format(mention=await user_link(from_id))
+        await event.reply(text, buttons=buttons)
+
+    elif welcome_security and welcome_security['security'] == 'hard':
+        buttons = [
+            [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(from_id, chat_id))]
+        ]
+        try:
+            await mute_user(event, int(from_id), chat_id, None)
+        except Exception as err:
+            await event.reply(err)
+
+        text = strings['wlcm_sec'].format(mention=await user_link(from_id))
+        await event.reply(text, buttons=buttons)
+
+
+async def do_cleanwelcome(event, chat_id, welc_msg):
+    clean_welcome = mongodb.clean_welcome.find_one({'chat_id': chat_id})
+    if clean_welcome:
+        new = {
+            'chat_id': chat_id,
+            'enabled': True,
+            'last_msg': welc_msg.id
+        }
+        if 'last_msg' in clean_welcome:
+            owo = []
+            owo.append(clean_welcome['last_msg'])
+            await event.client.delete_messages(chat_id, owo)
+
+        mongodb.clean_welcome.update_one({'_id': clean_welcome['_id']}, {'$set': new})
+
+
+
 @decorator.ChatAction()
 @get_strings_dec("greetings")
 async def welcome_trigger(event, strings):
-    if event.user_joined is True or event.user_added is True \
+    if event.user_joined or event.user_added \
             or isinstance(event.action_message.action, MessageActionChatJoinedByLink):
         chat = event.chat_id
         chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
 
         chat_id = event.action_message.chat_id
-        cleaner = mongodb.clean_service.find_one({'chat_id': chat_id})
-        if cleaner and cleaner['service']:
-            await event.delete()
 
         if hasattr(event.action_message.action, 'users'):
             from_id = event.action_message.action.users[0]
         else:
             from_id = event.action_message.from_id
 
-        bot_id = await bot.get_me()
-        if bot_id.id == from_id:
-            return  # Do not welcome yourselve
-
+        # Don't welcome blacklisted users
         blacklisted = mongodb.blacklisted_users.find_one({'user': from_id})
-        if blacklisted:  # Don't welcome blacklisted users
+        if blacklisted:
             return
 
+        # Don't welcome fbanned users
         chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
         if chat_fed:
-            print(chat_fed)
             fed_id = chat_fed['fed_id']
             is_banned = mongodb.fbanned_users.find_one({'user': from_id, 'fed_id': fed_id})
-            if is_banned:  # Don't welcome fbanned users
+            if is_banned:
                 return
+
+        # Do not welcome yourselve
+        bot_id = await bot.get_me()
+        if bot_id.id == from_id:
+            return
 
         welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
         if not welcome:
-            await event.reply(strings['welcome_hay'].format(mention=await user_link(from_id)))
+            welc_msg = await event.reply(strings['welcome_hay'].format(
+                mention=await user_link(from_id)
+            ))
         elif welcome['enabled'] is False:
-            pass
+            welc_msg = None
         else:
             welc_msg = await send_note(event.chat_id, chat_id, event.action_message.id,
                                        welcome['note'], show_none=True, from_id=from_id)
-        welcome_security = mongodb.welcome_security.find_one({'chat_id': chat_id})
-        if welcome_security and welcome_security['security'] == 'soft':
-            buttons = [
-                [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(from_id, chat_id))]
-            ]
-            time_val = int(time.time() + 60 * 60)  # Mute 1 hour
-            try:
-                await mute_user(event, int(from_id), chat_id, time_val)
-            except Exception as err:
-                await event.reply(err)
+        print(welc_msg)
 
-            text = strings['wlcm_sec'].format(mention=await user_link(from_id))
-            await event.reply(text, buttons=buttons)
+        # Welcomesecurity
+        await do_welcomesecurity(event, strings, from_id, chat_id)
 
-        elif welcome_security and welcome_security['security'] == 'hard':
-            buttons = [
-                [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(from_id, chat_id))]
-            ]
-            try:
-                await mute_user(event, int(from_id), chat_id, None)
-            except Exception as err:
-                await event.reply(err)
+        # Cleanwelcome
+        await do_cleanwelcome(event, chat_id, welc_msg)
 
-            text = strings['wlcm_sec'].format(mention=await user_link(from_id))
-            await event.reply(text, buttons=buttons)
-
-        clean_welcome = mongodb.clean_welcome.find_one({'chat_id': chat_id})
-        if clean_welcome:
-            new = {
-                'chat_id': chat_id,
-                'enabled': True,
-                'last_msg': welc_msg.id
-            }
-            if 'last_msg' in clean_welcome:
-                owo = []
-                owo.append(clean_welcome['last_msg'])
-                await event.client.delete_messages(chat_id, owo)
-
-            mongodb.clean_welcome.update_one({'_id': clean_welcome['_id']}, {'$set': new})
+        # Cleanservice
+        cleaner = mongodb.clean_service.find_one({'chat_id': chat_id})
+        if cleaner and cleaner['service']:
+            await event.delete()
 
 
 @decorator.command("setwelcome", arg=True)
