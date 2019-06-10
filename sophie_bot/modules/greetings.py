@@ -2,6 +2,7 @@ import re
 import time
 
 from telethon.tl.custom import Button
+from telethon.tl.types import MessageActionChatJoinedByLink
 
 from sophie_bot import bot, decorator, mongodb
 from sophie_bot.modules.bans import mute_user, unmute_user
@@ -15,7 +16,8 @@ from sophie_bot.modules.users import user_admin_dec, user_link
 @decorator.ChatAction()
 @get_strings_dec("greetings")
 async def welcome_trigger(event, strings):
-    if event.user_joined is True or event.user_added is True:
+    if event.user_joined is True or event.user_added is True \
+            or isinstance(event.action_message.action, MessageActionChatJoinedByLink):
         chat = event.chat_id
         chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
 
