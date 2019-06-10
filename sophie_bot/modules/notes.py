@@ -301,8 +301,6 @@ def button_parser(chat_id, texts):
         else:
             buttons.append(t)
 
-        print(url)
-
     return text, buttons
 
 

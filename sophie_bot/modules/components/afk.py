@@ -59,6 +59,7 @@ async def get_user(event):
 
 
 @decorator.insurgent()
+@flood_limit_dec("check_afk")
 async def check_afk(event):
     user_afk = mongodb.afk.find_one({'user': event.from_id})
     if user_afk:
