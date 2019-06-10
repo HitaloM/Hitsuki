@@ -342,6 +342,10 @@ async def user_link(user_id):
         except Exception:
             user_link = "[{}](tg://user?id={})".format(
                 user_id, user_id)
+    else:
+        user_link = "[{}](tg://user?id={})".format(
+            user['first_name'], user['user_id'])
+
     return user_link
 
 
