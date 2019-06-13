@@ -7,8 +7,9 @@ from sophie_bot import WHITELISTED, bot, decorator, mongodb, redis
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
-from sophie_bot.modules.language import get_string
+from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.notes import send_note
+from sophie_bot.modules.bans import ban_user
 from sophie_bot.modules.users import is_user_admin, user_admin_dec, user_link
 
 
@@ -43,11 +44,11 @@ async def check_message(event):
 @flood_limit_dec("filter")
 @user_admin_dec
 @connection(admin=True)
-async def add_filter(event, status, chat_id, chat_title):
-    real_chat_id = event.chat_id
+@get_strings_dec("filters")
+async def add_filter(event, strings, status, chat_id, chat_title):
     args = event.message.raw_text.split(" ")
     if len(args) < 3:
-        await event.reply(get_string("filters", "wrong_action", real_chat_id))
+        await event.reply(strings["wrong_action"])
         return
 
     handler = args[1]
@@ -56,28 +57,28 @@ async def add_filter(event, status, chat_id, chat_title):
         arg = args[3]
     else:
         arg = None
-    text = get_string("filters", "filter_added", real_chat_id)
-    text += get_string("filters", "filter_keyword", real_chat_id).format(handler)
+    text = strings["filter_added"]
+    text += get_string(strings["filter_keyword"].format(handler))
     if action == 'note':
         if not len(args) > 3:
-            await event.reply(get_string("filters", "no_arg_note", real_chat_id))
+            await event.reply(strings["no_arg_note"])
             return
-        text += get_string("filters", "a_send_note", real_chat_id).format(arg)
+        text += get_string(strings["a_send_note"].format(arg))
     elif action == 'tban':
         if not len(args) > 3:
-            await event.reply(get_string("filters", "no_arg_tban", real_chat_id))
+            await event.reply(strings["no_arg_tban"])
             return
-        text += get_string("filters", "a_tban", real_chat_id).format(str(arg))
+        text += strings["a_tban"].format(str(arg))
     elif action == 'delete':
-        text += get_string("filters", "a_del", real_chat_id)
+        text += strings["a_del"]
     elif action == 'ban':
-        text += get_string("filters", "a_ban", real_chat_id)
+        text += strings["a_ban"]
     elif action == 'mute':
-        text += get_string("filters", "a_mute", real_chat_id)
+        text += strings["a_mute"]
     elif action == 'kick':
-        text += get_string("filters", "a_kick", real_chat_id)
+        text += strings["a_kick"]
     else:
-        await event.reply(get_string("filters", "wrong_action", real_chat_id))
+        await event.reply(strings["wrong_action"])
         return
 
     mongodb.filters.insert_one({
