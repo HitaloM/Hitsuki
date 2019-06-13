@@ -206,8 +206,7 @@ async def gban_trigger(event):
                 await event.reply(get_string("gbans", "user_is_blacklisted", event.chat_id).format(
                                   await user_link(user_id), K['reason']))
 
-        except Exception as err:
-            logger.info(f'Error on gbanning {user_id} in {event.chat_id} \n {err}')
+        except Exception:
             pass
 
 

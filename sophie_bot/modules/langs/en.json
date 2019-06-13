@@ -61,7 +61,9 @@
         "whitelisted": "Haha NO! You is whitelisted!",
         "kickme_success": "Okay.. no problem!",
         "tmute_sucess": "Admin {admin} muted {user} for {time} {unit} !",
-        "usernt_banned": "This user isn't banned to unban!!"
+        "usernt_banned": "This user isn't banned to unban!!",
+        
+        "user_gbanned": "\n\nWarning! This user is globally banned becuase:\n`{reason}`"
     },
     "connections": {
         "can't_find_chat_use_id": "I can't find this chat, try using chat id.",

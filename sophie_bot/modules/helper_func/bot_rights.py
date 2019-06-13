@@ -16,6 +16,7 @@ from sophie_bot.modules.language import get_string
 async def get_bot_rights(event):
     bot_id = await bot.get_me()
     bot_req = await bot(GetParticipantRequest(channel=event.chat_id, user_id=bot_id))
+    print(bot_req)
     if bot_req and bot_req.participant and bot_req.participant.admin_rights:
         return bot_req.participant.admin_rights
     return False

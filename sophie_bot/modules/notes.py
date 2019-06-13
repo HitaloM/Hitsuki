@@ -2,6 +2,8 @@ import re
 from time import gmtime, strftime
 
 from bson.objectid import ObjectId
+
+from telethon.tl.functions.users import GetFullUserRequest
 from telethon import custom, errors
 from telethon.tl.custom import Button
 
@@ -12,7 +14,7 @@ from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.feds import get_chat_fed_dec
 from sophie_bot.modules.users import (check_group_admin, is_user_admin,
-                                      user_admin_dec, user_link)
+                                      user_admin_dec, user_link, add_user_to_db)
 from sophie_bot.modules.helper_func.notes import save_get_new_note
 
 
@@ -185,7 +187,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
     if from_id:
         user = mongodb.user_list.find_one({"user_id": from_id})
         if not user:
-            return  # TODO: Add user in db
+            user = await add_user_to_db(await bot(GetFullUserRequest(int(from_id))))
         if 'last_name' in user:
             last_name = user['last_name']
             if not last_name:
