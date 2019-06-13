@@ -6,6 +6,8 @@ import ujson
 from pymongo import MongoClient
 from telethon import TelegramClient
 
+from redisworks import Root
+
 # enable logging
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s: %(message)s",
@@ -41,6 +43,8 @@ mongodb = MongoClient(MONGO_CONN).sophie
 # Init Redis
 redis = redis.StrictRedis(
     host=REDIS_COMM, port=REDIS_PORT, db='1')  # decode_respone=True
+
+redisw = Root()
 
 bot = TelegramClient(NAME, API_ID, API_HASH)
 

@@ -1,7 +1,5 @@
 import re
 
-import ujson
-
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
@@ -16,19 +14,19 @@ from sophie_bot.modules.users import is_user_admin, user_admin_dec, user_link
 
 @decorator.insurgent()
 async def check_message(event):
-    cache = redis.get('filters_cache_{}'.format(event.chat_id))
-    try:
-        lst = ujson.decode(cache)
-    except TypeError:
-        return
-    if not lst:
+    filters = redis.lrange('filters_cache_{}'.format(event.chat_id), 0, -1)
+    if not filters:
+        update_handlers_cache(event.chat_id)
+        filters = redis.lrange('filters_cache_{}'.format(event.chat_id), 0, -1)
+    if redis.llen('filters_cache_{}'.format(event.chat_id)) == 0:
         return
     text = event.text.split(" ")
-    for filter in lst:
+    for filter in filters:
+        filter = filter.decode("utf-8")
         for word in text:
             match = re.fullmatch(filter, word, flags=re.IGNORECASE)
             if not match:
-                return
+                continue
             H = mongodb.filters.find_one(
                 {'chat_id': event.chat_id, "handler": {'$regex': str(filter)}})
 
@@ -82,10 +80,12 @@ async def add_filter(event, status, chat_id, chat_title):
         await event.reply(get_string("filters", "wrong_action", real_chat_id))
         return
 
-    mongodb.filters.insert_one(
-        {"chat_id": chat_id,
-         "handler": handler.lower(),
-         'action': action, 'arg': arg})
+    mongodb.filters.insert_one({
+        "chat_id": chat_id,
+        "handler": handler.lower(),
+        "action": action,
+        "arg": arg
+    })
     update_handlers_cache(chat_id)
     await event.reply(text)
 
@@ -124,17 +124,15 @@ async def stop_filter(event, status, chat_id, chat_title):
     mongodb.filters.delete_one({'_id': filter['_id']})
     update_handlers_cache(chat_id)
     text = str(get_string("filters", "filter_deleted", event.chat_id))
-    text = text.format(filter=handler, chat_name=chat_title)
+    text = text.format(filter=filter['handler'], chat_name=chat_title)
     await event.reply(text)
 
 
 def update_handlers_cache(chat_id):
     filters = mongodb.filters.find({'chat_id': chat_id})
-    lst = []
+    redis.delete('filters_cache_{}'.format(chat_id))
     for filter in filters:
-        lst.append(filter['handler'])
-    dump = ujson.dumps(lst)
-    redis.set('filters_cache_{}'.format(chat_id), dump)
+        redis.lpush('filters_cache_{}'.format(chat_id), filter['handler'])
 
 
 async def filter_ban(event, filter, time):
