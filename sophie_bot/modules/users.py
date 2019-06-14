@@ -53,7 +53,7 @@ async def update_users(event):
         'user_id': user_id,
         'first_name': user.first_name,
         'last_name': user.last_name,
-        'username': user.username,
+        'username': user.username.lower(),
         'user_lang': user.lang_code,
         'chats': new_chat
     }
@@ -64,27 +64,23 @@ async def update_users(event):
         mongodb.user_list.insert_one(user_new)
     logger.debug(f"user {user_id} updated")
 
-    try:
-        if event.message.reply_to_msg_id:
-            msg = await event.get_reply_message()
-            user_id = msg.from_id
-            user = await bot.get_entity(user_id)
-            old_user = mongodb.user_list.find_one({'user_id': user_id})
-            new_user = {
-                'user_id': user_id,
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'username': user.username,
-                'user_lang': user.lang_code
-            }
-            if old_user:
-                mongodb.notes.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
-            else:
-                mongodb.user_list.insert_one(new_user)
-            logger.debug(f"replied user {user_id} updated")
-
-    except Exception as err:
-        logger.error(err)
+    if event.message.reply_to_msg_id:
+        msg = await event.get_reply_message()
+        user_id = msg.from_id
+        user = await bot.get_entity(user_id)
+        old_user = mongodb.user_list.find_one({'user_id': user_id})
+        new_user = {
+            'user_id': user_id,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'username': user.username.lower(),
+            'user_lang': user.lang_code
+        }
+        if old_user:
+            mongodb.user_list.update_one({'_id': old_user['_id']}, {"$set": user_new})
+        else:
+            mongodb.user_list.insert_one(user_new)
+        logger.debug(f"replied user {user_id} updated")
 
     if event.message.fwd_from:
         user_id = event.message.fwd_from.from_id
@@ -94,7 +90,7 @@ async def update_users(event):
             'user_id': user_id,
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'username': user.username,
+            'username': user.username.lower(),
             'user_lang': user.lang_code
         }
         if old_user:
@@ -245,9 +241,10 @@ async def get_user(event, send_text=True):
         # Search user in database
         if '@' in arg_user:
             # Remove '@'
-            user = mongodb.user_list.find_one(
-                {'username': arg_user[1:]}
-            )
+            username = arg_user[1:].lower()
+            user = mongodb.user_list.find_one({
+                'username': username
+            })
         elif arg_user.isdigit():
             # User id
             arg_user = int(arg_user)
@@ -262,11 +259,9 @@ async def get_user(event, send_text=True):
         # If we didn't find user in database will ask Telegram.
         if not user:
             try:
-                reply_user = await event.client(GetFullUserRequest(arg_user))
-                # Add user in database
-                user = await add_user_to_db(reply_user)
-            except (ValueError, TypeError):
-                pass
+                user = await add_user_to_db(await bot(GetFullUserRequest(arg_user)))
+            except (ValueError, TypeError) as err:
+                logger.debug(f"cant update user E2: {err}")
 
         # Still didn't find? Lets try get entities
         try:
@@ -287,8 +282,8 @@ async def get_user(event, send_text=True):
                         )
                         if not user and userf:
                             user = await add_user_to_db(userf)
-        except (ValueError, TypeError):
-            pass
+        except (ValueError, TypeError) as err:
+            logger.debug(f"cant update user E3: {err}")
 
         if not user:
             # Last try before fail
@@ -296,8 +291,8 @@ async def get_user(event, send_text=True):
                 user = await event.client.get_entity(input_str)
                 if user:
                     user = await add_user_to_db(user)
-            except (ValueError, TypeError):
-                pass
+            except (ValueError, TypeError) as err:
+                logger.debug(f"cant update user E4: {err}")
 
     if not user and send_text is True:
         await event.reply("I can't find this user in whole Telegram.")
