@@ -45,6 +45,7 @@ async def switch_antispam(event, status, chat_id, chat_title):
 
 @decorator.command("gban", arg=True, from_users=SUDO)
 async def gban_1(event):
+    print('exec')
     await blacklist_user(event)
 
 
