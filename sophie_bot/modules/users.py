@@ -222,7 +222,7 @@ async def get_user(event, send_text=True):
                 user = await event.client(GetFullUserRequest(int(msg.from_id)))
                 # Add user in database
                 if user:
-                    user = add_user_to_db(user)
+                    user = await add_user_to_db(user)
             except Exception as err:
                 logger.error(err)
     else:
