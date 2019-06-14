@@ -57,12 +57,12 @@ async def add_filter(event, strings, status, chat_id, chat_title):
     else:
         arg = None
     text = strings["filter_added"]
-    text += get_string(strings["filter_keyword"].format(handler))
+    text += strings["filter_keyword"].format(handler)
     if action == 'note':
         if not len(args) > 3:
             await event.reply(strings["no_arg_note"])
             return
-        text += get_string(strings["a_send_note"].format(arg))
+        text += strings["a_send_note"].format(arg)
     elif action == 'tban':
         if not len(args) > 3:
             await event.reply(strings["no_arg_tban"])
