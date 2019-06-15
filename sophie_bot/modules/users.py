@@ -63,6 +63,10 @@ async def update_users(event):
         'chats': new_chat
     }
 
+    logger.debug(f"Updating {user_id}...")
+    logger.debug(f"old={old_user}")
+    logger.debug(f"new={user_new}")
+
     if old_user:
         mongodb.user_list.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
     else:
@@ -85,6 +89,9 @@ async def update_users(event):
             'username': username,
             'user_lang': user.lang_code
         }
+        logger.debug(f"Updating {user_id}...")
+        logger.debug(f"old={old_user}")
+        logger.debug(f"new={new_user}")
         if old_user:
             mongodb.user_list.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
         else:
@@ -106,6 +113,9 @@ async def update_users(event):
             'username': username,
             'user_lang': user.lang_code
         }
+        logger.debug(f"Updating {user_id}...")
+        logger.debug(f"old={old_user}")
+        logger.debug(f"new={new_user}")
         if old_user:
             mongodb.user_list.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
         else:
