@@ -1,6 +1,6 @@
 import random
 
-from requests import get, post, exceptions
+from requests import post
 
 from telethon.errors import BadRequestError, ChatNotModifiedError
 from telethon.tl.custom import Button
@@ -8,7 +8,7 @@ from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChatAdminRights
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
-from sophie_bot import BOT_USERNAME, bot, decorator, mongodb
+from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, bot, decorator, mongodb
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
@@ -315,3 +315,39 @@ async def paste_deldog(event, strings):
         reply_text = (strings["paste_fail"])
 
     await event.reply(reply_text, link_preview=False)
+
+
+@decorator.command("info", arg=True)
+@flood_limit_dec("info")
+@get_strings_dec("misc")
+async def user_info(event, strings):
+    user = await get_user(event)
+
+    check = mongodb.blacklisted_users.find_one({'user': user['user_id']})
+    if check:
+        gban_stat = strings['gbanned_yes']
+        gban_stat += strings["gbanned_date"].format(data=check['date'])
+        gban_stat += strings["gbanned_reason"].format(reason=check['reason'])
+    else:
+        gban_stat = strings['gbanned_no']
+
+    text = strings["user_info"]
+    text += strings["info_id"].format(id=user['user_id'])
+    text += strings["info_first"].format(first_name=str(user['first_name']))
+
+    if user['last_name'] is not None:
+        text += strings["info_last"].format(last_name=str(user['last_name']))
+
+    if user['username'] is not None:
+        text += strings["info_username"].format(username="@" + str(user['username']))
+
+    text += strings['info_link'].format(user_link=str(await user_link(user['user_id'])))
+
+    if user['user_id'] == OWNER_ID:
+        text += strings["father"]
+    elif user['user_id'] in SUDO:
+        text += strings['sudo_crown']
+    else:
+        text += strings["gbanned"] + gban_stat
+
+    await event.reply(text)

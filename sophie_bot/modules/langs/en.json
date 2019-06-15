@@ -184,7 +184,23 @@
         "paste_success_extra": "**Pasted successfully!**\nShortened url: {}\nOriginal Dogbin URL: {}",
         "paste_success": "**Pasted successfully!**\nDogbin URL: {}",
         "paste_fail": "Failed to reach Dogbin!",
-        "paste_no_text": "You haven't supplied text to paste!"
+        "paste_no_text": "You haven't supplied text to paste!",
+
+        "user_info": "**User info:**\n",
+        "info_id": "**ID:** `{id}`",
+        "info_first": "\n**First name:** {first_name}",
+        "info_last": "\n**Last name:** {last_name}",
+        "info_username": "\n**Username:** {username}",
+        "info_link": "\n**User link:** {user_link}",
+
+        "father": "\n\nThis is my father.",
+        "sudo_crown": "\n\nHey! Look at him, he has a crown, lemme let me see it.. Whaow, it has a engraving 'sudo user'.",
+
+        "gbanned": "Globally banned: ",
+        "gbanned_no": "No",
+        "gbanned_yes": "Yes\n",
+        "gbanned_date": "Data: `{data}`\n",
+        "gbanned_reason": "Reason: `{reason}`\n"
     },
     "gbans": {
         "user_is_blacklisted": "User {user} is blacklisted so has been removed. \nReason: __{rsn}__"

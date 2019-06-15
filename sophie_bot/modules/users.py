@@ -164,39 +164,6 @@ async def event(event):
     await msg.edit(text)
 
 
-@decorator.command("info", arg=True)
-@flood_limit_dec("info")
-async def user_info(event):
-    user = await get_user(event)
-
-    check = mongodb.blacklisted_users.find_one({'user': user['user_id']})
-    if check:
-        gban_stat = f"Yes\n* Gban data: `{check['date']}`\n* Reason: `{check['reason']}`"
-    else:
-        gban_stat = "No"
-
-    text = "**User info:**\n"
-    text += f"**ID:** `{user['user_id']}`"
-    text += "\n**First name:** " + str(user['first_name'])
-
-    if user['last_name'] is not None:
-        text += "\n**Last name:** " + str(user['last_name'])
-
-    if user['username'] is not None:
-        text += "\n**Username:** @" + str(user['username'])
-
-    text += "\n**User link:** " + str(await user_link(user['user_id']))
-
-    if user['user_id'] == OWNER_ID:
-        text += "\n\nThis is my father."
-    elif user['user_id'] in SUDO:
-        text += "\n\nHey! Look at him, he has a crown, lemme let me see it.. Whaow, it has a engraving 'sudo user'."
-    else:
-        text += "\n\n**Globally banned:** " + str(gban_stat)
-
-    await event.reply(text)
-
-
 async def get_user_and_text(event, send_text=True):
     msg = event.message.raw_text.split()
     user = await get_user(event, send_text=send_text)
