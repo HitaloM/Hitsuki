@@ -49,11 +49,16 @@ async def update_users(event):
             mongodb.chat_list.insert_one(chat_new)
         logger.debug(f"chat {chat_id} updated")
 
+    if user.username:
+        username = user.username.lower()
+    else:
+        username = None
+
     user_new = {
         'user_id': user_id,
         'first_name': user.first_name,
         'last_name': user.last_name,
-        'username': user.username.lower(),
+        'username': username,
         'user_lang': user.lang_code,
         'chats': new_chat
     }
@@ -69,15 +74,19 @@ async def update_users(event):
         user_id = msg.from_id
         user = await bot.get_entity(user_id)
         old_user = mongodb.user_list.find_one({'user_id': user_id})
+        if user.username:
+            username = user.username.lower()
+        else:
+            username = None
         new_user = {
             'user_id': user_id,
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'username': user.username.lower(),
+            'username': username,
             'user_lang': user.lang_code
         }
         if old_user:
-            mongodb.user_list.update_one({'_id': old_user['_id']}, {"$set": user_new})
+            mongodb.user_list.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
         else:
             mongodb.user_list.insert_one(user_new)
         logger.debug(f"replied user {user_id} updated")
@@ -86,11 +95,15 @@ async def update_users(event):
         user_id = event.message.fwd_from.from_id
         user = await bot.get_entity(user_id)
         old_user = mongodb.user_list.find_one({'user_id': user_id})
+        if user.username:
+            username = user.username.lower()
+        else:
+            username = None
         new_user = {
             'user_id': user_id,
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'username': user.username.lower(),
+            'username': username,
             'user_lang': user.lang_code
         }
         if old_user:
