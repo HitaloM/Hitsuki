@@ -387,7 +387,7 @@ async def user_info(event, strings):
         gban_stat += strings["gbanned_date"].format(data=check['date'])
         gban_stat += strings["gbanned_reason"].format(reason=check['reason'])
     else:
-        gban_stat = strings['gbanned_no']
+        gban_stat = strings['no']
 
     text = strings["user_info"]
     text += strings["info_id"].format(id=user['user_id'])
