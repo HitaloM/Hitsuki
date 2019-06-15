@@ -188,9 +188,9 @@ async def user_info(event):
     text += "\n**User link:** " + str(await user_link(user['user_id']))
 
     if user['user_id'] == OWNER_ID:
-        text += "\n\nThis is a my owner. Beware of him."
+        text += "\n\nThis is my father."
     elif user['user_id'] in SUDO:
-        text += "\n\nThis a SUDO user, he can gban you right now."
+        text += "\n\nHey! Look at him, he has a crown, lemme let me see it.. Whaow, it has a engraving 'sudo user'."
     else:
         text += "\n\n**Globally banned:** " + str(gban_stat)
 
