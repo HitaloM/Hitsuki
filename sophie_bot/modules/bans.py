@@ -33,7 +33,12 @@ async def ban(event, status, chat_id, chat_title):
 async def tban(event, status, chat_id, chat_title):
     user, data = await get_user_and_text(event)
     data = data.split(' ', 2)
-    reason = data[1]
+
+    if len(data) > 1:
+        reason = data[1]
+    else:
+        reason = "No reason."
+
     time_val = data[0]
 
     unit = time_val[-1]
@@ -52,7 +57,7 @@ async def tban(event, status, chat_id, chat_title):
             await event.reply(get_string("bans", "time_var_incorrect",
                               event.chat_id))
 
-    if await ban_user(event, user.id, chat_id, bantime) is True:
+    if await ban_user(event, user['user_id'], chat_id, bantime) is True:
         admin_str = await user_link(event.from_id)
         user_str = await user_link(user['user_id'])
         text = "User {} banned by {} in {}!\n".format(user_str, admin_str, chat_title)

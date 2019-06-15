@@ -196,7 +196,7 @@
         "father": "\n\nThis is my father.",
         "sudo_crown": "\n\nHey! Look at him, he has a crown, lemme let me see it.. Whaow, it has a engraving 'sudo user'.",
 
-        "gbanned": "Globally banned: ",
+        "gbanned": "\nGlobally banned: ",
         "no": "No",
         "gbanned_yes": "Yes\n",
         "gbanned_date": "Data: `{data}`\n",
