@@ -57,15 +57,7 @@ async def gban_2(event):
 async def blacklist_user(event):
     user, reason = await get_user_and_text(event, send_text=False)
 
-    probably_id = event.pattern_match.group(1).split()[0]
-
-    if user:
-        user_id = int(user['user_id'])
-    if not user and probably_id.isdigit():
-        probably_reason = event.pattern_match.group(1).split()[1]
-
-        user_id = int(probably_id)
-        reason = probably_reason
+    user_id = int(user['user_id'])
 
     if user_id in WHITELISTED:
         await event.reply("You can't blacklist a Whitelisted user")
