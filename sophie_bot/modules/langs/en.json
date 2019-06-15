@@ -305,8 +305,7 @@
             "i15": "This will retrieve the note and send it without formatting it; getting you the raw markdown, allowing you to make easy edits."
         },
         "buttons": {
-            "help_btn_notes_md": "Markdown",
-            "help_btn_notes_btns": "Buttons"
+            "help_btn_notes_md": "Markdown"
         },
         "md": {
             "a1": "You can use markdown to make your messages more expressive. This is the markdown currently supported:\n",
@@ -332,8 +331,7 @@
             "i1": "\nAvailable commands are:",
             "i2": "- /warn (reason): warn a user for the specified reason .",
             "i3": "- /warns: returns the list of warns, with reasons, for that user.",
-            "i4": "- /rmwarn: remove the latest warn for that user. #TODO",
-            "i5": "- /resetwarns: reset all of a user's warns. #TODO",
+            "i5": "- /resetwarns: reset all of a user's warns.",
             "i6": "- /setwarnlimit: sets the number of warns before an action is taken upon the user.",
             "i7": "\nIf you're looking for a way to automatically warn users when they say certain things, go to the blacklists module.",
             "i8": "\nAn example of how to set a new multiword warning:",
@@ -348,7 +346,9 @@
             "i1": "\nAvailable commands are:",
             "i2": "- /id: get a id of user and chat.",
             "i3": "- /stats: show bot stats.",
-            "i4": "- /botchanges: show bot changes (commit history)"
+            "i4": "- /botchanges: show bot changes (commit history)",
+            "i5": "- /runs: responds with a randomly generated 'run away' string.",
+            "i6": "- /paste <text>: Paste text to the Dogbin."
         }
     },
     "connections": {
@@ -366,9 +366,12 @@
         "btn": "Greetings",
         "title": "Give your members a warm welcome with the greetings module! Or a sad goodbye... Depends!",
         "text": {
+            "i0": "Welcomes it's are a note trigget, use /setwelcome to set welcome trigger to note.",
             "i1": "\nAvailable commands are:",
             "i2": "- /setwelcome <note>: sets your new welcome note!",
-            "i3": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat."
+            "i3": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat.",
+            "i4": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
+            "i5": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
         }
     },
     "filters": {
@@ -382,6 +385,35 @@
             "i5": "**kick** : eg: /filter foo kick ; Bot will kick user who send message containing 'foo' \n",
             "i6": "- /filters : Will display all filter in that chat!\n",
             "i7": "- /stop <filter name> : Will stop the the given filter names"
+        }
+    },
+    "federations": {
+        "btn": "Federations",
+        "title": "Ah, group management. It's all fun and games, until you start getting spammers in, and you need to ban them. Then you need to start banning more, and more, and it gets painful. But then you have multiple groups, and you don't want these spammers in any of your groups - how can you deal? Do you have to ban them manually, in all your groups?",
+        "text": {
+            "i0": "No more! With federations, you can make a ban in one chat overlap to all your other chats. You can even appoint federation admins, so that your trustworthiest admins can ban across all the chats that you want to protect.",
+            "i1": "\nAvailable commands are:",
+            "i2": "- /newfed <fedname>: Creates a new federation with the given name. Users are only allowed to own one federation. Using this method when you already have a fed will simply change the federation name.",
+            "i3": "- /joinfed <FedID>: Joins the current chat to the federation. Each chat can only be in one federation. Only chat owners can do this.",
+            "i4": "- /finfo: Show info about current chat Federation, you can /finfo <FedID> - to see info about other Federation.",
+            "i5": "\nFederation admins, they can use a fban command and others, to control they use this commands:",
+            "i6": "- /fpromote <user>: Promotes the user to fed admin in your fed.",
+            "i7": "- /fdemote <user>: Demotes the user from fed admin to normal user, in your fed.",
+            "i8": "\nOnly to Federation admins:",
+            "i9": "- /fban <user>: Bans a user from the current chat's federation.",
+            "i10": "- /unfban <user>: Unbans a user the current chat's federation.",
+            "i11": "\nOther commands:",
+            "i12": "/fchats: Show list of chats which connected to Federation."
+        },
+        "buttons": {
+            "help_btn_federations_notes": "Federation notes"
+        },
+        "notes": {
+            "i1": "You have many chats to Federation? Perfect! But now you get anoyed by saving and saving notes to every chats, such as rules or others info. No more! Federation notes can save what you wanna in all place for all chats, see how it works:",
+            "i2": "\nAvailable commands are:",
+            "i3": "/fsave <notename> <data>: Save note to the Fedearion notes, it will works for all chats in your Federation",
+            "i4": "/fclear <notename>: Remove the note.",
+            "i5": "\nAll notes will be append to end of /notes"
         }
     }
  }
