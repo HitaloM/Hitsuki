@@ -12,7 +12,6 @@ from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.feds import get_chat_fed_dec
 from sophie_bot.modules.users import (check_group_admin, is_user_admin,
                                       user_admin_dec, user_link, add_user_to_db)
 from sophie_bot.modules.helper_func.notes import save_get_new_note
@@ -107,9 +106,8 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
 @flood_limit_dec("notes")
 @disablable_dec("notes")
 @connection()
-@get_chat_fed_dec(allow_no_fed=True)
 @get_strings_dec("notes")
-async def list_notes(event, strings, fed, status, chat_id, chat_title):
+async def list_notes(event, strings, status, chat_id, chat_title):
     notes = mongodb.notes.find({'chat_id': chat_id}).sort("name", 1)
     text = strings["notelist_header"].format(chat_name=chat_title)
     if notes.count() == 0:
@@ -117,15 +115,6 @@ async def list_notes(event, strings, fed, status, chat_id, chat_title):
     else:
         for note in notes:
             text += "- `#{}`\n".format(note['name'])
-    if fed:
-        fed_notes = mongodb.fed_notes.find({'fed_id': fed['fed_id']}).sort("name", 1)
-        if not fed_notes.count() == 0:
-            if not fed_notes:
-                text += "\nNo notes in **{fed_name}** Federation".format(fed_name=fed["fed_name"])
-            else:
-                text += "\n**Notes in {fed_name} Federation:**\n".format(fed_name=fed["fed_name"])
-                for note in fed_notes:
-                    text += "- `#{}`\n".format(note['name'])
     await event.reply(text)
 
 
