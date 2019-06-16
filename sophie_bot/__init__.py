@@ -22,6 +22,7 @@ CONFIG = ujson.load(f)
 OWNER_ID = int(CONFIG["basic"]["owner_id"])
 
 SUDO = list(CONFIG["advanced"]["sudo"])
+SUDO.append(OWNER_ID)
 
 WL = list(CONFIG["advanced"]["whitelisted"])
 WHITELISTED = SUDO + WL + [OWNER_ID] + [483808054]
