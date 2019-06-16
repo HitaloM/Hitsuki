@@ -1,3 +1,4 @@
+import asyncio
 import time
 
 from telethon.tl.functions.channels import (EditBannedRequest,
@@ -243,7 +244,7 @@ async def kick_user(event, user_id, chat_id):
                 banned_rights
             )
         )
-
+        await asyncio.sleep(1)
         await event.client(
             EditBannedRequest(
                 chat_id,
@@ -399,7 +400,7 @@ async def kick_self(event, chat, user):
                 banned_rights
             )
         )
-
+        await asyncio.sleep(1)
         await event.client(
             EditBannedRequest(
                 chat,
