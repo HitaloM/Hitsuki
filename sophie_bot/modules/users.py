@@ -100,6 +100,8 @@ async def update_users(event):
 
     if event.message.fwd_from:
         user_id = event.message.fwd_from.from_id
+        if not user_id:  # If forwarded from deleted account
+            return
         user = await bot.get_entity(user_id)
         old_user = mongodb.user_list.find_one({'user_id': user_id})
         if user.username:
