@@ -11,3 +11,4 @@ sophie.log
 *.zip
 .vscode
 XDG_CACHE_HOME
+update.json

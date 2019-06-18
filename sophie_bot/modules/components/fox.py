@@ -1,4 +1,6 @@
 from ftplib import FTP
+import ujson
+import os
 
 from telethon import custom
 
@@ -8,7 +10,7 @@ from sophie_bot.modules.helper_func.flood import flood_limit_dec
 
 ftp_url = "ftp.orangefox.website"
 fox_groups = [483808054, -1001287179850, -1001280218923, -1001155400138, -1001362128194]
-fox_beta_groups = [483808054, -1001280218923, -1001362128194]
+fox_beta_groups = [4838080541, -1001280218923, -1001362128194]
 
 global DEVICES_STABLE
 global DEVICES_BETA
@@ -38,57 +40,78 @@ def update_devices():
 
         builds = list(ftp.mlsd("OrangeFox-Stable/" + device, ["type"]))
         builds.sort(key=lambda entry: entry[1]['modify'], reverse=True)
+        readme = None
+        done = 0
         for build, facts in builds:
+            logger.debug(build)
             if not facts["type"] == "file":
                 continue
-            if build == "device_info.txt":
+            elif build == "README.md":
+                readme = "README.md"
                 continue
-            if build == "README.md":
-                continue
-            last_build = build
-            modified = facts['modify']
-            break
+
+            ext = os.path.splitext(build)[1]
+            if ext == '.zip' and done == 0:
+                last_build = build
+                modified = facts['modify']
+                done = 1
 
         DEVICES_STABLE[device] = {
             "codename": codename,
             "fullname": fullname,
             "maintainer": maintainer,
             "ver": last_build,
-            "modified": modified
+            "modified": modified,
+            "readme": readme
         }
 
-    data = ftp.mlsd("OrangeFox Beta", ["type"])
+    data = ftp.mlsd("OrangeFox-Beta", ["type"])
     for device, facts in data:
         if not facts["type"] == "dir":
             continue
 
         info_file = []
-        ftp.retrlines(f'RETR OrangeFox Beta/{device}/device_info.txt', info_file.append)
+        ftp.retrlines(f'RETR OrangeFox-Beta/{device}/device_info.txt', info_file.append)
 
         codename = info_file[0].split(': ')[1]
         fullname = info_file[1].split(': ')[1]
         maintainer = info_file[2].split(': ')[1]
 
-        builds = list(ftp.mlsd("OrangeFox Beta/" + device, ["type"]))
+        builds = list(ftp.mlsd("OrangeFox-Beta/" + device, ["type"]))
         builds.sort(key=lambda entry: entry[1]['modify'], reverse=True)
+        readme = None
+        done = 0
         for build, facts in builds:
+            logger.debug(build)
             if not facts["type"] == "file":
                 continue
-            if build == "device_info.txt":
+            elif build == "README.md":
+                readme = "README.md"
                 continue
-            if build == "README.md":
-                continue
-            last_build = build
-            modified = facts['modify']
-            break
+
+            ext = os.path.splitext(build)[1]
+            if ext == '.zip' and done == 0:
+                last_build = build
+                modified = facts['modify']
+                done = 1
 
         DEVICES_BETA[device] = {
             "codename": codename,
             "fullname": fullname,
             "maintainer": maintainer,
             "ver": last_build,
-            "modified": modified
+            "modified": modified,
+            "readme": readme
         }
+
+    JSON_FILE = {'stable': DEVICES_STABLE, 'beta': DEVICES_BETA, 
+    'json_file_info': {"ver": 2}}
+    f = open("update.json","w+")
+    ujson.dump(JSON_FILE, f, indent=1)
+    f.close()
+    with open('update.json', 'rb') as f: 
+        ftp.storbinary('STOR %s' % 'Others/update.json', f)
+    
     logger.info("Done!")
 
 
@@ -129,33 +152,34 @@ async def check(event):
 
     if event.chat_id in fox_beta_groups and device_arg in DEVICES_BETA:
         beta_device = DEVICES_BETA[device_arg]
-        text = "**" + beta_device['fullname'] + "** (`{}`)".format(beta_device['codename'])
+        text = "📱 **" + beta_device['fullname'] + "** (`{}`)".format(beta_device['codename'])
         build = beta_device['ver']
-        text += "\nLast beta: `" + build + "`"
-        text += "\nDate: `" + beta_device['modified'] + "`"
-        if beta_device['maintainer'].isdigit():
-            maintainer = await user_link(int(beta_device['maintainer']))
-        else:
-            maintainer = beta_device['maintainer']
-        text += "\nMaintainer: " + maintainer
-        link_beta = "https://files.orangefox.website/OrangeFox%20Beta/" + device_arg
-        buttons = [[custom.Button.url("Download beta", link_beta + "/" + build),
-                    custom.Button.url("All builds", link_beta)]]
+        text += "\n📁 Last beta: `" + build + "`"
+        text += "\n📅 Date: `" + beta_device['modified'] + "`"
+        maintainer = beta_device['maintainer']
+        text += "\n👨‍🔬 Maintainer: " + maintainer
+        link_beta = "https://files.orangefox.website/OrangeFox-Beta/" + device_arg
+        buttons = []
+        if beta_device['readme']:
+            buttons.append([custom.Button.url(f"📄 Readme file ({beta_device['readme']})", link_beta)])
+        buttons.append([custom.Button.url("⬇️ Download beta", link_beta + "/" + build),
+                    custom.Button.url("🗄️ All builds", link_beta)])
     elif event.chat_id in fox_groups and device_arg in DEVICES_STABLE:
         device = DEVICES_STABLE[device_arg]
-        text = "**" + device['fullname'] + "** (`{}`)".format(device['codename'])
+        text = "📱 **" + device['fullname'] + "** (`{}`)".format(device['codename'])
         build = device['ver']
-        text += "\nLast build: `" + build + "`"
-        text += "\nDate: `" + device['modified'] + "`"
-        if beta_device['maintainer'].isdigit():
-            maintainer = await user_link(int(beta_device['maintainer']))
-        else:
-            maintainer = beta_device['maintainer']
-        text += "\nMaintainer: " + maintainer
+        text += "\n📁 Last build: `" + build + "`"
+        text += "\n📅 Date: `" + device['modified'] + "`"
+        maintainer = device['maintainer']
+        text += "\n👨‍🔬 Maintainer: " + maintainer
         link_stable = "https://files.orangefox.website/OrangeFox-Stable/" + device_arg
         buttons = [[custom.Button.url("Download last", link_stable + "/" + build)]]
         link_mirror = "https://sourceforge.net/projects/orangefox/files/"
-        buttons += [[custom.Button.url("All builds", link_stable),
-                    custom.Button.url("Cloud", link_mirror + device_arg)]]
+        buttons = []
+        buttons.append([custom.Button.url("⬇️ Download last", link_stable + "/" + build)])
+        if device['readme']:
+            buttons.append([custom.Button.url(f"📄 Readme file ({device['readme']})", link_beta)])
+        buttons.append([custom.Button.url("🗄️ All builds", link_stable),
+                    custom.Button.url("☁️ Cloud", link_mirror + device_arg)])
 
     await event.reply(text, buttons=buttons)
