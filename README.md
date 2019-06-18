@@ -70,3 +70,6 @@ for ArchLinux:
     cd SophieBot
     python3 -m sophie_bot
 
+
+# Our friends:
++ [Paperplane Telegram UserBot](https://github.com/RaphielGang/Telegram-UserBot)
