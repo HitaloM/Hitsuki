@@ -112,11 +112,14 @@ async def blacklist_user(event):
     gbanned_error = 0
     print(user)
     if 'chats' not in user:
-        await event.client(EditBannedRequest(
-            event.chat_id,
-            user_id,
-            banned_rights
-        ))
+        try:
+            await event.client(EditBannedRequest(
+                event.chat_id,
+                user_id,
+                banned_rights
+            ))
+        except Exception:
+            pass
         await msg.edit(text + "Status: **User not gbanned in any chat, but added in blacklist.**")
         return
 
