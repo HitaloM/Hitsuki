@@ -1,13 +1,15 @@
 from time import gmtime, strftime
+import asyncio
 
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
-from sophie_bot import SUDO, WHITELISTED, decorator, logger, mongodb
+from sophie_bot import SUDO, WHITELISTED, decorator, logger, mongodb, bot
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
                                       user_admin_dec, user_link)
+from telethon.tl.functions.channels import GetParticipantRequest
 
 
 @decorator.command("antispam", arg=True)
@@ -67,30 +69,17 @@ async def blacklist_user(event):
         await event.reply("You can't blacklist user without a reason blyat!")
         return
 
-    try:
-        banned_rights = ChatBannedRights(
-            until_date=None,
-            view_messages=True,
-            send_messages=True,
-            send_media=True,
-            send_stickers=True,
-            send_gifs=True,
-            send_games=True,
-            send_inline=True,
-            embed_links=True,
-        )
-
-        await event.client(
-            EditBannedRequest(
-                event.chat_id,
-                user_id,
-                banned_rights
-            )
-        )
-
-    except Exception as err:
-        logger.error(str(err))
-        await event.reply(str(err))
+    banned_rights = ChatBannedRights(
+        until_date=None,
+        view_messages=True,
+        send_messages=True,
+        send_media=True,
+        send_stickers=True,
+        send_gifs=True,
+        send_games=True,
+        send_inline=True,
+        embed_links=True,
+    )
 
     old = mongodb.blacklisted_users.find_one({'user': user_id})
     if old:
@@ -112,8 +101,44 @@ async def blacklist_user(event):
     }
     logger.info(f'user {user_id} gbanned by {event.from_id}')
     mongodb.blacklisted_users.insert_one(new)
-    await event.reply("Sudo {} blacklisted {}.\nDate: `{}`\nReason: `{}`".format(
-        await user_link(event.from_id), await user_link(user_id), date, reason))
+    text = "{} **blacklisted** {}\n".format(
+        await user_link(event.from_id), await user_link(user_id))
+    text += "ID: `{}`\n".format(user_id)
+    text += "Date: `{}`\n".format(date)
+    text += "Reason: `{}`\n".format(reason)
+    msg = await event.reply(text + "Status: **Gbanning...**")
+
+    gbanned_ok = 0
+    gbanned_error = 0
+    print(user)
+    if 'chats' not in user:
+        await event.client(EditBannedRequest(
+            event.chat_id,
+            user_id,
+            banned_rights
+        ))
+        await msg.edit(text + "Status: **User not gbanned in any chat, but added in blacklist.**")
+        return
+
+    for chat in user['chats']:
+        await asyncio.sleep(0.2)
+        try:
+            user_a = await bot(GetParticipantRequest(channel=event.chat_id, user_id=user_id))
+            if not user_a:
+                continue
+            await event.client(EditBannedRequest(
+                chat['chat_id'],
+                user_id,
+                banned_rights
+            ))
+            await event.reply(msg)
+            gbanned_ok += 1
+        except Exception:
+            gbanned_error += 1
+            continue
+    await msg.edit(text + "Status: **Done, user gbanned in {} chats, not gbanned in {}.**".format(
+        gbanned_ok, gbanned_error
+    ))
 
 
 @decorator.command("ungban", arg=True, from_users=SUDO)
