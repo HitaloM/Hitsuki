@@ -239,6 +239,7 @@ async def gban_trigger(event):
 @get_strings_dec('gbans')
 async def gban_helper_2(event, strings):
     if event.user_joined is True or event.user_added is True:
+        await asyncio.sleep(2)  # Sleep 2 seconds before check user to allow Simon gban user
         if hasattr(event.action_message.action, 'users'):
             from_id = event.action_message.action.users[0]
         else:
