@@ -12,6 +12,19 @@ from sophie_bot.modules.users import (get_user, get_user_and_text,
 from telethon.tl.functions.channels import GetParticipantRequest
 
 
+GBANNED_RIGHTS = ChatBannedRights(
+    until_date=None,
+    view_messages=True,
+    send_messages=True,
+    send_media=True,
+    send_stickers=True,
+    send_gifs=True,
+    send_games=True,
+    send_inline=True,
+    embed_links=True,
+)
+
+
 @decorator.command("antispam", arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
@@ -45,17 +58,6 @@ async def switch_antispam(event, status, chat_id, chat_title):
         return
 
 
-@decorator.command("gban", arg=True, from_users=SUDO)
-async def gban_1(event):
-    print('exec')
-    await blacklist_user(event)
-
-
-@decorator.command("fban", arg=True, from_users=172811422)
-async def gban_2(event):
-    await blacklist_user(event)
-
-
 async def blacklist_user(event):
     user, reason = await get_user_and_text(event, send_text=False)
 
@@ -69,17 +71,15 @@ async def blacklist_user(event):
         await event.reply("You can't blacklist user without a reason blyat!")
         return
 
-    banned_rights = ChatBannedRights(
-        until_date=None,
-        view_messages=True,
-        send_messages=True,
-        send_media=True,
-        send_stickers=True,
-        send_gifs=True,
-        send_games=True,
-        send_inline=True,
-        embed_links=True,
-    )
+    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
+    logger.info(f'user {user_id} gbanned by {event.from_id}')
+    text = "{} **blacklisted** {}\n".format(
+        await user_link(event.from_id), await user_link(user_id))
+    text += "ID: `{}`\n".format(user_id)
+    text += "Date: `{}`\n".format(date)
+    text += "Reason: `{}`\n".format(reason)
+    msg = await event.reply(text + "Status: **Gbanning...**")
 
     old = mongodb.blacklisted_users.find_one({'user': user_id})
     if old:
@@ -92,31 +92,24 @@ async def blacklist_user(event):
         mongodb.blacklisted_users.update_one({'_id': old['_id']}, {"$set": new}, upsert=False)
         await event.reply("This user already blacklisted! I'll update the reason.")
         return
-    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
     new = {
         'user': user_id,
         'date': date,
         'reason': reason,
         'by': event.from_id
     }
-    logger.info(f'user {user_id} gbanned by {event.from_id}')
+
     mongodb.blacklisted_users.insert_one(new)
-    text = "{} **blacklisted** {}\n".format(
-        await user_link(event.from_id), await user_link(user_id))
-    text += "ID: `{}`\n".format(user_id)
-    text += "Date: `{}`\n".format(date)
-    text += "Reason: `{}`\n".format(reason)
-    msg = await event.reply(text + "Status: **Gbanning...**")
 
     gbanned_ok = 0
     gbanned_error = 0
-    print(user)
     if 'chats' not in user:
         try:
             await event.client(EditBannedRequest(
                 event.chat_id,
                 user_id,
-                banned_rights
+                GBANNED_RIGHTS
             ))
         except Exception:
             pass
@@ -132,16 +125,27 @@ async def blacklist_user(event):
             await event.client(EditBannedRequest(
                 chat['chat_id'],
                 user_id,
-                banned_rights
+                GBANNED_RIGHTS
             ))
             await event.reply(msg)
             gbanned_ok += 1
         except Exception:
             gbanned_error += 1
             continue
-    await msg.edit(text + "Status: **Done, user gbanned in {} chats, not gbanned in {}.**".format(
+    await msg.edit(text + "Status: **Done, user gbanned in {}/{} chats.**".format(
         gbanned_ok, gbanned_error
     ))
+
+
+@decorator.command("gban", arg=True, from_users=SUDO)
+async def gban_1(event):
+    print('exec')
+    await blacklist_user(event)
+
+
+@decorator.command("fban", arg=True, from_users=172811422)
+async def gban_2(event):
+    await blacklist_user(event)
 
 
 @decorator.command("ungban", arg=True, from_users=SUDO)
