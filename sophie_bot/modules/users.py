@@ -82,12 +82,19 @@ async def update_users(event):
             username = user.username.lower()
         else:
             username = None
+        new_chat = [chat_id]
+        if old_user:
+            if 'chats' in old_user:
+                new_chat = old_user['chats']
+                if chat_id not in new_chat:
+                    new_chat.append(chat_id)
         new_user = {
             'user_id': user_id,
             'first_name': user.first_name,
             'last_name': user.last_name,
             'username': username,
-            'user_lang': user.lang_code
+            'user_lang': user.lang_code,
+            'chats': new_chat
         }
         logger.debug(f"Updating {user_id}...")
         logger.debug(f"old={old_user}")
@@ -108,12 +115,18 @@ async def update_users(event):
             username = user.username.lower()
         else:
             username = None
+        new_chat = None
+        if old_user:
+            if 'chats' in old_user:
+                new_chat = old_user['chats']
+
         new_user = {
             'user_id': user_id,
             'first_name': user.first_name,
             'last_name': user.last_name,
             'username': username,
-            'user_lang': user.lang_code
+            'user_lang': user.lang_code,
+            'chats': new_chat
         }
         logger.debug(f"Updating {user_id}...")
         logger.debug(f"old={old_user}")
