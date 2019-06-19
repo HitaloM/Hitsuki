@@ -62,7 +62,8 @@ def update_devices():
             "maintainer": maintainer,
             "ver": last_build,
             "modified": modified,
-            "readme": readme
+            "readme": readme,
+            "msg": f"This is test message for {fullname} device"
         }
 
     data = ftp.mlsd("OrangeFox-Beta", ["type"])
@@ -101,7 +102,8 @@ def update_devices():
             "maintainer": maintainer,
             "ver": last_build,
             "modified": modified,
-            "readme": readme
+            "readme": readme,
+            "msg": f"This is test message for {fullname} device"
         }
 
     JSON_FILE = {'stable': DEVICES_STABLE, 'beta': DEVICES_BETA, 
