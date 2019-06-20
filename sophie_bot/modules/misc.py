@@ -5,7 +5,7 @@ from requests import post
 from telethon.errors import BadRequestError, ChatNotModifiedError
 from telethon.tl.custom import Button
 from telethon.tl.functions.channels import EditAdminRequest
-from telethon.tl.types import ChatAdminRights
+from telethon.tl.types import ChatAdminRights, PeerUser
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
 from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, bot, decorator, mongodb
@@ -249,7 +249,7 @@ async def demote(event):
     else:
         return
 
-    bot_id = bot.get_me().id
+    bot_id = (await bot.get_me()).id
     if bot_id == user['user_id']:
         return
 
@@ -380,7 +380,7 @@ async def paste_deldog(event, strings):
 @get_strings_dec("misc")
 async def user_info(event, strings):
     user = await get_user(event)
-
+    user_obj = await event.client.get_entity(PeerUser(user["user_id"]))
     check = mongodb.blacklisted_users.find_one({'user': user['user_id']})
     if check:
         gban_stat = strings['gbanned_yes']
@@ -391,6 +391,16 @@ async def user_info(event, strings):
 
     text = strings["user_info"]
     text += strings["info_id"].format(id=user['user_id'])
+
+    if user_obj.photo:
+        text += strings["dc_id"].format(user_obj.photo.dc_id)
+        
+    text += strings["scam"].format(user_obj.scam)
+    
+    text += strings["restricted"].format(user_obj.restricted)
+
+    text += strings["deleted"].format(user_obj.deleted)
+
     text += strings["info_first"].format(first_name=str(user['first_name']))
 
     if user['last_name'] is not None:

@@ -187,7 +187,11 @@
         "paste_no_text": "You haven't supplied text to paste!",
 
         "user_info": "**User info:**\n",
-        "info_id": "**ID:** `{id}`",
+        "info_id": "**ID:** `{id}`\n",
+        "dc_id": "**DC (DataCenter) ID:** `{}`\n",
+        "scam": "**Scammer:** {}\n",
+        "restricted": "**Restricted:** {}\n",
+        "deleted": "**Deleted:** {}",
         "info_first": "\n**First name:** {first_name}",
         "info_last": "\n**Last name:** {last_name}",
         "info_username": "\n**Username:** {username}",
@@ -195,7 +199,7 @@
 
         "father": "\n\nThis is my father.",
         "sudo_crown": "\n\nHey! Look at him, he has a crown, lemme let me see it.. Whaow, it has a engraving 'sudo user'.",
-
+        
         "gbanned": "\nGlobally banned: ",
         "no": "No",
         "gbanned_yes": "Yes\n",
