@@ -4,13 +4,23 @@ import signal
 
 from importlib import import_module
 
-from sophie_bot import CONFIG, tbot, redis, logger, dp
+from sophie_bot import CONFIG, TOKEN, tbot, redis, logger, dp, bot
 from sophie_bot.modules import ALL_MODULES
 
 from aiogram import executor
 
 LOAD_COMPONENTS = CONFIG["advanced"]["load_components"]
+CATCH_UP = CONFIG["advanced"]["skip_catch_up"]
 
+# webhook settings
+WEBHOOK_HOST = CONFIG["advanced"]["webhook_host"]
+WEBHOOK_URL = f"{WEBHOOK_HOST}{TOKEN}"
+
+# webserver settings
+WEBAPP_HOST = CONFIG["advanced"]["webapp_host"]
+WEBAPP_PORT = CONFIG["advanced"]["webapp_port"]
+
+loop = asyncio.get_event_loop()
 
 # Import modules
 for module_name in ALL_MODULES:
@@ -32,7 +42,7 @@ else:
 
 
 # Catch up missed updates
-if CONFIG["advanced"]["catch_up"] is True:
+if CATCH_UP is False:
     logger.info("Catch up missed updates..")
 
     try:
@@ -53,10 +63,31 @@ def exit_gracefully(signum, frame):
     sys.exit(1)
 
 
+async def on_startup(dp):
+    await bot.set_webhook(WEBHOOK_URL)
+    # insert code here to run it after start
+
+
+async def on_shutdown(dp):
+    # insert code here to run it before shutdown
+    pass
+
+
 # Run loop
 logger.info("Running loop..")
 logger.info("tbot is alive!")
 signal.signal(signal.SIGINT, exit_gracefully)
 
-executor.start_polling(dp, skip_updates=CONFIG["advanced"]["catch_up"])
-asyncio.get_event_loop().run_forever()
+if CONFIG['advanced']['webhooks'] is True:
+    logger.info("Using webhooks method")
+    executor.start_webhook(dispatcher=dp,
+                           webhook_path=TOKEN,
+                           on_startup=on_startup,
+                           on_shutdown=on_shutdown,
+                           skip_updates=CATCH_UP,
+                           host=WEBAPP_HOST,
+                           port=WEBAPP_PORT)
+else:
+    logger.info("Using polling method")
+    executor.start_polling(dp, skip_updates=CATCH_UP)
+# asyncio.get_event_loop().run_forever()

@@ -11,7 +11,12 @@
     "redis_port": 6379
 },
  "advanced":{
-    "catch_up": false,
+    "webhooks": false,
+    "webhook_host": "https://yourdomain",
+    "webapp_host": "localhost",
+    "webapp_port": 8031,
+
+    "skip_catch_up": true,
     
     "sudo": [483808054, 782229305, 654839744],
     "whitelisted": [123456789, 928173281],
