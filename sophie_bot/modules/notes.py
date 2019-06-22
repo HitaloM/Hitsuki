@@ -7,7 +7,9 @@ from telethon.tl.functions.users import GetFullUserRequest
 from telethon import custom, errors
 from telethon.tl.custom import Button
 
-from sophie_bot import BOT_USERNAME, tbot, decorator, mongodb, logger
+from aiogram import types, filters
+
+from sophie_bot import BOT_USERNAME, tbot, decorator, mongodb, logger, dp
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
@@ -236,35 +238,40 @@ async def del_note_callback(event):
         note_name=note['name'], user=link), link_preview=False)
 
 
-@decorator.StrictCommand("^[/!#](?:get|get@{})(?: |$)(.*)".format(BOT_USERNAME))
-@connection()
-async def get_note(event, status, chat_id, chat_title):
-    raw_text = event.message.raw_text.split()
-    note_name = raw_text[1].lower()
+@dp.message_handler(commands=['get'], commands_prefix='!/#')
+async def get_note(message):
+    status, chat_id, chat_title = await get_conn_chat(message['from']['id'], message['chat']['id'])
+    args = message['text'].split(" ", 3)
+    if not args:
+        return
+
+    note_name = args[1].lower()
     if note_name[0] == "#":
         note_name = note_name[1:]
-    if len(raw_text) >= 3 and raw_text[2].lower() == "noformat":
+    if len(args) >= 3 and args[2].lower() == "noformat":
         noformat = True
     else:
         noformat = False
     if len(note_name) >= 1:
         await send_note(
-            event.chat_id, chat_id, event.message.id, note_name,
-            show_none=True, noformat=noformat, from_id=event.from_id)
+            message['chat']['id'], chat_id, message['message_id'], note_name,
+            show_none=True, noformat=noformat, from_id=message['from']['id'])
 
 
-@decorator.StrictCommand("^#(.*)")
-@connection()
-async def check_hashtag(event, status, chat_id, chat_title):
-    status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id)
+@dp.message_handler(regexp="#(\w+)")
+@dp.edited_message_handler(regexp="#(\w+)")
+async def check_hashtag(message: types.Message):
+    print(message)
+    status, chat_id, chat_title = await get_conn_chat(message['from']['id'], message['chat']['id'])
     if status is False:
-        await event.reply(chat_id)
+        await message.reply(chat_id)
         return
-    note_name = event.message.raw_text[1:].lower()
+    note_name = message['text'][1:].split(" ", 2)[0].lower()
+    print(note_name)
     if len(note_name) >= 1:
         await send_note(
-            event.chat_id, chat_id, event.message.id, note_name,
-            from_id=event.from_id)
+            message['chat']['id'], chat_id, message['message_id'], note_name,
+            from_id=message['from']['id'])
 
 
 def button_parser(chat_id, texts):

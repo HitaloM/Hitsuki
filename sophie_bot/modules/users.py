@@ -373,8 +373,8 @@ def user_sudo_dec(func):
 
 
 def user_owner_dec(func):
-    async def wrapped(event):
-        if not event.from_id == OWNER_ID:
+    async def wrapped(message):
+        if not message['from']['id'] == OWNER_ID:
             return
-        return await func(event)
+        return await func(message)
     return wrapped

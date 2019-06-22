@@ -353,7 +353,7 @@
                 "i2": "- /setwelcome <note>: задает приглашение!",
                 "i3": "- /cleanservice: Удалить служебные сообщения Telegram о входе и выходе пользователя из чата.",
                 "i4": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
-                "i5": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a tbot'"
+                "i5": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
             }
         },
         "filters": {

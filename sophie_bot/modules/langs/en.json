@@ -28,7 +28,7 @@
         "note_so_big": "This note bigger is than Telegram's limit of 200 characters!",
         "only_admins_can_rmw": "Only admins can remove this message",
         "delmsg_no_arg": "deletemsg button can contain only 'admin' or 'user' argument!",
-        "bot_msg" : "I'm sorry, i can't get this message, probably this a other tbot's message. I can't save it.",
+        "bot_msg" : "I'm sorry, i can't get this message, probably this a other bot's message. I can't save it.",
         "pmed_note": "I pm'ed note to you!",
         "notename_cant_contain": "Note name can't conatin `{}` !",
 
@@ -95,7 +95,7 @@
         "wlcm_sec_soft": "Welcome Security is set to **SOFT** in this chat!",
         "wlcm_sec_off": "Welcome Security is disabled in this chat!",
         "clik2tlk_btn": "Click here to talk",
-        "wlcm_sec": "Hey {mention}, Please click below button to prove that you aren't a tbot!",
+        "wlcm_sec": "Hey {mention}, Please click below button to prove that you aren't a bot!",
         "not_trgt_usr": "You're not supposed to click this button!",
         "trgt_success": "Great! you have been unmuted!",
         "not_trgt": "You are not supposed to click this button",
@@ -349,8 +349,8 @@
         "text": {
             "i1": "\nAvailable commands are:",
             "i2": "- /id: get a id of user and chat.",
-            "i3": "- /stats: show tbot stats.",
-            "i4": "- /botchanges: show tbot changes (commit history)",
+            "i3": "- /stats: show bot stats.",
+            "i4": "- /botchanges: show bot changes (commit history)",
             "i5": "- /runs: responds with a randomly generated 'run away' string.",
             "i6": "- /paste <text>: Paste text to the Dogbin."
         }
@@ -375,18 +375,18 @@
             "i2": "- /setwelcome <note>: sets your new welcome note!",
             "i3": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat.",
             "i4": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
-            "i5": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a tbot'"
+            "i5": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
         }
     },
     "filters": {
         "btn": "Filters",
-        "title": "Make your chat more lively with filters; The tbot will reply to certain words!",
+        "title": "Make your chat more lively with filters; The bot will reply to certain words!",
         "text": {
             "i1": "\nAvailable commands are:",
-            "i2": "\n - /filter <keyword> <action> : Every time someone says 'word' , the tbot will do the given action \n\n Available actions are: \n**note** : eg: /filter foo note <notename> ; tbot will reply to word 'foo' containing given notename ",
-            "i3": "**delete** : eg: /filter foo delete; tbot will delete the someone's message containing 'foo' \n**tban** : eg: /filter foo tban 10m ; tbot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
-            "i4": "**ban** : eg: /filter foo ban ; tbot will ban who send message containing 'foo' \n **mute**: eg: /filter foo mute ; tbot will mute user who send message 'foo'",
-            "i5": "**kick** : eg: /filter foo kick ; tbot will kick user who send message containing 'foo' \n",
+            "i2": "\n - /filter <keyword> <action> : Every time someone says 'word' , the bot will do the given action \n\n Available actions are: \n**note** : eg: /filter foo note <notename> ; bot will reply to word 'foo' containing given notename ",
+            "i3": "**delete** : eg: /filter foo delete; bot will delete the someone's message containing 'foo' \n**tban** : eg: /filter foo tban 10m ; bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
+            "i4": "**ban** : eg: /filter foo ban ; bot will ban who send message containing 'foo' \n **mute**: eg: /filter foo mute ; bot will mute user who send message 'foo'",
+            "i5": "**kick** : eg: /filter foo kick ; bot will kick user who send message containing 'foo' \n",
             "i6": "- /filters : Will display all filter in that chat!\n",
             "i7": "- /stop <filter name> : Will stop the the given filter names"
         }

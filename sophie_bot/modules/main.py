@@ -2,11 +2,10 @@ import asyncio
 import math
 import subprocess
 
-from sophie_bot import decorator, mongodb, dp
-from sophie_bot.modules.disable import disablable_dec
-from sophie_bot.modules.helper_func.flood import flood_limit_dec
+from sophie_bot import mongodb, dp, tbot
 
 from aiogram import types
+
 
 async def term(command):
     process = await asyncio.create_subprocess_shell(
@@ -20,31 +19,29 @@ async def term(command):
     return result
 
 
-async def chat_term(event, command):
+async def chat_term(message, command):
     result = await term(command)
     if len(result) > 4096:
         output = open("output.txt", "w+")
         output.write(result)
         output.close()
-        await event.client.send_file(
-            event.chat_id,
+        await tbot.send_file(
+            message['chat']['id'],
             "output.txt",
-            reply_to=event.id,
+            reply_to=message['message_id'],
             caption="`Output too large, sending as file`",
         )
         subprocess.run(["rm", "output.txt"], stdout=subprocess.PIPE)
     return result
 
 
-@decorator.command("botchanges")
-@disablable_dec("botchanges")
-@flood_limit_dec("botchanges")
-async def botchanges(event):
+@dp.message_handler(commands=['botchanges'])
+async def botchanges(message: types.Message):
     command = "git log --pretty=format:\"%an: %s\" -30"
-    result = "**Bot changes:**\n"
-    result += "__Showed last 30 commits__\n"
-    result += await chat_term(event, command)
-    await event.reply(result)
+    text = "<b>Bot changes:</b>\n"
+    text += "<i>Showed last 30 commits</i>\n"
+    text += await chat_term(message, command)
+    await message.reply(text, parse_mode=types.ParseMode.HTML)
 
 
 @dp.message_handler(commands=['stats'])
@@ -68,6 +65,11 @@ async def stats(message: types.Message):
         text += '\* Database size is `{}`, free `512M`'.format(
             convert_size(db['storageSize']))
     await message.reply(text, parse_mode=types.ParseMode.MARKDOWN)
+
+
+@dp.message_handler(commands=['test'])
+async def test(message: types.Message):
+    print(message)
 
 
 def convert_size(size_bytes):

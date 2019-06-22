@@ -349,18 +349,18 @@
                 "i2": "- /setwelcome <note>: назначує привітання!",
                 "i3": "- /cleanservice: видаляє повідомлення, що користувач приєднався до групи.",
                 "i4": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
-                "i5": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a tbot'"
+                "i5": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
             }
         },
         "filters": {
             "btn": "Filters",
-            "title": "Make your chat more lively with filters; The tbot will reply to certain words!",
+            "title": "Make your chat more lively with filters; The bot will reply to certain words!",
             "text": {
                 "i1": "\nAvailable commands are:",
-                "i2": "\n - /filter <keyword> <action> : Every time someone says 'word' , the tbot will do the given action \n\n Available actions are: \n**note** : eg: /filter foo note <notename> ; tbot will reply to word 'foo' containing given notename ",
-                "i3": "**delete** : eg: /filter foo delete; tbot will delete the someone's message containing 'foo' \n**tban** : eg: /filter foo tban 10m ; tbot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
-                "i4": "**ban** : eg: /filter foo ban ; tbot will ban who send message containing 'foo' \n **mute**: eg: /filter foo mute ; tbot will mute user who send message 'foo'",
-                "i5": "**kick** : eg: /filter foo kick ; tbot will kick user who send message containing 'foo' \n",
+                "i2": "\n - /filter <keyword> <action> : Every time someone says 'word' , the bot will do the given action \n\n Available actions are: \n**note** : eg: /filter foo note <notename> ; bot will reply to word 'foo' containing given notename ",
+                "i3": "**delete** : eg: /filter foo delete; bot will delete the someone's message containing 'foo' \n**tban** : eg: /filter foo tban 10m ; bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
+                "i4": "**ban** : eg: /filter foo ban ; bot will ban who send message containing 'foo' \n **mute**: eg: /filter foo mute ; bot will mute user who send message 'foo'",
+                "i5": "**kick** : eg: /filter foo kick ; bot will kick user who send message containing 'foo' \n",
                 "i6": "- /filters : Will display all filter in that chat!\n",
                 "i7": "- /stop <filter name> : Will stop the the given filter names"
             }

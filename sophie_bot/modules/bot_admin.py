@@ -1,18 +1,22 @@
 import asyncio
 import os
 
-from sophie_bot import OWNER_ID, tbot, decorator, mongodb, redis, logger
+from sophie_bot import OWNER_ID, tbot, decorator, mongodb, redis, logger, dp
+from sophie_bot.modules.users import user_owner_dec
 from sophie_bot.modules.main import chat_term
 from sophie_bot.modules.notes import button_parser
 
+from aiogram import types
 
-@decorator.command("term", arg=True, from_users=OWNER_ID)
-async def term(event):
-    msg = await event.reply("Running...")
-    command = str(event.message.text.split(" ", 1)[1])
-    result = "**Shell:**\n"
-    result += await chat_term(event, command)
-    await msg.edit(result)
+
+@dp.message_handler(commands=['term'])
+@user_owner_dec
+async def term(message: types.Message):
+    msg = await message.reply("Running...")
+    command = str(message['text'].split(" ", 1)[1])
+    result = "<b>Shell:</b>\n"
+    result += await chat_term(message, command)
+    await msg.edit_text(result, parse_mode=types.ParseMode.HTML)
 
 
 @decorator.command("broadcast", arg=True, from_users=OWNER_ID)

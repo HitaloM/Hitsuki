@@ -80,13 +80,15 @@ signal.signal(signal.SIGINT, exit_gracefully)
 
 if CONFIG['advanced']['webhooks'] is True:
     logger.info("Using webhooks method")
-    executor.start_webhook(dispatcher=dp,
-                           webhook_path=TOKEN,
-                           on_startup=on_startup,
-                           on_shutdown=on_shutdown,
-                           skip_updates=CATCH_UP,
-                           host=WEBAPP_HOST,
-                           port=WEBAPP_PORT)
+    executor.start_webhook(
+        dispatcher=dp,
+        webhook_path=TOKEN,
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        skip_updates=CATCH_UP,
+        host=WEBAPP_HOST,
+        port=WEBAPP_PORT
+    )
 else:
     logger.info("Using polling method")
     executor.start_polling(dp, skip_updates=CATCH_UP)
