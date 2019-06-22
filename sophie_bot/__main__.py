@@ -4,8 +4,10 @@ import signal
 
 from importlib import import_module
 
-from sophie_bot import CONFIG, bot, redis, logger
+from sophie_bot import CONFIG, tbot, redis, logger, dp
 from sophie_bot.modules import ALL_MODULES
+
+from aiogram import executor
 
 LOAD_COMPONENTS = CONFIG["advanced"]["load_components"]
 
@@ -34,7 +36,7 @@ if CONFIG["advanced"]["catch_up"] is True:
     logger.info("Catch up missed updates..")
 
     try:
-        asyncio.ensure_future(bot.catch_up())
+        asyncio.ensure_future(tbot.catch_up())
     except Exception as err:
         logger.error(err)
 
@@ -53,7 +55,8 @@ def exit_gracefully(signum, frame):
 
 # Run loop
 logger.info("Running loop..")
-logger.info("Bot is alive!")
+logger.info("tbot is alive!")
 signal.signal(signal.SIGINT, exit_gracefully)
 
+executor.start_polling(dp, skip_updates=CONFIG["advanced"]["catch_up"])
 asyncio.get_event_loop().run_forever()

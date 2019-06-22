@@ -7,7 +7,7 @@ from telethon.tl.functions.users import GetFullUserRequest
 from telethon import custom, errors
 from telethon.tl.custom import Button
 
-from sophie_bot import BOT_USERNAME, bot, decorator, mongodb, logger
+from sophie_bot import BOT_USERNAME, tbot, decorator, mongodb, logger
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
@@ -124,7 +124,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
     file_id = None
     note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': note_name})
     if not note and show_none is True:
-        await bot.send_message(chat_id, get_string(
+        await tbot.send_message(chat_id, get_string(
             "notes", "note_not_found", chat_id), reply_to=msg_id)
         return
     elif not note:
@@ -176,7 +176,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
     if from_id:
         user = mongodb.user_list.find_one({"user_id": from_id})
         if not user:
-            user = await add_user_to_db(await bot(GetFullUserRequest(int(from_id))))
+            user = await add_user_to_db(await tbot(GetFullUserRequest(int(from_id))))
         if 'last_name' in user:
             last_name = user['last_name']
             if not last_name:
@@ -206,7 +206,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         )
 
     try:
-        return await bot.send_message(
+        return await tbot.send_message(
             chat_id,
             string,
             buttons=buttons,
@@ -216,7 +216,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
             link_preview=preview
         )
     except Exception as err:
-        await bot.send_message(chat_id, str(err))
+        await tbot.send_message(chat_id, str(err))
         logger.error("Error in send_note/send_message: " + str(err))
 
 

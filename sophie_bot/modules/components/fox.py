@@ -5,7 +5,7 @@ import os
 
 from telethon import custom
 
-from sophie_bot import CONFIG, decorator, logger, bot
+from sophie_bot import CONFIG, decorator, logger, tbot
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 
 ftp_url = "ftp.orangefox.website"
@@ -125,7 +125,7 @@ async def update_devices():
             logger.info(f'Stable - new update of {codename} detected.')
             link = 'https://files.orangefox.website/OrangeFox-Stable/' + device + "/" + last_build
 
-            await bot.send_message(
+            await tbot.send_message(
                 STABLE_CHANNEL,
                 NEW_STABLE_TEXT.format_map(DEVICES_STABLE[device]),
                 buttons=[[custom.Button.url(
@@ -200,7 +200,7 @@ async def update_devices():
             logger.info(f'BETA - new update of {codename} detected.')
             link = 'https://files.orangefox.website/OrangeFox-Beta/' + device + "/" + last_build
 
-            await bot.send_message(
+            await tbot.send_message(
                 BETA_CHANNEL,
                 NEW_BETA_TEXT.format_map(DEVICES_BETA[device]),
                 buttons=[[custom.Button.url(

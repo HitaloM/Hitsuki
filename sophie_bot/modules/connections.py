@@ -3,7 +3,7 @@ import re
 from telethon import errors
 from telethon.tl.custom import Button
 
-from sophie_bot import bot, decorator, mongodb, redis
+from sophie_bot import tbot, decorator, mongodb, redis
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import is_user_admin
 
@@ -87,7 +87,7 @@ async def connect_with_arg(event):
         await event.reply(text)
     else:
         try:
-            await bot.send_message(user_id, text)
+            await tbot.send_message(user_id, text)
         except errors.rpcerrorlist.UserIsBlockedError:
             await event.reply(get_string("connections", "connected_pm_to_me", chat).format(
                 chat_title))

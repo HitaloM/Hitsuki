@@ -1,10 +1,10 @@
-import asyncio
 import logging
 
 import redis
 import ujson
 from pymongo import MongoClient
 from telethon import TelegramClient
+from aiogram import Bot, Dispatcher
 
 # enable logging
 logging.basicConfig(
@@ -43,13 +43,17 @@ mongodb = MongoClient(MONGO_CONN).sophie
 redis = redis.StrictRedis(
     host=REDIS_COMM, port=REDIS_PORT, db='1')  # decode_respone=True
 
-bot = TelegramClient(NAME, API_ID, API_HASH)
+tbot = TelegramClient(NAME, API_ID, API_HASH)
 
 # Init the bot
-bot.start(bot_token=CONFIG["basic"]["bot_token"])
+tbot.start(bot_token=CONFIG["basic"]["bot_token"])
 
-bot_info = asyncio.get_event_loop().run_until_complete(bot.get_me())
-BOT_USERNAME = bot_info.username
+# AIOGram
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
+
+# bot_info = asyncio.get_event_loop().run_until_complete(bot.get_me())
+BOT_USERNAME = "rSophieBot"  # bot_info.username
 
 
 logger.info("----------------------")

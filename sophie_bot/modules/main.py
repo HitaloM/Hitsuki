@@ -2,10 +2,11 @@ import asyncio
 import math
 import subprocess
 
-from sophie_bot import decorator, mongodb
+from sophie_bot import decorator, mongodb, dp
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 
+from aiogram import types
 
 async def term(command):
     process = await asyncio.create_subprocess_shell(
@@ -46,29 +47,27 @@ async def botchanges(event):
     await event.reply(result)
 
 
-@decorator.command("stats")
-@disablable_dec("stats")
-@flood_limit_dec("stats")
-async def stats(event):
-    text = "**Stats**\n"
+@dp.message_handler(commands=['stats'])
+async def stats(message: types.Message):
+    text = "*Stats*\n"
     usrs = mongodb.user_list.count()
     chats = mongodb.chat_list.count()
-    text += "* `{}` total users, in `{}` chats\n".format(usrs, chats)
-    text += "* `{}` total notes\n".format(mongodb.notes.count())
-    text += "* `{}` total warns\n".format(mongodb.warns.count())
-    text += "* `{}` total gbanned users\n".format(mongodb.blacklisted_users.count())
-    text += "* `{}` chats in `{}` total feds, `{}` fbanned users\n".format(
+    text += "\* `{}` total users, in `{}` chats\n".format(usrs, chats)
+    text += "\* `{}` total notes\n".format(mongodb.notes.count())
+    text += "\* `{}` total warns\n".format(mongodb.warns.count())
+    text += "\* `{}` total gbanned users\n".format(mongodb.blacklisted_users.count())
+    text += "\* `{}` chats in `{}` total feds, `{}` fbanned users\n".format(
         mongodb.fed_list.count(),
         mongodb.fed_groups.count(),
         mongodb.fbanned_users.count())
     db = mongodb.command("dbstats")
     if 'fsTotalSize' in db:
-        text += '* Database size is `{}`, free `{}`'.format(
+        text += '\* Database size is `{}`, free `{}`'.format(
             convert_size(db['dataSize']), convert_size(db['fsTotalSize'] - db['fsUsedSize']))
     else:
-        text += '* Database size is `{}`, free `512M`'.format(
+        text += '\* Database size is `{}`, free `512M`'.format(
             convert_size(db['storageSize']))
-    await event.reply(text)
+    await message.reply(text, parse_mode=types.ParseMode.MARKDOWN)
 
 
 def convert_size(size_bytes):

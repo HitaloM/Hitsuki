@@ -5,7 +5,7 @@ from telethon.tl.functions.channels import (EditBannedRequest,
                                             GetParticipantRequest)
 from telethon.tl.types import ChatBannedRights, ChannelParticipantBanned
 
-from sophie_bot import WHITELISTED, bot, decorator, logger, mongodb
+from sophie_bot import WHITELISTED, tbot, decorator, logger, mongodb
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
@@ -179,7 +179,7 @@ async def ban_user(event, user_id, chat_id, time_val):
         embed_links=True,
     )
 
-    bot_id = await bot.get_me()
+    bot_id = await tbot.get_me()
     bot_id = bot_id.id
 
     if str(user_id) in WHITELISTED:
@@ -225,7 +225,7 @@ async def kick_user(event, user_id, chat_id):
         send_messages=False
     )
 
-    bot_id = await bot.get_me()
+    bot_id = await tbot.get_me()
     bot_id = bot_id.id
 
     if user_id == bot_id:
@@ -273,7 +273,7 @@ async def unban_user(event, user_id, chat_id):
         embed_links=False,
     )
 
-    bot_id = await bot.get_me()
+    bot_id = await tbot.get_me()
     bot_id = bot_id.id
 
     if user_id == bot_id:
@@ -281,7 +281,7 @@ async def unban_user(event, user_id, chat_id):
                           event.chat_id))
         return False
     try:
-        peep = await bot(
+        peep = await tbot(
             GetParticipantRequest(
                 chat_id, user_id
             )
@@ -314,7 +314,7 @@ async def mute_user(event, user_id, chat_id, time_val):
         send_messages=True
     )
 
-    bot_id = await bot.get_me()
+    bot_id = await tbot.get_me()
     bot_id = bot_id.id
 
     if user_id == bot_id:
@@ -346,7 +346,7 @@ async def unmute_user(event, user_id, chat_id):
         send_messages=False
     )
 
-    bot_id = await bot.get_me()
+    bot_id = await tbot.get_me()
     bot_id = bot_id.id
 
     if user_id == bot_id:

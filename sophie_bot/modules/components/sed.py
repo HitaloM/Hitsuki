@@ -3,7 +3,7 @@ from collections import defaultdict, deque
 
 from telethon import events
 
-from sophie_bot import bot, decorator
+from sophie_bot import tbot, decorator
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 
@@ -67,7 +67,7 @@ async def doit(event, message, match):
                 await message.reply(substitution)
             else:
                 msg = await event.get_reply_message()
-                await bot.send_message(event.chat_id, substitution, reply_to=msg.id)
+                await tbot.send_message(event.chat_id, substitution, reply_to=msg.id)
 
     except Exception as e:
         await message.reply('fuck me\n' + str(e))
@@ -85,12 +85,12 @@ async def sed(event):
     raise events.StopPropagation
 
 
-@bot.on(events.NewMessage)
+@tbot.on(events.NewMessage)
 async def catch_all(event):
     last_msgs[event.chat_id].append(event.message)
 
 
-@bot.on(events.MessageEdited)
+@tbot.on(events.MessageEdited)
 async def catch_edit(event):
     for i, message in enumerate(last_msgs[event.chat_id]):
         if message.id == event.id:

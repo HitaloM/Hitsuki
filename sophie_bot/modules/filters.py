@@ -3,7 +3,7 @@ import re
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
-from sophie_bot import WHITELISTED, bot, decorator, mongodb, redis
+from sophie_bot import WHITELISTED, tbot, decorator, mongodb, redis
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
@@ -145,7 +145,7 @@ async def filter_ban(event, filter, time):
     if int(user) in WHITELISTED:
         return
 
-    bot_id = await bot.get_me()
+    bot_id = await tbot.get_me()
     if user == bot_id.id:
         return
 
@@ -175,7 +175,7 @@ async def filter_ban(event, filter, time):
 
     text = get_string('filters', 'filter_ban_success', chat).format(user=await user_link(user),
                                                                     filter=filter)
-    await bot.send_message(
+    await tbot.send_message(
         chat,
         text
     )

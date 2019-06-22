@@ -4,7 +4,7 @@ import time
 from telethon.tl.custom import Button
 from telethon.tl.types import MessageActionChatJoinedByLink
 
-from sophie_bot import bot, decorator, mongodb
+from sophie_bot import tbot, decorator, mongodb
 from sophie_bot.modules.bans import mute_user, unmute_user
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.helper_func.flood import flood_limit
@@ -89,7 +89,7 @@ async def welcome_trigger(event, strings):
                 return
 
         # Do not welcome yourselve
-        bot_id = await bot.get_me()
+        bot_id = await tbot.get_me()
         if bot_id.id == from_id:
             return
 

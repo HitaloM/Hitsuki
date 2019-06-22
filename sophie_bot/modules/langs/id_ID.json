@@ -30,7 +30,7 @@
             "note_so_big": "Catatan ini lebih besar dari batasan telegram yaitu 200 karakter!",
             "only_admins_can_rmw": "Hanya admin yang dapat menghapus pesan ini",
             "delmsg_no_arg": "tombol deletemsg hanya dapat mengandung argumen admin dan pengguna!",
-            "bot_msg": "Maaf, saya tidak bisa mendapatkan pesan itu dikarenakan itu adalah pesan dari bot lain. Saya tidak bisa menyimpannya.",
+            "bot_msg": "Maaf, saya tidak bisa mendapatkan pesan itu dikarenakan itu adalah pesan dari tbot lain. Saya tidak bisa menyimpannya.",
             "pmed_note": "Saya telah memberi catatan di pm anda!",
             "notename_cant_contain": "Nama catatan tidak boleh mengandung `{}` !",
             "note_saved_or_updated_in_fed": "**Catatan {note_name} {status} di Federasi {fed_name}!**\n",
@@ -323,8 +323,8 @@
             "text": {
                 "i1": "\nPerintah yang tersedia:",
                 "i2": "- /id: dapatkan id user atau obrolan.",
-                "i3": "- /stats: Memberikan statistik bot.",
-                "i4": "- /botchanges: Memberikan perubahan terakhir bot (histori perubahan)",
+                "i3": "- /stats: Memberikan statistik tbot.",
+                "i4": "- /botchanges: Memberikan perubahan terakhir tbot (histori perubahan)",
                 "i5": "- /runs: merespons dengan string 'lari' yang dihasilkan secara acak.",
                 "i6": "- /paste <teks>: Tempel teks ke Dogbin."
             }
@@ -349,18 +349,18 @@
                 "i2": "/setwelcome <note>: mengatur pesan catatan baru Anda!",
                 "i3": "/cleanservice: Hapus pesan Telegram ketika anggota baru masuk atau meninggalkan obrolan.",
                 "i4": "- /cleanwelcome: Menghapus pesan sambutan lama; ketika orang baru bergabung, pesan lama dihapus.",
-                "i5": "- /welcomesecurity <off/soft/hard>: soft - membatasi izin pengguna untuk mengirim file media selama 24 jam, hard - membatasi izin pengguna untuk mengirim pesan sampai mereka mengklik tombol 'Saya bukan bot'"
+                "i5": "- /welcomesecurity <off/soft/hard>: soft - membatasi izin pengguna untuk mengirim file media selama 24 jam, hard - membatasi izin pengguna untuk mengirim pesan sampai mereka mengklik tombol 'Saya bukan tbot'"
             }
         },
         "filters": {
             "btn": "Filter",
-            "title": "Jadikan obrolan Anda lebih hidup dengan filter; Bot akan membalas kata-kata tertentu!",
+            "title": "Jadikan obrolan Anda lebih hidup dengan filter; tbot akan membalas kata-kata tertentu!",
             "text": {
                 "i1": "\nPerintah yang tersedia adalah:",
-                "i2": "\n- /filter <kata kunci> <tindakan> : Setiap kali seseorang mengatakan 'kata', bot akan melakukan tindakan yang diberikan\n\nTindakan yang tersedia adalah:\n**note**: cth: /filter foo note <nama catatan> ; Bot akan membalas kata 'foo' yang berisi nama yang diberikan ",
-                "i3": "**delete** : cth: /filter foo delete; Bot akan menghapus pesan seseorang yang berisi 'foo'\n**tban** : cth: /filter foo tban 10m ; Bot akan tban ketika seseorang mengirim pesan berisi 'foo' untuk '10m' (menit), Anda dapat memberikan nilai apa pun dalam (m , h, d)",
-                "i4": "**ban** : eg: /filter foo ban ; Bot akan mencekal siapa yang mengirim pesan berisi 'foo'\n **mute**: eg: /filter foo mute ; Bot akan membisukan pengguna yang mengirim pesan 'foo'",
-                "i5": "**kick** : eg: /filter foo kick ; Bot akan menendang pengguna yang mengirim pesan berisi 'foo'\n",
+                "i2": "\n- /filter <kata kunci> <tindakan> : Setiap kali seseorang mengatakan 'kata', tbot akan melakukan tindakan yang diberikan\n\nTindakan yang tersedia adalah:\n**note**: cth: /filter foo note <nama catatan> ; tbot akan membalas kata 'foo' yang berisi nama yang diberikan ",
+                "i3": "**delete** : cth: /filter foo delete; tbot akan menghapus pesan seseorang yang berisi 'foo'\n**tban** : cth: /filter foo tban 10m ; tbot akan tban ketika seseorang mengirim pesan berisi 'foo' untuk '10m' (menit), Anda dapat memberikan nilai apa pun dalam (m , h, d)",
+                "i4": "**ban** : eg: /filter foo ban ; tbot akan mencekal siapa yang mengirim pesan berisi 'foo'\n **mute**: eg: /filter foo mute ; tbot akan membisukan pengguna yang mengirim pesan 'foo'",
+                "i5": "**kick** : eg: /filter foo kick ; tbot akan menendang pengguna yang mengirim pesan berisi 'foo'\n",
                 "i6": "- /filters : Akan menampilkan semua filter dalam obrolan itu!\n",
                 "i7": "- /stop <nama filter> : Akan menghentikan nama filter yang diberikan"
             }

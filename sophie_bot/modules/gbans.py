@@ -4,7 +4,7 @@ import asyncio
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
-from sophie_bot import SUDO, WHITELISTED, decorator, logger, mongodb, bot
+from sophie_bot import SUDO, WHITELISTED, decorator, logger, mongodb, tbot
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
@@ -119,7 +119,7 @@ async def blacklist_user(event):
     for chat in user['chats']:
         await asyncio.sleep(0.2)
         try:
-            user_a = await bot(GetParticipantRequest(channel=event.chat_id, user_id=user_id))
+            user_a = await tbot(GetParticipantRequest(channel=event.chat_id, user_id=user_id))
             if not user_a:
                 continue
             await event.client(EditBannedRequest(

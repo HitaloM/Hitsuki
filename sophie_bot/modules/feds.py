@@ -6,7 +6,7 @@ from telethon.tl.functions.channels import (EditBannedRequest,
                                             GetParticipantRequest)
 from telethon.tl.types import ChannelParticipantCreator, ChatBannedRights
 
-from sophie_bot import WHITELISTED, bot, decorator, mongodb, logger
+from sophie_bot import WHITELISTED, tbot, decorator, mongodb, logger
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
                                       is_user_admin, user_link)
@@ -230,7 +230,7 @@ async def fban_user(event, user, fed, reason, strings):
         await event.reply(strings['user_wl'])
         return
 
-    bot_id = await bot.get_me()
+    bot_id = await tbot.get_me()
     bot_id = bot_id.id
     if user['user_id'] == bot_id:
         await event.reply(strings['fban_self'])
@@ -282,7 +282,7 @@ async def fban_user(event, user, fed, reason, strings):
 async def unfban_user(event, user, fed, reason, strings):
     from_id = event.from_id
 
-    bot_id = await bot.get_me()
+    bot_id = await tbot.get_me()
     bot_id = bot_id.id
     if user == bot_id:
         await event.reply(strings['unfban_self'])
@@ -440,7 +440,7 @@ async def subfedlist(event, strings):
 
 
 async def join_fed(event, chat_id, fed_id, user):
-    peep = await bot(
+    peep = await tbot(
         GetParticipantRequest(
             channel=chat_id, user_id=user,
         )
@@ -466,7 +466,7 @@ async def join_fed(event, chat_id, fed_id, user):
 
 
 async def leave_fed(event, chat_id, user):
-    peep = await bot(
+    peep = await tbot(
         GetParticipantRequest(
             channel=chat_id, user_id=user,
         )

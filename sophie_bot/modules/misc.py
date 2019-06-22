@@ -8,7 +8,7 @@ from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChatAdminRights, PeerUser
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
-from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, bot, decorator, mongodb
+from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, tbot, decorator, mongodb
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
@@ -40,7 +40,7 @@ RUN_STRINGS = (  # Thanks PaulSonOfLars and Skittles9823
     "May the odds be ever in your favour.",
     "Famous last words.",
     "And they disappeared forever, never to be seen again.",
-    "\"Oh, look at me! I'm so cool, I can run from a bot!\" - this person",
+    "\"Oh, look at me! I'm so cool, I can run from a tbot!\" - this person",
     "Yeah yeah, just tap /kickme already.",
     "Here, take this ring and head to Mordor while you're at it.",
     "Legend has it, they're still running...",
@@ -170,7 +170,7 @@ async def pinMessage(event, strings):
     else:
         notify = False
     try:
-        await bot.pin_message(chat, msg_2_pin, notify=notify)
+        await tbot.pin_message(chat, msg_2_pin, notify=notify)
     except ChatNotModifiedError:
         await event.reply(strings['chat_not_modified_pin'])
         return
@@ -188,7 +188,7 @@ async def runs(event):
 @get_strings_dec('misc')
 async def unpin_message(event, strings):
     try:
-        await bot.pin_message(event.chat_id, None)
+        await tbot.pin_message(event.chat_id, None)
     except ChatNotModifiedError:
         await event.reply(strings['chat_not_modified_unpin'])
         return
@@ -249,7 +249,7 @@ async def demote(event):
     else:
         return
 
-    bot_id = (await bot.get_me()).id
+    bot_id = (await tbot.get_me()).id
     if bot_id == user['user_id']:
         return
 
@@ -394,9 +394,9 @@ async def user_info(event, strings):
 
     if user_obj.photo:
         text += strings["dc_id"].format(user_obj.photo.dc_id)
-        
+
     text += strings["scam"].format(user_obj.scam)
-    
+
     text += strings["restricted"].format(user_obj.restricted)
 
     text += strings["deleted"].format(user_obj.deleted)

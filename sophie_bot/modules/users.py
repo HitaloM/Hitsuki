@@ -4,7 +4,7 @@ from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import (ChannelParticipantsAdmins,
                                MessageEntityMentionName)
 
-from sophie_bot import OWNER_ID, SUDO, bot, decorator, logger, mongodb, redis
+from sophie_bot import OWNER_ID, SUDO, tbot, decorator, logger, mongodb, redis
 from sophie_bot.modules.helper_func.flood import flood_limit, flood_limit_dec
 
 
@@ -16,8 +16,8 @@ async def do_update_users(event):
 async def update_users(event):
     chat_id = event.chat_id
     user_id = event.from_id
-    user = await bot.get_entity(user_id)
-    chat = await bot.get_entity(chat_id)
+    user = await tbot.get_entity(user_id)
+    chat = await tbot.get_entity(chat_id)
 
     old_chat = mongodb.chat_list.find_one({'chat_id': chat_id})
     old_user = mongodb.user_list.find_one({'user_id': user_id})
@@ -76,7 +76,7 @@ async def update_users(event):
     if event.message.reply_to_msg_id:
         msg = await event.get_reply_message()
         user_id = msg.from_id
-        user = await bot.get_entity(user_id)
+        user = await tbot.get_entity(user_id)
         old_user = mongodb.user_list.find_one({'user_id': user_id})
         if user.username:
             username = user.username.lower()
@@ -109,7 +109,7 @@ async def update_users(event):
         user_id = event.message.fwd_from.from_id
         if not user_id:  # If forwarded from deleted account
             return
-        user = await bot.get_entity(user_id)
+        user = await tbot.get_entity(user_id)
         old_user = mongodb.user_list.find_one({'user_id': user_id})
         if user.username:
             username = user.username.lower()
@@ -139,7 +139,7 @@ async def update_users(event):
 
 
 async def update_admin_cache(chat_id):
-    admin_list = await bot.get_participants(
+    admin_list = await tbot.get_participants(
         int(chat_id), filter=ChannelParticipantsAdmins())
     admins = []
     for admin in admin_list:
@@ -270,7 +270,7 @@ async def get_user(event, send_text=True):
         # If we didn't find user in database will ask Telegram.
         if not user:
             try:
-                user = await add_user_to_db(await bot(GetFullUserRequest(arg_user)))
+                user = await add_user_to_db(await tbot(GetFullUserRequest(arg_user)))
             except (ValueError, TypeError) as err:
                 logger.debug(f"cant update user E2: {err}")
 
@@ -334,7 +334,7 @@ async def get_id_by_nick(data):
     if user:
         return user['user_id']
 
-    user = await bot(GetFullUserRequest(data))
+    user = await tbot(GetFullUserRequest(data))
     return user
 
 
@@ -342,7 +342,7 @@ async def user_link(user_id):
     user = mongodb.user_list.find_one({'user_id': user_id})
     if not user:
         try:
-            user = await add_user_to_db(await bot(GetFullUserRequest(int(user_id))))
+            user = await add_user_to_db(await tbot(GetFullUserRequest(int(user_id))))
             user_link = "[{}](tg://user?id={})".format(
                 user['first_name'], user['user_id'])
         except Exception:
