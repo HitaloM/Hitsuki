@@ -1,7 +1,9 @@
+import asyncio
+
 from sophie_bot import decorator
+from sophie_bot.modules.helper_func import bot_rights
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import is_user_admin
-import sophie_bot.modules.helper_func.bot_rights as bot_rights
 
 
 @decorator.command("purge")
@@ -29,7 +31,9 @@ async def purge(event):
             msgs = []
 
     await event.client.delete_messages(chat, msgs)
-    await event.reply(get_string("msg_deleting", "purge_done", event.chat_id))
+    msg = await event.reply(get_string("msg_deleting", "purge_done", event.chat_id))
+    await asyncio.sleep(5)
+    await event.client.delete_messages(chat, msg)
 
 
 @decorator.command("del")
