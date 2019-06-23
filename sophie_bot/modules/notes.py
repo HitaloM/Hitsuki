@@ -7,13 +7,13 @@ from telethon.tl.functions.users import GetFullUserRequest
 from telethon import custom, errors
 from telethon.tl.custom import Button
 
-from aiogram import types, filters
+from aiogram import types
 
-from sophie_bot import BOT_USERNAME, tbot, decorator, mongodb, logger, dp
+from sophie_bot import tbot, decorator, mongodb, logger, dp
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
-from sophie_bot.modules.helper_func.flood import flood_limit_dec
-from sophie_bot.modules.language import get_string, get_strings_dec
+from sophie_bot.modules.helper_func.flood import t_flood_limit_dec
+from sophie_bot.modules.language import get_string, t_get_strings_dec
 from sophie_bot.modules.users import (check_group_admin, is_user_admin,
                                       user_admin_dec, user_link, add_user_to_db)
 from sophie_bot.modules.helper_func.notes import save_get_new_note
@@ -22,7 +22,7 @@ from sophie_bot.modules.helper_func.notes import save_get_new_note
 @decorator.command("save", word_arg=True)
 @user_admin_dec
 @connection(admin=True)
-@get_strings_dec("notes")
+@t_get_strings_dec("notes")
 async def save_note(event, strings, status, chat_id, chat_title):
     note_name, file_id, note_text = await save_get_new_note(event, strings, chat_id)
 
@@ -72,7 +72,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
 @decorator.command("clear", arg=True)
 @user_admin_dec
 @connection(admin=True)
-@get_strings_dec("notes")
+@t_get_strings_dec("notes")
 async def clear_note(event, strings, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
     note = mongodb.notes.delete_one({'chat_id': chat_id, "name": note_name})
@@ -87,7 +87,7 @@ async def clear_note(event, strings, status, chat_id, chat_title):
 @decorator.command("noteinfo", arg=True)
 @user_admin_dec
 @connection(admin=True)
-@get_strings_dec("notes")
+@t_get_strings_dec("notes")
 async def noteinfo(event, strings, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
@@ -105,10 +105,10 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
 
 
 @decorator.command("notes ?(.*)")
-@flood_limit_dec("notes")
+@t_flood_limit_dec("notes")
 @disablable_dec("notes")
 @connection()
-@get_strings_dec("notes")
+@t_get_strings_dec("notes")
 async def list_notes(event, strings, status, chat_id, chat_title):
     notes = mongodb.notes.find({'chat_id': chat_id}).sort("name", 1)
     text = strings["notelist_header"].format(chat_name=chat_title)
@@ -223,7 +223,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
 
 
 @decorator.CallBackQuery(b'delnote_', compile=True)
-@flood_limit_dec("delnote_handler")
+@t_flood_limit_dec("delnote_handler")
 async def del_note_callback(event):
     user_id = event.query.user_id
     if await is_user_admin(event.chat_id, user_id) is False:

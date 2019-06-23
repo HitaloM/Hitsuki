@@ -7,7 +7,7 @@ from telethon.tl.functions.channels import (EditBannedRequest,
 from telethon.tl.types import ChannelParticipantCreator, ChatBannedRights
 
 from sophie_bot import WHITELISTED, tbot, decorator, mongodb, logger
-from sophie_bot.modules.language import get_string, get_strings_dec
+from sophie_bot.modules.language import get_string, t_get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
                                       is_user_admin, user_link)
 
@@ -121,7 +121,7 @@ def user_is_fed_admin(func):
 
 
 @decorator.command('newfed', arg=True)
-@get_strings_dec("feds")
+@t_get_strings_dec("feds")
 async def newFed(event, strings):
     args = event.pattern_match.group(1)
     if not args:
@@ -137,7 +137,7 @@ async def newFed(event, strings):
 
 
 @decorator.command('joinfed', arg=True)
-@get_strings_dec("feds")
+@t_get_strings_dec("feds")
 async def join_fed_comm(event, strings):
     fed_id = event.pattern_match.group(1)
     chat = event.chat_id
@@ -148,7 +148,7 @@ async def join_fed_comm(event, strings):
 
 
 @decorator.command('leavefed')
-@get_strings_dec("feds")
+@t_get_strings_dec("feds")
 async def leave_fed_comm(event, strings):
     chat = event.chat_id
     user = event.from_id
@@ -157,7 +157,7 @@ async def leave_fed_comm(event, strings):
 
 
 @decorator.command('fpromote', arg=True)
-@get_strings_dec("feds")
+@t_get_strings_dec("feds")
 @get_user_and_fed_dec
 async def promote_to_fed(event, user, fed, strings):
     user_id = event.from_id
@@ -178,7 +178,7 @@ async def promote_to_fed(event, user, fed, strings):
 
 
 @decorator.command('fchatlist', arg=True)
-@get_strings_dec("feds")
+@t_get_strings_dec("feds")
 @get_fed_dec()
 async def fed_chat_list(event, fed, strings):
     text = strings['chats_in_fed'].format(name=fed['fed_name'])
@@ -202,7 +202,7 @@ async def fed_chat_list(event, fed, strings):
 
 
 @decorator.command('finfo', arg=True)
-@get_strings_dec("feds")
+@t_get_strings_dec("feds")
 @get_fed_dec()
 async def fed_info(event, fed, strings):
     text = strings['fed_info']
@@ -215,7 +215,7 @@ async def fed_info(event, fed, strings):
 
 
 @decorator.command('fban', word_arg=True, additional=" ?(\S*) ?(.*)")
-@get_strings_dec("feds")
+@t_get_strings_dec("feds")
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin
 async def fban_user(event, user, fed, reason, strings):
@@ -276,7 +276,7 @@ async def fban_user(event, user, fed, reason, strings):
 
 
 @decorator.command('unfban', word_arg=True, additional=" ?(\S*) ?(.*)")
-@get_strings_dec("feds")
+@t_get_strings_dec("feds")
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin
 async def unfban_user(event, user, fed, reason, strings):
@@ -336,7 +336,7 @@ async def unfban_user(event, user, fed, reason, strings):
 
 
 @decorator.command('subfed', arg=True)
-@get_strings_dec('feds')
+@t_get_strings_dec('feds')
 async def subfed(event, strings):
     chat = event.chat_id
 
@@ -375,7 +375,7 @@ async def subfed(event, strings):
 
 
 @decorator.command('unsubfed', arg=True)
-@get_strings_dec('feds')
+@t_get_strings_dec('feds')
 async def unsubfed(event, strings):
     chat = event.chat_id
 
@@ -410,7 +410,7 @@ async def unsubfed(event, strings):
 
 
 @decorator.command('fedsubs')
-@get_strings_dec('feds')
+@t_get_strings_dec('feds')
 @user_is_fed_admin
 async def subfedlist(event, strings):
     chat = event.chat_id
@@ -484,7 +484,7 @@ async def leave_fed(event, chat_id, user):
 
 
 @decorator.insurgent()
-@get_strings_dec('feds')
+@t_get_strings_dec('feds')
 async def fban_helper(event, strings):
     user = event.from_id
     chat = event.chat_id
@@ -540,7 +540,7 @@ async def fban_helper(event, strings):
 
 
 @decorator.ChatAction()
-@get_strings_dec('feds')
+@t_get_strings_dec('feds')
 async def fban_helper_2(event, strings):
     if event.user_joined is True or event.user_added is True:
         if hasattr(event.action_message.action, 'users'):

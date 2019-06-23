@@ -8,7 +8,7 @@ from sophie_bot import tbot, decorator, mongodb
 from sophie_bot.modules.bans import mute_user, unmute_user
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.helper_func.flood import flood_limit
-from sophie_bot.modules.language import get_string, get_strings_dec
+from sophie_bot.modules.language import get_string, t_get_strings_dec
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_admin_dec, user_link
 
@@ -58,7 +58,7 @@ async def do_cleanwelcome(event, chat_id, welc_msg):
 
 
 @decorator.ChatAction()
-@get_strings_dec("greetings")
+@t_get_strings_dec("greetings")
 async def welcome_trigger(event, strings):
     print(event)
     print('\n=================================')
@@ -204,7 +204,7 @@ async def cleanservice(event):
 
 @decorator.command('welcomesecurity', arg=True)
 @user_admin_dec
-@get_strings_dec("greetings")
+@t_get_strings_dec("greetings")
 async def welcomeSecurity(event, strings):
     arg = event.pattern_match.group(1)
     args = arg.lower()
@@ -236,7 +236,7 @@ async def welcomeSecurity(event, strings):
 @decorator.command('cleanwelcome', arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
-@get_strings_dec("greetings")
+@t_get_strings_dec("greetings")
 async def clean_welcome(event, strings, status, chat_id, chat_title):
     arg = event.pattern_match.group(1)
     args = arg.lower()
@@ -264,7 +264,7 @@ async def clean_welcome(event, strings, status, chat_id, chat_title):
 
 
 @decorator.CallBackQuery('wlcm_')
-@get_strings_dec("greetings")
+@t_get_strings_dec("greetings")
 async def welcm_btn_callback(event, strings):
     data = str(event.data)
     details = re.search(r'wlcm_(.*)_(.*)', data)

@@ -60,3 +60,4 @@ BOT_USERNAME = "rSophieBot"  # bot_info.username
 logger.info("----------------------")
 logger.info("|      SophieBot     |")
 logger.info("----------------------")
+logger.info("Powered by Telethon and AIOGram and bleck megic")

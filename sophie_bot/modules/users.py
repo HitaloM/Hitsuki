@@ -5,7 +5,7 @@ from telethon.tl.types import (ChannelParticipantsAdmins,
                                MessageEntityMentionName)
 
 from sophie_bot import OWNER_ID, SUDO, tbot, decorator, logger, mongodb, redis
-from sophie_bot.modules.helper_func.flood import flood_limit, flood_limit_dec
+from sophie_bot.modules.helper_func.flood import flood_limit, t_flood_limit_dec
 
 
 @decorator.BotDo()
@@ -187,7 +187,7 @@ async def get_chat_admins(chat_id):
 
 
 @decorator.command("adminlist")
-@flood_limit_dec("adminlist")
+@t_flood_limit_dec("adminlist")
 async def event(event):
     msg = await event.reply("Updating cache now...")
     await update_admin_cache(event.chat_id)

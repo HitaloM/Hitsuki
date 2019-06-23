@@ -7,7 +7,7 @@ from telethon.tl.types import ChatBannedRights, ChannelParticipantBanned
 
 from sophie_bot import WHITELISTED, tbot, decorator, logger, mongodb
 from sophie_bot.modules.connections import connection
-from sophie_bot.modules.language import get_string, get_strings_dec
+from sophie_bot.modules.language import get_string, t_get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
                                       is_user_admin, user_admin_dec, user_link)
 
@@ -82,7 +82,7 @@ async def kick(event, status, chat_id, chat_title):
 @decorator.command("unban", arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
-@get_strings_dec("bans")
+@t_get_strings_dec("bans")
 async def unban(event, strings, status, chat_id, chat_title):
     user, data = await get_user_and_text(event)
     if await unban_user(event, user['user_id'], chat_id):

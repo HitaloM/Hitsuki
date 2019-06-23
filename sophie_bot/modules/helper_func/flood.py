@@ -1,18 +1,9 @@
 from sophie_bot import SUDO, redis
 
 
-async def flood_limit(event, command):
-    if event.chat_id:
-        chat_id = event.chat_id
-    else:
-        chat_id = event.from_id
+async def flood_limit(command, chat_id):
 
-    if not hasattr(event, 'from_id'):
-        check = event.query.user_id
-    else:
-        check = event.from_id
-
-    if check in SUDO:
+    if chat_id in SUDO:
         return True
 
     db_name = 'flood_command_{}_{}'.format(chat_id, command)
@@ -24,18 +15,28 @@ async def flood_limit(event, command):
         redis.expire(db_name, 120)
     if number > 6:
         return False
-        await event.reply('**Flood detected!**\nPlease wait 3 minutes before do this again!')
         redis.expire(db_name, 120)
     else:
         return True
 
 
-def flood_limit_dec(*args):
+def t_flood_limit_dec(cmd):
     def wrapped(func):
         async def wrapped_1(event, *args):
-            status = await flood_limit(event, 'test')
+            status = await flood_limit(event.from_id, cmd)
             if status is False:
                 return
             return await func(event)
+        return wrapped_1
+    return wrapped
+
+
+def flood_limit_dec(cmd):
+    def wrapped(func):
+        async def wrapped_1(message, *args):
+            status = await flood_limit(message['from']['id'], cmd)
+            if status is False:
+                return
+            return await func(message)
         return wrapped_1
     return wrapped

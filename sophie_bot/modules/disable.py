@@ -1,7 +1,7 @@
 from sophie_bot import decorator, mongodb
 from sophie_bot.modules.connections import connection
-from sophie_bot.modules.helper_func.flood import flood_limit_dec
-from sophie_bot.modules.language import get_strings_dec
+from sophie_bot.modules.helper_func.flood import t_flood_limit_dec
+from sophie_bot.modules.language import t_get_strings_dec
 from sophie_bot.modules.users import user_admin_dec
 
 global DISABLABLE_COMMANDS
@@ -9,7 +9,7 @@ DISABLABLE_COMMANDS = []
 
 
 @decorator.command("disablable")
-@flood_limit_dec("disablable")
+@t_flood_limit_dec("disablable")
 async def list_disablable(event):
     text = "**Disablable commands are:**\n"
     for command in DISABLABLE_COMMANDS:
@@ -20,7 +20,7 @@ async def list_disablable(event):
 @decorator.command("disable ?(.*)")
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
-@get_strings_dec("disable")
+@t_get_strings_dec("disable")
 async def disable_command(event, strings, status, chat_id, chat_title):
     if not event.pattern_match.group(1):
         await event.reply(strings["wot_to_disable"])
@@ -46,7 +46,7 @@ async def disable_command(event, strings, status, chat_id, chat_title):
 @decorator.command("enable ?(.*)")
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
-@get_strings_dec("disable")
+@t_get_strings_dec("disable")
 async def enable_command(event, strings, status, chat_id, chat_title):
     if not event.pattern_match.group(1):
         await event.reply(strings["wot_to_enable"])

@@ -6,7 +6,7 @@ from telethon.tl.types import ChatBannedRights
 
 from sophie_bot import SUDO, WHITELISTED, decorator, logger, mongodb, tbot
 from sophie_bot.modules.connections import connection
-from sophie_bot.modules.language import get_string, get_strings_dec
+from sophie_bot.modules.language import get_string, t_get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
                                       user_admin_dec, user_link)
 from telethon.tl.functions.channels import GetParticipantRequest
@@ -236,7 +236,7 @@ async def gban_trigger(event):
 
 
 @decorator.ChatAction()
-@get_strings_dec('gbans')
+@t_get_strings_dec('gbans')
 async def gban_helper_2(event, strings):
     if event.user_joined is True or event.user_added is True:
         await asyncio.sleep(2)  # Sleep 2 seconds before check user to allow Simon gban user
