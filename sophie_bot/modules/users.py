@@ -165,7 +165,7 @@ async def is_user_admin(chat_id, user_id):
         return False
 
 
-async def check_group_admin(event, user_id, no_msg=False):
+async def t_check_group_admin(event, user_id, no_msg=False):
     chat_id = event.chat_id
     if await is_user_admin(chat_id, user_id) is True:
         return True
@@ -355,9 +355,9 @@ async def user_link(user_id):
     return user_link
 
 
-def user_admin_dec(func):
+def t_user_admin_dec(func):
     async def wrapped(event):
-        if await check_group_admin(event, event.from_id, no_msg=True) is False:
+        if await t_check_group_admin(event, event.from_id, no_msg=True) is False:
             await event.reply("You should be admin to do it!")
             return
         return await func(event)

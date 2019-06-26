@@ -9,10 +9,10 @@ from telethon.tl.types import ChatAdminRights, PeerUser
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
 from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, tbot, decorator, mongodb
-from sophie_bot.modules.disable import disablable_dec
+from sophie_bot.modules.disable import t_disablable_dec
 from sophie_bot.modules.helper_func.flood import t_flood_limit_dec
 from sophie_bot.modules.language import get_string, t_get_strings_dec
-from sophie_bot.modules.users import get_user, user_admin_dec, user_link
+from sophie_bot.modules.users import get_user, t_user_admin_dec, user_link
 
 RUN_STRINGS = (  # Thanks PaulSonOfLars and Skittles9823
     "Where do you think you're going?",
@@ -128,7 +128,7 @@ RUN_STRINGS = (  # Thanks PaulSonOfLars and Skittles9823
 
 
 @decorator.command("id", arg=True)
-@disablable_dec("id")
+@t_disablable_dec("id")
 @t_flood_limit_dec("id")
 async def id(event):
     text = get_string("misc", "your_id", event.chat_id).format(event.from_id)
@@ -152,7 +152,7 @@ async def id(event):
 
 
 @decorator.command("pin", arg=True)
-@user_admin_dec
+@t_user_admin_dec
 @bot_rights.pin_messages()
 @t_get_strings_dec('misc')
 async def pinMessage(event, strings):
@@ -183,7 +183,7 @@ async def runs(event):
 
 
 @decorator.command("unpin")
-@user_admin_dec
+@t_user_admin_dec
 @bot_rights.pin_messages()
 @t_get_strings_dec('misc')
 async def unpin_message(event, strings):
@@ -196,7 +196,7 @@ async def unpin_message(event, strings):
 
 
 @decorator.command("promote", arg=True)
-@user_admin_dec
+@t_user_admin_dec
 @bot_rights.add_admins()
 async def promote(event):
 <<<<<<< HEAD
@@ -238,7 +238,7 @@ async def promote(event):
 
 
 @decorator.command("demote")
-@user_admin_dec
+@t_user_admin_dec
 @bot_rights.add_admins()
 async def demote(event):
     # Admin right check
@@ -292,7 +292,7 @@ async def help(event, strings):
 
 
 @decorator.command('setrules', arg=True)
-@user_admin_dec
+@t_user_admin_dec
 @t_get_strings_dec('misc')
 async def setrules(event, strings):
     reply_msg = await event.get_reply_message()
@@ -332,7 +332,7 @@ async def rules(event, strings):
 
 
 @decorator.command('clearrules')
-@user_admin_dec
+@t_user_admin_dec
 @t_get_strings_dec('misc')
 async def clear_rules(event, strings):
     chat = event.chat_id

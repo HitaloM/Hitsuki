@@ -4,13 +4,13 @@ from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName
 
 from sophie_bot import decorator, mongodb
-from sophie_bot.modules.disable import disablable_dec
+from sophie_bot.modules.disable import t_disablable_dec
 from sophie_bot.modules.helper_func.flood import t_flood_limit_dec
 from sophie_bot.modules.users import user_link
 
 
 @decorator.command("afk ?(.*)", arg=True)
-@disablable_dec("afk")
+@t_disablable_dec("afk")
 @t_flood_limit_dec("afk")
 async def afk(event):
     if not event.pattern_match.group(1):

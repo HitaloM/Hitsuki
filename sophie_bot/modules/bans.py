@@ -6,15 +6,15 @@ from telethon.tl.functions.channels import (EditBannedRequest,
 from telethon.tl.types import ChatBannedRights, ChannelParticipantBanned
 
 from sophie_bot import WHITELISTED, tbot, decorator, logger, mongodb
-from sophie_bot.modules.connections import connection
+from sophie_bot.modules.connections import t_connection
 from sophie_bot.modules.language import get_string, t_get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
-                                      is_user_admin, user_admin_dec, user_link)
+                                      is_user_admin, t_user_admin_dec, user_link)
 
 
 @decorator.command("ban", arg=True)
-@user_admin_dec
-@connection(admin=True, only_in_groups=True)
+@t_user_admin_dec
+@t_connection(admin=True, only_in_groups=True)
 async def ban(event, status, chat_id, chat_title):
     user, reason = await get_user_and_text(event)
     if await ban_user(event, user['user_id'], chat_id, None) is True:
@@ -29,8 +29,8 @@ async def ban(event, status, chat_id, chat_title):
 
 
 @decorator.command("tban", arg=True)
-@user_admin_dec
-@connection(admin=True, only_in_groups=True)
+@t_user_admin_dec
+@t_connection(admin=True, only_in_groups=True)
 async def tban(event, status, chat_id, chat_title):
     user, data = await get_user_and_text(event)
     data = data.split(' ', 2)
@@ -68,8 +68,8 @@ async def tban(event, status, chat_id, chat_title):
 
 
 @decorator.command("kick", arg=True)
-@user_admin_dec
-@connection(admin=True, only_in_groups=True)
+@t_user_admin_dec
+@t_connection(admin=True, only_in_groups=True)
 async def kick(event, status, chat_id, chat_title):
     user = await get_user(event)
     if await kick_user(event, user['user_id'], chat_id) is True:
@@ -80,8 +80,8 @@ async def kick(event, status, chat_id, chat_title):
 
 
 @decorator.command("unban", arg=True)
-@user_admin_dec
-@connection(admin=True, only_in_groups=True)
+@t_user_admin_dec
+@t_connection(admin=True, only_in_groups=True)
 @t_get_strings_dec("bans")
 async def unban(event, strings, status, chat_id, chat_title):
     user, data = await get_user_and_text(event)
@@ -100,8 +100,8 @@ async def unban(event, strings, status, chat_id, chat_title):
 
 
 @decorator.command("mute", arg=True)
-@user_admin_dec
-@connection(admin=True, only_in_groups=True)
+@t_user_admin_dec
+@t_connection(admin=True, only_in_groups=True)
 async def muter(event, status, chat_id, chat_title):
     user, data = await get_user_and_text(event)
     if await mute_user(event, user['user_id'], chat_id, None):
@@ -112,8 +112,8 @@ async def muter(event, status, chat_id, chat_title):
 
 
 @decorator.command("unmute", arg=True)
-@user_admin_dec
-@connection(admin=True, only_in_groups=True)
+@t_user_admin_dec
+@t_connection(admin=True, only_in_groups=True)
 async def unmute(event, status, chat_id, chat_title):
     user = await get_user(event)
     if await unmute_user(event, user['user_id'], chat_id):
@@ -133,8 +133,8 @@ async def kickme(event):
 
 
 @decorator.command("tmute", arg=True)
-@user_admin_dec
-@connection(admin=True, only_in_groups=True)
+@t_user_admin_dec
+@t_connection(admin=True, only_in_groups=True)
 async def tmute(event, status, chat_id, chat_title):
     user, data = await get_user_and_text(event)
     data = data.split(' ', 2)

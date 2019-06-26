@@ -5,10 +5,10 @@ from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
 from sophie_bot import SUDO, WHITELISTED, decorator, logger, mongodb, tbot
-from sophie_bot.modules.connections import connection
+from sophie_bot.modules.connections import t_connection
 from sophie_bot.modules.language import get_string, t_get_strings_dec
 from sophie_bot.modules.users import (get_user, get_user_and_text,
-                                      user_admin_dec, user_link)
+                                      t_user_admin_dec, user_link)
 from telethon.tl.functions.channels import GetParticipantRequest
 
 
@@ -26,8 +26,8 @@ GBANNED_RIGHTS = ChatBannedRights(
 
 
 @decorator.command("antispam", arg=True)
-@user_admin_dec
-@connection(admin=True, only_in_groups=True)
+@t_user_admin_dec
+@t_connection(admin=True, only_in_groups=True)
 async def switch_antispam(event, status, chat_id, chat_title):
     args = event.pattern_match.group(1)
     enable = ['yes', 'on', 'enable']

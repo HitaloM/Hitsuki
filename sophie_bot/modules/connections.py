@@ -186,7 +186,7 @@ async def get_conn_chat(user_id, chat_id, admin=False, only_in_groups=False):
     return True, int(group_id), chat_title
 
 
-def connection(**dec_kwargs):
+def t_connection(**dec_kwargs):
     def wrapped(func):
         async def wrapped_1(event, *args, **kwargs):
             status, chat_id, chat_title = await get_conn_chat(
