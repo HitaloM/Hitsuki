@@ -120,7 +120,7 @@ def user_is_fed_admin(func):
 # Commands
 
 
-@decorator.command('newfed', arg=True)
+@decorator.t_command('newfed', arg=True)
 @get_strings_dec("feds")
 async def newFed(event, strings):
     args = event.pattern_match.group(1)
@@ -136,7 +136,7 @@ async def newFed(event, strings):
         await event.reply(text.format(name=fed_name, id=fed_id, cr=await user_link(creator)))
 
 
-@decorator.command('joinfed', arg=True)
+@decorator.t_command('joinfed', arg=True)
 @get_strings_dec("feds")
 async def join_fed_comm(event, strings):
     fed_id = event.pattern_match.group(1)
@@ -147,7 +147,7 @@ async def join_fed_comm(event, strings):
         await event.reply(strings['join_fed_success'].format(name=fed_name))
 
 
-@decorator.command('leavefed')
+@decorator.t_command('leavefed')
 @get_strings_dec("feds")
 async def leave_fed_comm(event, strings):
     chat = event.chat_id
@@ -156,7 +156,7 @@ async def leave_fed_comm(event, strings):
         await event.reply(strings['leave_fed_success'])
 
 
-@decorator.command('fpromote', arg=True)
+@decorator.t_command('fpromote', arg=True)
 @get_strings_dec("feds")
 @get_user_and_fed_dec
 async def promote_to_fed(event, user, fed, strings):
@@ -177,7 +177,7 @@ async def promote_to_fed(event, user, fed, strings):
         user=await user_link(user['user_id']), name=fed['fed_name']))
 
 
-@decorator.command('fchatlist', arg=True)
+@decorator.t_command('fchatlist', arg=True)
 @get_strings_dec("feds")
 @get_fed_dec()
 async def fed_chat_list(event, fed, strings):
@@ -201,7 +201,7 @@ async def fed_chat_list(event, fed, strings):
     await event.reply(text)
 
 
-@decorator.command('finfo', arg=True)
+@decorator.t_command('finfo', arg=True)
 @get_strings_dec("feds")
 @get_fed_dec()
 async def fed_info(event, fed, strings):
@@ -214,7 +214,7 @@ async def fed_info(event, fed, strings):
     await event.reply(text)
 
 
-@decorator.command('fban', word_arg=True, additional=" ?(\S*) ?(.*)")
+@decorator.t_command('fban', word_arg=True, additional=" ?(\S*) ?(.*)")
 @get_strings_dec("feds")
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin
@@ -275,7 +275,7 @@ async def fban_user(event, user, fed, reason, strings):
     await event.reply(text)  # TODO(Notify all fedadmins)
 
 
-@decorator.command('unfban', word_arg=True, additional=" ?(\S*) ?(.*)")
+@decorator.t_command('unfban', word_arg=True, additional=" ?(\S*) ?(.*)")
 @get_strings_dec("feds")
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin
@@ -335,7 +335,7 @@ async def unfban_user(event, user, fed, reason, strings):
     ))
 
 
-@decorator.command('subfed', arg=True)
+@decorator.t_command('subfed', arg=True)
 @get_strings_dec('feds')
 async def subfed(event, strings):
     chat = event.chat_id
@@ -374,7 +374,7 @@ async def subfed(event, strings):
     mongodb.subfed_list.insert_one(data)
 
 
-@decorator.command('unsubfed', arg=True)
+@decorator.t_command('unsubfed', arg=True)
 @get_strings_dec('feds')
 async def unsubfed(event, strings):
     chat = event.chat_id
@@ -409,7 +409,7 @@ async def unsubfed(event, strings):
     mongodb.subfed_list.delete_one(data)
 
 
-@decorator.command('fedsubs')
+@decorator.t_command('fedsubs')
 @get_strings_dec('feds')
 @user_is_fed_admin
 async def subfedlist(event, strings):

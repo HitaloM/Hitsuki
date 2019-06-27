@@ -13,7 +13,7 @@ from sophie_bot.modules.users import (get_chat_admins, get_user,
                                       user_link)
 
 
-@decorator.command("warn(?!(\w))", arg=True)
+@decorator.t_command("warn(?!(\w))", arg=True)
 async def warn_user(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -101,7 +101,7 @@ async def remove_warn(event):
     await event.edit(textx.format(admin=user_str), link_preview=False)
 
 
-@decorator.command("warns", arg=True)
+@decorator.t_command("warns", arg=True)
 async def user_warns(event):
     status, chat_id, chat_title = await get_conn_chat(
         event.from_id, event.chat_id, admin=True, only_in_groups=True)
@@ -139,7 +139,7 @@ async def user_warns(event):
     await event.reply(text)
 
 
-@decorator.command("warnlimit", arg=True)
+@decorator.t_command("warnlimit", arg=True)
 async def warnlimit(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:
@@ -170,7 +170,7 @@ async def warnlimit(event):
         await event.reply(get_string("warns", "warn_limit_upd", event.chat_id).format(num))
 
 
-@decorator.command("resetwarns", arg=True)
+@decorator.t_command("resetwarns", arg=True)
 async def resetwarns(event):
     K = await is_user_admin(event.chat_id, event.from_id)
     if K is False:

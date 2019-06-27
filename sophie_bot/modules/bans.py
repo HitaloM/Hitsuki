@@ -12,7 +12,7 @@ from sophie_bot.modules.users import (get_user, get_user_and_text,
                                       is_user_admin, user_admin_dec, user_link)
 
 
-@decorator.command("ban", arg=True)
+@decorator.t_command("ban", arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 async def ban(event, status, chat_id, chat_title):
@@ -28,7 +28,7 @@ async def ban(event, status, chat_id, chat_title):
         )
 
 
-@decorator.command("tban", arg=True)
+@decorator.t_command("tban", arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 async def tban(event, status, chat_id, chat_title):
@@ -67,7 +67,7 @@ async def tban(event, status, chat_id, chat_title):
         await event.reply(text, link_preview=False)
 
 
-@decorator.command("kick", arg=True)
+@decorator.t_command("kick", arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 async def kick(event, status, chat_id, chat_title):
@@ -79,7 +79,7 @@ async def kick(event, status, chat_id, chat_title):
         await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
-@decorator.command("unban", arg=True)
+@decorator.t_command("unban", arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
@@ -99,7 +99,7 @@ async def unban(event, strings, status, chat_id, chat_title):
         await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
-@decorator.command("mute", arg=True)
+@decorator.t_command("mute", arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 async def muter(event, status, chat_id, chat_title):
@@ -111,7 +111,7 @@ async def muter(event, status, chat_id, chat_title):
         await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
-@decorator.command("unmute", arg=True)
+@decorator.t_command("unmute", arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 async def unmute(event, status, chat_id, chat_title):
@@ -123,7 +123,7 @@ async def unmute(event, status, chat_id, chat_title):
         await event.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
-@decorator.command("kickme")
+@decorator.t_command("kickme")
 async def kickme(event):
     user = event.from_id
     chat = event.chat_id
@@ -132,7 +132,7 @@ async def kickme(event):
         await event.reply(get_string("bans", "kickme_success", chat))
 
 
-@decorator.command("tmute", arg=True)
+@decorator.t_command("tmute", arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 async def tmute(event, status, chat_id, chat_title):

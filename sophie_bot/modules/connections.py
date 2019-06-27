@@ -8,7 +8,7 @@ from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import is_user_admin
 
 
-@decorator.command("connect", arg=True)
+@decorator.t_command("connect", arg=True)
 async def connect_with_arg(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
@@ -95,7 +95,7 @@ async def connect_with_arg(event):
         await event.reply(get_string("connections", "pm_connected", chat).format(chat_title))
 
 
-@decorator.command("connect")
+@decorator.t_command("connect")
 async def connect(event):
     user_id = event.from_id
     if not event.chat_id == user_id:
@@ -123,7 +123,7 @@ async def connect(event):
     await event.reply(text, buttons=buttons)
 
 
-@decorator.command("disconnect", arg=True)
+@decorator.t_command("disconnect", arg=True)
 async def disconnect(event):
     user_id = event.from_id
     old = mongodb.connections.find_one({'user_id': user_id})

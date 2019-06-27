@@ -189,7 +189,7 @@ async def get_chat_admins(chat_id):
     return admins
 
 
-@decorator.command("adminlist")
+@decorator.t_command("adminlist")
 @t_flood_limit_dec("adminlist")
 async def event(event):
     msg = await event.reply("Updating cache now...")

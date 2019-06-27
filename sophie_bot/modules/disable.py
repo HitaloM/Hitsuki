@@ -8,7 +8,7 @@ global DISABLABLE_COMMANDS
 DISABLABLE_COMMANDS = []
 
 
-@decorator.command("disablable")
+@decorator.t_command("disablable")
 @t_flood_limit_dec("disablable")
 async def list_disablable(event):
     text = "**Disablable commands are:**\n"
@@ -17,7 +17,7 @@ async def list_disablable(event):
     await event.reply(text)
 
 
-@decorator.command("disable ?(.*)")
+@decorator.t_command("disable ?(.*)")
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("disable")
@@ -43,7 +43,7 @@ async def disable_command(event, strings, status, chat_id, chat_title):
     await event.reply(strings["disabled"].format(cmd, chat_title))
 
 
-@decorator.command("enable ?(.*)")
+@decorator.t_command("enable ?(.*)")
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("disable")

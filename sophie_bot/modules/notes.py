@@ -27,7 +27,7 @@ async def test(message, strings, status, chat_id, chat_title):
     print(message.from_user.id)
 
 
-@decorator.command("save", word_arg=True)
+@decorator.t_command("save", word_arg=True)
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("notes")
@@ -77,7 +77,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
     await event.reply(text, buttons=buttons)
 
 
-@decorator.command("clear", arg=True)
+@decorator.t_command("clear", arg=True)
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("notes")
@@ -92,7 +92,7 @@ async def clear_note(event, strings, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@decorator.command("noteinfo", arg=True)
+@decorator.t_command("noteinfo", arg=True)
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("notes")
@@ -112,7 +112,7 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@decorator.command("notes ?(.*)")
+@decorator.t_command("notes ?(.*)")
 @t_flood_limit_dec("notes")
 @t_disablable_dec("notes")
 @connection()

@@ -8,7 +8,7 @@ ALLOW_F_COMMANDS = CONFIG["advanced"]["allow_forwards_commands"]
 ALLOW_COMMANDS_FROM_EXC = CONFIG["advanced"]["allow_commands_with_!"]
 
 
-def command(command, arg="", word_arg="", additional="", **kwargs):
+def t_command(command, arg="", word_arg="", additional="", **kwargs):
     def decorator(func):
 
         if 'forwards' not in kwargs:

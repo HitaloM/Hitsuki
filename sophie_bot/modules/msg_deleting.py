@@ -6,7 +6,7 @@ from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import is_user_admin
 
 
-@decorator.command("purge")
+@decorator.t_command("purge")
 @bot_rights.delete_messages()
 async def purge(event):
     K = await is_user_admin(event.chat_id, event.from_id)
@@ -36,7 +36,7 @@ async def purge(event):
     await event.client.delete_messages(chat, msg)
 
 
-@decorator.command("del")
+@decorator.t_command("del")
 @bot_rights.delete_messages()
 async def del_message(event):
     K = await is_user_admin(event.chat_id, event.from_id)

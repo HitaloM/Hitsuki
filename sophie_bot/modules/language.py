@@ -23,7 +23,7 @@ LANGS.sort()
 logger.info("Languages loaded: {}".format(LANGS))
 
 
-@decorator.command("lang")
+@decorator.t_command("lang")
 async def lang(event):
     if await flood_limit(event, 'lang') is False:
         return
@@ -42,7 +42,7 @@ async def lang(event):
     await event.reply(text, buttons=buttons)
 
 
-@decorator.command("lang", arg=True)
+@decorator.t_command("lang", arg=True)
 async def lang_with_arg(event):
     if not event.pattern_match.group(1):
         return

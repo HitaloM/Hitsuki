@@ -52,7 +52,7 @@ NEW_STABLE_TEXT = """🦊 **OrangeFox R10 Stable**
 💬 **OrangeFox chat:** [join](https://t.me/joinchat/HNZTNky4zkpWc7na_-Beow)"""
 
 
-@decorator.command("update")
+@decorator.t_command("update")
 async def update_devices(event):
     if event.chat_id not in fox_dev_chats:
         return
@@ -258,7 +258,7 @@ print(DEVICES_STABLE)
 print(DEVICES_BETA)
 
 
-@decorator.command("list")
+@decorator.t_command("list")
 @t_flood_limit_dec("list")
 async def list_stable(event):
     if event.chat_id in fox_beta_groups:

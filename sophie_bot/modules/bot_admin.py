@@ -19,7 +19,7 @@ async def term(message: types.Message):
     await msg.edit_text(result, parse_mode=types.ParseMode.HTML)
 
 
-@decorator.command("broadcast", arg=True, from_users=OWNER_ID)
+@decorator.t_command("broadcast", arg=True, from_users=OWNER_ID)
 async def broadcast(event):
     chats = mongodb.chat_list.find({})
     raw_text = event.message.text.split(" ", 1)[1]
@@ -43,7 +43,7 @@ async def broadcast(event):
 `{}` didn't received message.".format(num_succ, num_fail))
 
 
-@decorator.command("sbroadcast", arg=True, from_users=OWNER_ID)
+@decorator.t_command("sbroadcast", arg=True, from_users=OWNER_ID)
 async def sbroadcast(event):
     text = event.message.text.split(" ", 1)[1]
     # Add chats to sbroadcast list
@@ -61,7 +61,7 @@ async def sbroadcast(event):
         "Smart broadcast planned for `{}` chats".format(chats.count()))
 
 
-@decorator.command("stopsbroadcast", from_users=OWNER_ID)
+@decorator.t_command("stopsbroadcast", from_users=OWNER_ID)
 async def stop_sbroadcast(event):
     old = mongodb.sbroadcast_settings.find_one({})
     mongodb.sbroadcast_list.drop()
@@ -96,7 +96,7 @@ async def check_message_for_smartbroadcast(event):
             }, upsert=False)
 
 
-@decorator.command("backup", from_users=OWNER_ID)
+@decorator.t_command("backup", from_users=OWNER_ID)
 async def backup(event):
     msg = await event.reply("Running...")
     date = await chat_term(event, "date \"+%Y-%m-%d.%H:%M:%S\"")
@@ -104,19 +104,19 @@ async def backup(event):
     await msg.edit("**Done!**\nBackup under `Backups/dump_{}.gz`".format(date))
 
 
-@decorator.command("purgecaches?(s)", from_users=OWNER_ID)
+@decorator.t_command("purgecaches?(s)", from_users=OWNER_ID)
 async def purge_caches(event):
     redis.flushdb()
     await event.reply("redis cache was cleaned.")
 
 
-@decorator.command("botstop", from_users=OWNER_ID)
+@decorator.t_command("botstop", from_users=OWNER_ID)
 async def bot_stop(event):
     await event.reply("Goodbye...")
     exit(1)
 
 
-@decorator.command("upload", arg=True, from_users=OWNER_ID)
+@decorator.t_command("upload", arg=True, from_users=OWNER_ID)
 async def upload_file(event):
     input_str = event.pattern_match.group(1)
     if os.path.exists(input_str):

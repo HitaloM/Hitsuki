@@ -25,7 +25,7 @@ GBANNED_RIGHTS = ChatBannedRights(
 )
 
 
-@decorator.command("antispam", arg=True)
+@decorator.t_command("antispam", arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 async def switch_antispam(event, status, chat_id, chat_title):
@@ -137,18 +137,18 @@ async def blacklist_user(event):
     ))
 
 
-@decorator.command("gban", arg=True, from_users=SUDO)
+@decorator.t_command("gban", arg=True, from_users=SUDO)
 async def gban_1(event):
     print('exec')
     await blacklist_user(event)
 
 
-@decorator.command("fban", arg=True, from_users=172811422)
+@decorator.t_command("fban", arg=True, from_users=172811422)
 async def gban_2(event):
     await blacklist_user(event)
 
 
-@decorator.command("ungban", arg=True, from_users=SUDO)
+@decorator.t_command("ungban", arg=True, from_users=SUDO)
 async def un_blacklist_user(event):
     chat_id = event.chat_id
     user = await get_user(event, send_text=False)

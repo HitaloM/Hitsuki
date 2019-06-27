@@ -126,7 +126,7 @@ async def welcome_trigger(event, strings):
             await do_cleanwelcome(event, chat_id, welc_msg)
 
 
-@decorator.command("setwelcome", arg=True)
+@decorator.t_command("setwelcome", arg=True)
 async def setwelcome(event):
     if not event.pattern_match.group(1):
         return
@@ -155,7 +155,7 @@ async def setwelcome(event):
     await event.reply(get_string("greetings", "welcome_set_to_note", chat).format(note_name))
 
 
-@decorator.command("setwelcome")
+@decorator.t_command("setwelcome")
 async def setwelcome_withot_args(event):
     chat = event.chat_id
     chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
@@ -174,7 +174,7 @@ async def setwelcome_withot_args(event):
         await event.reply(get_string("greetings", "welcome_is_default", chat))
 
 
-@decorator.command('cleanservice', arg=True)
+@decorator.t_command('cleanservice', arg=True)
 @user_admin_dec
 async def cleanservice(event):
     args = event.pattern_match.group(1)
@@ -202,7 +202,7 @@ async def cleanservice(event):
         return
 
 
-@decorator.command('welcomesecurity', arg=True)
+@decorator.t_command('welcomesecurity', arg=True)
 @user_admin_dec
 @get_strings_dec("greetings")
 async def welcomeSecurity(event, strings):
@@ -233,7 +233,7 @@ async def welcomeSecurity(event, strings):
         await event.reply(strings['wlcm_sec_off'])
 
 
-@decorator.command('cleanwelcome', arg=True)
+@decorator.t_command('cleanwelcome', arg=True)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("greetings")

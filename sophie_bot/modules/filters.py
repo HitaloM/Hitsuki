@@ -39,7 +39,7 @@ async def check_message(event):
                 await filter_ban(event, filter, None)
 
 
-@decorator.command("filter(?!s)", arg=True)
+@decorator.t_command("filter(?!s)", arg=True)
 @t_flood_limit_dec("filter")
 @user_admin_dec
 @connection(admin=True)
@@ -90,7 +90,7 @@ async def add_filter(event, strings, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@decorator.command("filters", arg=True)
+@decorator.t_command("filters", arg=True)
 @t_disablable_dec("filters")
 @t_flood_limit_dec("filters")
 @connection()
@@ -111,7 +111,7 @@ async def list_filters(event, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@decorator.command("stop", arg=True)
+@decorator.t_command("stop", arg=True)
 @user_admin_dec
 @connection(admin=True)
 async def stop_filter(event, status, chat_id, chat_title):

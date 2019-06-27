@@ -9,7 +9,7 @@ from sophie_bot.modules.helper_func.flood import t_flood_limit_dec
 from sophie_bot.modules.users import user_link
 
 
-@decorator.command("afk ?(.*)", arg=True)
+@decorator.t_command("afk ?(.*)", arg=True)
 @t_disablable_dec("afk")
 @t_flood_limit_dec("afk")
 async def afk(event):
