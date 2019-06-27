@@ -3,30 +3,34 @@ from telethon import utils
 RESTRICTED_SYMBOLS = ['**', '__', '`']
 
 
-async def save_get_new_note(event, strings, chat_id):
-    note_name = event.pattern_match.group(1)
+async def save_get_new_note(message, strings, chat_id):
+    args = message['text'].split(" ", 2)
+
+    note_name = args[1]
     for sym in RESTRICTED_SYMBOLS:
         if sym in note_name:
-            await event.reply(strings["notename_cant_contain"].format(sym))
+            await message.reply(strings["notename_cant_contain"].format(sym))
             return
     if note_name[0] == "#":
         note_name = note_name[1:]
     file_id = None
     prim_text = ""
-    if len(event.message.text.split(" ")) > 2:
-        prim_text = event.text.partition(note_name)[2]
-    if event.message.reply_to_msg_id:
-        msg = await event.get_reply_message()
+    if len(message['text'].split(" ")) > 2:
+        prim_text = args[2]
+    if message.reply_to_message:
+        msg = message.reply_to_message
         if not msg:
-            await event.reply(strings["bot_msg"])
+            await message.reply(strings["bot_msg"])
             return
-        note_text = msg.message
+        note_text = msg.text
         if prim_text:
             note_text += prim_text
-        if hasattr(msg.media, 'photo'):
-            file_id = utils.pack_bot_file_id(msg.media)
-        if hasattr(msg.media, 'document'):
-            file_id = utils.pack_bot_file_id(msg.media)
+        if 'sticker' in msg:
+            file_id = msg.sticker.thumb.file_id
+        if 'photo' in msg:
+            file_id = msg.photo.file_id
+        if 'document' in msg:
+            file_id = msg.document.file_id
     else:
         note_text = prim_text
 
