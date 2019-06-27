@@ -6,11 +6,11 @@ from telethon.tl.types import MessageActionChatJoinedByLink
 
 from sophie_bot import tbot, decorator, mongodb
 from sophie_bot.modules.bans import mute_user, unmute_user
-from sophie_bot.modules.connections import t_connection, get_conn_chat
+from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.helper_func.flood import flood_limit
-from sophie_bot.modules.language import get_string, t_get_strings_dec
+from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.notes import send_note
-from sophie_bot.modules.users import t_user_admin_dec, user_link
+from sophie_bot.modules.users import user_admin_dec, user_link
 
 
 async def do_welcomesecurity(event, strings, from_id, chat_id):
@@ -58,7 +58,7 @@ async def do_cleanwelcome(event, chat_id, welc_msg):
 
 
 @decorator.ChatAction()
-@t_get_strings_dec("greetings")
+@get_strings_dec("greetings")
 async def welcome_trigger(event, strings):
     print(event)
     print('\n=================================')
@@ -175,7 +175,7 @@ async def setwelcome_withot_args(event):
 
 
 @decorator.command('cleanservice', arg=True)
-@t_user_admin_dec
+@user_admin_dec
 async def cleanservice(event):
     args = event.pattern_match.group(1)
     chat_id = event.chat_id
@@ -203,8 +203,8 @@ async def cleanservice(event):
 
 
 @decorator.command('welcomesecurity', arg=True)
-@t_user_admin_dec
-@t_get_strings_dec("greetings")
+@user_admin_dec
+@get_strings_dec("greetings")
 async def welcomeSecurity(event, strings):
     arg = event.pattern_match.group(1)
     args = arg.lower()
@@ -234,9 +234,9 @@ async def welcomeSecurity(event, strings):
 
 
 @decorator.command('cleanwelcome', arg=True)
-@t_user_admin_dec
-@t_connection(admin=True, only_in_groups=True)
-@t_get_strings_dec("greetings")
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
+@get_strings_dec("greetings")
 async def clean_welcome(event, strings, status, chat_id, chat_title):
     arg = event.pattern_match.group(1)
     args = arg.lower()
@@ -264,7 +264,7 @@ async def clean_welcome(event, strings, status, chat_id, chat_title):
 
 
 @decorator.CallBackQuery('wlcm_')
-@t_get_strings_dec("greetings")
+@get_strings_dec("greetings")
 async def welcm_btn_callback(event, strings):
     data = str(event.data)
     details = re.search(r'wlcm_(.*)_(.*)', data)

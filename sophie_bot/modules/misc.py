@@ -11,8 +11,8 @@ import sophie_bot.modules.helper_func.bot_rights as bot_rights
 from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, tbot, decorator, mongodb
 from sophie_bot.modules.disable import t_disablable_dec
 from sophie_bot.modules.helper_func.flood import t_flood_limit_dec
-from sophie_bot.modules.language import get_string, t_get_strings_dec
-from sophie_bot.modules.users import get_user, t_user_admin_dec, user_link
+from sophie_bot.modules.language import get_string, get_strings_dec
+from sophie_bot.modules.users import get_user, user_admin_dec, user_link
 
 RUN_STRINGS = (  # Thanks PaulSonOfLars and Skittles9823
     "Where do you think you're going?",
@@ -152,9 +152,9 @@ async def id(event):
 
 
 @decorator.command("pin", arg=True)
-@t_user_admin_dec
+@user_admin_dec
 @bot_rights.pin_messages()
-@t_get_strings_dec('misc')
+@get_strings_dec('misc')
 async def pinMessage(event, strings):
     tagged_message = await event.get_reply_message()
     if not tagged_message:
@@ -183,9 +183,9 @@ async def runs(event):
 
 
 @decorator.command("unpin")
-@t_user_admin_dec
+@user_admin_dec
 @bot_rights.pin_messages()
-@t_get_strings_dec('misc')
+@get_strings_dec('misc')
 async def unpin_message(event, strings):
     try:
         await tbot.pin_message(event.chat_id, None)
@@ -196,7 +196,7 @@ async def unpin_message(event, strings):
 
 
 @decorator.command("promote", arg=True)
-@t_user_admin_dec
+@user_admin_dec
 @bot_rights.add_admins()
 async def promote(event):
 <<<<<<< HEAD
@@ -238,7 +238,7 @@ async def promote(event):
 
 
 @decorator.command("demote")
-@t_user_admin_dec
+@user_admin_dec
 @bot_rights.add_admins()
 async def demote(event):
     # Admin right check
@@ -281,7 +281,7 @@ async def demote(event):
 
 
 @decorator.command('help')
-@t_get_strings_dec('misc')
+@get_strings_dec('misc')
 async def help(event, strings):
     if event.chat_id != event.from_id:
         buttons = [
@@ -292,8 +292,8 @@ async def help(event, strings):
 
 
 @decorator.command('setrules', arg=True)
-@t_user_admin_dec
-@t_get_strings_dec('misc')
+@user_admin_dec
+@get_strings_dec('misc')
 async def setrules(event, strings):
     reply_msg = await event.get_reply_message()
     if reply_msg:
@@ -317,7 +317,7 @@ async def setrules(event, strings):
 
 
 @decorator.command('rules')
-@t_get_strings_dec('misc')
+@get_strings_dec('misc')
 async def rules(event, strings):
     rule = mongodb.rules.find_one({'chat': event.chat_id})
     if rule:
@@ -332,8 +332,8 @@ async def rules(event, strings):
 
 
 @decorator.command('clearrules')
-@t_user_admin_dec
-@t_get_strings_dec('misc')
+@user_admin_dec
+@get_strings_dec('misc')
 async def clear_rules(event, strings):
     chat = event.chat_id
     mongodb.rules.delete_one({'chat': chat})
@@ -341,7 +341,7 @@ async def clear_rules(event, strings):
 
 
 @decorator.command('paste', arg=True)
-@t_get_strings_dec('misc')
+@get_strings_dec('misc')
 async def paste_deldog(event, strings):
     DOGBIN_URL = "https://del.dog/"
     dogbin_final_url = None
@@ -377,7 +377,7 @@ async def paste_deldog(event, strings):
 
 @decorator.command("info", arg=True)
 @t_flood_limit_dec("info")
-@t_get_strings_dec("misc")
+@get_strings_dec("misc")
 async def user_info(event, strings):
     user = await get_user(event)
     user_obj = await event.client.get_entity(PeerUser(user["user_id"]))

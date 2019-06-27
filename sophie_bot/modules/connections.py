@@ -186,11 +186,21 @@ async def get_conn_chat(user_id, chat_id, admin=False, only_in_groups=False):
     return True, int(group_id), chat_title
 
 
-def t_connection(**dec_kwargs):
+def connection(**dec_kwargs):
     def wrapped(func):
         async def wrapped_1(event, *args, **kwargs):
+            if hasattr(event, 'from_id'):
+                user_id = event.from_id
+            elif hasattr(event, 'from_user'):
+                user_id = event.from_user.id
+
+            if hasattr(event, 'chat_id'):
+                chat_id = event.chat_id
+            elif hasattr(event, 'chat'):
+                chat_id = event.chat.id
+
             status, chat_id, chat_title = await get_conn_chat(
-                event.from_id, event.chat_id, **dec_kwargs)
+                user_id, chat_id, **dec_kwargs)
             if status is False:
                 await event.reply(chat_id)
                 return

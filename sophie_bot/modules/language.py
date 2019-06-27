@@ -154,27 +154,19 @@ def lang_info(chat_id, pm=False):
     return text, buttons
 
 
-def t_get_strings_dec(module=""):
+def get_strings_dec(module=""):
     def wrapped(func):
         async def wrapped_1(event, *args, **kwargs):
-            chat_lang = get_chat_lang(event.chat_id)
+            if hasattr(event, 'chat_id'):
+                chat_id = event.chat_id
+            elif hasattr(event, 'chat'):
+                chat_id = event.chat.id
+
+            chat_lang = get_chat_lang(chat_id)
             if module in LANGUAGES[chat_lang]["STRINGS"]:
                 str = LANGUAGES[chat_lang]["STRINGS"][module]
             else:
                 str = LANGUAGES['en']["STRINGS"][module]
             return await func(event, str, *args, **kwargs)
-        return wrapped_1
-    return wrapped
-
-
-def get_strings_dec(module=""):
-    def wrapped(func):
-        async def wrapped_1(message, *args, **kwargs):
-            chat_lang = get_chat_lang(message['chat']['id'])
-            if module in LANGUAGES[chat_lang]["STRINGS"]:
-                str = LANGUAGES[chat_lang]["STRINGS"][module]
-            else:
-                str = LANGUAGES['en']["STRINGS"][module]
-            return await func(message, str, *args, **kwargs)
         return wrapped_1
     return wrapped
