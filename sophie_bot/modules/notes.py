@@ -19,12 +19,20 @@ from sophie_bot.modules.users import (check_group_admin, is_user_admin,
 from sophie_bot.modules.helper_func.notes import save_get_new_note
 
 
-@decorator.command(["save"])
+@dp.message_handler(commands=['owo'], commands_prefix='!/#')
+@user_admin_dec
+@connection()
+@get_strings_dec("notes")
+async def test(message, strings, status, chat_id, chat_title):
+    print(message.from_user.id)
+
+
+@decorator.t_command("save", word_arg=True)
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("notes")
-async def save_note(message, strings, status, chat_id, chat_title):
-    note_name, file_id, note_text = await save_get_new_note(message, strings, chat_id)
+async def save_note(event, strings, status, chat_id, chat_title):
+    note_name, file_id, note_text = await save_get_new_note(event, strings, chat_id)
 
     status = strings["saved"]
     old = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
@@ -39,19 +47,18 @@ async def save_note(message, strings, status, chat_id, chat_title):
         status = strings["updated"]
 
     if not creator:
-        creator = message.from_user.id
-
-    if not note_text:
-        note_text = ""
+        creator = event.from_id
 
     new = ({'chat_id': chat_id,
             'name': note_name,
             'text': note_text,
             'date': date,
             'created': created_date,
-            'updated_by': message.from_user.id,
+            'updated_by': event.from_id,
             'creator': creator,
             'file_id': file_id})
+
+    buttons = None
 
     if old:
         mongodb.notes.update_one({'_id': old['_id']}, {"$set": new}, upsert=False)
@@ -59,11 +66,15 @@ async def save_note(message, strings, status, chat_id, chat_title):
     else:
         new = mongodb.notes.insert_one(new).inserted_id
 
+        buttons = [
+            [Button.inline(strings["del_note"], 'delnote_{}'.format(new))]
+        ]
+
     text = strings["note_saved_or_updated"].format(
         note_name=note_name, status=status, chat_title=chat_title)
     text += strings["you_can_get_note"].format(name=note_name)
 
-    await message.reply(text, parse_mode=types.ParseMode.HTML)
+    await event.reply(text, buttons=buttons)
 
 
 @decorator.t_command("clear", arg=True)

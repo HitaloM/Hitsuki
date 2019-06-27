@@ -2,7 +2,7 @@ import re
 
 from telethon import events
 
-from sophie_bot import BOT_USERNAME, CONFIG, tbot, bot, dp
+from sophie_bot import BOT_USERNAME, CONFIG, tbot
 
 ALLOW_F_COMMANDS = CONFIG["advanced"]["allow_forwards_commands"]
 ALLOW_COMMANDS_FROM_EXC = CONFIG["advanced"]["allow_commands_with_!"]
@@ -30,23 +30,6 @@ def t_command(command, arg="", word_arg="", additional="", **kwargs):
 
         tbot.add_event_handler(func, events.NewMessage(incoming=True, pattern=cmd, **kwargs))
         tbot.add_event_handler(func, events.MessageEdited(incoming=True, pattern=cmd, **kwargs))
-    return decorator
-
-
-def command(command, **kwargs):
-    def decorator(func):
-        # if 'forwards' not in kwargs:
-        #    kwargs['forwards'] = ALLOW_F_COMMANDS
-
-        if 'commands_prefix' in kwargs:
-            pass
-        elif ALLOW_COMMANDS_FROM_EXC is True:
-            kwargs['commands_prefix'] = '/!'
-        else:
-            kwargs['commands_prefix'] = '/'
-
-        dp.register_message_handler(func, commands=command, **kwargs)
-        dp.register_edited_message_handler(func, commands=command, **kwargs)
     return decorator
 
 
