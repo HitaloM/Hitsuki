@@ -84,7 +84,7 @@
     "greetings": {
         "welcome_hay": "Welcome {mention}! How are you?",
         "cant_find_note": "I can't find this note.",
-        "welcome_set_to_note": "Welcome set to note: `{}`",
+        "welcome_set_to_note": "Welcome set to note: <code>{}</code>",
         "welcome_is_note": "Welcome is note: `{}`",
         "welcome_is_default": "Welcome is set to default.",
         "no_args_serv": "Please give me yes/no to Enable/Disable Clean Service",

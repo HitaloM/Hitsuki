@@ -4,6 +4,8 @@ import time
 from telethon.tl.custom import Button
 from telethon.tl.types import MessageActionChatJoinedByLink
 
+from aiogram import types
+
 from sophie_bot import tbot, decorator, mongodb
 from sophie_bot.modules.bans import mute_user, unmute_user
 from sophie_bot.modules.connections import connection, get_conn_chat
@@ -60,8 +62,6 @@ async def do_cleanwelcome(event, chat_id, welc_msg):
 @decorator.ChatAction()
 @get_strings_dec("greetings")
 async def welcome_trigger(event, strings):
-    print(event)
-    print('\n=================================')
     if event.user_joined \
             or event.user_added \
             or isinstance(event.action_message.action, MessageActionChatJoinedByLink):
@@ -95,9 +95,6 @@ async def welcome_trigger(event, strings):
 
         reply = event.action_message.id
 
-        print(chat_id)
-        print(event.chat_id)
-
         # Cleanservice
         cleaner = mongodb.clean_service.find_one({'chat_id': chat_id})
         if cleaner and cleaner['service']:
@@ -116,7 +113,6 @@ async def welcome_trigger(event, strings):
                 chat_id, chat_id, reply, welcome['note'],
                 show_none=True, from_id=from_id
             )
-        print(welc_msg)
 
         # Welcomesecurity
         await do_welcomesecurity(event, strings, from_id, chat_id)
@@ -126,23 +122,34 @@ async def welcome_trigger(event, strings):
             await do_cleanwelcome(event, chat_id, welc_msg)
 
 
-@decorator.t_command("setwelcome", arg=True)
-async def setwelcome(event):
-    if not event.pattern_match.group(1):
+@decorator.command(["setwelcome"])
+@user_admin_dec
+@connection(only_in_groups=True, admin=True)
+@get_strings_dec("greetings")
+async def setwelcome(message, strings, status, chat_id, chat_title, *args):
+    chat = mongodb.chat_list.find_one({'chat_id': int(chat_id)})
+    arg = message['text'].split(" ", 2)
+    if len(arg) <= 1:
         return
-    status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id, admin=True)
-    chat = event.chat_id
-    chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
     if status is False:
-        await event.reply(chat_id)
+        await message.reply(chat_id)
+
+    note_name = arg[1]
+    off = ['off', 'none', 'disable']
+    if note_name in off:
+        check = mongodb.welcomes.delete_one({'chat_id': chat})
+        if check:
+            text = "Welcome disabled for this chat"
+        else:
+            text = "Welcome didn't setuped yet"
+        await message.reply(text)
         return
-    note_name = event.pattern_match.group(1)
     note = mongodb.notes.find_one({
         'chat_id': chat_id,
         'name': note_name
     })
     if not note:
-        await event.reply(get_string("greetings", "cant_find_note", chat))
+        await message.reply(strings["cant_find_note"])
         return
     old = mongodb.welcomes.find_one({'chat_id': chat_id})
     if old:
@@ -152,7 +159,8 @@ async def setwelcome(event):
         'enabled': True,
         'note': note_name
     })
-    await event.reply(get_string("greetings", "welcome_set_to_note", chat).format(note_name))
+    await message.reply(strings["welcome_set_to_note"].format(note_name),
+                        parse_mode=types.ParseMode.HTML)
 
 
 @decorator.t_command("setwelcome")
