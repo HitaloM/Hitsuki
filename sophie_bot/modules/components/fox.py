@@ -25,7 +25,7 @@ global DEVICES_BETA
 DEVICES_STABLE = {}
 DEVICES_BETA = {}
 
-NEW_BETA_TEXT = """🦊 **OrangeFox R10 Beta**
+NEW_BETA_TEXT = """🦊 **OrangeFox Beta**
 `{ver}`
 
 📱 {fullname} ({codename})
