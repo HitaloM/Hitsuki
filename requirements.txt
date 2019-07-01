@@ -6,6 +6,4 @@ pymongo
 dnspython # needed to connect to cloud MongoDB instances
 cryptg
 pillow
-
-# TEMP
-bs4
+aiogram
