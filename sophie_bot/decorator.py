@@ -7,8 +7,12 @@ from sophie_bot import BOT_USERNAME, CONFIG, tbot, bot, dp
 ALLOW_F_COMMANDS = CONFIG["advanced"]["allow_forwards_commands"]
 ALLOW_COMMANDS_FROM_EXC = CONFIG["advanced"]["allow_commands_with_!"]
 
+REGISTRED_COMMANDS = []
+
 
 def t_command(command, arg="", word_arg="", additional="", **kwargs):
+    REGISTRED_COMMANDS.append(command)
+
     def decorator(func):
 
         if 'forwards' not in kwargs:
@@ -33,20 +37,24 @@ def t_command(command, arg="", word_arg="", additional="", **kwargs):
     return decorator
 
 
-def command(command, **kwargs):
+def command(command, additional="", **kwargs):
+    REGISTRED_COMMANDS.append(command)
+
     def decorator(func):
-        # if 'forwards' not in kwargs:
-        #    kwargs['forwards'] = ALLOW_F_COMMANDS
-
-        if 'commands_prefix' in kwargs:
-            pass
-        elif ALLOW_COMMANDS_FROM_EXC is True:
-            kwargs['commands_prefix'] = '/!'
+        if ALLOW_COMMANDS_FROM_EXC is True:
+            P = '[/!]'
         else:
-            kwargs['commands_prefix'] = '/'
+            P = '/'
 
-        dp.register_message_handler(func, commands=command, **kwargs)
-        dp.register_edited_message_handler(func, commands=command, **kwargs)
+        if 'word_arg' in kwargs and kwargs['word_arg'] is True:
+            cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)(\S*){2}".format(command, BOT_USERNAME, additional,
+                                                               P=P)
+        else:
+            cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_USERNAME, additional,
+                                                              P=P)
+
+        dp.register_message_handler(func, regexp=cmd, **kwargs)
+        dp.register_edited_message_handler(func, regexp=cmd, **kwargs)
     return decorator
 
 

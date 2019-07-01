@@ -19,7 +19,7 @@ from sophie_bot.modules.users import (check_group_admin, is_user_admin,
 from sophie_bot.modules.helper_func.notes import save_get_new_note
 
 
-@dp.message_handler(commands=['owo'], commands_prefix='!/#')
+@decorator.command('owo')
 @user_admin_dec
 @connection()
 @get_strings_dec("notes")

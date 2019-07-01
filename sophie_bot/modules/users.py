@@ -15,6 +15,8 @@ async def do_update_users(event):
 
 async def update_users(event):
     chat_id = event.chat_id
+    if not chat_id:
+        return
     user_id = event.from_id
     user = await tbot.get_entity(user_id)
     chat = await tbot.get_entity(chat_id)
@@ -22,7 +24,8 @@ async def update_users(event):
     old_chat = mongodb.chat_list.find_one({'chat_id': chat_id})
     old_user = mongodb.user_list.find_one({'user_id': user_id})
 
-    new_chat = [chat_id]
+    new_chat = []
+    new_chat.append(chat_id)
 
     if old_user:
         if 'chats' in old_user:

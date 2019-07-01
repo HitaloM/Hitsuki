@@ -122,7 +122,7 @@ async def welcome_trigger(event, strings):
             await do_cleanwelcome(event, chat_id, welc_msg)
 
 
-@decorator.command(["setwelcome"])
+@decorator.command("setwelcome")
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("greetings")

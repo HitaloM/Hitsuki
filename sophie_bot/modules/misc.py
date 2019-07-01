@@ -127,6 +127,13 @@ RUN_STRINGS = (  # Thanks PaulSonOfLars and Skittles9823
 )
 
 
+@decorator.command('allcommands')
+async def all_commands_list(message):
+    txt = ""
+    for cmd in decorator.REGISTRED_COMMANDS:
+        txt += "* /" + cmd + "\n"
+    await message.reply(txt)
+
 @decorator.t_command("id", arg=True)
 @t_disablable_dec("id")
 @t_flood_limit_dec("id")
