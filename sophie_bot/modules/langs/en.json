@@ -292,7 +292,7 @@
         "btn": "Notes",
         "title": "Notes are great to save random tidbits of information; a phone number, a nice gif, a funny picture - anything!",
         "text": {
-            "i1": "\nAvailable commands are:",
+            "i1": "\n**Available commands are:**",
             "i2": "- /save (name) (data): Replying to a message will save that message. Even works on media!",
             "i3": "- /get (name): get the note registered to that word.",
             "i4": "- /clear (name): delete the note",
@@ -309,21 +309,43 @@
             "i15": "This will retrieve the note and send it without formatting it; getting you the raw markdown, allowing you to make easy edits."
         },
         "buttons": {
-            "help_btn_notes_md": "Markdown"
+            "help_btn_notes_md": "Markdown",
+            "help_btn_notes_vars": "Special vars",
+            "help_btn_notes_html": "HTML"
+        },
+        "vars": {
+            "a1": "You can use special variable in notes, here a list of it:",
+            "a2": "`{first}` - First name, will something like 'Mike'",
+            "a3": "`{last}` - Last name, ex. 'Smith'",
+            "a4": "`{fullname}` - Full name, ex. 'Mike Smith'",
+            "a5": "`{username}` - Gives the username, ex. '@MikeSmith009'",
+            "a6": "`{mention}` - Gives the link to user, ex. [SophieBot](https://t.me/rSophieBot)",
+            "a7": "`{id}` - Gives the id of the user, ex. '885745757'",
+            "a8": "`{chatname}` - Gives the current chat name, ex. 'SophieBot chat'"
         },
         "md": {
             "a1": "You can use markdown to make your messages more expressive. This is the markdown currently supported:\n",
-            "a2": "`code words` backticks allow you to wrap your words in monospace fonts. Shows as: `code words`",
-            "a3": "`**bold words**` asterixes are used for bold font. Shows as: **bold words**",
-            "a4": "`__italic words__` underscores are used for italics. Shows as: __italic words__",
-            "a5": "`[hyperlink](example.com)` this is used for hyperlinks, and will show as such: [hyperlink](http://example.com/). Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown."
+            "a2": "<code>`code words`</code>: backticks allow you to wrap your words in monospace fonts. Shows as: <code>code words</code>",
+            "a3": "<code>**bold words**</code>: asterixes are used for bold font. Shows as: <b>bold words</b>",
+            "a4": "<code>__italic words__</code>: underscores are used for italics. Shows as: <i>italic words</i>",
+            "a5": "<code>[hyperlink](example.com)</code>: this is used for hyperlinks, and will show as such: <a href=\"http://example.com/\">hyperlink</a>. Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown."
+        },
+        "html": {
+            "a1": "Markdown is easy, but when you will be making many notes, note by note, you will see obvious flaws, every extra '*' can broke your perfect note.",
+            "a2": "How about HTML? Let's try use it instead of markdown. Please read before the 'Markdown' guide.",
+            "a3": "\nTo use the HTML in the note add the `[format:html]` to the end of note, you can fully disable formatting note by `[format:none]`.\n",
+            "a4": "HTML markdown:",
+            "a5": "`<code>code words</code>`: will shows as '`blue text`'",
+            "a6": "`<b>bold text</b>`: will shows as **bold text**",
+            "a7": "`<i>italic text</i>`: will shows as __italic text__",
+            "a8": "`<a href=\"http://example.com/\">hyperlink</a>`: Example of hyperlink, will shown as [hyperlink](example.com)"
         }
     },
     "purges": {
         "btn": "Purges",
         "title": "Need to delete lots of messages? That's what purges are for!",
         "text": {
-            "i1": "\nAvailable commands are:",
+            "i1": "\n**Available commands are:**",
             "i2": "- /purge: deletes all messages from the message you replied to, to the current message.",
             "i3": "- /del: deletes the message you replied to."
         }
@@ -332,7 +354,7 @@
         "btn": "Warnings",
         "title": "Keep your members in check with warnings; stop them getting out of control!",
         "text": {
-            "i1": "\nAvailable commands are:",
+            "i1": "\n**Available commands are:**",
             "i2": "- /warn (reason): warn a user for the specified reason .",
             "i3": "- /warns: returns the list of warns, with reasons, for that user.",
             "i5": "- /resetwarns: reset all of a user's warns.",
@@ -347,7 +369,7 @@
         "btn": "Misc",
         "title": "An \"odds and ends\" module for small, simple commands which don't really fit anywhere",
         "text": {
-            "i1": "\nAvailable commands are:",
+            "i1": "\n**Available commands are:**",
             "i2": "- /id: get a id of user and chat.",
             "i3": "- /stats: show bot stats.",
             "i4": "- /botchanges: show bot changes (commit history)",
@@ -360,7 +382,7 @@
         "title": "Sometimes, you just want to add some notes and filters to a group chat, but you don't want everyone to see; This is where connections come in...",
         "text": {
             "i0": "This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)",
-            "i1": "\nAvailable commands are:",
+            "i1": "\n**Available commands are:**",
             "i2": "- /connect <chat>: connect to the chat with chat username/ID, allowing you to view/edit contents.",
             "i3": "- /connect: show last 3 chats to fast connect.",
             "i4": "\nYou can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids."
@@ -371,8 +393,9 @@
         "title": "Give your members a warm welcome with the greetings module! Or a sad goodbye... Depends!",
         "text": {
             "i0": "Welcomes it's are a note trigget, use /setwelcome to set welcome trigger to note.",
-            "i1": "\nAvailable commands are:",
+            "i1": "\n**Available commands are:**",
             "i2": "- /setwelcome <note>: sets your new welcome note!",
+            "mm": "- /setwelcome off: disable welcome in chat.",
             "i3": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat.",
             "i4": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
             "i5": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
@@ -382,13 +405,17 @@
         "btn": "Filters",
         "title": "Make your chat more lively with filters; The bot will reply to certain words!",
         "text": {
-            "i1": "\nAvailable commands are:",
-            "i2": "\n - /filter <keyword> <action> : Every time someone says 'word' , the bot will do the given action \n\n Available actions are: \n**note** : eg: /filter foo note <notename> ; bot will reply to word 'foo' containing given notename ",
-            "i3": "**delete** : eg: /filter foo delete; bot will delete the someone's message containing 'foo' \n**tban** : eg: /filter foo tban 10m ; bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
-            "i4": "**ban** : eg: /filter foo ban ; bot will ban who send message containing 'foo' \n **mute**: eg: /filter foo mute ; bot will mute user who send message 'foo'",
-            "i5": "**kick** : eg: /filter foo kick ; bot will kick user who send message containing 'foo' \n",
-            "i6": "- /filters : Will display all filter in that chat!\n",
-            "i7": "- /stop <filter name> : Will stop the the given filter names"
+            "i1": "**Available commands are:**",
+            "i2": "- /filter <keyword> <action> : Every time someone says 'word' , the bot will do the given action.",
+            "i10": "- /filters: Will display all filter in that chat!",
+            "i11": "- /stop <filter name> : Will stop the the given filter names",
+            "i3": "\n**Available actions are:**",
+            "i4": "- note: eg: `/filter foo note <notename>`: bot will reply to word 'foo' containing given notename.",
+            "i5": "- delete: eg: `/filter foo delete`: bot will delete the someone's message containing 'foo'.",
+            "i6": "- tban: eg: `/filter foo tban 10m`: bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
+            "i7": "- ban: eg: `/filter foo ban`: bot will ban who send message containing 'foo'",
+            "i8": "- mute: eg: `/filter foo mute`: bot will mute user who send message 'foo'",
+            "i9": "- kick: eg: `/filter foo kick`: bot will kick user who send message containing 'foo'"
         }
     },
     "federations": {
@@ -396,7 +423,7 @@
         "title": "Ah, group management. It's all fun and games, until you start getting spammers in, and you need to ban them. Then you need to start banning more, and more, and it gets painful. But then you have multiple groups, and you don't want these spammers in any of your groups - how can you deal? Do you have to ban them manually, in all your groups?",
         "text": {
             "i0": "No more! With federations, you can make a ban in one chat overlap to all your other chats. You can even appoint federation admins, so that your trustworthiest admins can ban across all the chats that you want to protect.",
-            "i1": "\nAvailable commands are:",
+            "i1": "\n**Available commands are:**",
             "i2": "- /newfed <fedname>: Creates a new federation with the given name. Users are only allowed to own one federation. Using this method when you already have a fed will simply change the federation name.",
             "i3": "- /joinfed <FedID>: Joins the current chat to the federation. Each chat can only be in one federation. Only chat owners can do this.",
             "i4": "- /finfo: Show info about current chat Federation, you can /finfo <FedID> - to see info about other Federation.",
@@ -408,16 +435,35 @@
             "i10": "- /unfban <user>: Unbans a user the current chat's federation.",
             "i11": "\nOther commands:",
             "i12": "/fchats: Show list of chats which connected to Federation."
-        },
-        "buttons": {
-            "help_btn_federations_notes": "Federation notes"
-        },
-        "notes": {
-            "i1": "You have many chats to Federation? Perfect! But now you get anoyed by saving and saving notes to every chats, such as rules or others info. No more! Federation notes can save what you wanna in all place for all chats, see how it works:",
-            "i2": "\nAvailable commands are:",
-            "i3": "/fsave <notename> <data>: Save note to the Fedearion notes, it will works for all chats in your Federation",
-            "i4": "/fclear <notename>: Remove the note.",
-            "i5": "\nAll notes will be append to end of /notes"
+        }
+    },
+    "disabling": {
+        "btn": "Disabling",
+        "title": "You might not like all the SophieBot's features and wanna disable something to reduce spam in your group? If you this module for you!",
+        "text": {
+            "a1": "**Available commands are:**",
+            "a2": "- /disable <command>: Disable the command",
+            "a3": "- /enable <command>: Enable the command",
+            "a4": "- /disablable: See command list which commands can be disabled."
+        }
+    },
+    "pin": {
+        "btn": "Pinning",
+        "title": "You wanna pin the message? Here you go.",
+        "text": {
+            "a1": "**Available commands are:**",
+            "a2": "- /pin: pin the message you replied to; add 'loud' to send a notification to group members.",
+            "a3": "- /unpin: Unpin the message."
+        }
+    },
+    "lang": {
+        "btn": "Language",
+        "title": "Not every can speak with perfect English, SophieBot have translation system, check it out.",
+        "text": {
+            "a1": "**Available commands are:**",
+            "a2": "/lang: Will show a buttons with all languages and it will show current chat language.",
+            "a3": "/lang <lang>: Will change the language without selecting it with buttons.",
+            "a4": "\nNot all language currently supported, help us with translation on [our crowdin page](https://crowdin.com/project/sophiebot)"
         }
     }
  }

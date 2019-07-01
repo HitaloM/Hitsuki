@@ -134,13 +134,16 @@ async def get_help_button_callback(event):
     data = event_raw.group(2)[:-1]
     chat_id = event.chat_id
     lang = get_chat_lang(chat_id)
-    text = "Help of {}"
+    text = ""
     if data in LANGUAGES[lang]["HELPS"][module]:
         for btn in get_string(module, data, chat_id, dir="HELPS"):
             text += LANGUAGES[lang]["HELPS"][module][data][btn]
             text += '\n'
     buttons = [[Button.inline("Back", 'mod_help_' + module)]]
-    await event.edit(text, buttons=buttons)
+    if module == 'notes' and data == 'md':
+        await event.edit(text, buttons=buttons, parse_mode='html')
+    else:
+        await event.edit(text, buttons=buttons)
 
 
 @decorator.t_command('start help')  # '/start help' is cmd gen by help button
