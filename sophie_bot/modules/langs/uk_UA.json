@@ -33,8 +33,8 @@
             "bot_msg": "Вибач, але я не можу побачити це повідомлення, схоже воно від іншого бота. Я не можу його зберегти.",
             "pmed_note": "Я відправила замітку тобі в лс!",
             "notename_cant_contain": "Назва замітки не може вміщувати `{}`!",
-            "note_saved_or_updated_in_fed": "**Note {note_name} {status} in {fed_name} Federation!**\n",
-            "note_already_in_chat": "Note `{note_name}` already exits in **{chat_name}** chat, remove it before trying save."
+            "note_saved_or_updated_in_fed": "**Замітка {note_name} {status} в {fed_name} Федерації!**\n",
+            "note_already_in_chat": "Замітка `{note_name}` вже наявна в **{chat_name}** чаті, видаліть її до спроби збереження."
         },
         "bans": {
             "user_banned": "Користувач {user} був заблокований адміністратором {admin} у {chat_name}!\n",
@@ -84,7 +84,7 @@
         "greetings": {
             "welcome_hay": "Вітаємо {mention}! Як ваші справи?",
             "cant_find_note": "Я не можу знайти цю замітку.",
-            "welcome_set_to_note": "Вітання встановлено в замітку: `{}`",
+            "welcome_set_to_note": "Welcome set to note: <code>{}</code>",
             "welcome_is_note": "Вітання це замітка: `{}`",
             "welcome_is_default": "Вітання відновлено.",
             "no_args_serv": "Дай мені відповідь Так або Ні щоб Увімкнути або Вимкнути Clean Service",
@@ -95,16 +95,16 @@
             "wlcm_sec_soft": "Вхідна безпека налаштована в **МЯГКИЙ РЕЖИМ** в цьому чаті!",
             "wlcm_sec_off": "Вхідна безпека вимкнена в цьому чаті!",
             "clik2tlk_btn": "Нажміть сюди для розмови",
-            "wlcm_sec": "Агов {mention}, Будь ласка натисни на кнопку розташовану нижче, щоб довести що ти не Робот!",
+            "wlcm_sec": "Hey {mention}, Please click below button to prove that you aren't a bot!",
             "not_trgt_usr": "Ви не повинні натискати на цю кнопку!",
             "trgt_success": "Чудово! З Вас зняли німоту!",
             "not_trgt": "Ви не повинні натискати на цю кнопку",
-            "cln_wel_alr_enabled": "Cleaning welcomes already enabled for **{chat_name}**!",
-            "cln_wel_alr_disabled": "Cleaning welcomes was not enabled for **{chat_name}**",
-            "cln_wel_disabled": "Cleaning welcomes is `disabled` for **{chat_name}**.",
-            "cln_wel_enabled": "Cleaning welcomes is `enabled` for **{chat_name}**.",
-            "cln_wel_s_enabled": "Cleaning welcomes enabled for **{chat_name}**.",
-            "cln_wel_s_disabled": "Cleaning welcomes disabled for **{chat_name}**."
+            "cln_wel_alr_enabled": "Чистка вітання вже увімкнена для **{chat_name}**!",
+            "cln_wel_alr_disabled": "Чистка вітання не була увімкнена для **{chat_name}**",
+            "cln_wel_disabled": "Чистка вітання `вимкнена` для **{chat_name}**.",
+            "cln_wel_enabled": "Чистка вітання `увімкнена` для **{chat_name}**.",
+            "cln_wel_s_enabled": "Чистка вітання увімкнена для **{chat_name}**.",
+            "cln_wel_s_disabled": "Чистка вітання вимкнена для **{chat_name}**."
         },
         "filters": {
             "dont_have_right": "В тебе немає прав на зберігання фільтрів у цьому чаті!",
@@ -124,8 +124,8 @@
             "filtes_in": "**Фільтри у {}:**\n",
             "no_rights_stop": "В тебе немає прав на видалення фільтрів у цьому чаті!",
             "cant_find_filter": "Я не можу знайти цей фільтр!",
-            "filter_deleted": "Filter `{filter}` in **{chat_name}** deleted!",
-            "filter_ban_success": "User {user} banned due to automated action on filter **{filter}**."
+            "filter_deleted": "Фільтер`{filter}` в **{chat_name}** видалений!",
+            "filter_ban_success": "Користувач {user} заблокований через автоматичні дії по фільтру **{filter}**."
         },
         "warns": {
             "user_no_admeme": "Ти не адмін",
@@ -155,7 +155,7 @@
             "chat_id": "ID чату: `{}`\n",
             "user_id": "ID користувача {}: `{}`\n",
             "pinned_success": "Успішно закріплено",
-            "no_reply_msg": "Please me any message to pin",
+            "no_reply_msg": "Будь ласка відправте повідомлення для закріплення",
             "unpin_success": "Успішно знято з закріплених!",
             "promote_success": "Успішно підвищено в правах!",
             "promote_failed": "Підвищення прав не вдалось! Перевірте чи я маю право на це",
@@ -165,33 +165,37 @@
             "chat_not_modified_unpin": "Тут не має закріплених повідомлень, щоб їх зняти з закріплень!",
             "help_btn": "Нажми на мене для допомоги!",
             "help_txt": "Нажми кнопку нижче для допомоги!",
-            "rule_empty": "Rules can't be empty.",
-            "rule_updated": "Rules for this chat is updated!",
+            "rule_empty": "Правила не можуть бути пустими.",
+            "rule_updated": "Правила для цього чату оновлені!",
             "rules_inserted": "Налаштуйте правила для цього чату!",
-            "rules_btn": "Rules",
+            "rules_btn": "Правила",
             "rules_text": "Нажміть кнопку нижче щоб прочитати правила!",
-            "no_rules": "This chat doesn't seem to have had any rules set yet... I wouldn't take that as an invitation though.",
-            "clrd_rules": "Rules for this chat cleared successfully!",
-            "paste_success_extra": "**Pasted successfully!**\nShortened url: {}\nOriginal Dogbin URL: {}",
-            "paste_success": "**Pasted successfully!**\nDogbin URL: {}",
-            "paste_fail": "Failed to reach Dogbin!",
-            "paste_no_text": "You haven't supplied text to paste!",
-            "user_info": "**User info:**\n",
-            "info_id": "**ID:** `{id}`",
-            "info_first": "\n**First name:** {first_name}",
-            "info_last": "\n**Last name:** {last_name}",
-            "info_username": "\n**Username:** {username}",
-            "info_link": "\n**User link:** {user_link}",
+            "no_rules": "Цей чат не мав раніше жодних налаштованих правил... Я б не прийняв це як запрошення.",
+            "clrd_rules": "Правила для цього чату очищені вдало!",
+            "paste_success_extra": "**Вставлено вдало!**\nСкорочені посилання: {}\nОригінальний Dogbin URL: {}",
+            "paste_success": "**Вставлено вдало!**\nDogbin URL: {}",
+            "paste_fail": "Проблема з'єднання з Dogbin!",
+            "paste_no_text": "Ви не надали текст щоб вставити!",
+            "user_info": "**Інформація користувача:**\n",
+            "info_id": "**ID:** `{id}`\n",
+            "dc_id": "**DC (DataCenter) ID:** `{}`\n",
+            "scam": "**Scammer:** {}\n",
+            "restricted": "**Restricted:** {}\n",
+            "deleted": "**Deleted:** {}",
+            "info_first": "\n**Ім'я:** {first_name}",
+            "info_last": "\n**Призвіще:** {last_name}",
+            "info_username": "\n**Нікнейм:** {username}",
+            "info_link": "\n**Посилання користувача:** {user_link}",
             "father": "\n\nЦе мій батько.",
-            "sudo_crown": "\n\nHey! Look at him, he has a crown, lemme let me see it.. Whaow, it has a engraving 'sudo user'.",
-            "gbanned": "Globally banned: ",
+            "sudo_crown": "\n\nАгов! Поглянь на нього, він має корону, дайте мені це побачити.. Ого, воно має гравюру 'Супер користувач'.",
+            "gbanned": "\nGlobally banned: ",
             "no": "Ні",
             "gbanned_yes": "Так\n",
             "gbanned_date": "Дані: `{data}`\n",
             "gbanned_reason": "Причина: `{reason}`\n"
         },
         "gbans": {
-            "user_is_blacklisted": "User {user} is blacklisted so has been removed. \nReason: __{rsn}__"
+            "user_is_blacklisted": "Користувач {user} в чорному списку, отже він вилучений з чату. \nПричина: __{rsn}__"
         },
         "pm_menu": {
             "start_hi": "Привіт! Мене звати Софія :3. Я допомагаю тобі керувати твоєю групою і не тільки!",
@@ -203,61 +207,61 @@
         "disable": {
             "wot_to_disable": "Що ви хочете вимкнути?",
             "already_disabled": "Ця команда вже вимкнена!",
-            "disabled": "Команда `{}` вимекнена в **{}**!",
-            "wot_to_enable": "What you wanna enable?",
-            "already_enabled": "This command isn't disabled!",
-            "enabled": "Command `{}` enabled in **{}**!"
+            "disabled": "Команда `{}` вимкнена в **{}**!",
+            "wot_to_enable": "Що ви бажаєте увімкнути?",
+            "already_enabled": "Ця команда не вимкнена!",
+            "enabled": "Команд `{}` увімкнена в **{}**!"
         },
         "bot_rights": {
-            "change_info": "I don't have rights to change group info, please make me admin with that right.",
-            "edit_messages": "I don't have right to edit channel messages!",
-            "delete_messages": "I don't have rights to delete messages here.",
-            "ban_user": "I don't have rights to ban users, please make me admin with that right.",
-            "pin_messages": "I don't have rights to pin messages, please make me admin with that right.",
-            "add_admins": "I don't have rights to add admin, please make me admin with that right."
+            "change_info": "Я не маю прав для зміни інформації групи, будь ласка, зробіть мене адміністратором з цими правами.",
+            "edit_messages": "Я не маю прав щоб редагувати повідомлення каналу!",
+            "delete_messages": "Я не маю прав щоб видаляти повідомлення тут.",
+            "ban_user": "Я не маю прав щоб блокувати користувачів, будь ласка, зробіть мене адміністратором з цими правами.",
+            "pin_messages": "Я не маю прав що закріплювати повідомлення, будь ласка, зробіть мене адміністратором з цими правами.",
+            "add_admins": "Я не маю прав щоб додати адміністратора, будь ласка, зробіть мене адміністратором з цими правами."
         },
         "feds": {
-            "no_args": "Please give me Federation name to create Federation!",
-            "only_creators": "Only group creators can join/leave Federation!",
-            "created_fed": "Congratz! You have been successfully created Federation \n\n **NAME :** {name} \n **ID :** `{id}` \n **CREATOR :** {cr} \n",
-            "fed_id_invalid": "The given Federation ID is invalid! Please give me Valid ID. ",
-            "joined_fed_already": "This chat has already joined a Federation! Please use /leavefed to leave that federation",
-            "join_fed_success": "Great! This chat's Federation is now **{name}**!",
-            "chat_not_in_fed": "This chat not in any federation.",
-            "leave_fed_success": "Chat left the federation.",
-            "only_creator_promote": "Only Federation creator can fpromote users.",
-            "admin_already_in_fed": "User {user} already admin in **{name}** Federation",
-            "admin_added_to_fed": "User {user} added to **{name}** Federation admins",
-            "chats_in_fed": "**Chats connected to {name} Federation:**\n",
-            "fed_info": "**Federation info**:\n",
-            "fed_name": "**Name:** {name}\n",
+            "no_args": "Будь ласка, надайте мені ім'я Федерації щоб створити Федерацію!",
+            "only_creators": "Тільки творці груп можуть приєднуватися та залишати Федерацію!",
+            "created_fed": "Вітання, В успішно створили Федерацію \n\n **ІМ'Я:** {name} \n **ID :** `{id}` \n **ТВОРЕЦЬ :** {cr}\n",
+            "fed_id_invalid": "Введено не вірний ID Федарації! Будь ласка введіть правильний ID. ",
+            "joined_fed_already": "Цей чат вже приєднаний до Федерації! Будь ласка використайте /leavefed щоб покинути Федерацію",
+            "join_fed_success": "Чудово! Федерація цього чату тепер **{name}**!",
+            "chat_not_in_fed": "Цей чат не приєднаний до жодної федерації.",
+            "leave_fed_success": "Чат залишив федерацію.",
+            "only_creator_promote": "Тільки творці федерації можуть надавати права адміністратора федерації.",
+            "admin_already_in_fed": "Користувач {user} вже адміністратор в **{name}** Федерації",
+            "admin_added_to_fed": "Користувач {user} доданий до адміністраторів **{name}** Федерації",
+            "chats_in_fed": "**Чати під'єднані до {name} Федерації**\n",
+            "fed_info": "**Інформація Федерації**:\n",
+            "fed_name": "**Ім'я:** {name}\n",
             "fed_id": "**ID:** {id}\n",
-            "fed_creator": "**Creator:** {user}\n",
-            "chats_in_fed_info": "**Chats in the fed:** {num}\n",
-            "fban_self": "Try fban yourselve, thats will be a show!",
-            "need_admin_to_fban": "You should be Federation admin to use fban for {name} Fedearion",
-            "already_fbanned": "{user} already fbanned in this federation.",
-            "fban_success_reply": "**Fban** \n**User :** {user} \n**Fed Admin :** {fadmin} \n**Fed :** {fed} \n**Reason :** {rsn}",
-            "user_wl": "This user is whitelisted from fbanning.",
-            "fban_usr_rmvd": "User {user} is fbanned in current federation **{fed}**.So has been removed! \nReason: __{rsn}__",
-            "unfban_self": "I can't unfban myselve, think of something to have fun instead of this.",
-            "user_not_fbanned": "{user} didn't fbanned in this federation.",
-            "unfban_started": "Unbanning {user} in {fed_name} Federation by {admin} started..",
-            "unfban_completed": "{user} unbanned in {fed_name} Federation by {admin}",
-            "no_fed_2": "This chat is not in any federation to subscribe to any federation.",
-            "no_arg_given": "How can I subscribe to any federation without Fed ID?!",
-            "only_creator": "Only fed creator can subscribe to any federation.",
-            "invalid_fedid": "The given Fed ID is invalid!",
-            "subfed_success": "This federation successfully subscribed to **{fedname}** fed.",
-            "already_subfed": "This federation already subscribed to given federation.",
-            "no_fed_3": "This chat is not in any federation to unsubscribe to any federation.",
-            "no_arg_given_2": "How can I unsubscribe any federation without their fed ID",
-            "only_creator_2": "Only fed creator can unsubscribe any federation",
-            "fed_n'tsubscribed": "Given Fed ID isn't subscribed to unsubscribe!",
-            "unsub_success": "This federation successfully unsubscribed to **{fedname}** fed.",
-            "no_fed_4": "This chat is not in any federation to list the subscribed federations!",
-            "no_subfeds": "This federation isn't subscribed to any federations!",
-            "list_head": "Subscribed federations are: \n",
+            "fed_creator": "**Творець:** {user}\n",
+            "chats_in_fed_info": "**Чати в федерації:** {num}\n",
+            "fban_self": "Спробуй заблокувати себе в федерації самотужки, це буде уроком!",
+            "need_admin_to_fban": "Вам потрібно бути адміністратором федерації щоб використовувати блокування в Федерації {name}",
+            "already_fbanned": "{user} вже заблокований в цій федерації.",
+            "fban_success_reply": "**Блокування в федерації** \n**Користувач :** {user} \n**Адміністратор федерації :** {fadmin} \n**Федерація :** {fed} \n**Причина :** {rsn}",
+            "user_wl": "Цей користувач у білому списку, його не можна заблокувати в федерації.",
+            "fban_usr_rmvd": "Користувач {user} заблокований в даній федерації **{fed}**.Тому його вилучено! \nПричина: __{rsn}__",
+            "unfban_self": "Я не можу розблокувати себе в федерації, думай про те як посміятись над цим.",
+            "user_not_fbanned": "{user} не заблокований в цій федерації.",
+            "unfban_started": "Розблокування {user} в {fed_name} Федерації почав {admin}..",
+            "unfban_completed": "Користувача {user} розблоковав в {fed_name} Федерації наступний адміністратор - {admin}",
+            "no_fed_2": "Цей чат не належить до жодної федерації, щоб підписатись на будь-яку федерацію.",
+            "no_arg_given": "Як я можу підписатись на федерацію не маючи ID федерації?!",
+            "only_creator": "Тільки творець федерації може підіписатись на будь-яку федерацію.",
+            "invalid_fedid": "Введено не вірний ID Федерації!",
+            "subfed_success": "Ця федерація вдало підписалась на **{fedname}** федерацію.",
+            "already_subfed": "Ця федерація вже підписалась на дану федерацію.",
+            "no_fed_3": "Цей чат не належить до жодної федерації, щоб відписатись від будь-якої федерації.",
+            "no_arg_given_2": "Як я можу відписатись від федерації без потрібної ID федерації",
+            "only_creator_2": "Тільки творець федерації може відписатий від будь-якої федерації",
+            "fed_n'tsubscribed": "Даний ID федерації не наявний в списку підписок, щоб відписатись!",
+            "unsub_success": "Ця федерація вдало відписадась від **{fedname}** федерації.",
+            "no_fed_4": "Цей чат не належить до жодної федерації, щоб показати список підписок на федерації!",
+            "no_subfeds": "Ця федерація не підписана на жодну федерацію!",
+            "list_head": "Підписані федерації:\n",
             "list_data": "- **{fedname}**"
         }
     },
@@ -266,7 +270,7 @@
             "btn": "Замітки",
             "title": "Замітки - крута фунція для збереження інформації: номер телефону, чудової гіфки, смішної картинкиі і ще багато чого іншого!",
             "text": {
-                "i1": "\nДоступні команди:",
+                "i1": "\n**Available commands are:**",
                 "i2": "- /save (ім'я замітки) (інформація): також, якщо відповісти на повідомлення, то інформація з нього зебрежеться. Працює навіть з медія!",
                 "i3": "- /get (ім'я): отримати замітку збережену за цим словом.",
                 "i4": "- /clear (ім'я замітки): видалити замітку.",
@@ -283,21 +287,43 @@
                 "i15": "Це дозволить отримати зімітку та надіслати її без форматування; отримати незміненої замітки, що дозволяє легко редагувати."
             },
             "buttons": {
-                "help_btn_notes_md": "Markdown"
+                "help_btn_notes_md": "Markdown",
+                "help_btn_notes_vars": "Special vars",
+                "help_btn_notes_html": "HTML"
+            },
+            "vars": {
+                "a1": "You can use special variable in notes, here a list of it:",
+                "a2": "`{first}` - First name, will something like 'Mike'",
+                "a3": "`{last}` - Last name, ex. 'Smith'",
+                "a4": "`{fullname}` - Full name, ex. 'Mike Smith'",
+                "a5": "`{username}` - Gives the username, ex. '@MikeSmith009'",
+                "a6": "`{mention}` - Gives the link to user, ex. [SophieBot](https://t.me/rSophieBot)",
+                "a7": "`{id}` - Gives the id of the user, ex. '885745757'",
+                "a8": "`{chatname}` - Gives the current chat name, ex. 'SophieBot chat'"
             },
             "md": {
                 "a1": "Ви можете використовувати markdown, щоб зробити повідомлення більш виразними. Це типи markdown, які підтримуються:\n",
-                "a2": "`code words` змінюють твої слова за допомогою моноширних шрифтів. Показує як: `code words`",
-                "a3": "`**bold words**` зірочки використовуються для жирного шрифту. Показується, як **bold words**",
-                "a4": "`__italic words__` підкреслення використовуються для похилого шрифту. Показується, як __italic words__",
-                "a5": "`[гіперпосилання](example.com)` використовується для гіперпосилання і відображається, як [гіперпосилання](http://example.com/). Переконайся, що не додав додаткових пробілів між ] і ( це важливо для markdown."
+                "a2": "<code>`code words`</code>: backticks allow you to wrap your words in monospace fonts. Shows as: <code>code words</code>",
+                "a3": "<code>**bold words**</code>: asterixes are used for bold font. Shows as: <b>bold words</b>",
+                "a4": "<code>__italic words__</code>: underscores are used for italics. Shows as: <i>italic words</i>",
+                "a5": "<code>[hyperlink](example.com)</code>: this is used for hyperlinks, and will show as such: <a href=\"http://example.com/\">hyperlink</a>. Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown."
+            },
+            "html": {
+                "a1": "Markdown is easy, but when you will be making many notes, note by note, you will see obvious flaws, every extra '*' can broke your perfect note.",
+                "a2": "How about HTML? Let's try use it instead of markdown. Please read before the 'Markdown' guide.",
+                "a3": "\nTo use the HTML in the note add the `[format:html]` to the end of note, you can fully disable formatting note by `[format:none]`.\n",
+                "a4": "HTML markdown:",
+                "a5": "`<code>code words</code>`: will shows as '`blue text`'",
+                "a6": "`<b>bold text</b>`: will shows as **bold text**",
+                "a7": "`<i>italic text</i>`: will shows as __italic text__",
+                "a8": "`<a href=\"http://example.com/\">hyperlink</a>`: Example of hyperlink, will shown as [hyperlink](example.com)"
             }
         },
         "purges": {
             "btn": "Очищення",
             "title": "Потрібно видалити багато повідомлень? Для цього є \"очищення\"!",
             "text": {
-                "i1": "\nДоступні команди:",
+                "i1": "\n**Available commands are:**",
                 "i2": "- /purge: видаляє всі повідомлення до якого ти відповів.",
                 "i3": "- /del: видаляє повідомлення, на яке ти відповів."
             }
@@ -306,10 +332,10 @@
             "btn": "Попередження",
             "title": "Тримайте користувачів під контролем за допомогою попереджень!",
             "text": {
-                "i1": "\nДоступні команди:",
+                "i1": "\n**Available commands are:**",
                 "i2": "- /warn (причина): попереджує користувача за вказаною причиною.",
                 "i3": "- /warns: список попереджень у користувача.",
-                "i5": "- /resetwarns: reset all of a user's warns.",
+                "i5": "- /resetwarns: скасовує всі попередження користувачу.",
                 "i6": "- /setwarnlimit: встановлює кількість попереджень перед тим, як дія буде спрямована на користувача.",
                 "i7": "\nЯкщо ви шукаєте спосіб автоматичного попередження користувачів, коли вони скажуть певні слова, перейдіть до модуля \"чорний список\".",
                 "i8": "\nПриклад того, як встановити нове попередження до слова:",
@@ -321,12 +347,12 @@
             "btn": "Інше",
             "title": "Модуль \"всяка всячина\" для не великих простих команд, які нікому не потрібні",
             "text": {
-                "i1": "\nДоступні команди:",
+                "i1": "\n**Available commands are:**",
                 "i2": "- /id: отримати ID користувача та чату.",
                 "i3": "- /stats: показуэ статистику користувачів.",
                 "i4": "- /botchanges: показує список змін у боті",
-                "i5": "- /runs: responds with a randomly generated 'run away' string.",
-                "i6": "- /paste <text>: Paste text to the Dogbin."
+                "i5": "- /runs: відповідає з випадково згенерованим 'run away' рядком.",
+                "i6": "- /paste <text>: Вставляє текст до Dogbin."
             }
         },
         "connections": {
@@ -334,7 +360,7 @@
             "title": "Іноді ти просто хочеш додати до групового чату деякі замітки та фільтри, але ти не хочеш, щоб усі бачили; Саме для цього потрібні з'єднання...",
             "text": {
                 "i0": "Це дозволяє підключатися до бази даних чату і додавати до нього речі, не знаючи чату про це! З очевидних причин, ти повинен бути адміністратором, щоб додати речі; але будь-який учасник може переглядати ваші дані. (заблоковані/вилучені користувачі не можуть!)",
-                "i1": "\nДоступні команди:",
+                "i1": "\n**Available commands are:**",
                 "i2": "- /connect <chat>: підключає чат задопомогую юзернейму або ID, дозволяючи тобі бачити або редагувати контент.",
                 "i3": "- /connect: надає останні 3 чати для швидкого підключення.",
                 "i4": "\nТи можеш отримати ID чату використовуючи /id в чаті. Всі супер-групи мають мінус на початку ID."
@@ -344,54 +370,78 @@
             "btn": "Привітання",
             "title": "Дай користувачам групи тепле привітання з модулем вітання! Або сумне прощання...",
             "text": {
-                "i0": "Welcomes it's are a note trigget, use /setwelcome to set welcome trigger to note.",
-                "i1": "\nДоступні команди:",
+                "i0": "Вітання - це замітки при вході нового користувача, використовуйте /setwelcome щоб налаштувати вітання.",
+                "i1": "\n**Available commands are:**",
                 "i2": "- /setwelcome <note>: назначує привітання!",
+                "mm": "- /setwelcome off: disable welcome in chat.",
                 "i3": "- /cleanservice: видаляє повідомлення, що користувач приєднався до групи.",
-                "i4": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
-                "i5": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
+                "i4": "- /cleanwelcome: Видаляє старі повідомлення вітання; коли новий користувач приєднується, старі повідомлення видаляються.",
+                "i5": "- /welcomesecurity <off/soft/hard>: soft - обмежує користувачів в можливості надсилати медіа файли протягом 24 годин, hard - обмежує користувачів в можливості надсилати повідомлення, доки не нажмуть кнопку 'Я не робот'"
             }
         },
         "filters": {
-            "btn": "Filters",
-            "title": "Make your chat more lively with filters; The bot will reply to certain words!",
+            "btn": "Фільтри",
+            "title": "Зробіть ваш чат більш життєпридатним використовуючи фільтри; Бот відповість на ті слова!",
             "text": {
-                "i1": "\nAvailable commands are:",
-                "i2": "\n - /filter <keyword> <action> : Every time someone says 'word' , the bot will do the given action \n\n Available actions are: \n**note** : eg: /filter foo note <notename> ; bot will reply to word 'foo' containing given notename ",
-                "i3": "**delete** : eg: /filter foo delete; bot will delete the someone's message containing 'foo' \n**tban** : eg: /filter foo tban 10m ; bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
-                "i4": "**ban** : eg: /filter foo ban ; bot will ban who send message containing 'foo' \n **mute**: eg: /filter foo mute ; bot will mute user who send message 'foo'",
-                "i5": "**kick** : eg: /filter foo kick ; bot will kick user who send message containing 'foo' \n",
-                "i6": "- /filters : Will display all filter in that chat!\n",
-                "i7": "- /stop <filter name> : Will stop the the given filter names"
+                "i1": "**Available commands are:**",
+                "i2": "- /filter <keyword> <action> : Every time someone says 'word' , the bot will do the given action.",
+                "i10": "- /filters: Will display all filter in that chat!",
+                "i11": "- /stop <filter name> : Will stop the the given filter names",
+                "i3": "\n**Available actions are:**",
+                "i4": "- note: eg: `/filter foo note <notename>`: bot will reply to word 'foo' containing given notename.",
+                "i5": "- delete: eg: `/filter foo delete`: bot will delete the someone's message containing 'foo'.",
+                "i6": "- tban: eg: `/filter foo tban 10m`: bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
+                "i7": "- ban: eg: `/filter foo ban`: bot will ban who send message containing 'foo'",
+                "i8": "- mute: eg: `/filter foo mute`: bot will mute user who send message 'foo'",
+                "i9": "- kick: eg: `/filter foo kick`: bot will kick user who send message containing 'foo'"
             }
         },
         "federations": {
-            "btn": "Federations",
-            "title": "Ah, group management. It's all fun and games, until you start getting spammers in, and you need to ban them. Then you need to start banning more, and more, and it gets painful. But then you have multiple groups, and you don't want these spammers in any of your groups - how can you deal? Do you have to ban them manually, in all your groups?",
+            "btn": "Федерації",
+            "title": "Ех, адміністрування груп. Це здається веселощами та іграшками, поки ти не почнеш отримувати спам, і тобі не доведеться блокувати спамерів. Тоді тобі потрібно буде почати блокувати більше та більше, і веселощі перетворюються в біль. Але коли ти маєш безліч груп, і ти не хочеш мати справи зі спамерами в жодній з них - що ти можеш зробити? Невже тобі доведеться вручну блокувати кожного мізерного спамера в групі?",
             "text": {
-                "i0": "No more! With federations, you can make a ban in one chat overlap to all your other chats. You can even appoint federation admins, so that your trustworthiest admins can ban across all the chats that you want to protect.",
-                "i1": "\nAvailable commands are:",
-                "i2": "- /newfed <fedname>: Creates a new federation with the given name. Users are only allowed to own one federation. Using this method when you already have a fed will simply change the federation name.",
-                "i3": "- /joinfed <FedID>: Joins the current chat to the federation. Each chat can only be in one federation. Only chat owners can do this.",
-                "i4": "- /finfo: Show info about current chat Federation, you can /finfo <FedID> - to see info about other Federation.",
-                "i5": "\nFederation admins, they can use a fban command and others, to control they use this commands:",
-                "i6": "- /fpromote <user>: Promotes the user to fed admin in your fed.",
-                "i7": "- /fdemote <user>: Demotes the user from fed admin to normal user, in your fed.",
-                "i8": "\nOnly to Federation admins:",
-                "i9": "- /fban <user>: Bans a user from the current chat's federation.",
-                "i10": "- /unfban <user>: Unbans a user the current chat's federation.",
-                "i11": "\nOther commands:",
-                "i12": "/fchats: Show list of chats which connected to Federation."
-            },
-            "buttons": {
-                "help_btn_federations_notes": "Federation notes"
-            },
-            "notes": {
-                "i1": "You have many chats to Federation? Perfect! But now you get anoyed by saving and saving notes to every chats, such as rules or others info. No more! Federation notes can save what you wanna in all place for all chats, see how it works:",
-                "i2": "\nAvailable commands are:",
-                "i3": "/fsave <notename> <data>: Save note to the Fedearion notes, it will works for all chats in your Federation",
-                "i4": "/fclear <notename>: Remove the note.",
-                "i5": "\nAll notes will be append to end of /notes"
+                "i0": "Від тепер - Ні! з федераціями ви можете блокувати в одному чаті, а інші автоматично підтягнуть ці блокування. Ви можете навіть створити адміністраторів федерацій, тож тепер ваші найвідданіші адміністратори зможуть блокувати у всіх чатах, які ви бажаєте захистити.",
+                "i1": "\n**Available commands are:**",
+                "i2": "- /newfed <fedname>: Створює нову федерацію з даним ім'ям. Користувачі не можуть привласнювати жодної федерації. Використовуючи цю команду, коли ви вже маєте федерацію, ви зміните назву федерації.",
+                "i3": "- /joinfed <FedID>: Під'єднує даний чат до федерації. Кожен чат може бути лише в одній федерації. Тільки власники чатів можуть виконувати цю команду.",
+                "i4": "- /finfo: Показує інформацію про Федерацію даного чата, Ви можете додати <FedID> - шоб побачити інформацію про іншу Федерацію.",
+                "i5": "\nАдміністратори Федерації, можуть використовувати Блокування в Федерації та інші команди, щоб контролювати вони можуть використовувати наступні команди:",
+                "i6": "- /fpromote <user>: Надає права адміністратора федерації користувачу в вашій федерації.",
+                "i7": "- /fdemote <user>: Вдібирає права адміністратора федерації і перетворю в звичайного користувача в вашій федерації.",
+                "i8": "\nТільки для адміністраторів Федерації:",
+                "i9": "- /fban <user>: Блокує користувача в федерації чату.",
+                "i10": "- /unfban <user>: Розблоковує користувача в федерації чату.",
+                "i11": "\nІнші команди:",
+                "i12": "/fchats: Показує список чатів під'єднаних до Федерації."
+            }
+        },
+        "disabling": {
+            "btn": "Disabling",
+            "title": "You might not like all the SophieBot's features and wanna disable something to reduce spam in your group? If you this module for you!",
+            "text": {
+                "a1": "**Available commands are:**",
+                "a2": "- /disable <command>: Disable the command",
+                "a3": "- /enable <command>: Enable the command",
+                "a4": "- /disablable: See command list which commands can be disabled."
+            }
+        },
+        "pin": {
+            "btn": "Pinning",
+            "title": "You wanna pin the message? Here you go.",
+            "text": {
+                "a1": "**Available commands are:**",
+                "a2": "- /pin: pin the message you replied to; add 'loud' to send a notification to group members.",
+                "a3": "- /unpin: Unpin the message."
+            }
+        },
+        "lang": {
+            "btn": "Language",
+            "title": "Not every can speak with perfect English, SophieBot have translation system, check it out.",
+            "text": {
+                "a1": "**Available commands are:**",
+                "a2": "/lang: Will show a buttons with all languages and it will show current chat language.",
+                "a3": "/lang <lang>: Will change the language without selecting it with buttons.",
+                "a4": "\nNot all language currently supported, help us with translation on [our crowdin page](https://crowdin.com/project/sophiebot)"
             }
         }
     }

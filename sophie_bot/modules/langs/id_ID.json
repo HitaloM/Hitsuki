@@ -84,7 +84,7 @@
         "greetings": {
             "welcome_hay": "Selamat datang {mention}! Bagaimana kabarmu?",
             "cant_find_note": "Saya tidak bisa menemukan catatan ini.",
-            "welcome_set_to_note": "Pesan sambutan diatur ke catatan: `{}`",
+            "welcome_set_to_note": "Welcome set to note: <code>{}</code>",
             "welcome_is_note": "Pesan sambutan menggunakan catatan: `{}`",
             "welcome_is_default": "Pesan sambutan diatur ke default.",
             "no_args_serv": "Berikan saya argumen yes/no untuk menyalakan/mematikan Layanan Pembersihan",
@@ -95,7 +95,7 @@
             "wlcm_sec_soft": "Keamanan Selamat Datang diatur ke **SOFT** di obrolan ini!",
             "wlcm_sec_off": "Keamanan Selamat Datang dinonaktifkan di obrolan ini!",
             "clik2tlk_btn": "Klik disini untuk berbicara",
-            "wlcm_sec": "Hai {mention}, tolong tekan tombol dibawah ini untuk membuktikan Anda adalah manusia!",
+            "wlcm_sec": "Hey {mention}, Please click below button to prove that you aren't a bot!",
             "not_trgt_usr": "Anda bukanlah pengguna ini!",
             "trgt_success": "Bagus! Anda bisa berbicara!",
             "not_trgt": "Anda bukanlah pengguna ini",
@@ -177,14 +177,18 @@
             "paste_fail": "Gagal terhubung ke Dogbin!",
             "paste_no_text": "Anda belum memberi teks untuk di salin!",
             "user_info": "**Info Pengguna:**\n",
-            "info_id": "**ID:** `{id}`",
+            "info_id": "**ID:** `{id}`\n",
+            "dc_id": "**DC (DataCenter) ID:** `{}`\n",
+            "scam": "**Scammer:** {}\n",
+            "restricted": "**Restricted:** {}\n",
+            "deleted": "**Deleted:** {}",
             "info_first": "\n**Nama Depan:** {first_name}",
             "info_last": "\n**Nama Belakang:** {last_name}",
             "info_username": "\n**Username:** {username}",
             "info_link": "\n**Tautan Pengguna:** {user_link}",
             "father": "\n\nIni adalah ayahku.",
             "sudo_crown": "\n\nHei! Lihat dia, dia punya mahkota, biar saya lihat.. Whaow, ada ukiran 'pengguna sudo'.",
-            "gbanned": "Terblokir Secara Global: ",
+            "gbanned": "\nGlobally banned: ",
             "no": "Tidak",
             "gbanned_yes": "Ya\n",
             "gbanned_date": "Data: `{data}`\n",
@@ -266,7 +270,7 @@
             "btn": "Catatan",
             "title": "Catatan bagus untuk menyimpan informasi acak; nomor telepon, gif yang bagus, gambar lucu - apa saja!",
             "text": {
-                "i1": "\nPerintah yang tersedia:",
+                "i1": "\n**Available commands are:**",
                 "i2": "-/save (nama catatan) (isi catatan): Balas ke sebuah pesan akan menyimpan pesan itu. Bahkan bekerja untuk media!",
                 "i3": "- /get (nama catatan): ambil catatan yang dimaksud.",
                 "i4": "- /clear (nama catatan): hapus catatan yang dimaksud",
@@ -283,21 +287,43 @@
                 "i15": "Ini akan mengambil catatan dan mengirimkannya tanpa memformatnya; memberi Anda markdown mentah, memungkinkan Anda untuk mengedit dengan mudah."
             },
             "buttons": {
-                "help_btn_notes_md": "Markdown"
+                "help_btn_notes_md": "Markdown",
+                "help_btn_notes_vars": "Special vars",
+                "help_btn_notes_html": "HTML"
+            },
+            "vars": {
+                "a1": "You can use special variable in notes, here a list of it:",
+                "a2": "`{first}` - First name, will something like 'Mike'",
+                "a3": "`{last}` - Last name, ex. 'Smith'",
+                "a4": "`{fullname}` - Full name, ex. 'Mike Smith'",
+                "a5": "`{username}` - Gives the username, ex. '@MikeSmith009'",
+                "a6": "`{mention}` - Gives the link to user, ex. [SophieBot](https://t.me/rSophieBot)",
+                "a7": "`{id}` - Gives the id of the user, ex. '885745757'",
+                "a8": "`{chatname}` - Gives the current chat name, ex. 'SophieBot chat'"
             },
             "md": {
                 "a1": "Anda bisa menggunakan markdown untuk membuat pesan anda lebih ekspresif. Berikut adalah beberapa markdown yang didukung:\n",
-                "a2": "`kata` tanda petik terbalik dapat membuat kata - kata Anda menjadi monospace. Contoh: `Halo Dunia`",
-                "a3": "`**kata tebal**` tanda asteriks digunakan untuk menebalkan fonta. Contoh: **Halo Dunia**",
-                "a4": "`__kata miring__` simbol garis bawah digunakan untuk memiringkan fonta. Contoh: __Halo Dunia__",
-                "a5": "`[hyperlink](example.com)` ini digunakan untuk hyperlink, dan akan ditampilkan seperti itu: [hyperlink](http://example.com/). Pastikan untuk tidak menambahkan spasi tambahan antara \"]\" dan \"(\" atau itu tidak akan menjadi sebuah markdown yang valid."
+                "a2": "<code>`code words`</code>: backticks allow you to wrap your words in monospace fonts. Shows as: <code>code words</code>",
+                "a3": "<code>**bold words**</code>: asterixes are used for bold font. Shows as: <b>bold words</b>",
+                "a4": "<code>__italic words__</code>: underscores are used for italics. Shows as: <i>italic words</i>",
+                "a5": "<code>[hyperlink](example.com)</code>: this is used for hyperlinks, and will show as such: <a href=\"http://example.com/\">hyperlink</a>. Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown."
+            },
+            "html": {
+                "a1": "Markdown is easy, but when you will be making many notes, note by note, you will see obvious flaws, every extra '*' can broke your perfect note.",
+                "a2": "How about HTML? Let's try use it instead of markdown. Please read before the 'Markdown' guide.",
+                "a3": "\nTo use the HTML in the note add the `[format:html]` to the end of note, you can fully disable formatting note by `[format:none]`.\n",
+                "a4": "HTML markdown:",
+                "a5": "`<code>code words</code>`: will shows as '`blue text`'",
+                "a6": "`<b>bold text</b>`: will shows as **bold text**",
+                "a7": "`<i>italic text</i>`: will shows as __italic text__",
+                "a8": "`<a href=\"http://example.com/\">hyperlink</a>`: Example of hyperlink, will shown as [hyperlink](example.com)"
             }
         },
         "purges": {
             "btn": "Pembersihan",
             "title": "Perlu menghapus banyak pesan? Untuk itulah modul pembersihan!",
             "text": {
-                "i1": "\nPerintah yang tersedia:",
+                "i1": "\n**Available commands are:**",
                 "i2": "- /purge: menghapus semua pesan dari pesan yang Anda balas sampai ke pesan saat ini.",
                 "i3": "- /del: menghapus pesan yang Anda balas."
             }
@@ -306,7 +332,7 @@
             "btn": "Peringatan",
             "title": "Jaga anggota Anda tetap terkendali dengan peringatan; hentikan mereka jika di luar kendali!",
             "text": {
-                "i1": "\nPerintah yang tersedia:",
+                "i1": "\n**Available commands are:**",
                 "i2": "- /warn (alasan): memperingatkan pengguna dengan alasan yang ditentukan.",
                 "i3": "- /warns: menampilkan jumlah peringatan, dengan alasan, untuk pengguna yang dimaksud.",
                 "i5": "- /resetwarns: setel ulang semua peringatan pengguna.",
@@ -321,7 +347,7 @@
             "btn": "Lainnya",
             "title": "Sebuah module kecil, perintah mudah yang tidak masuk ke seksi lainnya",
             "text": {
-                "i1": "\nPerintah yang tersedia:",
+                "i1": "\n**Available commands are:**",
                 "i2": "- /id: dapatkan id user atau obrolan.",
                 "i3": "- /stats: Memberikan statistik bot.",
                 "i4": "- /botchanges: Memberikan perubahan terakhir bot (histori perubahan)",
@@ -334,7 +360,7 @@
             "title": "Terkadang, Anda hanya ingin menambahkan beberapa catatan dan filter ke obrolan grup, tetapi Anda tidak ingin semua orang melihatnya; Di sinilah modul koneksi berfungsi...",
             "text": {
                 "i0": "Ini memungkinkan Anda untuk terhubung ke database obrolan, dan menambahkan sesuatu ke dalamnya tanpa harus mengetiknya di obrolan yang dituju! Untuk alasan yang jelas, Anda harus menjadi admin untuk menambahkan sesuatu; tetapi setiap anggota dapat melihat data Anda. (pengguna yang diblokir / ditendang tidak bisa menggunakannya!)",
-                "i1": "\nPerintah yang tersedia:",
+                "i1": "\n**Available commands are:**",
                 "i2": "-/connect <chat>: hubungkan ke sebuah obrolan dengan ID/username obrolan. Anda dapat melihat atau menyunting konten obrolan tersebut.",
                 "i3": "-/connect: menunjukan 3 riwayat koneksi terakhir.",
                 "i4": "\nAnda bisa menerima id obrolan dengan menggunakan perintah /id di obrolan anda. Jangan terkejut apabila id nya negatif; semua supergrup memiliki id negatif."
@@ -345,8 +371,9 @@
             "title": "Memberikan anggota baru anda sebuah pesan sambutan dengan modul pesan sambutan! Atau mungkin sebuah pesan selamat tinggal...",
             "text": {
                 "i0": "Welcomes adalah pemicu catatan, gunakan /setwelcome untuk mengatur pemicu selamat datang untuk dicatat.",
-                "i1": "\nPerintah yang tersedia:",
+                "i1": "\n**Available commands are:**",
                 "i2": "/setwelcome <note>: mengatur pesan catatan baru Anda!",
+                "mm": "- /setwelcome off: disable welcome in chat.",
                 "i3": "/cleanservice: Hapus pesan Telegram ketika anggota baru masuk atau meninggalkan obrolan.",
                 "i4": "- /cleanwelcome: Menghapus pesan sambutan lama; ketika orang baru bergabung, pesan lama dihapus.",
                 "i5": "- /welcomesecurity <off/soft/hard>: soft - membatasi izin pengguna untuk mengirim file media selama 24 jam, hard - membatasi izin pengguna untuk mengirim pesan sampai mereka mengklik tombol 'Saya bukan bot'"
@@ -354,15 +381,19 @@
         },
         "filters": {
             "btn": "Filter",
-            "title": "Jadikan obrolan Anda lebih hidup dengan filter; bot akan membalas kata-kata tertentu!",
+            "title": "Jadikan obrolan Anda lebih hidup dengan filter; Bot akan membalas kata-kata tertentu!",
             "text": {
-                "i1": "\nPerintah yang tersedia adalah:",
-                "i2": "\n- /filter <kata kunci> <tindakan> : Setiap kali seseorang mengatakan 'kata', bot akan melakukan tindakan yang diberikan\n\nTindakan yang tersedia adalah:\n**note**: cth: /filter foo note <nama catatan> ; bot akan membalas kata 'foo' yang berisi nama yang diberikan ",
-                "i3": "**delete** : cth: /filter foo delete; bot akan menghapus pesan seseorang yang berisi 'foo'\n**tban** : cth: /filter foo tban 10m ; bot akan tban ketika seseorang mengirim pesan berisi 'foo' untuk '10m' (menit), Anda dapat memberikan nilai apa pun dalam (m , h, d)",
-                "i4": "**ban** : eg: /filter foo ban ; bot akan mencekal siapa yang mengirim pesan berisi 'foo'\n **mute**: eg: /filter foo mute ; bot akan membisukan pengguna yang mengirim pesan 'foo'",
-                "i5": "**kick** : eg: /filter foo kick ; bot akan menendang pengguna yang mengirim pesan berisi 'foo'\n",
-                "i6": "- /filters : Akan menampilkan semua filter dalam obrolan itu!\n",
-                "i7": "- /stop <nama filter> : Akan menghentikan nama filter yang diberikan"
+                "i1": "**Available commands are:**",
+                "i2": "- /filter <keyword> <action> : Every time someone says 'word' , the bot will do the given action.",
+                "i10": "- /filters: Will display all filter in that chat!",
+                "i11": "- /stop <filter name> : Will stop the the given filter names",
+                "i3": "\n**Available actions are:**",
+                "i4": "- note: eg: `/filter foo note <notename>`: bot will reply to word 'foo' containing given notename.",
+                "i5": "- delete: eg: `/filter foo delete`: bot will delete the someone's message containing 'foo'.",
+                "i6": "- tban: eg: `/filter foo tban 10m`: bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
+                "i7": "- ban: eg: `/filter foo ban`: bot will ban who send message containing 'foo'",
+                "i8": "- mute: eg: `/filter foo mute`: bot will mute user who send message 'foo'",
+                "i9": "- kick: eg: `/filter foo kick`: bot will kick user who send message containing 'foo'"
             }
         },
         "federations": {
@@ -370,7 +401,7 @@
             "title": "Ah, manajemen kelompok. Semuanya menyenangkan dan gim, sampai Anda mulai memasukkan spammer, dan Anda harus mencekalnya. Maka Anda perlu mulai melarang lebih banyak, dan lebih banyak lagi, dan itu terasa menyakitkan. Tetapi kemudian Anda memiliki banyak grup, dan Anda tidak ingin spammer ini ada di grup mana pun - bagaimana Anda bisa berurusan? Apakah Anda harus melarangnya secara manual, di semua grup Anda?",
             "text": {
                 "i0": "Tidak lagi! Dengan federasi, Anda dapat membuat larangan dalam satu obrolan tumpang tindih dengan semua obrolan lainnya. Anda bahkan dapat menunjuk admin federasi, sehingga admin terpercaya Anda dapat melarang semua obrolan yang ingin Anda lindungi.",
-                "i1": "\nPerintah yang tersedia adalah:",
+                "i1": "\n**Available commands are:**",
                 "i2": "- /newfed <nama fed>: Menciptakan federasi baru dengan nama yang diberikan. Pengguna hanya diperbolehkan memiliki satu federasi. Menggunakan metode ini ketika Anda sudah memiliki umpan hanya akan mengubah nama federasi.",
                 "i3": "- /joinfed <FedID>: Bergabung dengan obrolan saat ini ke federasi. Setiap obrolan hanya bisa dalam satu federasi. Hanya pemilik obrolan yang dapat melakukan ini.",
                 "i4": "- /finfo: Tampilkan info tentang Federasi obrolan saat ini, Anda dapat /finfo <FedID> - untuk melihat info tentang Federasi lain.",
@@ -382,16 +413,35 @@
                 "i10": "- /unfban <pengguna>: Batalkan blokir pengguna federasi obrolan saat ini.",
                 "i11": "\nPerintah lain:",
                 "i12": "/fchats: Tampilkan daftar obrolan yang terhubung ke Federasi."
-            },
-            "buttons": {
-                "help_btn_federations_notes": "Catatan Federasi"
-            },
-            "notes": {
-                "i1": "Anda punya banyak obrolan ke Federasi? Sempurna! Tapi sekarang Anda bisa dikejutkan dengan menyimpan dan menyimpan catatan untuk setiap obrolan, seperti aturan atau info lainnya. Tidak lagi! Catatan Federasi dapat menyimpan apa yang Anda inginkan di semua tempat untuk semua obrolan, lihat cara kerjanya:",
-                "i2": "\nPerintah yang tersedia adalah:",
-                "i3": "/fsave <notename> <data>: Simpan catatan ke catatan Fedearion, itu akan bekerja untuk semua obrolan di Federasi Anda",
-                "i4": "/fclear <notename>: Hapus catatan.",
-                "i5": "\nSemua catatan akan ditambahkan ke akhir /notes"
+            }
+        },
+        "disabling": {
+            "btn": "Disabling",
+            "title": "You might not like all the SophieBot's features and wanna disable something to reduce spam in your group? If you this module for you!",
+            "text": {
+                "a1": "**Available commands are:**",
+                "a2": "- /disable <command>: Disable the command",
+                "a3": "- /enable <command>: Enable the command",
+                "a4": "- /disablable: See command list which commands can be disabled."
+            }
+        },
+        "pin": {
+            "btn": "Pinning",
+            "title": "You wanna pin the message? Here you go.",
+            "text": {
+                "a1": "**Available commands are:**",
+                "a2": "- /pin: pin the message you replied to; add 'loud' to send a notification to group members.",
+                "a3": "- /unpin: Unpin the message."
+            }
+        },
+        "lang": {
+            "btn": "Language",
+            "title": "Not every can speak with perfect English, SophieBot have translation system, check it out.",
+            "text": {
+                "a1": "**Available commands are:**",
+                "a2": "/lang: Will show a buttons with all languages and it will show current chat language.",
+                "a3": "/lang <lang>: Will change the language without selecting it with buttons.",
+                "a4": "\nNot all language currently supported, help us with translation on [our crowdin page](https://crowdin.com/project/sophiebot)"
             }
         }
     }
