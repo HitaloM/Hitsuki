@@ -38,6 +38,18 @@ class NotGbanned(BoundFilter):
             return True
 
 
+class NotForwarded(BoundFilter):
+    key = 'not_forwarded'
+
+    def __init__(self, not_forwarded):
+        self.not_forwarded = not_forwarded
+
+    async def check(self, message: types.Message):
+        if 'forward_from' not in message:
+            return True
+
+
 dp.filters_factory.bind(IsAdmin)
 dp.filters_factory.bind(IsOwner)
 dp.filters_factory.bind(NotGbanned)
+dp.filters_factory.bind(NotForwarded)

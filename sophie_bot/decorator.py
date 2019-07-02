@@ -47,8 +47,11 @@ def command(command, additional="", **kwargs):
         else:
             P = '/'
 
-        if BLOCK_GBANNED_USERS is True:
+        if 'not_gbanned' not in kwargs and BLOCK_GBANNED_USERS is True:
             kwargs['not_gbanned'] = True
+
+        if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
+            kwargs['not_forwarded'] = True
 
         if 'word_arg' in kwargs and kwargs['word_arg'] is True:
             cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)(\S*){2}".format(command, BOT_USERNAME, additional,
