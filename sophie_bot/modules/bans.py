@@ -165,7 +165,7 @@ async def tmute(event, status, chat_id, chat_title):
                 time=time_val[:-1], unit=unit_str))
 
 
-async def ban_user(event, user_id, chat_id, time_val):
+async def ban_user(event, user_id, chat_id, time_val, no_msg=False):
 
     banned_rights = ChatBannedRights(
         until_date=time_val,
@@ -183,16 +183,19 @@ async def ban_user(event, user_id, chat_id, time_val):
     bot_id = bot_id.id
 
     if str(user_id) in WHITELISTED:
-        await event.reply("This user is whitelisted")
+        if no_msg is False:
+            await event.reply("This user is whitelisted")
         return
 
     if user_id == bot_id:
-        await event.reply(get_string("bans", "bot_cant_be_banned",
-                          event.chat_id))
+        if no_msg is False:
+            await event.reply(get_string("bans", "bot_cant_be_banned",
+                              event.chat_id))
         return False
     if await is_user_admin(chat_id, user_id) is True:
-        await event.reply(get_string("bans", "user_admin_ban",
-                          event.chat_id))
+        if no_msg is False:
+            await event.reply(get_string("bans", "user_admin_ban",
+                              event.chat_id))
         return False
 
     try:
@@ -211,7 +214,7 @@ async def ban_user(event, user_id, chat_id, time_val):
     return True
 
 
-async def kick_user(event, user_id, chat_id):
+async def kick_user(event, user_id, chat_id, no_msg=False):
 
     banned_rights = ChatBannedRights(
         until_date=None,
@@ -229,11 +232,13 @@ async def kick_user(event, user_id, chat_id):
     bot_id = bot_id.id
 
     if user_id == bot_id:
-        await event.reply(get_string("bans", "bot_cant_be_kicked",
-                          event.chat_id))
+        if no_msg is False:
+            await event.reply(get_string("bans", "bot_cant_be_kicked",
+                              event.chat_id))
         return False
     if await is_user_admin(chat_id, user_id) is True:
-        await event.reply(get_string("bans", "user_admin_kick", event.chat_id))
+        if no_msg is False:
+            await event.reply(get_string("bans", "user_admin_kick", event.chat_id))
         return False
 
     try:

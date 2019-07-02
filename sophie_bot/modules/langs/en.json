@@ -131,7 +131,9 @@
         "cant_find_filter": "I can't find this filter!",
         "filter_deleted": "Filter `{filter}` in **{chat_name}** deleted!",
 
-        "filter_ban_success": "User {user} banned due to automated action on filter **{filter}**."
+        "filter_ban_success": "User {user} banned due to automated action on filter **{filter}**.",
+        "filter_tban_success": "User {user} temporary banned on `{time}` due to automated action on filter **{filter}**.",
+        "filter_kick_success": "User {user} kicked due to automated action on filter **{filter}**."
     },
     "warns": {
         "user_no_admeme": "You're not an admin",
