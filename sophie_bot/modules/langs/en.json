@@ -116,6 +116,7 @@
         "a_send_note": "Action: **send note** `{}`",
         "no_arg_tban": "Please write in arguments how long you want the user to be banned for",
         "a_tban": "Action: **temporary ban sender for** `{}`",
+        "a_answer": "Action: answer on message",
         "a_del": "Action: **delete message**",
         "a_ban": "Action: **ban sender**",
         "a_mute": "Action: **mute sender**",

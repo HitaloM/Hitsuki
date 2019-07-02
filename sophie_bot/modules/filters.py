@@ -8,7 +8,7 @@ from sophie_bot.modules.connections import connection
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.notes import send_note
+from sophie_bot.modules.notes import send_note, button_parser
 from sophie_bot.modules.users import is_user_admin, user_admin_dec, user_link
 
 
@@ -29,14 +29,21 @@ async def check_message(event):
                 continue
             H = mongodb.filters.find_one(
                 {'chat_id': event.chat_id, "handler": {'$regex': str(filter)}})
-
-            if H['action'] == 'note':
+            action = H['action']
+            if action == 'note':
                 await send_note(event.chat_id, event.chat_id, event.message.id,
                                 H['arg'], show_none=True)
-            elif H['action'] == 'delete':
+            elif action == 'delete':
                 await event.delete()
-            elif H['action'] == 'ban':
+            elif action == 'ban':
                 await filter_ban(event, filter, None)
+            elif action == 'answer':
+                print(H['arg'])
+                text, buttons = button_parser(event.chat_id, H['arg'])
+                if not buttons:
+                    buttons = None
+                await event.reply(text, buttons=buttons)
+
 
 
 @decorator.t_command("filter(?!s)", arg=True)
@@ -68,6 +75,13 @@ async def add_filter(event, strings, status, chat_id, chat_title):
             await event.reply(strings["no_arg_tban"])
             return
         text += strings["a_tban"].format(str(arg))
+    elif action == 'answer':
+        txt = event.message.raw_text.split(" ", 2)[2]
+        if len(txt) <= 2:
+            await event.reply(strings["wrong_action"])
+            return
+        arg = txt
+        text += strings["a_answer"]
     elif action == 'delete':
         text += strings["a_del"]
     elif action == 'ban':
