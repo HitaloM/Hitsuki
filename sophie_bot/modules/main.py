@@ -2,7 +2,7 @@ import asyncio
 import math
 import subprocess
 
-from sophie_bot import mongodb, dp, tbot
+from sophie_bot import mongodb, dp, tbot, decorator
 
 from aiogram import types
 
@@ -35,7 +35,7 @@ async def chat_term(message, command):
     return result
 
 
-@dp.message_handler(commands=['botchanges'])
+@decorator.command("botchanges")
 async def botchanges(message: types.Message):
     command = "git log --pretty=format:\"%an: %s\" -30"
     text = "<b>Bot changes:</b>\n"
@@ -44,7 +44,7 @@ async def botchanges(message: types.Message):
     await message.reply(text, parse_mode=types.ParseMode.HTML)
 
 
-@dp.message_handler(commands=['stats'])
+@decorator.command("stats")
 async def stats(message: types.Message):
     text = "*Stats*\n"
     usrs = mongodb.user_list.count()
@@ -65,11 +65,6 @@ async def stats(message: types.Message):
         text += '\* Database size is `{}`, free `512M`'.format(
             convert_size(db['storageSize']))
     await message.reply(text, parse_mode=types.ParseMode.MARKDOWN)
-
-
-@dp.message_handler(commands=['test'])
-async def test(message: types.Message):
-    print(message)
 
 
 def convert_size(size_bytes):

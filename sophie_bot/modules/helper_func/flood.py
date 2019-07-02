@@ -20,23 +20,17 @@ async def flood_limit(command, chat_id):
         return True
 
 
-def t_flood_limit_dec(cmd):
+def flood_limit_dec(cmd):
     def wrapped(func):
         async def wrapped_1(event, *args):
-            status = await flood_limit(event.from_id, cmd)
+            if hasattr(event, 'from_id'):
+                user_id = event.from_id
+            elif hasattr(event, 'from_user'):
+                user_id = event.from_user.id
+
+            status = await flood_limit(user_id, cmd)
             if status is False:
                 return
             return await func(event)
-        return wrapped_1
-    return wrapped
-
-
-def flood_limit_dec(cmd):
-    def wrapped(func):
-        async def wrapped_1(message, *args):
-            status = await flood_limit(message['from']['id'], cmd)
-            if status is False:
-                return
-            return await func(message)
         return wrapped_1
     return wrapped

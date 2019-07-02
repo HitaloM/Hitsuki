@@ -5,7 +5,7 @@ import ujson
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from pymongo import MongoClient
 from telethon import TelegramClient
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, types
 
 # enable logging
 logging.basicConfig(
@@ -49,7 +49,7 @@ tbot = TelegramClient(NAME, API_ID, API_HASH)
 tbot.start(bot_token=CONFIG["basic"]["bot_token"])
 
 # AIOGram
-bot = Bot(token=TOKEN)
+bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 

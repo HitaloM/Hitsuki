@@ -6,7 +6,7 @@ import os
 from telethon import custom
 
 from sophie_bot import CONFIG, decorator, logger, tbot
-from sophie_bot.modules.helper_func.flood import t_flood_limit_dec
+from sophie_bot.modules.helper_func.flood import flood_limit_dec
 
 ftp_url = "ftp.orangefox.website"
 fox_groups = [483808054, -1001287179850, -1001280218923, -1001155400138, -1001362128194]
@@ -15,9 +15,6 @@ fox_dev_chats = [-1001155400138, 483808054]
 
 BETA_CHANNEL = -1001429093106
 STABLE_CHANNEL = -1001196811863
-
-#BETA_CHANNEL = 483808054
-#STABLE_CHANNEL = 483808054
 
 global DEVICES_STABLE
 global DEVICES_BETA
@@ -259,7 +256,7 @@ print(DEVICES_BETA)
 
 
 @decorator.t_command("list")
-@t_flood_limit_dec("list")
+@flood_limit_dec("list")
 async def list_stable(event):
     if event.chat_id in fox_beta_groups:
         text = "**Beta testing devices:**\n"

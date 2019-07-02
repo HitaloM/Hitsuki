@@ -5,8 +5,8 @@ from telethon.tl.types import ChatBannedRights
 
 from sophie_bot import WHITELISTED, tbot, decorator, mongodb, redis
 from sophie_bot.modules.connections import connection
-from sophie_bot.modules.disable import t_disablable_dec
-from sophie_bot.modules.helper_func.flood import t_flood_limit_dec
+from sophie_bot.modules.disable import disablable_dec
+from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import is_user_admin, user_admin_dec, user_link
@@ -40,7 +40,7 @@ async def check_message(event):
 
 
 @decorator.t_command("filter(?!s)", arg=True)
-@t_flood_limit_dec("filter")
+@flood_limit_dec("filter")
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("filters")
@@ -91,8 +91,8 @@ async def add_filter(event, strings, status, chat_id, chat_title):
 
 
 @decorator.t_command("filters", arg=True)
-@t_disablable_dec("filters")
-@t_flood_limit_dec("filters")
+@disablable_dec("filters")
+@flood_limit_dec("filters")
 @connection()
 async def list_filters(event, status, chat_id, chat_title):
     filters = mongodb.filters.find({'chat_id': chat_id})

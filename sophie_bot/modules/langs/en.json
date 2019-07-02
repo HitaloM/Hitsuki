@@ -217,13 +217,16 @@
         "btn_channel": "📡 Channel"
     },
     "disable": {
+        "disablable": "<b>Disablable commands are:</b>\n",
+        "disabled_list": "<b>Disabled commands in {chat_name} are:</b>\n",
+
         "wot_to_disable": "What you wanna disable?",
         "already_disabled": "This command is already disabled!",
-        "disabled": "Command `{}` disabled in **{}**!",
+        "disabled": "Command <code>{cmd}</code> disabled in <b>{chat_name}</b>!",
 
         "wot_to_enable": "What you wanna enable?",
         "already_enabled": "This command isn't disabled!",
-        "enabled": "Command `{}` enabled in **{}**!"
+        "enabled": "Command <code>{cmd}</code> enabled in <b>{chat_name}</b>!"
     },
     "bot_rights": {
         "change_info": "I don't have rights to change group info, please make me admin with that right.",
@@ -444,7 +447,8 @@
             "a1": "**Available commands are:**",
             "a2": "- /disable <command>: Disable the command",
             "a3": "- /enable <command>: Enable the command",
-            "a4": "- /disablable: See command list which commands can be disabled."
+            "a4": "- /disablable: See command list which commands can be disabled.",
+            "a5": "- /disabled: List of disabled commands in current chat."
         }
     },
     "pin": {

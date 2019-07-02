@@ -4,14 +4,14 @@ from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName
 
 from sophie_bot import decorator, mongodb
-from sophie_bot.modules.disable import t_disablable_dec
-from sophie_bot.modules.helper_func.flood import t_flood_limit_dec
+from sophie_bot.modules.disable import disablable_dec
+from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.users import user_link
 
 
 @decorator.t_command("afk ?(.*)", arg=True)
-@t_disablable_dec("afk")
-@t_flood_limit_dec("afk")
+@disablable_dec("afk")
+@flood_limit_dec("afk")
 async def afk(event):
     if not event.pattern_match.group(1):
         reason = "No reason"
@@ -59,7 +59,7 @@ async def get_user(event):
 
 
 @decorator.insurgent()
-@t_flood_limit_dec("check_afk")
+@flood_limit_dec("check_afk")
 async def check_afk(event):
     user_afk = mongodb.afk.find_one({'user': event.from_id})
     if user_afk:

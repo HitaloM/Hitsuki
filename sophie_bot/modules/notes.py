@@ -11,8 +11,8 @@ from aiogram import types
 
 from sophie_bot import tbot, decorator, mongodb, logger, dp
 from sophie_bot.modules.connections import connection, get_conn_chat
-from sophie_bot.modules.disable import t_disablable_dec
-from sophie_bot.modules.helper_func.flood import t_flood_limit_dec
+from sophie_bot.modules.disable import disablable_dec
+from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (check_group_admin, is_user_admin,
                                       user_admin_dec, user_link, add_user_to_db)
@@ -24,7 +24,7 @@ from sophie_bot.modules.helper_func.notes import save_get_new_note
 @connection()
 @get_strings_dec("notes")
 async def test(message, strings, status, chat_id, chat_title):
-    print(message.from_user.id)
+    print(message)
 
 
 @decorator.t_command("save", word_arg=True)
@@ -113,8 +113,8 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
 
 
 @decorator.t_command("notes ?(.*)")
-@t_flood_limit_dec("notes")
-@t_disablable_dec("notes")
+@flood_limit_dec("notes")
+@disablable_dec("notes")
 @connection()
 @get_strings_dec("notes")
 async def list_notes(event, strings, status, chat_id, chat_title):
@@ -231,7 +231,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
 
 
 @decorator.CallBackQuery(b'delnote_', compile=True)
-@t_flood_limit_dec("delnote_handler")
+@flood_limit_dec("delnote_handler")
 async def del_note_callback(event):
     user_id = event.query.user_id
     if await is_user_admin(event.chat_id, user_id) is False:

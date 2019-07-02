@@ -9,8 +9,8 @@ from telethon.tl.types import ChatAdminRights, PeerUser
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
 from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, tbot, decorator, mongodb
-from sophie_bot.modules.disable import t_disablable_dec
-from sophie_bot.modules.helper_func.flood import t_flood_limit_dec
+from sophie_bot.modules.disable import disablable_dec
+from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import get_user, user_admin_dec, user_link
 
@@ -134,9 +134,10 @@ async def all_commands_list(message):
         txt += "* /" + cmd + "\n"
     await message.reply(txt)
 
+
 @decorator.t_command("id", arg=True)
-@t_disablable_dec("id")
-@t_flood_limit_dec("id")
+@disablable_dec("id")
+@flood_limit_dec("id")
 async def id(event):
     text = get_string("misc", "your_id", event.chat_id).format(event.from_id)
     text += get_string("misc", "chat_id", event.chat_id).format(event.chat_id)
@@ -383,7 +384,7 @@ async def paste_deldog(event, strings):
 
 
 @decorator.t_command("info", arg=True)
-@t_flood_limit_dec("info")
+@flood_limit_dec("info")
 @get_strings_dec("misc")
 async def user_info(event, strings):
     user = await get_user(event)

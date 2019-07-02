@@ -5,7 +5,7 @@ from telethon.tl.types import (ChannelParticipantsAdmins,
                                MessageEntityMentionName)
 
 from sophie_bot import OWNER_ID, SUDO, tbot, decorator, logger, mongodb, redis
-from sophie_bot.modules.helper_func.flood import flood_limit, t_flood_limit_dec
+from sophie_bot.modules.helper_func.flood import flood_limit, flood_limit_dec
 
 
 @decorator.BotDo()
@@ -15,8 +15,6 @@ async def do_update_users(event):
 
 async def update_users(event):
     chat_id = event.chat_id
-    if not chat_id:
-        return
     user_id = event.from_id
     user = await tbot.get_entity(user_id)
     chat = await tbot.get_entity(chat_id)
@@ -30,6 +28,7 @@ async def update_users(event):
     if old_user:
         if 'chats' in old_user:
             new_chat = old_user['chats']
+            print(new_chat)
             if chat_id not in new_chat:
                 new_chat.append(chat_id)
 
@@ -193,7 +192,7 @@ async def get_chat_admins(chat_id):
 
 
 @decorator.t_command("adminlist")
-@t_flood_limit_dec("adminlist")
+@flood_limit_dec("adminlist")
 async def event(event):
     msg = await event.reply("Updating cache now...")
     await update_admin_cache(event.chat_id)
@@ -363,7 +362,7 @@ async def user_link(user_id):
 
 def user_admin_dec(func):
     async def wrapped(event):
-        
+
         if hasattr(event, 'from_id'):
             user_id = event.from_id
         elif hasattr(event, 'from_user'):
