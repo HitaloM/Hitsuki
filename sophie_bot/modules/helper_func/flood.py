@@ -34,3 +34,13 @@ def flood_limit_dec(cmd):
             return await func(event)
         return wrapped_1
     return wrapped
+
+
+def rate_limit(limit: int, key=None):
+    def decorator(func):
+        setattr(func, 'throttling_rate_limit', limit)
+        if key:
+            setattr(func, 'throttling_key', key)
+        return func
+
+    return decorator
