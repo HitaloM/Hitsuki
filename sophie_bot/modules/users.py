@@ -4,7 +4,7 @@ from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import (ChannelParticipantsAdmins,
                                MessageEntityMentionName)
 
-from sophie_bot import OWNER_ID, SUDO, tbot, decorator, logger, mongodb, redis
+from sophie_bot import BOT_ID, OWNER_ID, SUDO, tbot, decorator, logger, mongodb, redis
 from sophie_bot.modules.helper_func.flood import flood_limit, flood_limit_dec
 
 
@@ -16,6 +16,10 @@ async def do_update_users(event):
 async def update_users(event):
     chat_id = event.chat_id
     user_id = event.from_id
+
+    if user_id == BOT_ID:
+        return
+
     user = await tbot.get_entity(user_id)
     chat = await tbot.get_entity(chat_id)
 

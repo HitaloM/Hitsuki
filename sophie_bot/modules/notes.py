@@ -24,7 +24,7 @@ from sophie_bot.modules.helper_func.notes import save_get_new_note
 @connection()
 @get_strings_dec("notes")
 async def test(message, strings, status, chat_id, chat_title):
-    print(message)
+    pass
 
 
 @decorator.t_command("save", word_arg=True)
