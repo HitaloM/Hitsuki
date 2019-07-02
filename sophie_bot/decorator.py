@@ -2,10 +2,11 @@ import re
 
 from telethon import events
 
-from sophie_bot import BOT_USERNAME, CONFIG, tbot, bot, dp
+from sophie_bot import BOT_USERNAME, CONFIG, tbot, dp
 
 ALLOW_F_COMMANDS = CONFIG["advanced"]["allow_forwards_commands"]
 ALLOW_COMMANDS_FROM_EXC = CONFIG["advanced"]["allow_commands_with_!"]
+BLOCK_GBANNED_USERS = CONFIG["advanced"]["block_gbanned_users"]
 
 REGISTRED_COMMANDS = []
 
@@ -45,6 +46,9 @@ def command(command, additional="", **kwargs):
             P = '[/!]'
         else:
             P = '/'
+
+        if BLOCK_GBANNED_USERS is True:
+            kwargs['not_gbanned'] = True
 
         if 'word_arg' in kwargs and kwargs['word_arg'] is True:
             cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)(\S*){2}".format(command, BOT_USERNAME, additional,

@@ -19,12 +19,12 @@ from sophie_bot.modules.users import (check_group_admin, is_user_admin,
 from sophie_bot.modules.helper_func.notes import save_get_new_note
 
 
-@decorator.command('owo')
+@decorator.command('owo', is_owner=True)
 @user_admin_dec
 @connection()
 @get_strings_dec("notes")
 async def test(message, strings, status, chat_id, chat_title):
-    pass
+    print('blyat')
 
 
 @decorator.t_command("save", word_arg=True)

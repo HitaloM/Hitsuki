@@ -30,6 +30,8 @@ DEFAULT_RATE_LIMIT = CONFIG["advanced"]["rate_limit_num"]
 
 loop = asyncio.get_event_loop()
 
+import_module("sophie_bot.modules.helper_func.bount_filter")
+
 # Import modules
 for module_name in ALL_MODULES:
     logger.debug("Importing " + module_name)
