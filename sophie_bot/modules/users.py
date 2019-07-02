@@ -28,9 +28,10 @@ async def update_users(event):
     if old_user:
         if 'chats' in old_user:
             new_chat = old_user['chats']
-            print(new_chat)
-            if chat_id not in new_chat:
+            if not new_chat or chat_id not in new_chat:
                 new_chat.append(chat_id)
+
+    print(new_chat)
 
     if not hasattr(chat, 'username'):
         chatnick = None
