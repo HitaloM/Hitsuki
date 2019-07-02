@@ -25,7 +25,8 @@ WEBHOOK_URL = f"{WEBHOOK_HOST}{TOKEN}"
 WEBAPP_HOST = CONFIG["advanced"]["webapp_host"]
 WEBAPP_PORT = CONFIG["advanced"]["webapp_port"]
 
-DEFAULT_RATE_LIMIT = 5
+RATE_LIMIT = CONFIG["advanced"]["rate_limit"]
+DEFAULT_RATE_LIMIT = CONFIG["advanced"]["rate_limit_num"]
 
 loop = asyncio.get_event_loop()
 
@@ -91,6 +92,8 @@ class ThrottlingMiddleware(BaseMiddleware):
         # Calculate how many time is left till the block ends
         delta = throttled.rate - throttled.delta
 
+        msg = ""
+
         # Prevent flooding
         if throttled.exceeded_count <= 2:
             msg = await message.reply('Too many requests!')
@@ -103,7 +106,8 @@ class ThrottlingMiddleware(BaseMiddleware):
 
         # If current message is not last with current key - do not send message
         if thr.exceeded_count == throttled.exceeded_count:
-            await bot.edit_message_text('Unlocked.', msg.chat.id, msg.message_id)
+            if msg:
+                await bot.edit_message_text('Unlocked.', msg.chat.id, msg.message_id)
 
 
 async def on_startup(dp):
@@ -146,7 +150,8 @@ logger.info("Running loop..")
 logger.info("tbot is alive!")
 signal.signal(signal.SIGINT, exit_gracefully)
 
-dp.middleware.setup(ThrottlingMiddleware())
+if RATE_LIMIT is True:
+    dp.middleware.setup(ThrottlingMiddleware())
 
 if CONFIG['advanced']['webhooks'] is True:
     logger.info("Using webhooks method")

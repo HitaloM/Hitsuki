@@ -17,6 +17,8 @@
     "webapp_port": 8031,
 
     "skip_catch_up": true,
+    "rate_limit": true,
+    "rate_limit_num": 3,
     
     "sudo": [483808054, 782229305, 654839744],
     "whitelisted": [123456789, 928173281],
