@@ -2,7 +2,7 @@ import asyncio
 import math
 import subprocess
 
-from sophie_bot import mongodb, dp, tbot, decorator
+from sophie_bot import mongodb, tbot, decorator
 
 from aiogram import types
 
