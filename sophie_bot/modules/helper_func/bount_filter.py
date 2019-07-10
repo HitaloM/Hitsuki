@@ -49,7 +49,19 @@ class NotForwarded(BoundFilter):
             return True
 
 
+class Only_PM(BoundFilter):
+    key = 'only_pm'
+
+    def __init__(self, only_pm):
+        self.only_pm = only_pm
+
+    async def check(self, message: types.Message):
+        if message.from_user.id == message.chat.id:
+            return True
+
+
 dp.filters_factory.bind(IsAdmin)
 dp.filters_factory.bind(IsOwner)
 dp.filters_factory.bind(NotGbanned)
 dp.filters_factory.bind(NotForwarded)
+dp.filters_factory.bind(Only_PM)
