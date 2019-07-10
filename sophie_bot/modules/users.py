@@ -365,6 +365,23 @@ async def user_link(user_id):
     return user_link
 
 
+async def user_link_html(user_id):
+    user = mongodb.user_list.find_one({'user_id': user_id})
+    if not user:
+        try:
+            user = await add_user_to_db(await tbot(GetFullUserRequest(int(user_id))))
+            user_link = "<a href=\"tg://user?id={id}\">{name}</a>".format(
+                name=user['first_name'], id=user['user_id'])
+        except Exception:
+            user_link = "<a href=\"tg://user?id={id}\">{name}</a>".format(
+                name=user_id, id=user_id)
+    else:
+        user_link = "<a href=\"tg://user?id={id}\">{name}</a>".format(
+            name=user['first_name'], id=user['user_id'])
+
+    return user_link
+
+
 def user_admin_dec(func):
     async def wrapped(event):
 

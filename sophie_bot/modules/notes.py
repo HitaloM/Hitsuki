@@ -15,7 +15,8 @@ from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (check_group_admin, is_user_admin,
-                                      user_admin_dec, user_link, add_user_to_db)
+                                      user_admin_dec, user_link,
+                                      add_user_to_db, user_link_html)
 from sophie_bot.modules.helper_func.notes import save_get_new_note
 
 
@@ -203,17 +204,34 @@ async def send_note(chat_id, group_id, msg_id, note_name,
 
         chatname = mongodb.chat_list.find_one({'chat_id': group_id})
 
-        # Format vars
-        string = string.format(
-            first=user['first_name'],
-            last=last_name,
-            fullname=full_name,
-            username=username,
-            mention=await user_link(from_id),
-            id=from_id,
-            chatname=chatname['chat_title'],
-            rules='Will be later'
-        )
+        if noformat is True:
+            string = string.format(
+                first="{first}",
+                last="{last}",
+                fullname="{fullname}",
+                username="{username}",
+                mention="{mention}",
+                id="{id}",
+                chatname="{chatname}",
+            )
+        else:
+            if format == "md":
+                mention_str = await user_link(from_id)
+            elif format == "html":
+                mention_str = await user_link_html(from_id)
+            elif format == "none":
+                mention_str = full_name
+
+            string = string.format(
+                first=user['first_name'],
+                last=last_name,
+                fullname=full_name,
+                username=username,
+                id=from_id,
+                mention=mention_str,
+                chatname=chatname['chat_title']
+            )
+            
 
     try:
         return await tbot.send_message(
