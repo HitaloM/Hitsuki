@@ -84,7 +84,7 @@
         "greetings": {
             "welcome_hay": "Добро пожаловать {mention}! Как дела?",
             "cant_find_note": "Я не могу найти эту заметку.",
-            "welcome_set_to_note": "Welcome set to note: <code>{}</code>",
+            "welcome_set_to_note": "Установка приветствия в заметку: <code>{}</code>",
             "welcome_is_note": "Приветствие настроено на заметку: `{}`",
             "welcome_is_default": "Приветствие не настроено.",
             "no_args_serv": "Пожалуйста, добавьте аргумент yes или no , чтобы включить или выключить очистку служебных сообщений Telegram",
@@ -179,9 +179,9 @@
             "user_info": "**Информация о пользователе**\n",
             "info_id": "**ID:** `{Id}`\n",
             "dc_id": "**DC (DataCenter) ID:** `{}`\n",
-            "scam": "**Scammer:** {}\n",
-            "restricted": "**Restricted:** {}\n",
-            "deleted": "**Deleted:** {}",
+            "scam": "**Мошенник:** {}\n",
+            "restricted": "**Ограниченный:** {}\n",
+            "deleted": "**Удалён:** {}",
             "info_first": "\n**Имя:**{first_name}",
             "info_last": "\n**Фамилия:**{last_name}",
             "info_username": "\n**Псевдоним:**{username}",
@@ -303,16 +303,16 @@
             },
             "md": {
                 "a1": "Вы можете использовать разметку для того, чтобы сделать ваши сообщения более выразительными. Это разметка, которая в настоящее время поддерживается:\n",
-                "a2": "<code>`code words`</code>: backticks allow you to wrap your words in monospace fonts. Shows as: <code>code words</code>",
-                "a3": "<code>**bold words**</code>: asterixes are used for bold font. Shows as: <b>bold words</b>",
-                "a4": "<code>__italic words__</code>: underscores are used for italics. Shows as: <i>italic words</i>",
-                "a5": "<code>[hyperlink](example.com)</code>: this is used for hyperlinks, and will show as such: <a href=\"http://example.com/\">hyperlink</a>. Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown."
+                "a2": "<code>`код`</code>: кавычки разрешают Вам написать Ваши слова в моноширинном шрифте. Показывается как: <code>code words</code>",
+                "a3": "<code>**слова жирным шрифтом**</code>: звёздочки используются для жирного шрифта. Shows as: <b>слова жирным шрифтом</b>",
+                "a4": "<code>__слова курсивом__</code>: нижние подчёркивания используются для курсива. Показывается как: <i>слова курсивом</i>",
+                "a5": "<code>[hyperlink](example.com)</code>: это используется для гиперссылок, и будет показано как: <a href=\"http://example.com/\">гиперссылка</a>. Будьте уверены что Вы не добавили каких-либо дополнительных пробелов между ] и ( иначе это будет не правильная разметка."
             },
             "html": {
-                "a1": "Markdown is easy, but when you will be making many notes, note by note, you will see obvious flaws, every extra '*' can broke your perfect note.",
-                "a2": "How about HTML? Let's try use it instead of markdown. Please read before the 'Markdown' guide.",
+                "a1": "Разметка лёгкая, но когда Вам нужно создать много заметок, заметка за заметкой, Вы увидите значительные недостатки, каждый символ '*' может сломать Вашу идеальную заметку.",
+                "a2": "Что на счёт HTML? Давайте попробуем использовать его вместо разметки. Пожалуйста, прочитайте перед гидом разметки.",
                 "a3": "\nЧтобы использовать HTML в заметках добавьте `[format:html]` в конец заметки, Вы можете полностью отключить форматирование заметки используя `[format:none]`.\n",
-                "a4": "HTML markdown:",
+                "a4": "HTML-разметка:",
                 "a5": "`<code>код</code>`: будет показано как '`синий текст`'",
                 "a6": "`<b>жирный текст</b>`: будет показано как **жирный текст**",
                 "a7": "`<i>курсивный текст</i>`: будет отображаться как __курсивный текст__",
@@ -388,12 +388,12 @@
                 "i10": "- /filters: Покажете все фильтры в чате!",
                 "i11": "- /stop <filter name>: Остановит указанный фильтр",
                 "i3": "\n**Доступные действия:**",
-                "i4": "- note: eg: `/filter foo note <notename>`: bot will reply to word 'foo' containing given notename.",
-                "i5": "- delete: eg: `/filter foo delete`: bot will delete the someone's message containing 'foo'.",
-                "i6": "- tban: eg: `/filter foo tban 10m`: bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
-                "i7": "- ban: eg: `/filter foo ban`: bot will ban who send message containing 'foo'",
-                "i8": "- mute: eg: `/filter foo mute`: bot will mute user who send message 'foo'",
-                "i9": "- kick: eg: `/filter foo kick`: bot will kick user who send message containing 'foo'"
+                "i4": "- note: eg: `/filter foo note <notename>`: бот ответит на слово 'foo' включая указанное notename.",
+                "i5": "- delete: нвпример: `/filter foo delete`: бот удалит сообщение, в котором есть 'foo'.",
+                "i6": "- tban: например: `/filter foo tban 10m`: бот затбанит когда кто-то отправит сообщение, которое включает 'foo' на '10m' (minutes) , Вы можете дать любое значение (m , h, d)",
+                "i7": "- ban: например: `/filter foo ban`: бот забанит того, кто отправит сообщение включающее 'foo'",
+                "i8": "- mute: например: `/filter foo mute`: бот замутит пользователя который отправит 'foo'",
+                "i9": "- kick: например: `/filter foo kick`: бот кикнет пользователя, который отправит сообщение, включающее, 'foo'"
             }
         },
         "federations": {
@@ -401,7 +401,7 @@
             "title": "Ах, управление группой. Это все веселье и игрушки, пока вы не начнете получать спам, и вам нужно будет блокировать спамеров. Затем вам нужно начать банить больше и больше, и веселье становится болью. Но когда у вас есть несколько групп, и вы не хотите, чтобы эти спамеры ни в одной из ваших групп - что вы можете сделать? Неужели вы должны запретить их вручную, во всех ваших группах?",
             "text": {
                 "i0": "Скажи этому - Нет! С федерациями вы можете заблокировать в одном чате, а остальные автоматически подтянут эти блокировки. Вы даже можете назначать администраторов федераций, чтобы самые честные администраторы, могли блокировать во всех чатах, которые вы хотите защитить.",
-                "i1": "\n**Available commands are:**",
+                "i1": "\n**Доступные команды:**",
                 "i2": "- /newfed <fedname>: Создает новую федерацию с указанным именем. Пользователям разрешено владеть только одной федерацией.",
                 "i3": "- /joinfed <FedID>: Присоединяйтесь к текущему чату в федерацию. Каждый чат может быть только в одной федерации. Только владельцы чата могут это сделать.",
                 "i4": "- /finfo: Показывает информацию про данную Федерацию чата, Вы можете использовать /finfo <FedID> - чтобы увидеть информацию о другой Федерации.",
@@ -416,32 +416,32 @@
             }
         },
         "disabling": {
-            "btn": "Disabling",
-            "title": "You might not like all the SophieBot's features and wanna disable something to reduce spam in your group? If you this module for you!",
+            "btn": "Выключение",
+            "title": "Вы не можете использовать все фичи SophieBot и хотите отключиться что-то для уменьшения спама в Вашей группе? Тогда этот модуль для Вас!",
             "text": {
-                "a1": "**Available commands are:**",
-                "a2": "- /disable <command>: Disable the command",
-                "a3": "- /enable <command>: Enable the command",
-                "a4": "- /disablable: See command list which commands can be disabled."
+                "a1": "**Доступные команды:**",
+                "a2": "- /disable <command>: Выключить команду",
+                "a3": "- /enable <command>: Включить команду",
+                "a4": "/disablable: Посмотрите на список команд, которые могут быть выключены."
             }
         },
         "pin": {
-            "btn": "Pinning",
-            "title": "You wanna pin the message? Here you go.",
+            "btn": "Закрепление",
+            "title": "Вы хочете закрепить сообщение? Вперёд.",
             "text": {
-                "a1": "**Available commands are:**",
-                "a2": "- /pin: pin the message you replied to; add 'loud' to send a notification to group members.",
-                "a3": "- /unpin: Unpin the message."
+                "a1": "**Доступные команды:**",
+                "a2": "- /pin: закрепить сообщение на которое Вы ответили; добавьте 'loud' чтобы отослать уведомление всем членам группы.",
+                "a3": "- /unpin: Открепить сообщение."
             }
         },
         "lang": {
-            "btn": "Language",
-            "title": "Not every can speak with perfect English, SophieBot have translation system, check it out.",
+            "btn": "Язык",
+            "title": "Не каждый может идеально разговаривать на Английском, SophieBot имеет систему перевода, проверьте её.",
             "text": {
-                "a1": "**Available commands are:**",
-                "a2": "/lang: Will show a buttons with all languages and it will show current chat language.",
-                "a3": "/lang <lang>: Will change the language without selecting it with buttons.",
-                "a4": "\nNot all language currently supported, help us with translation on [our crowdin page](https://crowdin.com/project/sophiebot)"
+                "a1": "**Доступные команды:**",
+                "a2": "/lang: Покажет кнопки со всеми языками и покажет текущий язык.",
+                "a3": "/lang <lang>: Изменит язык без нажатия на кнопки.",
+                "a4": "\nНе все языки сейчас поддерживаются, помогите нам с переводом на [our crowdin page](https://crowdin.com/project/sophiebot)"
             }
         }
     }

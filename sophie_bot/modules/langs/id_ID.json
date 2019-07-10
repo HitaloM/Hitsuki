@@ -84,7 +84,7 @@
         "greetings": {
             "welcome_hay": "Selamat datang {mention}! Bagaimana kabarmu?",
             "cant_find_note": "Saya tidak bisa menemukan catatan ini.",
-            "welcome_set_to_note": "Welcome set to note: <code>{}</code>",
+            "welcome_set_to_note": "Atur Sambutan untuk catatan:<code>{}</code>",
             "welcome_is_note": "Pesan sambutan menggunakan catatan: `{}`",
             "welcome_is_default": "Pesan sambutan diatur ke default.",
             "no_args_serv": "Berikan saya argumen yes/no untuk menyalakan/mematikan Layanan Pembersihan",
@@ -95,7 +95,7 @@
             "wlcm_sec_soft": "Keamanan Selamat Datang diatur ke **SOFT** di obrolan ini!",
             "wlcm_sec_off": "Keamanan Selamat Datang dinonaktifkan di obrolan ini!",
             "clik2tlk_btn": "Klik disini untuk berbicara",
-            "wlcm_sec": "Hey {mention}, Please click below button to prove that you aren't a bot!",
+            "wlcm_sec": "Hai {mention}, tolong tekan tombol dibawah ini untuk membuktikan Anda bukanlah robot!",
             "not_trgt_usr": "Anda bukanlah pengguna ini!",
             "trgt_success": "Bagus! Anda bisa berbicara!",
             "not_trgt": "Anda bukanlah pengguna ini",
@@ -180,8 +180,8 @@
             "info_id": "**ID:** `{id}`\n",
             "dc_id": "**DC (DataCenter) ID:** `{}`\n",
             "scam": "**Scammer:** {}\n",
-            "restricted": "**Restricted:** {}\n",
-            "deleted": "**Deleted:** {}",
+            "restricted": "**Batasi:**{}\n",
+            "deleted": "**Dihapus:** {}",
             "info_first": "\n**Nama Depan:** {first_name}",
             "info_last": "\n**Nama Belakang:** {last_name}",
             "info_username": "\n**Username:** {username}",
@@ -270,7 +270,7 @@
             "btn": "Catatan",
             "title": "Catatan bagus untuk menyimpan informasi acak; nomor telepon, gif yang bagus, gambar lucu - apa saja!",
             "text": {
-                "i1": "\n**Available commands are:**",
+                "i1": "\nBantu -> catatan -> text -> i1",
                 "i2": "-/save (nama catatan) (isi catatan): Balas ke sebuah pesan akan menyimpan pesan itu. Bahkan bekerja untuk media!",
                 "i3": "- /get (nama catatan): ambil catatan yang dimaksud.",
                 "i4": "- /clear (nama catatan): hapus catatan yang dimaksud",
@@ -293,17 +293,17 @@
             },
             "vars": {
                 "a1": "You can use special variable in notes, here a list of it:",
-                "a2": "`{first}` - First name, will something like 'Mike'",
-                "a3": "`{last}` - Last name, ex. 'Smith'",
-                "a4": "`{fullname}` - Full name, ex. 'Mike Smith'",
-                "a5": "`{username}` - Gives the username, ex. '@MikeSmith009'",
-                "a6": "`{mention}` - Gives the link to user, ex. [SophieBot](https://t.me/rSophieBot)",
-                "a7": "`{id}` - Gives the id of the user, ex. '885745757'",
-                "a8": "`{chatname}` - Gives the current chat name, ex. 'SophieBot chat'"
+                "a2": "`{pertama}` - Nama Pertama akan Seperti 'Mike'",
+                "a3": "`{last}` - Nama Belakang, contoh. 'Smith'",
+                "a4": "`{nama lengkap}` - Nama lengkap, mis. 'Mike Smith'",
+                "a5": "`{namapengguna}` - Memberikan nama pengguna, mis. '@ MikeSmith009",
+                "a6": "`{sebutkan}` - Memberikan tautan ke pengguna, mis. [SophieBot] (https://t.me/rSophieBot)",
+                "a7": "`{id}` - Memberi id pengguna, mis. '885745757'",
+                "a8": "`{namaobrolan}` - Memberikan nama obrolan saat ini, mis. 'SophieBot mengobrol'"
             },
             "md": {
                 "a1": "Anda bisa menggunakan markdown untuk membuat pesan anda lebih ekspresif. Berikut adalah beberapa markdown yang didukung:\n",
-                "a2": "<code>`code words`</code>: backticks allow you to wrap your words in monospace fonts. Shows as: <code>code words</code>",
+                "a2": "<kode> `kode kata` </kode>: backticks memungkinkan Anda untuk membungkus kata-kata Anda dalam font monospace. Ditampilkan sebagai: <kode> kata-kata kode </kode>",
                 "a3": "<code>**bold words**</code>: asterixes are used for bold font. Shows as: <b>bold words</b>",
                 "a4": "<code>__italic words__</code>: underscores are used for italics. Shows as: <i>italic words</i>",
                 "a5": "<code>[hyperlink](example.com)</code>: this is used for hyperlinks, and will show as such: <a href=\"http://example.com/\">hyperlink</a>. Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown."
