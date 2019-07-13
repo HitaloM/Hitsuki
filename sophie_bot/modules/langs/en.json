@@ -28,7 +28,7 @@
         "note_so_big": "This note bigger is than Telegram's limit of 200 characters!",
         "only_admins_can_rmw": "Only admins can remove this message",
         "delmsg_no_arg": "deletemsg button can contain only 'admin' or 'user' argument!",
-        "bot_msg" : "I'm sorry, i can't get this message, probably this a other bot's message. I can't save it.",
+        "bot_msg" : "I'm sorry, I can't get this message, probably this a other bot's message. I can't save it.",
         "pmed_note": "I pm'ed note to you!",
         "notename_cant_contain": "Note name can't conatin `{}` !",
 
@@ -315,6 +315,7 @@
             "i15": "This will retrieve the note and send it without formatting it; getting you the raw markdown, allowing you to make easy edits."
         },
         "buttons": {
+            "help_btn_notes_btns": "Buttons",
             "help_btn_notes_md": "Markdown",
             "help_btn_notes_vars": "Special vars",
             "help_btn_notes_html": "HTML"
@@ -345,6 +346,19 @@
             "a6": "`<b>bold text</b>`: will shows as **bold text**",
             "a7": "`<i>italic text</i>`: will shows as __italic text__",
             "a8": "`<a href=\"http://example.com/\">hyperlink</a>`: Example of hyperlink, will shown as [hyperlink](example.com)"
+        },
+        "btns": {
+            "a1": "Making buttons isn't so hard as you expected. Unlike other bots SophieBot have many types of custom buttons, let's try use it!",
+            "a2": "Lets start by default url buttons, url buttons have such syntax `[Button name](buttonurl:https://url.com)`.",
+            "a3": "\nOk, you added many buttons to your message, but it looks ugly? You wanna make few buttons per line? This will help you:",
+            "a4": "Add `:same` at the end of your link; it'll set it on the same line as the other one. For example:",
+            "a5": "`[Button 1](buttonurl:https://url.com)`\n[Button 2](buttonurl:https://url.com:same)",
+            "a6": "You can set more than 2 buttons per row, do not overdo it.",
+            "a7": "\nOk, you just created you note with many buttons, you will see that you do not have enough just url buttons, see other's:",
+            "a8": "- `[Button name](buttonnote:name_of_note)`: With such types of button you will get a note in your PM, this done to prevent spamming notes in pm.",
+            "a9": "- `[Button name](buttonalert:name_of_note)`: This one will show you popup with note data (Warning, only text supported by popups), for example this can be done for rules, you are limited only by your imagination and by 200 symbols limit for popups",
+            "a10": "- `[Button name](deletemsg:admin)`: Some notes used by warning, or notify, after reading it it leaving in chat, it spammy, right? This button will remove message, it have argument to control which one can be remove message `user` or `admin`.",
+            "a11": "\nCreate your beautiful and functional notes with SophieBot."
         }
     },
     "purges": {
@@ -380,7 +394,7 @@
             "i3": "- /stats: show bot stats.",
             "i4": "- /botchanges: show bot changes (commit history)",
             "i5": "- /runs: responds with a randomly generated 'run away' string.",
-            "i6": "- /paste <text>: Paste text to the Dogbin."
+            "i6": "- /paste (text): Paste text to the Dogbin."
         }
     },
     "connections": {
@@ -389,22 +403,22 @@
         "text": {
             "i0": "This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)",
             "i1": "\n**Available commands are:**",
-            "i2": "- /connect <chat>: connect to the chat with chat username/ID, allowing you to view/edit contents.",
+            "i2": "- /connect (chat): connect to the chat with chat username/ID, allowing you to view/edit contents.",
             "i3": "- /connect: show last 3 chats to fast connect.",
             "i4": "\nYou can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids."
         }
     },
     "greetings": {
         "btn": "Greetings",
-        "title": "Give your members a warm welcome with the greetings module! Or a sad goodbye... Depends!",
+        "title": "Give your members a warm welcome with the greetings module!",
         "text": {
-            "i0": "Welcomes it's are a note trigget, use /setwelcome to set welcome trigger to note.",
+            "i0": "Welcomes it's are a note trigger, use /setwelcome to set welcome trigger to note.",
             "i1": "\n**Available commands are:**",
-            "i2": "- /setwelcome <note>: sets your new welcome note!",
-            "mm": "- /setwelcome off: disable welcome in chat.",
-            "i3": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat.",
-            "i4": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
-            "i5": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
+            "i2": "- /setwelcome (notename): sets your new welcome note!",
+            "i3": "- /setwelcome off: disable welcome in chat.",
+            "i4": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat.",
+            "i5": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
+            "i6": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
         }
     },
     "filters": {
@@ -412,11 +426,11 @@
         "title": "Make your chat more lively with filters; The bot will reply to certain words!",
         "text": {
             "i1": "**Available commands are:**",
-            "i2": "- /filter <keyword> <action> : Every time someone says 'word' , the bot will do the given action.",
+            "i2": "- /filter (keyword) (action) : Every time someone says 'word' , the bot will do the given action.",
             "i3": "- /filters: Will display all filter in that chat!",
-            "i4": "- /stop <filter name> : Will stop the the given filter names",
+            "i4": "- /stop (filter name) : Will stop the the given filter names",
             "i5": "\n**Available actions are:**",
-            "i6": "- note: eg: `/filter foo note <notename>`: bot will reply to word 'foo' containing given notename.",
+            "i6": "- note: eg: `/filter foo note (notename)`: bot will reply to word 'foo' containing given notename.",
             "i7": "- answer: eg `/filter foo note how are you?`: bot will reply the 'how are you?' to the word 'foo', buttons also supported.",
             "i8": "- delete: eg: `/filter foo delete`: bot will delete the someone's message containing 'foo'.",
             "i9": "- tban: eg: `/filter foo tban 10m`: bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
@@ -431,15 +445,15 @@
         "text": {
             "i0": "No more! With federations, you can make a ban in one chat overlap to all your other chats. You can even appoint federation admins, so that your trustworthiest admins can ban across all the chats that you want to protect.",
             "i1": "\n**Available commands are:**",
-            "i2": "- /newfed <fedname>: Creates a new federation with the given name. Users are only allowed to own one federation. Using this method when you already have a fed will simply change the federation name.",
-            "i3": "- /joinfed <FedID>: Joins the current chat to the federation. Each chat can only be in one federation. Only chat owners can do this.",
-            "i4": "- /finfo: Show info about current chat Federation, you can /finfo <FedID> - to see info about other Federation.",
+            "i2": "- /newfed (fedname): Creates a new federation with the given name. Users are only allowed to own one federation. Using this method when you already have a fed will simply change the federation name.",
+            "i3": "- /joinfed (FedID): Joins the current chat to the federation. Each chat can only be in one federation. Only chat owners can do this.",
+            "i4": "- /finfo: Show info about current chat Federation, you can /finfo (FedID) - to see info about other Federation.",
             "i5": "\nFederation admins, they can use a fban command and others, to control they use this commands:",
-            "i6": "- /fpromote <user>: Promotes the user to fed admin in your fed.",
-            "i7": "- /fdemote <user>: Demotes the user from fed admin to normal user, in your fed.",
+            "i6": "- /fpromote (user): Promotes the user to fed admin in your fed.",
+            "i7": "- /fdemote (user): Demotes the user from fed admin to normal user, in your fed.",
             "i8": "\nOnly to Federation admins:",
-            "i9": "- /fban <user>: Bans a user from the current chat's federation.",
-            "i10": "- /unfban <user>: Unbans a user the current chat's federation.",
+            "i9": "- /fban (user): Bans a user from the current chat's federation.",
+            "i10": "- /unfban (user): Unbans a user the current chat's federation.",
             "i11": "\nOther commands:",
             "i12": "/fchats: Show list of chats which connected to Federation."
         }
@@ -449,8 +463,8 @@
         "title": "You might not like all the SophieBot's features and wanna disable something to reduce spam in your group? If you this module for you!",
         "text": {
             "a1": "**Available commands are:**",
-            "a2": "- /disable <command>: Disable the command",
-            "a3": "- /enable <command>: Enable the command",
+            "a2": "- /disable (command): Disable the command",
+            "a3": "- /enable (command): Enable the command",
             "a4": "- /disablable: See command list which commands can be disabled.",
             "a5": "- /disabled: List of disabled commands in current chat."
         }
@@ -470,7 +484,7 @@
         "text": {
             "a1": "**Available commands are:**",
             "a2": "/lang: Will show a buttons with all languages and it will show current chat language.",
-            "a3": "/lang <lang>: Will change the language without selecting it with buttons.",
+            "a3": "/lang (lang): Will change the language without selecting it with buttons.",
             "a4": "\nNot all language currently supported, help us with translation on [our crowdin page](https://crowdin.com/project/sophiebot)"
         }
     }

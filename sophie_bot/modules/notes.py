@@ -231,7 +231,6 @@ async def send_note(chat_id, group_id, msg_id, note_name,
                 mention=mention_str,
                 chatname=chatname['chat_title']
             )
-            
 
     try:
         return await tbot.send_message(
