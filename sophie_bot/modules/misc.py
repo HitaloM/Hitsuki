@@ -299,55 +299,6 @@ async def help(event, strings):
         await event.reply(text, buttons=buttons)
 
 
-@decorator.t_command('setrules', arg=True)
-@user_admin_dec
-@get_strings_dec('misc')
-async def setrules(event, strings):
-    reply_msg = await event.get_reply_message()
-    if reply_msg:
-        rule = str(reply_msg.message)
-    else:
-        rule = str(event.text[10:])
-
-    chat = event.chat_id
-
-    if rule == " ":
-        await event.reply(strings['rule_empty'])
-        return
-
-    old_rules = mongodb.rules.find_one({'chat': chat})
-    if old_rules:
-        mongodb.rules.update_one({'_id': old_rules['_id']}, {'$set': {'rule': rule}})
-        await event.reply(strings['rule_updated'])
-    else:
-        mongodb.rules.insert_one({'chat': chat, 'rule': rule})
-        await event.reply(strings['rules_inserted'])
-
-
-@decorator.t_command('rules')
-@get_strings_dec('misc')
-async def rules(event, strings):
-    rule = mongodb.rules.find_one({'chat': event.chat_id})
-    if rule:
-        buttons = [
-            [Button.url(strings['rules_btn'], url='https://t.me/{}?start=rules{}'.format(
-                        BOT_USERNAME, event.chat_id))]
-        ]
-        text = strings['rules_text']
-        await event.reply(text, buttons=buttons)
-    else:
-        await event.reply(strings['no_rules'])  # thank paul for dis string :/
-
-
-@decorator.t_command('clearrules')
-@user_admin_dec
-@get_strings_dec('misc')
-async def clear_rules(event, strings):
-    chat = event.chat_id
-    mongodb.rules.delete_one({'chat': chat})
-    await event.reply(strings['clrd_rules'])
-
-
 @decorator.t_command('paste', arg=True)
 @get_strings_dec('misc')
 async def paste_deldog(event, strings):
