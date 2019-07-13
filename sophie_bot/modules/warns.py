@@ -6,25 +6,17 @@ from telethon.tl.custom import Button
 
 from sophie_bot import WHITELISTED, decorator, mongodb
 from sophie_bot.modules.bans import ban_user
-from sophie_bot.modules.connections import get_conn_chat
+from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.language import get_string
 from sophie_bot.modules.users import (get_chat_admins, get_user,
                                       get_user_and_text, is_user_admin,
-                                      user_link)
+                                      user_link, user_admin_dec)
 
 
 @decorator.t_command("warn(?!(\w))", arg=True)
-async def warn_user(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("warns", "user_no_admeme", event.chat_id))
-        return
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, admin=True, only_in_groups=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
-
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
+async def warn_user(event, status, chat_id, chat_title):  # Rewrite me on AIOGram
     user, reason = await get_user_and_text(event)
     user_id = int(user['user_id'])
     if user_id in WHITELISTED:
@@ -59,7 +51,13 @@ async def warn_user(event):
     for suka in old:
         h += 1
 
-    button = Button.inline("Remove warn", 'remove_warn_{}'.format(rndm))
+    buttons = [Button.inline("⚠️ Remove warn", 'remove_warn_{}'.format(rndm))]
+
+    rules = mongodb.rules.find_one({"chat_id": chat_id})
+    if rules:
+        buttons.append(Button.inline("📝 Rules", 'get_note_{}_{}'.format(
+            chat_id, rules['note']
+        )))
 
     warn_limit = mongodb.warnlimit.find_one({'chat_id': chat_id})
 
@@ -81,7 +79,7 @@ async def warn_user(event):
         textx = get_string("warns", "warn_num", event.chat_id)
         text += textx.format(curr_warns=h, max_warns=warn_limit)
 
-    await event.reply(text, buttons=button, link_preview=False)
+    await event.reply(text, buttons=buttons, link_preview=False)
 
 
 @decorator.CallBackQuery(b'remove_warn_')

@@ -108,6 +108,10 @@
         "cln_wel_s_enabled": "Cleaning welcomes enabled for **{chat_name}**.",
         "cln_wel_s_disabled": "Cleaning welcomes disabled for **{chat_name}**."
     },
+    "rules" : {
+        "cant_find_note": "I can't find this note.",
+        "rules_set_to_note": "Rules set to note: <code>{}</code>"
+    },
     "filters": {
         "dont_have_right": "You don't have rights to save filters here!",
         "filter_added": "Filter added\n",
