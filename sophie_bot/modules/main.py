@@ -54,8 +54,8 @@ async def stats(message: types.Message):
     text += "\* `{}` total warns\n".format(mongodb.warns.count())
     text += "\* `{}` total gbanned users\n".format(mongodb.blacklisted_users.count())
     text += "\* `{}` chats in `{}` total feds, `{}` fbanned users\n".format(
-        mongodb.fed_list.count(),
         mongodb.fed_groups.count(),
+        mongodb.fed_list.count(),
         mongodb.fbanned_users.count())
     db = mongodb.command("dbstats")
     if 'fsTotalSize' in db:
