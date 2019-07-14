@@ -135,12 +135,13 @@ async def send_note(chat_id, group_id, msg_id, note_name,
                     from_id=""):
     file_id = None
     note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': note_name})
-    if not note and show_none is True:        
+    if not note and show_none is True:
         text = get_string("notes", "note_not_found", chat_id)
         all_notes = mongodb.notes.find({'chat_id': group_id})
         if all_notes.count() > 0:
             check = difflib.get_close_matches(note_name, [d['name'] for d in all_notes])
-            text += "\nDid you mean `#{}`?".format(check[0])
+            if len(check) > 0:
+                text += "\nDid you mean `#{}`?".format(check[0])
 
         await tbot.send_message(chat_id, text, reply_to=msg_id)
         return

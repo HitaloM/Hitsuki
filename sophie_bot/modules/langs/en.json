@@ -409,10 +409,14 @@
             "i0": "Welcomes it's are a note trigger, use /setwelcome to set welcome trigger to note.",
             "i1": "\n**Available commands are:**",
             "i2": "- /setwelcome (notename): sets your new welcome note!",
-            "i3": "- /setwelcome off: disable welcome in chat.",
-            "i4": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat.",
-            "i5": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
-            "i6": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
+            "i3": "Note: Please keep in mind, SophieBot use notes for welcome, you must create note with welcome text and set note as welcome",
+            "i4": "Steps:",
+            "i5": "1. Create note with your welcome",
+            "i6": "2. /setwelcome notename\n",
+            "i7": "- /setwelcome off: disable welcome in chat.",
+            "i8": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat.",
+            "i9": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
+            "i10": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
         }
     },
     "filters": {
@@ -480,6 +484,19 @@
             "a2": "/lang: Will show a buttons with all languages and it will show current chat language.",
             "a3": "/lang (lang): Will change the language without selecting it with buttons.",
             "a4": "\nNot all language currently supported, help us with translation on [our crowdin page](https://crowdin.com/project/sophiebot)"
+        }
+    },
+    "rules": {
+        "btn": "Rules",
+        "title": "Save your chat with your rules",
+        "text": {
+            "a1": "**Available commands are:**",
+            "a2": "- /setrules (notename): Set the rules",
+            "a3": "Note: Please keep in mind, SophieBot use notes for rules, you must create note with rules text and set it",
+            "a4": "Steps:",
+            "a5": "1. Create note with your welcome",
+            "a6": "2. /setwelcome notename",
+            "a7": "\nRules button will appear in the warn message"
         }
     }
  },
