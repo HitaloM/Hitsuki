@@ -18,17 +18,15 @@ async def check_message(event):
         filters = redis.lrange('filters_cache_{}'.format(event.chat_id), 0, -1)
     if redis.llen('filters_cache_{}'.format(event.chat_id)) == 0:
         return
-    text = event.text.split(" ")
+    text = event.text
     chat = event.chat_id
     user = event.from_id
-    for filter in filters:
-        filter = filter.decode("utf-8")
-        for word in text:
-            match = re.fullmatch(filter, word, flags=re.IGNORECASE)
-            if not match:
-                continue
+    for keyword in filters:
+        keyword = keyword.decode("utf-8")
+        pattern = r"( |^|[^\w])" + re.escape(keyword) + r"( |$|[^\w])"
+        if re.search(pattern, text, flags=re.IGNORECASE):
             H = mongodb.filters.find_one(
-                {'chat_id': event.chat_id, "handler": {'$regex': str(filter)}})
+                {'chat_id': event.chat_id, "handler": {'$regex': str(pattern)}})
             action = H['action']
             if action == 'note':
                 await send_note(event.chat_id, event.chat_id, event.message.id,
@@ -62,6 +60,7 @@ async def check_message(event):
                         filter=filter
                     )
                     event.reply(text)
+            break
 
 
 @decorator.t_command("filter(?!s)", arg=True)
