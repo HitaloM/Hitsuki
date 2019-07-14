@@ -14,72 +14,6 @@ from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import get_user, user_admin_dec, user_link
 
-RUN_STRINGS = (  # Thanks Skittles9823
-    "Wew dat boi noped de fugg outta here.",
-    "OwO where you going?",
-    ";___; sir pls.",
-    "BOI!",
-    "Fugg off!",
-    "This is a christian server. You shold leave!",
-    "Is this group not potable enough for you?",
-    "\"I go away.\"",
-    "Stahp running pls ;__;",
-    ";______________________;",
-    "But whoi sar?",
-    "Oh please you aren't even funny.",
-    "Stop baiting!",
-    "Are you running away from me? Okay cya boi.",
-    "Run for the potable water! Stay hydrated!",
-    "Oof, sick b8 m8",
-    "( ͡° ͜ʖ ͡°)( ͡° ͜ʖ ͡°)",
-    "Please. End your existence thanks.",
-    "NoU∞.",
-    "Well… "
-    "That just happened.",
-    "Big if true.",
-    "Wow, I didn't know you could even rebut that.",
-    "That's not a rebuttle!",
-    "Delet this!",
-    "Yeah yeah, just tap /kickme already.",
-    "Leave please, and never come back thanks.",
-    "The absolute mad man! I can't believe you just say that.",
-    "Can you not.",
-    "UwU.",
-    "OwO",
-    "Keep doing what you're doing, hopefully you'll be banned soon.",
-    "Heck, I thought this was a Christian server ;_;.",
-    "No curr.",
-    "Delet, delet, wee woo wee woo!.",
-    "Who even are you?",
-    "Yesn't Men't.",
-    "Non't Urselfn't.",
-    "/Walksn't*",
-    "Not if I ban you first.",
-    "Birthn't yourself.",
-    "Okay have fun with your exercise sar.",
-    "What's the sense of your life?",
-    "Nuuuuuuuuuuuu",
-    "M cri",
-    "Let's torture @Jeepeo",
-    "Suka blyat!",
-    "Sir, why?",
-    "Why you doing this? I cry.",
-    "Someone really wrote this strings for me.",
-    "Alexa, play despacito!",
-    "TODO: WRITE THIS STRING.",
-    "Jepo, replace this string on some kool.",
-    "@pqhaz think runs is cool, but in mostly cases it only spam in chat,"
-    "so let's torure him together!",
-    "32... Wait, what?! I forgot translate number to string, let me remember how I used to do it.",
-    "Plox sir",
-    "Let's torture @Skittles9823",
-    "Wait, oh, stop.. I can't send stickers ;_;",
-    "Help me!!",
-    "/runs",
-    "I thought you are smarter.",
-    "Meaow! 😺"
-)
-
 
 @decorator.command('allcommands')
 async def all_commands_list(message):
@@ -140,8 +74,9 @@ async def pinMessage(event, strings):
 
 
 @decorator.t_command("runs")
-async def runs(event):
-    await event.reply(random.choice(RUN_STRINGS))
+@get_strings_dec("RUNS", mas_name="RANDOM_STRINGS")
+async def runs(event, strings):
+    await event.reply(strings[random.choice(list(strings))])
 
 
 @decorator.t_command("unpin")
