@@ -106,3 +106,9 @@ def ChatAction():
     def decorator(func):
         tbot.add_event_handler(func, events.ChatAction)
     return decorator
+
+
+def RawAction():
+    def decorator(func):
+        tbot.add_event_handler(func, events.Raw)
+    return decorator
