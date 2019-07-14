@@ -6,12 +6,10 @@ from sophie_bot import decorator, mongodb
 @decorator.RawAction()
 async def migrator(event):
     if hasattr(event, "message") and isinstance(event.message.action, MessageActionChatMigrateTo):
-        print('h')
         old_id = event.message.to_id.chat_id
         o_id = '-' + str(old_id)
         new_id = event.message.action.channel_id
         n_id = '-100' + str(new_id)
-        print(n_id)
 
         # Migrating db data
 

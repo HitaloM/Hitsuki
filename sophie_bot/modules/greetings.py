@@ -232,7 +232,7 @@ async def welcomeSecurity(event, strings):
         await event.reply(strings['wlcm_sec_hard'])
     elif args in soft:
         if old:
-            mongodb.welcome_security.update_one({'$set': {'security': 'soft'}})
+            mongodb.welcome_security.update_one({'_id': old['_id']}, {'$set': {'security': 'soft'}})
         else:
             mongodb.welcome_security.insert_one({'chat_id': chat, 'security': 'soft'})
         await event.reply(strings['wlcm_sec_soft'])
