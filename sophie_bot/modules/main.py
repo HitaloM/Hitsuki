@@ -3,6 +3,7 @@ import math
 import subprocess
 
 from sophie_bot import mongodb, tbot, decorator
+from sophie_bot.modules.disable import disablable_dec
 
 from aiogram import types
 
@@ -36,7 +37,8 @@ async def chat_term(message, command):
 
 
 @decorator.command("botchanges")
-async def botchanges(message: types.Message):
+@disablable_dec("botchanges")
+async def botchanges(message, **kwargs):
     command = "git log --pretty=format:\"%an: %s\" -30"
     text = "<b>Bot changes:</b>\n"
     text += "<i>Showed last 30 commits</i>\n"
@@ -45,7 +47,8 @@ async def botchanges(message: types.Message):
 
 
 @decorator.command("stats")
-async def stats(message: types.Message):
+@disablable_dec("stats")
+async def stats(message, **kwargs):
     text = "*Stats*\n"
     usrs = mongodb.user_list.count()
     chats = mongodb.chat_list.count()
@@ -62,8 +65,8 @@ async def stats(message: types.Message):
         text += '\* Database size is `{}`, free `{}`'.format(
             convert_size(db['dataSize']), convert_size(db['fsTotalSize'] - db['fsUsedSize']))
     else:
-        text += '\* Database size is `{}`, free `512M`'.format(
-            convert_size(db['storageSize']))
+        text += '\* Database size is `{}`, free `{}`'.format(
+            convert_size(db['storageSize']), convert_size(536870912 - db['storageSize']))
     await message.reply(text, parse_mode=types.ParseMode.MARKDOWN)
 
 
