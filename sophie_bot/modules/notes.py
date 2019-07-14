@@ -197,7 +197,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
             last_name = None
             full_name = user['first_name']
 
-        if 'username' in user:
+        if 'username' in user and user['username']:
             username = "@" + user['username']
         else:
             username = None
