@@ -302,7 +302,6 @@
             "i7": "- /noteinfo (name): Show detailed info about note, who updated and created note",
             "i8": "\nAn example of how to save a note would be via:",
             "i9": "`/save data This is example note!`",
-            "i10": "\nIf you want a button write /markdownhelp to get a help with it.",
             "i11": "\nNow, anyone using `/get data`, or `#data` will be replied to with `This is example note!`.",
             "i12": "\nIf you want to save an image, gif, or sticker, or any other data, do the following:",
             "i13": "`save word` while replying to a sticker or whatever data you'd like. Now, the note at `#word` contains a sticker which will be sent as a reply.",
