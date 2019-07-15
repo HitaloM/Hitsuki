@@ -246,35 +246,37 @@ async def gban_helper_2(event, strings):
             from_id = event.action_message.from_id
 
         K = mongodb.blacklisted_users.find_one({'user': from_id})
-        if K:
-            banned_rights = ChatBannedRights(
-                until_date=None,
-                view_messages=True,
-                send_messages=True,
-                send_media=True,
-                send_stickers=True,
-                send_gifs=True,
-                send_games=True,
-                send_inline=True,
-                embed_links=True,
+        if not K:
+            return
+
+        banned_rights = ChatBannedRights(
+            until_date=None,
+            view_messages=True,
+            send_messages=True,
+            send_media=True,
+            send_stickers=True,
+            send_gifs=True,
+            send_games=True,
+            send_inline=True,
+            embed_links=True,
+        )
+
+        try:
+            ban = await event.client(
+                EditBannedRequest(
+                    event.chat_id,
+                    from_id,
+                    banned_rights
+                )
             )
 
-            try:
-                ban = await event.client(
-                    EditBannedRequest(
-                        event.chat_id,
-                        from_id,
-                        banned_rights
-                    )
-                )
+            if ban:
+                mongodb.gbanned_groups.insert_one({'user': from_id, 'chat': event.chat_id})
+                msg = await event.reply(strings['user_is_blacklisted'].format(
+                                        user=await user_link(from_id), rsn=K['reason']))
+                await asyncio.sleep(5)
+                await event.client.delete_messages(event.chat_id, msg)
 
-                if ban:
-                    mongodb.gbanned_groups.insert_one({'user': from_id, 'chat': event.chat_id})
-                    msg = await event.reply(strings['user_is_blacklisted'].format(
-                                            user=await user_link(from_id), rsn=K['reason']))
-                    await asyncio.sleep(5)
-                    await event.client.delete_messages(event.chat_id, msg)
-
-            except Exception as err:
-                logger.info(f'Error on gbanning {from_id} in {event.chat_id} \n {err}')
-                pass
+        except Exception as err:
+            logger.info(f'Error on gbanning {from_id} in {event.chat_id} \n {err}')
+            pass

@@ -10,7 +10,7 @@ from telethon.tl.custom import Button
 
 from aiogram import types
 
-from sophie_bot import tbot, decorator, mongodb, logger, dp
+from sophie_bot import BOT_ID, tbot, decorator, mongodb, logger, dp
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
@@ -337,6 +337,49 @@ def button_parser(chat_id, texts):
             buttons.append(t)
 
     return text, buttons
+
+
+@decorator.command("migrateyana")
+@user_admin_dec
+@connection(admin=True)
+@get_strings_dec("notes")
+async def migrate_from_yana(message, strings, status, chat_id, chat_title, **kwargs):
+    migrated = 0
+    error_migrated = 0
+    all_notes = mongodb.yana_notes.find({'chat_id': chat_id})
+    rnotes = mongodb.notes.find({'chat_id': chat_id})
+    real_notes = []
+    for d in rnotes:
+        real_notes.append(d['name'].lower())
+
+    if all_notes.count() < 1:
+        await message.answer("Nothing to migrate!")
+        return
+
+    msg = await message.answer("Migrating...")
+
+    for note in all_notes:
+        if note['name'].lower() in real_notes:
+            error_migrated += 1
+            continue
+        new = ({
+            'chat_id': chat_id,
+            'name': note['name'].lower(),
+            'text': note['text'],
+            'date': note['created'],
+            'created': note['created'],
+            'updated_by': BOT_ID,
+            'creator': BOT_ID,
+            'file_id': note['file_id']
+        })
+        mongodb.notes.insert(new)
+        migrated += 1
+
+    text = "<b>Migration done!</b>"
+    text += f"\nMigrated <code>{migrated}</code> notes"
+    text += f"\nDidn't migrated <code>{error_migrated}</code> notes"
+
+    await msg.edit_text(text)
 
 
 @decorator.CallBackQuery(b'get_note_')
