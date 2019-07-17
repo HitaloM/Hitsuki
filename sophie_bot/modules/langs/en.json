@@ -54,15 +54,15 @@
         "user_admin_ban": "This is an admin, I can't ban him.",
         "user_admin_mute": "This is an admin, I can't mute him.",
         "user_admin_kick": "This is an admin, I can't kick him.",
-        "user_admin_unmute": "Mm?! unmuted",
+        "user_admin_unmute": "Mm?! Unmuted",
         "user_mooted": "{admin} muted {user} in {chat_name}",
         "user_unmooted": "{admin} unmuted {user} in {chat_name}",
         "kickme_admin": "I can't kick you!",
-        "whitelisted": "Haha NO! You is whitelisted!",
-        "kickme_success": "Okay.. no problem!",
+        "whitelisted": "Haha No! You are whitelisted!",
+        "kickme_success": "Okay.. No problem!",
         "tmute_sucess": "Admin {admin} muted {user} for {time} {unit} !",
-        "usernt_banned": "This user isn't banned to unban!!",
-        
+        "usernt_banned": "This user isn't banned in the first place!",
+
         "user_gbanned": "\n\nWarning! This user is globally banned becuase:\n`{reason}`"
     },
     "connections": {
@@ -82,7 +82,7 @@
         "usage_only_in_groups": "Usage limited only in groups!"
     },
     "greetings": {
-        "welcome_hay": "Welcome {mention}! How are you?",
+        "welcome_hay": "Welcome {mention}! Howdy?",
         "cant_find_note": "I can't find this note.",
         "welcome_set_to_note": "Welcome set to note: <code>{}</code>",
         "welcome_is_note": "Welcome is note: `{}`",
@@ -142,14 +142,14 @@
     "warns": {
         "user_no_admeme": "You're not an admin",
         "purged_warns": "{admin} resetted warns of {user} successfully!",
-        "usr_no_wrn": "{user} hasn't got warns till to reset!",
-        "usr_whitelist": "This is one of whitelisted user!",
+        "usr_no_wrn": "{user} hasn't got warns!",
+        "usr_whitelist": "This is a whitelisted user!",
         "Admin_no_wrn": "Heck, I can't warn the admins!",
-        "warn": "{admin} have warned {user} in {chat_name}\n",
+        "warn": "{admin} has warned {user} in {chat_name}\n",
         "warn_rsn": "Reason: `{reason}`\n",
         "warn_bun": "Warnings has been exceeded! {user} has been banned!",
         "warn_num": "Warns: {curr_warns}/{max_warns}\n",
-        "rmv_warn_admin": "You're not an admin, Only admins can do!",
+        "rmv_warn_admin": "You're not an admin, Only admins can remove a warn!",
         "rmv_sfl": "Warn removed by {admin}",
         "warn_list_head": "{user}'s **warnings in {chat_name}:**\n",
         "user_hasnt_warned": "{user} hasn't been warned in **{chat_name}** before!",
@@ -167,18 +167,18 @@
         "chat_id": "Chat id: `{}`\n",
         "user_id": "{}'s user id: `{}`\n",
         "pinned_success": "Successfully pinned",
-        "no_reply_msg": "Please me any message to pin",
+        "no_reply_msg": "Please reply some message to pin",
         "unpin_success": "Successfully unpinned!",
         "promote_success": "Successfully promoted!",
         "promote_failed": "Promotion failed! Check if I have rights to",
         "demote_success": "Demoted.",
-        "demote_failed": "Demotion failed. Check if I have proper rights",
-        "chat_not_modified_pin": "You are pinning already pinned message!",
+        "demote_failed": "Demotion failed. Maybe I can't demote or the person is promoted by someone else",
+        "chat_not_modified_pin": "That message is already pinned!",
         "chat_not_modified_unpin": "There is no pinned message to unpin!",
 
         "help_btn": "Click me for help!",
         "help_txt": "Click below button for help!",
-        
+
         "paste_success_extra": "**Pasted successfully!**\nShortened url: {}\nOriginal Dogbin URL: {}",
         "paste_success": "**Pasted successfully!**\nDogbin URL: {}",
         "paste_fail": "Failed to reach Dogbin!",
@@ -197,7 +197,7 @@
 
         "father": "\n\nThis is my father.",
         "sudo_crown": "\n\nHey! Look at him, he has a crown, lemme let me see it.. Whaow, it has a engraving 'sudo user'.",
-        
+
         "gbanned": "\nGlobally banned: ",
         "no": "No",
         "gbanned_yes": "Yes\n",
@@ -208,7 +208,7 @@
         "user_is_blacklisted": "User {user} is blacklisted so has been removed. \nReason: __{rsn}__"
     },
     "pm_menu": {
-        "start_hi": "Hey there! My name is Sophie :3, I'm a chat manager bot, check Help if you don't know what to-do.",
+        "start_hi": "Hey there! My name is Sophie :3, I help you manage your group in an efficient way! Press on /help for Help",
         "btn_help": "❔ Help",
         "btn_lang": "🇷🇺 Language",
         "btn_chat": "👥 Group",
@@ -240,7 +240,7 @@
         "created_fed": "Congratz! You have been successfully created Federation \n\n **NAME :** {name} \n **ID :** `{id}` \n **CREATOR :** {cr} \n",
         "fed_id_invalid": "The given Federation ID is invalid! Please give me Valid ID. ",
         "joined_fed_already": "This chat has already joined a Federation! Please use /leavefed to leave that federation",
-        "join_fed_success": "Great! This chat's Federation is now **{name}**!",
+        "join_fed_success": "Great! This chat is now a part of **{name}** Federation!",
 
         "chat_not_in_fed": "This chat not in any federation.",
         "leave_fed_success": "Chat left the federation.",
@@ -257,30 +257,30 @@
         "fed_creator": "**Creator:** {user}\n",
         "chats_in_fed_info": "**Chats in the fed:** {num}\n",
 
-        "fban_self": "Try fban yourselve, thats will be a show!",
-        "need_admin_to_fban": "You should be Federation admin to use fban for {name} Fedearion",
+        "fban_self": "Thats a nice show!",
+        "need_admin_to_fban": "You are not a fedadmin in {name} Federation",
         "already_fbanned": "{user} already fbanned in this federation.",
         "fban_success_reply": "**Fban** \n**User :** {user} \n**Fed Admin :** {fadmin} \n**Fed :** {fed} \n**Reason :** {rsn}",
         "user_wl": "This user is whitelisted from fbanning.",
         "fban_usr_rmvd": "User {user} is fbanned in current federation **{fed}**.So has been removed! \nReason: __{rsn}__",
 
-        "unfban_self": "I can't unfban myselve, think of something to have fun instead of this.",
+        "unfban_self": "Think of something to have fun instead of this.",
         "user_not_fbanned": "{user} didn't fbanned in this federation.",
-        "unfban_started": "Unbanning {user} in {fed_name} Federation by {admin} started..",
-        "unfban_completed": "{user} unbanned in {fed_name} Federation by {admin}",
+        "unfban_started": "Unfban of {user} in {fed_name} Federation by {admin} started..",
+        "unfban_completed": "{user} unfbanned in {fed_name} Federation by {admin}",
 
         "no_fed_2": "This chat is not in any federation to subscribe to any federation.",
-        "no_arg_given": "How can I subscribe to any federation without Fed ID?!",
+        "no_arg_given": "I cannot subscribe to a Fed without its ID!",
         "only_creator": "Only fed creator can subscribe to any federation.",
         "invalid_fedid": "The given Fed ID is invalid!",
-        "subfed_success": "This federation successfully subscribed to **{fedname}** fed.",
-        "already_subfed": "This federation already subscribed to given federation.",
+        "subfed_success": "This federation is now subscribed to **{fedname}** fed.",
+        "already_subfed": "This federation is already subscribed to given federation.",
 
-        "no_fed_3": "This chat is not in any federation to unsubscribe to any federation.",
-        "no_arg_given_2": "How can I unsubscribe any federation without their fed ID",
+        "no_fed_3": "This chat is not in any federation to unsubscribe.",
+        "no_arg_given_2": "How can I unsubscribe any federation without fed ID",
         "only_creator_2": "Only fed creator can unsubscribe any federation",
         "fed_n'tsubscribed": "Given Fed ID isn't subscribed to unsubscribe!",
-        "unsub_success": "This federation successfully unsubscribed to **{fedname}** fed.",
+        "unsub_success": "This federation no longer subscribed to **{fedname}** fed.",
 
         "no_fed_4": "This chat is not in any federation to list the subscribed federations!",
         "no_subfeds": "This federation isn't subscribed to any federations!",
