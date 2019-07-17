@@ -21,6 +21,10 @@ from sophie_bot.modules.users import (check_group_admin, is_user_admin,
 from sophie_bot.modules.helper_func.notes import save_get_new_note
 
 
+# Notes - the most modern module of SophieBot
+# Time spended:
+# MrYacha - more than 12 hours
+
 @decorator.command('owo', is_owner=True)
 @user_admin_dec
 @connection()
