@@ -14,7 +14,7 @@
         "note_saved_or_updated": "**Note {note_name} {status} in {chat_title}!**\n",
         "you_can_get_note": "You can retrieve this note by using `/get {name}`, or `#{name}`",
         "dont_have_rights_to_save": "You don't have rights to save notes here!",
-        "del_note": "Delete note",
+        "del_note": "🗑 Delete note",
         "note_removed": "Note `{note_name}` removed in **{chat_name}**!",
         "cant_find_note": "I can't find this note in **{chat_name}**!",
         "note_info_title": "**Note info**\n",
