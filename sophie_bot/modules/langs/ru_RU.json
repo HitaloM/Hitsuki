@@ -17,6 +17,7 @@
             "you_can_get_note": "Вы можете получить заметку используя `/get {name}`, или `{name}`",
             "dont_have_rights_to_save": "Вы не имеете прав сохранять заметки здесь!",
             "del_note": "Удалить заметку",
+            "no_note": "Не могу найти эту заметку.",
             "note_removed": "Заметка `{note_name}` удалена в **{chat_name}**!",
             "cant_find_note": "Я не могу найти эту заметку в **{chat_name}**!",
             "note_info_title": "**Информация о заметке**\n",
@@ -107,8 +108,12 @@
             "cln_wel_s_disabled": "Очистка приветствий отключена для **{chat_name}**."
         },
         "rules": {
-            "cant_find_note": "Я не могу найти эту заметку.",
-            "rules_set_to_note": "Правила установлены в заметке: <code>{}</code>"
+            "cannot_find_note": "Я не могу найти заметку <code>{}</code>",
+            "set_note": "<code>{}</code> теперь заметка для правил",
+            "didnt_set_note": "В этой группе нет ещё заметки для правил",
+            "cannot_find_set_note": "Я не могу найти заметку для правил.",
+            "havent_set_rules_note": "Вы ещё не установили заметку для правил.",
+            "success_remove_rules_note": "Успешно удалила заметку о правилах в <b>{}</b>."
         },
         "filters": {
             "dont_have_right": "Вы не имеете прав сохранять фильтры здесь!",
