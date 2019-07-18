@@ -324,6 +324,84 @@ async def get_user(event, send_text=True):
     return user
 
 
+async def aio_get_user(message, send_text=True, allow_self=False):
+    args = message.text.split()
+    user = None
+    # Only 1 way
+    if len(args) < 2:
+        if "reply_to_message" in message:
+            user = await get_user_by_id(message.reply_to_message.from_user.id)
+
+    # Get all mention entities
+    entities = filter(lambda ent: ent['type'] == 'mention', message.entities)
+    for item in entities:
+        mention = item.get_text(message.text)
+
+        # Allow get user only in second arg: ex. /warn (user) Reason
+        # so if we write nick in reason and try warn by reply it will work as expected
+        if mention == args[1]:
+            return await get_user_by_username(mention)
+
+    # Ok, now we really be unsure, so don't return right away
+    if len(args) > 1:
+        if args[1].isdigit():
+            user = await get_user_by_id(args[1])
+
+        # Admin can mess a @
+        if not user:
+            user = await get_user_by_username(args[1])
+
+    # Not first because ex. admins can /warn (user) and reply to offended user
+    if not user and "reply_to_message" in message:
+        return await get_user_by_id(message.reply_to_message.from_user.id)
+
+    if not user and allow_self is True:
+        user = await get_user_by_id(message.from_user.id)
+
+    if not user:
+        print("m cri")
+        return None
+
+    return user
+
+
+async def get_user_by_username(username):
+    # Search username in database
+    if '@' in username:
+        # Remove '@'
+        username = username[1:].lower()
+        user = mongodb.user_list.find_one({
+            'username': username
+        })
+    else:
+        user = mongodb.user_list.find_one(
+            {'username': username}
+        )
+
+    # Ohnu, we don't have this user in DB
+    if not user:
+        try:
+            user = await add_user_to_db(await tbot(GetFullUserRequest(username)))
+        except (ValueError, TypeError):
+            user = None
+
+    return user
+
+
+async def get_user_by_id(user_id):
+    user = mongodb.user_list.find_one(
+        {'user_id': int(user_id)}
+    )
+    # Ohnu, we don't have this user in DB
+    if not user:
+        try:
+            user = await add_user_to_db(await tbot(GetFullUserRequest(int(user_id))))
+        except (ValueError, TypeError):
+            user = None
+
+    return user
+
+
 async def add_user_to_db(user):
     user = {'user_id': user.user.id,
             'first_name': user.user.first_name,
