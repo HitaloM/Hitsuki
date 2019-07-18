@@ -325,12 +325,13 @@ async def get_user(event, send_text=True):
 
 
 async def aio_get_user(message, send_text=True, allow_self=False):
-    args = message.text.split()
+    args = message.text.split(None, 2)
     user = None
+    text = None
+
     # Only 1 way
-    if len(args) < 2:
-        if "reply_to_message" in message:
-            user = await get_user_by_id(message.reply_to_message.from_user.id)
+    if len(args) < 2 and "reply_to_message" in message:
+        user = await get_user_by_id(message.reply_to_message.from_user.id)
 
     # Get all mention entities
     entities = filter(lambda ent: ent['type'] == 'mention', message.entities)
@@ -340,7 +341,9 @@ async def aio_get_user(message, send_text=True, allow_self=False):
         # Allow get user only in second arg: ex. /warn (user) Reason
         # so if we write nick in reason and try warn by reply it will work as expected
         if mention == args[1]:
-            return await get_user_by_username(mention)
+            if len(args) > 2:
+                text = args[2]
+            return await get_user_by_username(mention), text
 
     # Ok, now we really be unsure, so don't return right away
     if len(args) > 1:
@@ -351,18 +354,23 @@ async def aio_get_user(message, send_text=True, allow_self=False):
         if not user:
             user = await get_user_by_username(args[1])
 
+    if len(args) > 2:
+        text = args[2]
+
     # Not first because ex. admins can /warn (user) and reply to offended user
     if not user and "reply_to_message" in message:
-        return await get_user_by_id(message.reply_to_message.from_user.id)
+        if len(args) > 1:
+            text = "".join(args).partition(args[0])[2]
+        return await get_user_by_id(message.reply_to_message.from_user.id), text
 
     if not user and allow_self is True:
         user = await get_user_by_id(message.from_user.id)
 
     if not user:
         print("m cri")
-        return None
+        return None, None
 
-    return user
+    return user, text
 
 
 async def get_user_by_username(username):
