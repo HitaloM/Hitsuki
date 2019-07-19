@@ -6,10 +6,9 @@ from telethon.tl.functions.channels import (EditBannedRequest,
                                             GetParticipantRequest)
 from telethon.tl.types import ChannelParticipantCreator, ChatBannedRights
 
-from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, mongodb, logger, bot
+from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, mongodb, bot
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import (get_user_and_text,
-                                      is_user_admin, user_link,
+from sophie_bot.modules.users import (is_user_admin, user_link,
                                       aio_get_user, user_link_html)
 from sophie_bot.modules.connections import connection
 
@@ -49,7 +48,6 @@ def get_user_and_fed_and_text_dec(func):
 
         return await func(message, status, chat_id, chat_title, user, fed, text, *args, **kwargs)
     return wrapped_1
-
 
 
 def get_fed_dec(func):
@@ -156,7 +154,7 @@ async def leave_fed_comm(event, strings):
 @user_is_fed_admin
 @get_strings_dec("feds")
 async def promote_to_fed(message, strings, status, chat_id, chat_title, user, fed, reason,
-                    *args, **kwargs):
+                         *args, **kwargs):
     user_id = message.from_user.id
 
     if not user_id == fed["creator"]:
@@ -180,7 +178,7 @@ async def promote_to_fed(message, strings, status, chat_id, chat_title, user, fe
 @user_is_fed_admin
 @get_strings_dec("feds")
 async def fed_chat_list(message, strings, status, chat_id, chat_title, fed,
-                    *args, **kwargs):
+                        *args, **kwargs):
     text = strings['chats_in_fed'].format(name=fed['fed_name'])
     chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
     for fed in chats:
@@ -190,10 +188,10 @@ async def fed_chat_list(message, strings, status, chat_id, chat_title, fed,
         output = open("output.txt", "w+")
         output.write(text)
         output.close()
-        await tbot.send_file( # TOOD: convert to AIO
+        await tbot.send_file(  # TOOD: convert to AIO
             message.chat.id,
             "output.txt",
-            reply_to=event.message_id,
+            reply_to=message.message_id,
             caption="`Output too large, sending as file`",
         )
         subprocess.run(["rm", "output.txt"], stdout=subprocess.PIPE)
@@ -207,7 +205,7 @@ async def fed_chat_list(message, strings, status, chat_id, chat_title, fed,
 @user_is_fed_admin
 @get_strings_dec("feds")
 async def fed_info(message, strings, status, chat_id, chat_title, fed,
-                    *args, **kwargs):
+                   *args, **kwargs):
     print('owo')
     text = strings['fed_info']
     text += strings['fed_name'].format(name=fed['fed_name'])
@@ -281,65 +279,50 @@ async def fban_user(message, strings, status, chat_id, chat_title, user, fed, re
     # TODO(Notify all fedadmins)
 
 
-@decorator.t_command('unfban', word_arg=True, additional=" ?(\S*) ?(.*)")
+@decorator.command('unfban')
 @connection(admin=True, only_in_groups=True)
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin
 @get_strings_dec("feds")
-async def unfban_user(event, strings, status, chat_id, chat_title, user, fed, reason):
-    from_id = event.from_id
-
-    bot_id = await tbot.get_me()
-    bot_id = bot_id.id
-    if user == bot_id:
-        await event.reply(strings['unfban_self'])
+async def un_fban_user(message, strings, status, chat_id, chat_title, user, fed, reason,
+                       *args, **kwargs):
+    from_id = message.from_user.id
+    if user == BOT_ID:
+        await message.reply(strings['unfban_self'])
         return
 
     check = mongodb.fbanned_users.find_one({'user': user['user_id'], 'fed_id': fed['fed_id']})
     if not check:
-        await event.reply(strings['user_not_fbanned'].format(
-                          user=await user_link(user['user_id'])))
+        await message.reply(strings['user_not_fbanned'].format(
+                            user=await user_link_html(user['user_id'])))
         return
 
     fed_chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
 
-    msg = await event.reply(strings["unfban_started"].format(
-        user=await user_link(user['user_id']),
-        fed_name=fed["fed_name"],
-        admin=await user_link(from_id)
-    ))
+    text = strings['un_fbanned_header']
+    text += strings['fbanned_fed'].format(fed=fed["fed_name"])
+    text += strings['fbanned_fadmin'].format(fadmin=await user_link_html(from_id))
+    text += strings['fbanned_user'].format(
+        user=await user_link_html(user['user_id']) + f" (<code>{user['user_id']}</code>)")
 
+    msg = await message.reply(text + strings['un_fbanned_process'].format(num=fed_chats.count()))
+
+    counter = 0
     for chat in fed_chats:
         await asyncio.sleep(1)  # Do not slow down other updates
         try:
-            unbanned_rights = ChatBannedRights(
-                until_date=None,
-                view_messages=False,
-                send_messages=False,
-                send_media=False,
-                send_stickers=False,
-                send_gifs=False,
-                send_games=False,
-                send_inline=False,
-                embed_links=False,
-            )
-
-            await event.client(EditBannedRequest(
+            await bot. unban_chat_member(
                 chat['chat_id'],
-                user['user_id'],
-                unbanned_rights
-            ))
+                user['user_id']
+            )
+            counter += 1
 
-        except Exception as err:
-            logger.error(err)
+        except Exception:
+            continue
 
     mongodb.fbanned_users.delete_one({'_id': check['_id']})
 
-    await msg.edit(strings["unfban_completed"].format(
-        user=await user_link(user['user_id']),
-        fed_name=fed["fed_name"],
-        admin=await user_link(from_id)
-    ))
+    await msg.edit_text(text + strings['un_fbanned_done'].format(num=counter))
 
 
 @decorator.t_command('subfed', arg=True)
