@@ -244,14 +244,14 @@ async def fban_user(message, strings, status, chat_id, chat_title, user, fed, re
     if message.from_user.id == 172811422:
         return
 
-    if reason == " ":
+    if not reason:
         reason = 'No reason'
 
-    if int(user['user_id']) in WHITELISTED:
+    if user['user_id'] in WHITELISTED:
         await message.reply(strings['user_wl'])
         return
 
-    if user['user_id'] == BOT_ID:
+    elif user['user_id'] == BOT_ID:
         await message.reply(strings['fban_self'])
         return
 
@@ -262,16 +262,29 @@ async def fban_user(message, strings, status, chat_id, chat_title, user, fed, re
         return
 
     fed_name = mongodb.fed_list.find_one({'fed_id': fed['fed_id']})['fed_name']
-    text = strings['fban_success_reply'].format(
-        user=await user_link_html(user['user_id']),
-        fadmin=await user_link_html(message.from_user.id),
-        fed=fed_name,
-        rsn=reason)
-    try:
-        await bot.kick_chat_member(message.chat.id, user['user_id'])
 
-    except Exception:
-        pass
+    text = strings['fbanned_header']
+    text += strings['fbanned_fed'].format(fed=fed_name)
+    text += strings['fbanned_fadmin'].format(fadmin=await user_link_html(message.from_user.id))
+    text += strings['fbanned_user'].format(
+        user=await user_link_html(user['user_id']) + f" (<code>{user['user_id']}</code>)")
+    text += strings['fbanned_reason'].format(reason=reason)
+
+    fed_chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
+
+    msg = await message.reply(text + strings['fbanned_process'].format(num=fed_chats.count()))
+
+    counter = 0
+    for chat in fed_chats:
+        await asyncio.sleep(1)  # Do not slow down other updates
+        try:
+            await bot.kick_chat_member(message.chat.id, user['user_id'])
+            counter += 1
+
+        except Exception:
+            continue
+
+    await msg.edit_text(text + strings['fbanned_done'].format(num=counter))
 
     new = {
         'user': user['user_id'],
@@ -280,7 +293,7 @@ async def fban_user(message, strings, status, chat_id, chat_title, user, fed, re
     }
     mongodb.fbanned_users.insert_one(new)
 
-    await message.reply(text)  # TODO(Notify all fedadmins)
+    # TODO(Notify all fedadmins)
 
 
 @decorator.t_command('unfban', word_arg=True, additional=" ?(\S*) ?(.*)")

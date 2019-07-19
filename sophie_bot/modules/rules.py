@@ -10,7 +10,7 @@ from sophie_bot.modules.notes import send_note
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("rules")
 async def setrules(message, strings, status, chat_id, chat_title, **kwargs):
-    note_to_find = message['text'][10:]
+    note_to_find = message.text.split(" ", 1)[1]
 
     note = mongodb.notes.find_one({'chat_id': chat_id, 'name': note_to_find})
 
@@ -22,12 +22,12 @@ async def setrules(message, strings, status, chat_id, chat_title, **kwargs):
     if not in_db:
         mongodb.rules.insert_one({
             'chat_id': chat_id,
-            'note_name': note_to_find
+            'note': note_to_find
         })
     else:
         mongodb.rules.update_one({'chat_id': chat_id}, {
             "$set": {
-                'note_name': note_to_find
+                'note': note_to_find
             }
         })
 
