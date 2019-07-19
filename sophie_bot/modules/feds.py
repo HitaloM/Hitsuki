@@ -97,7 +97,8 @@ def user_is_fed_admin(func):
         elif hasattr(event, 'chat'):
             real_chat_id = event.chat.id
 
-        status, chat_id, chat_title = await get_conn_chat(user_id, real_chat_id, only_in_groups=True)
+        status, chat_id, chat_title = await get_conn_chat(
+            user_id, real_chat_id, only_in_groups=True)
 
         group_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
         if not group_fed:
@@ -116,20 +117,20 @@ def user_is_fed_admin(func):
 # Commands
 
 
-@decorator.t_command('newfed', arg=True)
+@decorator.command('newfed', arg=True)
 @get_strings_dec("feds")
-async def newFed(event, strings):
-    args = event.pattern_match.group(1)
+async def newFed(message, strings, regexp=None, **kwargs):
+    args = regexp.group(1)
     if not args:
-        await event.reply(strings['no_args'])
+        await message.reply(strings['no_args'])
     fed_name = args
-    creator = event.from_id
+    creator = message.from_user.id
     fed_id = str(uuid.uuid4())
     data = {'fed_name': fed_name, 'fed_id': fed_id, 'creator': creator}
     check = mongodb.fed_list.insert_one(data)
     if check:
-        text = strings['created_fed']
-        await event.reply(text.format(name=fed_name, id=fed_id, cr=await user_link(creator)))
+        await message.reply(strings['created_fed'].format(
+            name=fed_name, id=fed_id, cr=await user_link(creator)))
 
 
 @decorator.command('joinfed')
