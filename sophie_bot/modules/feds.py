@@ -189,7 +189,8 @@ async def fed_chat_list(message, strings, status, chat_id, chat_title, fed,
     if len(text) > 4096:
         await message.answer_document(
             types.InputFile(io.StringIO(text), filename="chatlist.txt"),
-            "Output too large, sending as file"
+            "Output too large, sending as file",
+            reply=message.message_id
         )
         return
     await message.reply(text)
