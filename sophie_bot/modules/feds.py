@@ -12,7 +12,7 @@ from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, mongodb, bot
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (is_user_admin, user_link,
                                       aio_get_user, user_link_html)
-from sophie_bot.modules.connections import connection
+from sophie_bot.modules.connections import connection, get_conn_chat
 
 
 def get_user_and_fed_and_text_dec(func):
@@ -85,7 +85,7 @@ def get_fed_dec(func):
 
 
 def user_is_fed_admin(func):
-    async def wrapped_1(event, status, chat_id, chat_title, *args, **kwargs):
+    async def wrapped_1(event, *args, **kwargs):
 
         if hasattr(event, 'from_id'):
             user_id = event.from_id
@@ -97,6 +97,8 @@ def user_is_fed_admin(func):
         elif hasattr(event, 'chat'):
             real_chat_id = event.chat.id
 
+        status, chat_id, chat_title = await get_conn_chat(user_id, real_chat_id, only_in_groups=True)
+
         group_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
         if not group_fed:
             await event.reply(get_string("feds", 'chat_not_in_fed', real_chat_id))
@@ -107,7 +109,7 @@ def user_is_fed_admin(func):
             if not fadmins:
                 await event.reply(get_string("feds", 'need_admin_to_fban', real_chat_id).format(
                     name=fed['fed_name']))
-        return await func(event, status, chat_id, chat_title, *args, **kwargs)
+        return await func(event, *args, **kwargs)
     return wrapped_1
 
 
@@ -130,24 +132,56 @@ async def newFed(event, strings):
         await event.reply(text.format(name=fed_name, id=fed_id, cr=await user_link(creator)))
 
 
-@decorator.t_command('joinfed', arg=True)
+@decorator.command('joinfed')
 @get_strings_dec("feds")
-async def join_fed_comm(event, strings):
-    fed_id = event.pattern_match.group(1)
-    chat = event.chat_id
-    user = event.from_id
-    if await join_fed(event, chat, fed_id, user) is True:
-        fed_name = mongodb.fed_list.find_one({'fed_id': fed_id})['fed_name']
-        await event.reply(strings['join_fed_success'].format(name=fed_name))
+async def join_fed_comm(message, strings, regexp=None, **kwargs):
+    fed_id = regexp.group(1)
+    chat_id = message.chat.id
+    user = message.from_user.id
+    peep = await tbot(
+        GetParticipantRequest(
+            channel=chat_id, user_id=user,
+        )
+    )
+    if not peep.participant == ChannelParticipantCreator(user_id=user):
+        await message.reply(get_string('feds', 'only_creators', chat_id))
+        return
+
+    check = mongodb.fed_list.find_one({'fed_id': fed_id})
+    if check is False:  # Assume Fed ID invalid
+        await message.reply(get_string('feds', 'fed_id_invalid', chat_id))
+        return
+
+    old = mongodb.fed_groups.find_one({'chat_id': chat_id})
+    if old:  # Assume chat already joined this/other fed
+        await message.reply(get_string('feds', 'joined_fed_already', chat_id))
+        return
+
+    join_data = {'chat_id': chat_id, 'fed_id': fed_id}
+    mongodb.fed_groups.insert_one(join_data)
+
+    await message.reply(strings['join_fed_success'].format(name=check['fed_name']))
 
 
-@decorator.t_command('leavefed')
+@decorator.command('leavefed')
 @get_strings_dec("feds")
-async def leave_fed_comm(event, strings):
-    chat = event.chat_id
-    user = event.from_id
-    if await leave_fed(event, chat, user) is True:
-        await event.reply(strings['leave_fed_success'])
+async def leave_fed_comm(message, strings, **kwargs):
+    chat_id = message.chat.id
+    user = message.from_user.id
+    peep = await tbot(
+        GetParticipantRequest(
+            channel=chat_id, user_id=user,
+        )
+    )
+    if not peep.participant == ChannelParticipantCreator(user_id=user):
+        await message.reply(get_string('feds', 'only_creators', chat_id))
+        return
+
+    old = mongodb.fed_groups.delete_one({'chat_id': chat_id}).deleted_count
+    if old < 1:  # If chat not was in any federation
+        await message.reply(get_string('feds', 'chat_not_in_fed', chat_id))
+        return
+    await message.reply(strings['leave_fed_success'])
 
 
 @decorator.command('fpromote')
@@ -423,51 +457,6 @@ async def subfedlist(event, strings):
 
 
 # Functions
-
-
-async def join_fed(event, chat_id, fed_id, user):
-    peep = await tbot(
-        GetParticipantRequest(
-            channel=chat_id, user_id=user,
-        )
-    )
-    if not peep.participant == ChannelParticipantCreator(user_id=user):
-        await event.reply(get_string('feds', 'only_creators', chat_id))
-        return
-
-    check = mongodb.fed_list.find_one({'fed_id': fed_id})
-    if check is False:  # Assume Fed ID invalid
-        await event.reply(get_string('feds', 'fed_id_invalid', chat_id))
-        return
-
-    old = mongodb.fed_groups.find_one({'chat_id': chat_id})
-    if old:  # Assume chat already joined this/other fed
-        await event.reply(get_string('feds', 'joined_fed_already', chat_id))
-        return
-
-    join_data = {'chat_id': chat_id, 'fed_id': fed_id}
-    mongodb.fed_groups.insert_one(join_data)
-
-    return True
-
-
-async def leave_fed(event, chat_id, user):
-    peep = await tbot(
-        GetParticipantRequest(
-            channel=chat_id, user_id=user,
-        )
-    )
-    if not peep.participant == ChannelParticipantCreator(user_id=user):
-        await event.reply(get_string('feds', 'only_creators', chat_id))
-        return
-
-    old = mongodb.fed_groups.delete_one({'chat_id': chat_id}).deleted_count
-    if old < 1:  # If chat not was in any federation
-        await event.reply(get_string('feds', 'chat_not_in_fed', chat_id))
-        return
-
-    return True
-
 
 @decorator.insurgent()
 @get_strings_dec('feds')

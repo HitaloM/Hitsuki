@@ -245,7 +245,7 @@
         "created_fed": "Congratz! You have been successfully created Federation \n\n **NAME :** {name} \n **ID :** `{id}` \n **CREATOR :** {cr} \n",
         "fed_id_invalid": "The given Federation ID is invalid! Please give me Valid ID. ",
         "joined_fed_already": "This chat has already joined a Federation! Please use /leavefed to leave that federation",
-        "join_fed_success": "Great! This chat is now a part of **{name}** Federation!",
+        "join_fed_success": "Great! This chat is now a part of <b>{name}</b> Federation!",
 
         "chat_not_in_fed": "This chat not in any federation.",
         "leave_fed_success": "Chat left the federation.",
