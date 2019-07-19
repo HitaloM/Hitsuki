@@ -251,16 +251,16 @@
         "leave_fed_success": "Chat left the federation.",
 
         "only_creator_promote": "Only Federation creator can fpromote users.",
-        "admin_already_in_fed": "User {user} already admin in **{name}** Federation",
-        "admin_added_to_fed": "User {user} added to **{name}** Federation admins",
+        "admin_already_in_fed": "User {user} already admin in <b>{name}</b> Federation",
+        "admin_added_to_fed": "User {user} added to <b>{name}</b> Federation admins",
 
-        "chats_in_fed": "**Chats connected to {name} Federation:**\n",
+        "chats_in_fed": "<b>Chats connected to {name} Federation:</b>\n",
 
-        "fed_info": "**Federation info**:\n",
-        "fed_name": "**Name:** {name}\n",
-        "fed_id": "**ID:** {id}\n",
-        "fed_creator": "**Creator:** {user}\n",
-        "chats_in_fed_info": "**Chats in the fed:** {num}\n",
+        "fed_info": "<b>Federation info</b>\n",
+        "fed_name": "Name: {name}\n",
+        "fed_id": "ID: <code>{id}</code>\n",
+        "fed_creator": "Creator: {user}\n",
+        "chats_in_fed_info": "Chats in the fed: {num}\n",
 
         "fban_self": "Thats a nice show!",
         "need_admin_to_fban": "You are not a fedadmin in {name} Federation",

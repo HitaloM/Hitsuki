@@ -12,6 +12,7 @@ from sophie_bot.modules.notes import send_note
 async def setrules(message, strings, status, chat_id, chat_title, **kwargs):
     note_to_find = message.text.split(" ", 1)[1]
 
+
     note = mongodb.notes.find_one({'chat_id': chat_id, 'name': note_to_find})
 
     if not note:

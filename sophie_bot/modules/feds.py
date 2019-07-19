@@ -51,62 +51,37 @@ def get_user_and_fed_and_text_dec(func):
     return wrapped_1
 
 
-def get_user_and_fed_dec(func):
-    async def wrapped_1(event, *args, **kwargs):
-        chat_id = event.chat_id
-        user, fed_id = await get_user_and_text(event)
-        if not fed_id:
+
+def get_fed_dec(func):
+    async def wrapped_1(message, status, chat_id, chat_title, *args, **kwargs):
+        chat_fed = None
+
+        arg = message.text.split(' ', 2)
+        if not len(arg) < 2:
+            arg = arg[1]
+
+            # Check if arg is a FedID
+            F = 0
+            for symbol in arg:
+                if symbol == "-":
+                    F += 1
+
+            if F == 4:
+                chat_fed = mongodb.fed_list.find_one({'fed_id': arg})
+                if not chat_fed:
+                    await message.reply(get_string("feds", 'fed_id_invalid', message.chat.id))
+                    return
+
+        if not chat_fed:
             chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
             if not chat_fed:
-                await event.reply(get_string("feds", 'chat_not_in_fed', chat_id))
+                await message.reply(get_string("feds", 'chat_not_in_fed', message.chat.id))
                 return
-            fed = mongodb.fed_list.find_one({'fed_id': chat_fed['fed_id']})
-        else:
-            fed = mongodb.fed_list.find_one({'fed_id': fed_id.lower()})
-            if not fed:
-                await event.reply(get_string("feds", 'fed_id_invalid', chat_id))
-                return
-        return await func(event, user, fed, *args, **kwargs)
+
+        fed = mongodb.fed_list.find_one({'fed_id': chat_fed['fed_id']})
+
+        return await func(message, status, chat_id, chat_title, fed, *args, **kwargs)
     return wrapped_1
-
-
-def get_chat_fed_dec(allow_no_fed=False):
-    def wrapped_0(func):
-        async def wrapped_1(event, *args, **kwargs):
-            fed = await get_fed_by_chat(event)
-            if fed is False and allow_no_fed is True:
-                fed = None
-            elif fed is False and allow_no_fed is False:
-                await event.reply(get_string("feds", 'fed_id_invalid', event.chat_id))
-                return
-            return await func(event, fed, *args, **kwargs)
-        return wrapped_1
-    return wrapped_0
-
-
-def get_fed_dec(allow_no_fed=False):
-    def wrapped_0(func):
-        async def wrapped_1(event, *args, **kwargs):
-            fed_id = event.pattern_match.group(1)
-            fed = mongodb.fed_list.find_one({'fed_id': fed_id})
-            if not fed and allow_no_fed is True:
-                fed = None
-            elif not fed and allow_no_fed is False:
-                await event.reply(get_string("feds", 'fed_id_invalid', event.chat_id))
-                return
-            return await func(event, fed, *args, **kwargs)
-        return wrapped_1
-    return wrapped_0
-
-
-async def get_fed_by_chat(event):
-    chat_id = event.chat_id
-    chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
-    if not chat_fed:
-        return None
-    fed = mongodb.fed_list.find_one({'fed_id': chat_fed['fed_id']})
-
-    return fed
 
 
 def user_is_fed_admin(func):
@@ -175,31 +150,37 @@ async def leave_fed_comm(event, strings):
         await event.reply(strings['leave_fed_success'])
 
 
-@decorator.t_command('fpromote', arg=True)
+@decorator.command('fpromote')
+@connection(admin=True, only_in_groups=True)
+@get_user_and_fed_and_text_dec
+@user_is_fed_admin
 @get_strings_dec("feds")
-@get_user_and_fed_dec
-async def promote_to_fed(event, user, fed, strings):
-    user_id = event.from_id
+async def promote_to_fed(message, strings, status, chat_id, chat_title, user, fed, reason,
+                    *args, **kwargs):
+    user_id = message.from_user.id
 
     if not user_id == fed["creator"]:
-        await event.reply(strings["only_creator_promote"])
+        await message.reply(strings["only_creator_promote"])
         return
     data = {'fed_id': fed['fed_id'], 'admin': user['user_id']}
 
     old = mongodb.fed_admins.find_one(data)
     if old:
-        await event.reply(strings["admin_already_in_fed"].format(
-            user=await user_link(user['user_id']), name=fed['fed_name']))
+        await message.reply(strings["admin_already_in_fed"].format(
+            user=await user_link_html(user['user_id']), name=fed['fed_name']))
         return
     mongodb.fed_admins.insert_one(data)
-    await event.reply(strings["admin_added_to_fed"].format(
-        user=await user_link(user['user_id']), name=fed['fed_name']))
+    await message.reply(strings["admin_added_to_fed"].format(
+        user=await user_link_html(user['user_id']), name=fed['fed_name']))
 
 
-@decorator.t_command('fchatlist', arg=True)
+@decorator.command('fchatlist')
+@connection(admin=True, only_in_groups=True)
+@get_fed_dec
+@user_is_fed_admin
 @get_strings_dec("feds")
-@get_fed_dec()
-async def fed_chat_list(event, fed, strings):
+async def fed_chat_list(message, strings, status, chat_id, chat_title, fed,
+                    *args, **kwargs):
     text = strings['chats_in_fed'].format(name=fed['fed_name'])
     chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
     for fed in chats:
@@ -209,28 +190,32 @@ async def fed_chat_list(event, fed, strings):
         output = open("output.txt", "w+")
         output.write(text)
         output.close()
-        await event.client.send_file(
-            event.chat_id,
+        await tbot.send_file( # TOOD: convert to AIO
+            message.chat.id,
             "output.txt",
-            reply_to=event.id,
+            reply_to=event.message_id,
             caption="`Output too large, sending as file`",
         )
         subprocess.run(["rm", "output.txt"], stdout=subprocess.PIPE)
         return
-    await event.reply(text)
+    await message.reply(text)
 
 
-@decorator.t_command('finfo', arg=True)
+@decorator.command('finfo')
+@connection(admin=True, only_in_groups=True)
+@get_fed_dec
+@user_is_fed_admin
 @get_strings_dec("feds")
-@get_fed_dec()
-async def fed_info(event, fed, strings):
+async def fed_info(message, strings, status, chat_id, chat_title, fed,
+                    *args, **kwargs):
+    print('owo')
     text = strings['fed_info']
     text += strings['fed_name'].format(name=fed['fed_name'])
     text += strings['fed_id'].format(id=fed['fed_id'])
-    text += strings['fed_creator'].format(user=await user_link(fed['creator']))
+    text += strings['fed_creator'].format(user=await user_link_html(fed['creator']))
     chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
     text += strings['chats_in_fed_info'].format(num=chats.count())
-    await event.reply(text)
+    await message.reply(text)
 
 
 @decorator.command('fban')
