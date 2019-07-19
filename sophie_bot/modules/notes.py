@@ -90,10 +90,10 @@ async def save_note(event, strings, status, chat_id, chat_title):
 async def clear_note(event, strings, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
     note = mongodb.notes.delete_one({'chat_id': chat_id, "name": note_name})
-    
+
     if not note_name:
         return await event.reply(strings["no_note"])
-    
+
     if note:
         text = strings["note_removed"].format(
             note_name=note_name, chat_name=chat_title)

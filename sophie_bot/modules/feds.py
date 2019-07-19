@@ -6,39 +6,48 @@ from telethon.tl.functions.channels import (EditBannedRequest,
                                             GetParticipantRequest)
 from telethon.tl.types import ChannelParticipantCreator, ChatBannedRights
 
-from sophie_bot import WHITELISTED, tbot, decorator, mongodb, logger
+from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, mongodb, logger, bot
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import (get_user, get_user_and_text,
-                                      is_user_admin, user_link)
+from sophie_bot.modules.users import (get_user_and_text,
+                                      is_user_admin, user_link,
+                                      aio_get_user, user_link_html)
+from sophie_bot.modules.connections import connection
 
 
 def get_user_and_fed_and_text_dec(func):
-    async def wrapped_1(event, *args, **kwargs):
-        user = await get_user(event)
-        # Count of - in group(2) to see if its a fed id
-        F = 0
-        text = ""
-        for a in event.pattern_match.group(2):
-            if a == "-":
-                F += 1
-        if F == 4:  # group(2) is id
-            chat_fed = mongodb.fed_list.find_one({'fed_id': event.pattern_match.group(2)})
+    async def wrapped_1(message, status, chat_id, chat_title, *args, **kwargs):
+        user, text = await aio_get_user(message)
+
+        chat_fed = None
+
+        if text:
+            args = text.split(" ", 1)
+
+            if len(args) >= 1:
+                # Check if args[0] is a FedID
+                F = 0
+                for symbol in args[0]:
+                    if symbol == "-":
+                        F += 1
+
+                if F == 4:
+                    text = args[1]
+                    chat_fed = mongodb.fed_list.find_one({'fed_id': args[0]})
+                    if not chat_fed:
+                        await message.reply(get_string("feds", 'fed_id_invalid', message.chat.id))
+                        return
+                else:
+                    text = "".join(args)
+
+        if not chat_fed:
+            chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
             if not chat_fed:
-                await event.reply(get_string("feds", 'fed_id_invalid', event.chat_id))
+                await message.reply(get_string("feds", 'chat_not_in_fed', message.chat.id))
                 return
-        else:
-            chat_fed = mongodb.fed_groups.find_one({'chat_id': event.chat_id})
-            if not chat_fed:
-                await event.reply(get_string("feds", 'chat_not_in_fed', event.chat_id))
-                return
-            text += event.pattern_match.group(2)
-            text += " "
-        if event.pattern_match.group(3):
-            text += event.pattern_match.group(3)
 
         fed = mongodb.fed_list.find_one({'fed_id': chat_fed['fed_id']})
 
-        return await func(event, user, fed, text, *args, **kwargs)
+        return await func(message, status, chat_id, chat_title, user, fed, text, *args, **kwargs)
     return wrapped_1
 
 
@@ -101,19 +110,29 @@ async def get_fed_by_chat(event):
 
 
 def user_is_fed_admin(func):
-    async def wrapped_1(event, *args, **kwargs):
-        group_fed = mongodb.fed_groups.find_one({'chat_id': event.chat_id})
+    async def wrapped_1(event, status, chat_id, chat_title, *args, **kwargs):
+
+        if hasattr(event, 'from_id'):
+            user_id = event.from_id
+        elif hasattr(event, 'from_user'):
+            user_id = event.from_user.id
+
+        if hasattr(event, 'chat_id'):
+            real_chat_id = event.chat_id
+        elif hasattr(event, 'chat'):
+            real_chat_id = event.chat.id
+
+        group_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
         if not group_fed:
-            await event.reply(get_string("feds", 'chat_not_in_fed', event.chat_id))
+            await event.reply(get_string("feds", 'chat_not_in_fed', real_chat_id))
             return False
         fed = mongodb.fed_list.find_one({'fed_id': group_fed['fed_id']})
-        user_id = event.from_id
         if not user_id == fed['creator']:
             fadmins = mongodb.fed_admins.find({'fed_id': fed['fed_id'], 'admin': user_id})
             if not fadmins:
-                await event.reply(get_string("feds", 'need_admin_to_fban', event.chat_id).format(
+                await event.reply(get_string("feds", 'need_admin_to_fban', real_chat_id).format(
                     name=fed['fed_name']))
-        return await func(event, *args, **kwargs)
+        return await func(event, status, chat_id, chat_title, *args, **kwargs)
     return wrapped_1
 
 
@@ -214,72 +233,62 @@ async def fed_info(event, fed, strings):
     await event.reply(text)
 
 
-@decorator.t_command('fban', word_arg=True, additional=" ?(\S*) ?(.*)")
-@get_strings_dec("feds")
+@decorator.command('fban')
+@connection(admin=True, only_in_groups=True)
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin
-async def fban_user(event, user, fed, reason, strings):
+@get_strings_dec("feds")
+async def fban_user(message, strings, status, chat_id, chat_title, user, fed, reason,
+                    *args, **kwargs):
 
-    if event.from_id == 172811422:
+    if message.from_user.id == 172811422:
         return
 
     if reason == " ":
         reason = 'No reason'
 
     if int(user['user_id']) in WHITELISTED:
-        await event.reply(strings['user_wl'])
+        await message.reply(strings['user_wl'])
         return
 
-    bot_id = await tbot.get_me()
-    bot_id = bot_id.id
-    if user['user_id'] == bot_id:
-        await event.reply(strings['fban_self'])
+    if user['user_id'] == BOT_ID:
+        await message.reply(strings['fban_self'])
         return
 
     check = mongodb.fbanned_users.find_one({'user': user['user_id'], 'fed_id': fed['fed_id']})
     if check:
-        await event.reply(strings['already_fbanned'].format(
-                          user=await user_link(user['user_id'])))
+        await message.reply(strings['already_fbanned'].format(
+                            user=await user_link_html(user['user_id'])))
         return
 
     fed_name = mongodb.fed_list.find_one({'fed_id': fed['fed_id']})['fed_name']
     text = strings['fban_success_reply'].format(
-        user=await user_link(user['user_id']),
-        fadmin=await user_link(event.from_id),
+        user=await user_link_html(user['user_id']),
+        fadmin=await user_link_html(message.from_user.id),
         fed=fed_name,
         rsn=reason)
     try:
-        banned_rights = ChatBannedRights(
-            until_date=None,
-            view_messages=True,
-            send_messages=True,
-            send_media=True,
-            send_stickers=True,
-            send_gifs=True,
-            send_games=True,
-            send_inline=True,
-            embed_links=True,
-        )
-
-        await event.client(EditBannedRequest(
-            event.chat_id,
-            user['user_id'],
-            banned_rights
-        ))
+        await bot.kick_chat_member(message.chat.id, user['user_id'])
 
     except Exception:
         pass
 
-    mongodb.fbanned_users.insert_one({'user': user['user_id'], 'fed_id': fed['fed_id'],
-                                      'reason': reason})
-    await event.reply(text)  # TODO(Notify all fedadmins)
+    new = {
+        'user': user['user_id'],
+        'fed_id': fed['fed_id'],
+        'reason': reason
+    }
+    mongodb.fbanned_users.insert_one(new)
+
+    await message.reply(text)  # TODO(Notify all fedadmins)
 
 
 @decorator.t_command('unfban', word_arg=True, additional=" ?(\S*) ?(.*)")
-@get_strings_dec("feds")
+@connection(admin=True, only_in_groups=True)
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin
-async def unfban_user(event, user, fed, reason, strings):
+@get_strings_dec("feds")
+async def unfban_user(event, strings, status, chat_id, chat_title, user, fed, reason):
     from_id = event.from_id
 
     bot_id = await tbot.get_me()
