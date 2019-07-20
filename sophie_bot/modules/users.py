@@ -4,145 +4,72 @@ from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import (ChannelParticipantsAdmins,
                                MessageEntityMentionName)
 
-from sophie_bot import BOT_ID, OWNER_ID, SUDO, tbot, decorator, logger, mongodb, redis
+from sophie_bot import OWNER_ID, SUDO, tbot, decorator, logger, mongodb, redis
 from sophie_bot.modules.helper_func.flood import flood_limit, flood_limit_dec
 
 
-@decorator.BotDo()
-async def do_update_users(event):
-    await update_users(event)
+@decorator.AioBotDo()
+async def update_users(message):
+    chat_id = message.chat.id
+
+    # Update chat
+    new_chat = message.chat
+    if not new_chat.type == 'private':
+
+        if not hasattr(new_chat, 'username'):
+            chatnick = None
+        else:
+            chatnick = new_chat.username
+
+        chat_new = {
+            "chat_id": chat_id,
+            "chat_title": new_chat.title,
+            "chat_nick": chatnick,
+            "type": new_chat.type
+        }
+
+        mongodb.chat_list.update_one({'chat_id': chat_id}, {"$set": chat_new}, upsert=True)
+
+        logger.debug(f"Users: Chat {chat_id} updated")
+
+    # Update users
+    update_user(chat_id, message.from_user)
+
+    if "reply_to_message" in message:
+        update_user(chat_id, message.reply_to_message.from_user)
+
+    if "forward_from" in message:
+        update_user(chat_id, message.forward_from)
 
 
-async def update_users(event):
-    chat_id = event.chat_id
-    user_id = event.from_id
-
-    if user_id == BOT_ID:
-        return
-
-    user = await tbot.get_entity(user_id)
-    chat = await tbot.get_entity(chat_id)
-
-    old_chat = mongodb.chat_list.find_one({'chat_id': chat_id})
-    old_user = mongodb.user_list.find_one({'user_id': user_id})
+def update_user(chat_id, new_user):
+    old_user = mongodb.user_list.find_one({'user_id': new_user.id})
 
     new_chat = []
     new_chat.append(chat_id)
 
-    if old_user:
-        if 'chats' in old_user:
-            new_chat = old_user['chats']
-            if not new_chat or chat_id not in new_chat:
-                new_chat.append(chat_id)
+    if old_user and 'chats' in old_user:
+        new_chat = old_user['chats']
+        if not new_chat or chat_id not in new_chat:
+            new_chat.append(chat_id)
 
-    print(new_chat)
-
-    if not hasattr(chat, 'username'):
-        chatnick = None
-    else:
-        chatnick = chat.username
-
-    # Chats with no title is pm
-    if hasattr(chat, 'title'):
-        chat_new = {
-            "chat_id": chat_id,
-            "chat_title": chat.title,
-            "chat_nick": chatnick
-        }
-
-        if old_chat:
-            mongodb.chat_list.update_one({'_id': old_chat['_id']}, {"$set": chat_new}, upsert=False)
-        else:
-            mongodb.chat_list.insert_one(chat_new)
-        logger.debug(f"chat {chat_id} updated")
-
-    if user.username:
-        username = user.username.lower()
+    if new_user.username:
+        username = new_user.username.lower()
     else:
         username = None
 
     user_new = {
-        'user_id': user_id,
-        'first_name': user.first_name,
-        'last_name': user.last_name,
+        'user_id': new_user.id,
+        'first_name': new_user.first_name,
+        'last_name': new_user.last_name,
         'username': username,
-        'user_lang': user.lang_code,
+        'user_lang': new_user.language_code,
         'chats': new_chat
     }
 
-    logger.debug(f"Updating {user_id}...")
-    logger.debug(f"old={old_user}")
-    logger.debug(f"new={user_new}")
+    mongodb.chat_list.update_one({'user_id': new_user.id}, {"$set": user_new}, upsert=True)
 
-    if old_user:
-        mongodb.user_list.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
-    else:
-        mongodb.user_list.insert_one(user_new)
-    logger.debug(f"user {user_id} updated")
-
-    if event.message.reply_to_msg_id:
-        msg = await event.get_reply_message()
-        user_id = msg.from_id
-        user = await tbot.get_entity(user_id)
-        old_user = mongodb.user_list.find_one({'user_id': user_id})
-        if user.username:
-            username = user.username.lower()
-        else:
-            username = None
-        new_chat = [chat_id]
-        if old_user:
-            if 'chats' in old_user:
-                new_chat = old_user['chats']
-                if chat_id not in new_chat:
-                    new_chat.append(chat_id)
-        new_user = {
-            'user_id': user_id,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'username': username,
-            'user_lang': user.lang_code,
-            'chats': new_chat
-        }
-        logger.debug(f"Updating {user_id}...")
-        logger.debug(f"old={old_user}")
-        logger.debug(f"new={new_user}")
-        if old_user:
-            mongodb.user_list.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
-        else:
-            mongodb.user_list.insert_one(user_new)
-        logger.debug(f"replied user {user_id} updated")
-
-    if event.message.fwd_from:
-        user_id = event.message.fwd_from.from_id
-        if not user_id:  # If forwarded from deleted account
-            return
-        user = await tbot.get_entity(user_id)
-        old_user = mongodb.user_list.find_one({'user_id': user_id})
-        if user.username:
-            username = user.username.lower()
-        else:
-            username = None
-        new_chat = None
-        if old_user:
-            if 'chats' in old_user:
-                new_chat = old_user['chats']
-
-        new_user = {
-            'user_id': user_id,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'username': username,
-            'user_lang': user.lang_code,
-            'chats': new_chat
-        }
-        logger.debug(f"Updating {user_id}...")
-        logger.debug(f"old={old_user}")
-        logger.debug(f"new={new_user}")
-        if old_user:
-            mongodb.user_list.update_one({'_id': old_user['_id']}, {"$set": user_new}, upsert=False)
-        else:
-            mongodb.user_list.insert_one(new_user)
-        logger.debug(f"forwarded user {user_id} updated")
+    logger.debug(f"Users: User {new_user.id} updated")
 
 
 async def update_admin_cache(chat_id):

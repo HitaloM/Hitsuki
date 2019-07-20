@@ -88,6 +88,13 @@ def BotDo():
     return decorator
 
 
+def AioBotDo():
+    def decorator(func):
+        dp.register_message_handler(func)
+        dp.register_edited_message_handler(func)
+    return decorator
+
+
 def insurgent():
     def decorator(func):
         tbot.add_event_handler(func, events.NewMessage(incoming=True))

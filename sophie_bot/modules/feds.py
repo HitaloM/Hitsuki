@@ -117,7 +117,7 @@ def user_is_fed_admin(func):
 # Commands
 
 
-@decorator.command('newfed', arg=True)
+@decorator.command('newfed')
 @get_strings_dec("feds")
 async def newFed(message, strings, regexp=None, **kwargs):
     args = regexp.group(1)
