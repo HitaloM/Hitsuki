@@ -67,7 +67,7 @@ def update_user(chat_id, new_user):
         'chats': new_chat
     }
 
-    mongodb.chat_list.update_one({'user_id': new_user.id}, {"$set": user_new}, upsert=True)
+    mongodb.user_list.update_one({'user_id': new_user.id}, {"$set": user_new}, upsert=True)
 
     logger.debug(f"Users: User {new_user.id} updated")
 
@@ -396,7 +396,7 @@ async def user_link_html(user_id):
 
 
 def user_admin_dec(func):
-    async def wrapped(event):
+    async def wrapped(event, *args, **kwargs):
 
         if hasattr(event, 'from_id'):
             user_id = event.from_id
@@ -406,7 +406,7 @@ def user_admin_dec(func):
         if await check_group_admin(event, user_id, no_msg=True) is False:
             await event.reply("You should be admin to do it!")
             return
-        return await func(event)
+        return await func(event, *args, **kwargs)
     return wrapped
 
 
