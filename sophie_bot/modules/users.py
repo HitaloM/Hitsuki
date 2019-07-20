@@ -9,7 +9,7 @@ from sophie_bot.modules.helper_func.flood import flood_limit, flood_limit_dec
 
 
 @decorator.AioBotDo()
-async def update_users(message):
+async def update_users(message, **kwargs):
     chat_id = message.chat.id
 
     # Update chat
