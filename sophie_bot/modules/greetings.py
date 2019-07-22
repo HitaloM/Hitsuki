@@ -68,7 +68,10 @@ async def welcome_trigger(event, strings):
         chat = event.chat_id
         chat = mongodb.chat_list.find_one({'chat_id': int(chat)})
 
-        chat_id = event.action_message.chat_id
+        if hasattr(event.action_message, 'chat_id'):
+            chat_id = event.action_message.chat_id
+        else:
+            print(event.action_message)
 
         if hasattr(event.action_message.action, 'users'):
             from_id = event.action_message.action.users[0]
