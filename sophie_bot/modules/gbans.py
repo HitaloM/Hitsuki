@@ -139,7 +139,6 @@ async def blacklist_user(event):
 
 @decorator.t_command("gban", arg=True, from_users=SUDO)
 async def gban_1(event):
-    print('exec')
     await blacklist_user(event)
 
 

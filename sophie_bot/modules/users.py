@@ -45,8 +45,7 @@ async def update_users(message, **kwargs):
 def update_user(chat_id, new_user):
     old_user = mongodb.user_list.find_one({'user_id': new_user.id})
 
-    new_chat = []
-    new_chat.append(chat_id)
+    new_chat = [chat_id]
 
     if old_user and 'chats' in old_user:
         new_chat = old_user['chats']

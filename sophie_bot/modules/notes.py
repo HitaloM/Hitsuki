@@ -5,7 +5,7 @@ from time import gmtime, strftime
 from bson.objectid import ObjectId
 
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon import custom, errors
+from telethon import custom, errors, utils
 from telethon.tl.custom import Button
 
 from aiogram import types
@@ -18,7 +18,6 @@ from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (check_group_admin, is_user_admin,
                                       user_admin_dec, user_link,
                                       add_user_to_db, user_link_html)
-from sophie_bot.modules.helper_func.notes import save_get_new_note
 
 
 # Notes - the most modern module of SophieBot
@@ -33,12 +32,39 @@ async def test(message, strings, status, chat_id, chat_title):
     print(message)
 
 
+RESTRICTED_SYMBOLS = ['**', '__', '`']
+
+
 @decorator.t_command("save", word_arg=True)
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("notes")
 async def save_note(event, strings, status, chat_id, chat_title):
-    note_name, file_id, note_text = await save_get_new_note(event, strings, chat_id)
+    note_name = event.pattern_match.group(1)
+    for sym in RESTRICTED_SYMBOLS:
+        if sym in note_name:
+            await event.reply(strings["notename_cant_contain"].format(sym))
+            return
+    if note_name[0] == "#":
+        note_name = note_name[1:]
+    file_id = None
+    prim_text = ""
+    if len(event.message.text.split(" ")) > 2:
+        prim_text = event.text.partition(note_name)[2]
+    if event.message.reply_to_msg_id:
+        msg = await event.get_reply_message()
+        if not msg:
+            await event.reply(strings["bot_msg"])
+            return
+        note_text = msg.message
+        if prim_text:
+            note_text += prim_text
+        if hasattr(msg.media, 'photo'):
+            file_id = utils.pack_bot_file_id(msg.media)
+        if hasattr(msg.media, 'document'):
+            file_id = utils.pack_bot_file_id(msg.media)
+    else:
+        note_text = prim_text
 
     status = strings["saved"]
     old = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
@@ -55,14 +81,16 @@ async def save_note(event, strings, status, chat_id, chat_title):
     if not creator:
         creator = event.from_id
 
-    new = ({'chat_id': chat_id,
-            'name': note_name,
-            'text': note_text,
-            'date': date,
-            'created': created_date,
-            'updated_by': event.from_id,
-            'creator': creator,
-            'file_id': file_id})
+    new = ({
+        'chat_id': chat_id,
+        'name': note_name,
+        'text': note_text,
+        'date': date,
+        'created': created_date,
+        'updated_by': event.from_id,
+        'creator': creator,
+        'file_id': file_id
+    })
 
     buttons = None
 
@@ -310,7 +338,6 @@ async def check_hashtag(event, status, chat_id, chat_title):
         await message.reply(chat_id)
         return
     note_name = message['text'][1:].split(" ", 2)[0].lower()
-    print(note_name)
     if len(note_name) >= 1:
         await send_note(
             event.chat_id, chat_id, msg, note_name,
