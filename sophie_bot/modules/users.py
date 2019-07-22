@@ -35,7 +35,9 @@ async def update_users(message, **kwargs):
     # Update users
     update_user(chat_id, message.from_user)
 
-    if "reply_to_message" in message:
+    if "reply_to_message" in message and \
+        hasattr(message.reply_to_message.from_user, 'chat_id') and \
+            message.reply_to_message.from_user.chat_id:
         update_user(chat_id, message.reply_to_message.from_user)
 
     if "forward_from" in message:
@@ -48,7 +50,8 @@ def update_user(chat_id, new_user):
     new_chat = [chat_id]
 
     if old_user and 'chats' in old_user:
-        new_chat = old_user['chats']
+        if old_user['chats']:
+            new_chat = old_user['chats']
         if not new_chat or chat_id not in new_chat:
             new_chat.append(chat_id)
 
