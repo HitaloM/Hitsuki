@@ -342,7 +342,7 @@ async def un_fban_user(message, strings, status, chat_id, chat_title, user, fed,
     for chat in fed_chats:
         await asyncio.sleep(1)  # Do not slow down other updates
         try:
-            await bot. unban_chat_member(
+            await bot.unban_chat_member(
                 chat['chat_id'],
                 user['user_id']
             )
