@@ -70,7 +70,6 @@ async def pinMessage(event, strings):
     except ChatNotModifiedError:
         await event.reply(strings['chat_not_modified_pin'])
         return
-    await event.reply(get_string('misc', 'pinned_success', event.chat_id))
 
 
 @decorator.t_command("runs")
@@ -89,7 +88,6 @@ async def unpin_message(event, strings):
     except ChatNotModifiedError:
         await event.reply(strings['chat_not_modified_unpin'])
         return
-    await event.reply(get_string('misc', 'unpin_success', event.chat_id))
 
 
 @decorator.t_command("promote", arg=True)
