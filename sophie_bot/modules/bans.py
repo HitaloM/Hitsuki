@@ -322,6 +322,10 @@ async def mute_user(event, user_id, chat_id, time_val):
     bot_id = await tbot.get_me()
     bot_id = bot_id.id
 
+    if str(user_id) in WHITELISTED:
+        await event.reply("This user is whitelisted")
+        return
+
     if user_id == bot_id:
         await event.reply(get_string("bans", "bot_cant_be_muted",
                           event.chat_id))
