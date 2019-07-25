@@ -5,7 +5,7 @@ import os
 
 from telethon import custom
 
-from sophie_bot import CONFIG, decorator, logger, tbot
+from sophie_bot import CONFIG, decorator, logger, tbot, mongodb
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 
 ftp_url = "ftp.orangefox.website"
@@ -269,7 +269,20 @@ async def list_stable(event):
             text += "* {} (`{}`)\n".format(
                 DEVICES_STABLE[device]['fullname'], DEVICES_STABLE[device]["codename"])
     text += "\nTo get device write `/codename`"
-    await event.reply(text)
+    msg = await event.reply(text)
+    old_msg = mongodb.old_fox_msgs.find_one({'chat_id': event.chat_id})
+    new = {
+        'chat_id': event.chat_id,
+        'last_msg': msg.id
+    }
+    if not old_msg:
+        mongodb.old_fox_msgs.insert_one(new)
+        return
+    owo = []
+    owo.append(old_msg['last_msg'])
+    await event.client.delete_messages(event.chat_id, owo)
+
+    mongodb.old_fox_msgs.update_one({'_id': old_msg['_id']}, {'$set': new}, upsert=True)
 
 
 @decorator.StrictCommand("^[!/#](.*)")
@@ -321,4 +334,22 @@ async def check(event):
                 buttons.append([custom.Button.url("🗄️ All builds", link_stable),
                                custom.Button.url("☁️ Cloud", link_mirror + device_arg)])
     if text:
-        await event.reply(text, buttons=buttons)
+        msg = await event.reply(text, buttons=buttons)
+
+        old_msg = mongodb.old_fox_msgs.find_one({'chat_id': event.chat_id})
+
+        new = {
+            'chat_id': event.chat_id,
+            'last_msg': msg.id
+        }
+
+        if not old_msg:
+            mongodb.old_fox_msgs.insert_one(new)
+            return
+
+        owo = []
+        owo.append(old_msg['last_msg'])
+        await event.client.delete_messages(event.chat_id, owo)
+
+
+        mongodb.old_fox_msgs.update_one({'_id': old_msg['_id']}, {'$set': new}, upsert=True)

@@ -63,7 +63,7 @@ class Only_PM(BoundFilter):
 class Only_In_Groups(BoundFilter):
     key = 'only_groups'
 
-    def __init__(self, only_pm):
+    def __init__(self, only_groups):
         self.only_groups = only_groups
 
     async def check(self, message: types.Message):
