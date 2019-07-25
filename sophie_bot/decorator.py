@@ -61,8 +61,12 @@ def command(command, additional="", **kwargs):
             cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_USERNAME, additional,
                                                               P=P)
 
-        dp.register_message_handler(func, regexp=cmd, **kwargs)
-        dp.register_edited_message_handler(func, regexp=cmd, **kwargs)
+        async def new_func(*args, **kwargs):
+            await func(*args, **kwargs)
+            raise SkipHandler()
+
+        dp.register_message_handler(new_func, regexp=cmd, **kwargs)
+        dp.register_edited_message_handler(new_func, regexp=cmd, **kwargs)
     return decorator
 
 
