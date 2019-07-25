@@ -109,7 +109,7 @@ async def gban_2(message, **kwargs):
 
 
 @decorator.command("ungban")
-async def un_blacklist_user(message):
+async def un_blacklist_user(message, **kwargs):
     if message.from_user.id not in SUDO:
         return
     chat_id = message.chat.id
