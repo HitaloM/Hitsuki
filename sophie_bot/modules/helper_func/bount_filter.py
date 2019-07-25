@@ -60,8 +60,20 @@ class Only_PM(BoundFilter):
             return True
 
 
+class Only_In_Groups(BoundFilter):
+    key = 'only_groups'
+
+    def __init__(self, only_pm):
+        self.only_groups = only_groups
+
+    async def check(self, message: types.Message):
+        if not message.from_user.id == message.chat.id:
+            return True
+
+
 dp.filters_factory.bind(IsAdmin)
 dp.filters_factory.bind(IsOwner)
 dp.filters_factory.bind(NotGbanned)
 dp.filters_factory.bind(NotForwarded)
 dp.filters_factory.bind(Only_PM)
+dp.filters_factory.bind(Only_In_Groups)
