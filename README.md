@@ -1,14 +1,16 @@
 # SophieBot
 
-SophieBot can be runned by 2 ways, so
-# Docker way (reccomended)
+SophieBot can be ran in 2 ways.
 
-## Requirements
-+ Installed git
-+ Installed docker and docker-tools
+Using Docker is always recommended, as its setup is automated, and needs a very little knowledge of Linux or Command Line.
+You also gain an advantage of isolating your server from the Sophie Bot.
 
-## Cloning this repo
-    git clone https://github.com/MrYacha/SophieBot
+You need to configure this bot a bit before it can be used, don't worry, its easy!
+
+# Requirements
+
++ Install git, python 3.7+ and docker(for docker method) from your package manager
++ You need to know how to clone this repo
 
 ## Setting config
 
@@ -17,7 +19,12 @@ SophieBot can be runned by 2 ways, so
 + Open in text editor
 + Set mongo_conn to "mongo-server"
 + Set redis_conn to "redis-server"
-+ Set other configs
++ Set other configs as needed
+
+# Docker Way
+
+## Cloning this repo
+    git clone https://github.com/MrYacha/SophieBot
 
 ## Creating bridge
     docker network create sophiebot-net
@@ -30,40 +37,14 @@ SophieBot can be runned by 2 ways, so
     docker run -d -v /home/yacha/SophieBot/data/:/opt/sophie_bot/data --network sophiebot-net sophie 
 
 
-# Local way 
+# I am an old man, I like to go the manual way...
 
-## Requirements
-+ Installed git
-+ Installed Python3.6+
-
-## Install pip
-    wget https://bootstrap.pypa.io/get-pip.py
-    python3 get-pip.py
-
-## Cloning repo
-    git clone https://github.com/MrYacha/SophieBot
 
 ## Installing requirements
     cd SophieBot
     sudo pip3 install -r requirements.txt
-
-## Installing redis and mongoDB
-
-for Ubuntu:
-
-    sudo apt install redis mongodb
-
-for ArchLinux:
-
-    sudo pacman -S redis
-    sudo aur -S mongodb
-
-## Setting config
-
-+ Go to SophieBot/data
-+ Rename bot_conf.json.example to bot_conf.json
-+ Open in text editor
-+ Set basic config
+   
+    redis and mongodb from your package manager
 
 ## Running
 
