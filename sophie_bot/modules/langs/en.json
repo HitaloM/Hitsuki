@@ -184,21 +184,17 @@
         "help_btn": "Click me for help!",
         "help_txt": "Click below button for help!",
 
-        "paste_success_extra": "**Pasted successfully!**\nShortened url: {}\nOriginal Dogbin URL: {}",
-        "paste_success": "**Pasted successfully!**\nDogbin URL: {}",
+        "paste_success_extra": "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}",
+        "paste_success": "<b>Pasted successfully!</b>\nDogbin URL: {}",
         "paste_fail": "Failed to reach Dogbin!",
         "paste_no_text": "You haven't supplied text to paste!",
 
-        "user_info": "**User info:**\n",
-        "info_id": "**ID:** `{id}`\n",
-        "dc_id": "**DC (DataCenter) ID:** `{}`\n",
-        "scam": "**Scammer:** {}\n",
-        "restricted": "**Restricted:** {}\n",
-        "deleted": "**Deleted:** {}",
-        "info_first": "\n**First name:** {first_name}",
-        "info_last": "\n**Last name:** {last_name}",
-        "info_username": "\n**Username:** {username}",
-        "info_link": "\n**User link:** {user_link}",
+        "user_info": "<b>User info:</b>\n",
+        "info_id": "ID: <code>{id}</code>\n",
+        "info_first": "\nFirst name: {first_name}",
+        "info_last": "\nLast name: {last_name}",
+        "info_username": "\nUsername: {username}",
+        "info_link": "\nUser link: {user_link}",
 
         "father": "\n\nThis is my father.",
         "sudo_crown": "\n\nHey! Look at him, he has a crown, lemme let me see it.. Whaow, it has a engraving 'sudo user'.",
@@ -206,8 +202,8 @@
         "gbanned": "\nGlobally banned: ",
         "no": "No",
         "gbanned_yes": "Yes\n",
-        "gbanned_date": "Data: `{data}`\n",
-        "gbanned_reason": "Reason: `{reason}`\n"
+        "gbanned_date": "Data: <code>{data}</code>\n",
+        "gbanned_reason": "Reason: <code>{reason}</code>\n"
     },
     "gbans": {
         "user_is_blacklisted": "User {user} is blacklisted so has been removed. \nReason: __{rsn}__"

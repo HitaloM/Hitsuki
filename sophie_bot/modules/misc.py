@@ -5,14 +5,15 @@ from requests import post
 from telethon.errors import BadRequestError, ChatNotModifiedError
 from telethon.tl.custom import Button
 from telethon.tl.functions.channels import EditAdminRequest
-from telethon.tl.types import ChatAdminRights, PeerUser
+from telethon.tl.types import ChatAdminRights
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
 from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, tbot, decorator, mongodb
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import get_user, user_admin_dec, user_link
+from sophie_bot.modules.users import (get_user, user_admin_dec,
+                                      user_link, aio_get_user, user_link_html)
 
 
 @decorator.command('allcommands')
@@ -186,21 +187,20 @@ async def help(event, strings):
         await event.reply(text, buttons=buttons)
 
 
-@decorator.t_command('paste', arg=True)
+@decorator.command('paste')
 @get_strings_dec('misc')
-async def paste_deldog(event, strings):
+async def paste_deldog(message, strings, **kwargs):
     DOGBIN_URL = "https://del.dog/"
     dogbin_final_url = None
     to_paste = None
-    reply_msg = await event.get_reply_message()
 
-    if reply_msg:
-        to_paste = str(reply_msg.message)
+    if 'reply_to_message' in message:
+        to_paste = message.reply_to_message.text
     else:
-        to_paste = event.text[6:]
+        to_paste = message.text.split(' ', 1)[1]
 
     if not to_paste:
-        await event.reply(strings['paste_no_text'])
+        await message.reply(strings['paste_no_text'])
         return
 
     resp = post(DOGBIN_URL + "documents", data=to_paste.encode('utf-8'))
@@ -218,15 +218,17 @@ async def paste_deldog(event, strings):
     else:
         reply_text = (strings["paste_fail"])
 
-    await event.reply(reply_text, link_preview=False)
+    await message.reply(reply_text, disable_web_page_preview=True)
 
 
-@decorator.t_command("info", arg=True)
-@flood_limit_dec("info")
+@decorator.command("info")
 @get_strings_dec("misc")
-async def user_info(event, strings):
-    user = await get_user(event)
-    user_obj = await event.client.get_entity(PeerUser(user["user_id"]))
+async def user_info(message, strings, **kwargs):
+    user, txt = await aio_get_user(message, allow_self=True)
+    if not user:
+        print('noooo')
+        return
+
     check = mongodb.blacklisted_users.find_one({'user': user['user_id']})
     if check:
         gban_stat = strings['gbanned_yes']
@@ -238,15 +240,6 @@ async def user_info(event, strings):
     text = strings["user_info"]
     text += strings["info_id"].format(id=user['user_id'])
 
-    if user_obj.photo:
-        text += strings["dc_id"].format(user_obj.photo.dc_id)
-
-    text += strings["scam"].format(user_obj.scam)
-
-    text += strings["restricted"].format(user_obj.restricted)
-
-    text += strings["deleted"].format(user_obj.deleted)
-
     text += strings["info_first"].format(first_name=str(user['first_name']))
 
     if user['last_name'] is not None:
@@ -255,7 +248,7 @@ async def user_info(event, strings):
     if user['username'] is not None:
         text += strings["info_username"].format(username="@" + str(user['username']))
 
-    text += strings['info_link'].format(user_link=str(await user_link(user['user_id'])))
+    text += strings['info_link'].format(user_link=str(await user_link_html(user['user_id'])))
 
     if user['user_id'] == OWNER_ID:
         text += strings["father"]
@@ -264,4 +257,4 @@ async def user_info(event, strings):
     else:
         text += strings["gbanned"] + gban_stat
 
-    await event.reply(text)
+    await message.reply(text)
