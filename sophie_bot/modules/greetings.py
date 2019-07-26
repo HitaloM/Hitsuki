@@ -129,7 +129,7 @@ async def welcome_trigger(event, strings):
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("greetings")
-async def setwelcome(message, strings, status, chat_id, chat_title, *args):
+async def setwelcome(message, strings, status, chat_id, chat_title, *args, **kwargs):
     chat = mongodb.chat_list.find_one({'chat_id': int(chat_id)})
     arg = message['text'].split(" ", 2)
     if len(arg) <= 1:
