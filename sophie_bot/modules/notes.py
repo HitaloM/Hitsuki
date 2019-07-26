@@ -246,6 +246,10 @@ async def send_note(chat_id, group_id, msg_id, note_name,
             username = None
 
         chatname = mongodb.chat_list.find_one({'chat_id': group_id})
+        if chatname:
+            chatname = chatname['chat_title']
+        else:
+            chatname = "None"
 
         if noformat is True:
             string = string.format(
@@ -272,7 +276,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
                 username=username,
                 id=from_id,
                 mention=mention_str,
-                chatname=chatname['chat_title']
+                chatname=chatname
             )
 
     try:
