@@ -1,9 +1,10 @@
 import asyncio
 import os
+from time import gmtime, strftime
 
-from sophie_bot import OWNER_ID, tbot, decorator, mongodb, redis, logger, dp
+from sophie_bot import CONFIG, OWNER_ID, tbot, decorator, mongodb, redis, logger, dp
 from sophie_bot.modules.users import user_owner_dec
-from sophie_bot.modules.main import chat_term
+from sophie_bot.modules.main import chat_term, term
 from sophie_bot.modules.notes import button_parser
 
 from aiogram import types
@@ -11,7 +12,7 @@ from aiogram import types
 
 @dp.message_handler(commands=['term'])
 @user_owner_dec
-async def term(message: types.Message):
+async def cmd_term(message: types.Message):
     msg = await message.reply("Running...")
     command = str(message['text'].split(" ", 1)[1])
     result = "<b>Shell:</b>\n"
@@ -99,8 +100,14 @@ async def check_message_for_smartbroadcast(event):
 @decorator.t_command("backup", from_users=OWNER_ID)
 async def backup(event):
     msg = await event.reply("Running...")
-    date = await chat_term(event, "date \"+%Y-%m-%d.%H:%M:%S\"")
-    await chat_term(event, "mongodbdump --gzip --archive > Backups/dump_{}.gz".format(date))
+    date = strftime("%Y-%m-%dI%H:%M:%S", gmtime())
+    cmd = "mkdir Backups;"
+    cmd += f"mongodump --uri \"{CONFIG['basic']['mongo_conn']}/sophie\" "
+    cmd += f"--forceTableScan --gzip --archive > Backups/dump_{date}.gz"
+    await term(cmd)
+    if not os.path.exists(f"Backups/dump_{date}.gz"):
+        await msg.edit("**Error!**")
+        return
     await msg.edit("**Done!**\nBackup under `Backups/dump_{}.gz`".format(date))
 
 

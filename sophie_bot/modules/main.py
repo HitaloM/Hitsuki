@@ -27,7 +27,7 @@ async def chat_term(message, command):
         output.write(result)
         output.close()
         await tbot.send_file(
-            message['chat']['id'],
+            message.chat.id,
             "output.txt",
             reply_to=message['message_id'],
             caption="`Output too large, sending as file`",
