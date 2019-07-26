@@ -97,18 +97,24 @@ async def check_message_for_smartbroadcast(event):
             }, upsert=False)
 
 
-@decorator.t_command("backup", from_users=OWNER_ID)
-async def backup(event):
-    msg = await event.reply("Running...")
+@decorator.command("backup", is_owner=True)
+async def backup(message, **kwargs):
+    msg = await message.reply("Running...")
     date = strftime("%Y-%m-%dI%H:%M:%S", gmtime())
     cmd = "mkdir Backups;"
     cmd += f"mongodump --uri \"{CONFIG['basic']['mongo_conn']}/sophie\" "
     cmd += f"--forceTableScan --gzip --archive > Backups/dump_{date}.gz"
     await term(cmd)
     if not os.path.exists(f"Backups/dump_{date}.gz"):
-        await msg.edit("**Error!**")
+        await msg.edit_text("<b>Error!</b>")
         return
-    await msg.edit("**Done!**\nBackup under `Backups/dump_{}.gz`".format(date))
+    await msg.edit_text("<b>Done!</b>\nBackup under <code>Backups/dump_{}.gz</code>".format(date))
+    await tbot.send_file(
+        message.chat.id,
+        f"Backups/dump_{date}.gz",
+        reply_to=message.message_id,
+        caption="Backup file",
+    )
 
 
 @decorator.t_command("purgecaches?(s)", from_users=OWNER_ID)
