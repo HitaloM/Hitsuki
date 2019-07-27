@@ -130,6 +130,7 @@
         "a_ban": "Action: **ban sender**",
         "a_mute": "Action: **mute sender**",
         "a_kick": "Action: **kick sender**",
+        "a_warn": "Action: **warn sender** with following reason:\n`{}`",
         "wrong_action": "Wrong action! Read the help.",
         "filters_in": "Filters in **{chat_name}**:\n",
 
@@ -142,7 +143,9 @@
 
         "filter_ban_success": "User {user} banned due to automated action on filter **{filter}**.",
         "filter_tban_success": "User {user} temporary banned on `{time}` due to automated action on filter **{filter}**.",
-        "filter_kick_success": "User {user} kicked due to automated action on filter **{filter}**."
+        "filter_kick_success": "User {user} kicked due to automated action on filter **{filter}**.",
+        "filter_warn_ban": "That's {warns}/{warns} warns. {user} was banned due to\n`{reason}`",
+        "filter_warn_warned": "{user} was warned in {chat} **({current_warns}/{max_warns})** due to\n `{reason}` "
     },
     "warns": {
         "user_no_admeme": "You're not an admin",
