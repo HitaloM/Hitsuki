@@ -254,13 +254,12 @@ async def get_user(event, send_text=True):
 
 
 async def aio_get_user(message, send_text=True, allow_self=False):
-    args = message.get_args().split(" ")
-    print(args)
+    args = message.text.split(None, 2)
     user = None
     text = None
 
     # Only 1 way
-    if not args and "reply_to_message" in message:
+    if len(args) < 2 and "reply_to_message" in message:
         user = await get_user_by_id(message.reply_to_message.from_user.id)
 
     # Get all mention entities
@@ -270,22 +269,22 @@ async def aio_get_user(message, send_text=True, allow_self=False):
 
         # Allow get user only in second arg: ex. /warn (user) Reason
         # so if we write nick in reason and try warn by reply it will work as expected
-        if mention == args[0]:
+        if mention == args[1]:
             if len(args) > 2:
-                text = args[1]
+                text = args[2]
             return await get_user_by_username(mention), text
 
     # Ok, now we really be unsure, so don't return right away
-    if args:
-        if args[0].isdigit():
-            user = await get_user_by_id(args[0])
+    if len(args) > 1:
+        if args[1].isdigit():
+            user = await get_user_by_id(args[1])
 
         # Admin can mess a @
         if not user:
-            user = await get_user_by_username(args[0])
+            user = await get_user_by_username(args[1])
 
-    if len(args) > 1:
-        text = args[1]
+    if len(args) > 2:
+        text = args[2]
 
     # Not first because ex. admins can /warn (user) and reply to offended user
     if not user and "reply_to_message" in message:
@@ -297,7 +296,7 @@ async def aio_get_user(message, send_text=True, allow_self=False):
         user = await get_user_by_id(message.from_user.id)
 
     if not user:
-        await message.reply("I can't find the user in whole Telegram!")
+        print("m cri")
         return None, None
 
     return user, text
