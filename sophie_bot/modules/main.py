@@ -1,8 +1,9 @@
 import asyncio
 import math
 import subprocess
+import ujson
 
-from sophie_bot import mongodb, tbot, decorator
+from sophie_bot import mongodb, tbot, decorator, dp, logger
 from sophie_bot.modules.disable import disablable_dec
 
 from aiogram import types
@@ -68,6 +69,12 @@ async def stats(message, **kwargs):
         text += '\* Database size is `{}`, free `{}`'.format(
             convert_size(db['storageSize']), convert_size(536870912 - db['storageSize']))
     await message.reply(text, parse_mode=types.ParseMode.MARKDOWN)
+
+
+@dp.errors_handler()
+async def all_errors_handler(dp, update, e):
+    logger.exception(f'The update was: {ujson.dumps(update.to_python(), indent=4)}', exc_info=True)
+    return
 
 
 def convert_size(size_bytes):
