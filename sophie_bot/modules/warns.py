@@ -148,7 +148,14 @@ async def warnlimit(event):
     if status is False:
         await event.reply(chat_id)
         return
-    arg = event.pattern_match.group(2)
+    
+    _arg = event.text.split(" ", 1)
+    
+    try:
+        arg = _arg[1]
+    except:
+        arg = None
+    
     old = mongodb.warnlimit.find_one({'chat_id': chat_id})
     if not arg:
         if old:
