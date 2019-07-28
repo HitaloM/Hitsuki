@@ -43,12 +43,12 @@ async def rules(message, strings, status, chat_id, chat_title, **kwargs):
     if not in_db:
         return await message.reply(strings['didnt_set_note'])
 
-    note_in_db = mongodb.notes.find_one({'chat_id': chat_id, 'name': in_db['note_name']})
+    note_in_db = mongodb.notes.find_one({'chat_id': chat_id, 'name': in_db['note']})
 
     if not note_in_db:
         return await message.reply(strings['cannot_find_set_note'])
 
-    await send_note(chat_id, chat_id, message.message_id, in_db['note_name'])
+    await send_note(chat_id, chat_id, message.message_id, in_db['note'])
 
 
 @decorator.command("delrules")

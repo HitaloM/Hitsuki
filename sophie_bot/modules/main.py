@@ -1,7 +1,12 @@
 import asyncio
 import math
 import subprocess
+import sys
+import io
+import traceback
 import ujson
+
+from time import gmtime, strftime
 
 from sophie_bot import mongodb, tbot, decorator, dp, logger
 from sophie_bot.modules.disable import disablable_dec
@@ -72,9 +77,43 @@ async def stats(message, **kwargs):
 
 
 @dp.errors_handler()
-async def all_errors_handler(dp, update, e, *args, **kwargs):
-    print(*args, **kwargs)
-    logger.exception(f'The update was: {ujson.dumps(update.to_python(), indent=4)}', exc_info=True)
+async def all_errors_handler(message, dp):
+    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    logger.error("Error: " + date)
+    msg = message.message
+
+    text = ":( | <b>Sorry, i got a error!</b>\n"
+    link = "<a href=\"https://t.me/YanaBotGroup\">Sophie support chat</a>"
+    text += f"If you wanna you can report it - just forward this file to {link}.\n"
+    text += "I won't log anything except the fact of error and date\n"
+
+    ftext = "Sophie error log file."
+    ftext += "\n______________________\n"
+    ftext += "\nNotice:\nThis file uploaded ONLY here, we logged only fact of error and date, "
+    ftext += "we respect your privacy, you may not report this error if you've "
+    ftext += "any confidential data here, noone will see your data\n\n"
+    ftext += "\nDate: " + date
+    ftext += "\nGroup ID: " + str(msg.chat.id)
+    ftext += "\nSender ID: " + str(msg.from_user.id)
+    ftext += "\n\nRaw update text:\n"
+    ftext += str(message)
+    ftext += "\n\nFormatted update text:\n"
+    ftext += str(ujson.dumps(msg, indent=2))
+    ftext += "\n\nTraceback info:\n"
+    ftext += str(traceback.format_exc())
+    ftext += "\n\nError text:\n"
+    ftext += str(sys.exc_info()[1])
+
+    command = "git log --pretty=format:\"%an: %s\" -5"
+    ftext += "\n\n\nLast 5 commits:\n"
+    ftext += await term(command)
+
+    await msg.answer_document(
+        types.InputFile(io.StringIO(ftext), filename="error.txt"),
+        text,
+        reply=msg.message_id
+    )
+
     return
 
 
