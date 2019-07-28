@@ -421,3 +421,23 @@ async def kick_self(event, chat, user):
     except Exception:
         return False
     return True
+
+
+async def convert_time(event, time_val):
+    if any(time_val.endswith(unit) for unit in ('m', 'h', 'd')):
+        time_num = time_val[:-1]
+        unit = time_val[-1]
+        if unit == 'm':
+            mutetime = int(time.time() + int(time_num) * 60)
+            unit_str = 'minutes'
+        elif unit == 'h':
+            mutetime = int(time.time() + int(time_num) * 60 * 60)
+            unit_str = 'hours'
+        elif unit == 'd':
+            mutetime = int(time.time() + int(time_num) * 24 * 60 * 60)
+            unit_str = 'days'
+        else:
+            return await event.reply(get_string("bans", "time_var_incorrect",
+                                     event.chat_id))
+
+        return mutetime, unit_str
