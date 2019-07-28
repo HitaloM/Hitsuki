@@ -8,7 +8,7 @@ from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.notes import send_note, button_parser
-from sophie_bot.modules.bans import ban_user, kick_user
+from sophie_bot.modules.bans import ban_user, kick_user, convert_time
 from sophie_bot.modules.users import user_admin_dec, user_link, get_chat_admins
 from sophie_bot.modules.warns import randomString
 
@@ -47,24 +47,25 @@ async def check_message(event):
                 if await ban_user(event, user, chat, None, no_msg=True) is True:
                     text = get_string('filters', 'filter_ban_success', chat).format(
                         user=await user_link(user),
-                        filter=filter
+                        filter=H['handler']
                     )
-                    event.reply(text)
+                    await event.reply(text)
             elif action == 'tban':
-                if await ban_user(event, user, chat, H['arg'], no_msg=True) is True:
+                timee, unit = await convert_time(event, H['arg'])
+                if await ban_user(event, user, chat, timee, no_msg=True) is True:
                     text = get_string('filters', 'filter_tban_success', chat).format(
                         user=await user_link(user),
                         time=H['arg'],
-                        filter=filter
+                        filter=H['handler']
                     )
-                    event.reply(text)
+                    await event.reply(text)
             elif action == 'kick':
                 if await kick_user(event, user, chat, no_msg=True) is True:
                     text = get_string('filters', 'filter_kick_success', chat).format(
                         user=await user_link(user),
-                        filter=filter
+                        filter=H['handler']
                     )
-                    event.reply(text)
+                    await event.reply(text)
             elif action == 'warn':
                 user_id = event.sender_id
                 if user_id in WHITELISTED:
@@ -153,25 +154,66 @@ async def add_filter(event, strings, status, chat_id, chat_title):
         arg = args[3]
     else:
         arg = None
+
+    custom = None
+
+    if args[1].startswith(("'", '"')):
+        custom = True
+        raw = args[1:]
+        _handler = []
+        for x in raw:
+            if x.startswith(("'", '"')):
+                _handler.append(x.replace('"', '').replace("'", ''))
+            elif x.endswith(("'", '"')):
+                _handler.append(x.replace('"', '').replace("'", ''))
+                break
+            else:
+                _handler.append(x)
+
+        handler = " ".join(_handler)
+        action = raw[len(_handler)]
+        _arg = len(_handler) + 1
+        arg = raw[_arg:]
+
     text = strings["filter_added"]
     text += strings["filter_keyword"].format(handler)
     if action == 'note':
-        if not len(args) > 3:
+        if custom:
+            if not arg:
+                await event.reply(strings["no_arg_note"])
+                return
+
+            arg = arg[0]
+            text += strings["a_send_note"].format(arg)
+        elif not len(args) > 3:
             await event.reply(strings["no_arg_note"])
             return
-        text += strings["a_send_note"].format(arg)
+            text += strings["a_send_note"].format(arg)
     elif action == 'tban':
-        if not len(args) > 3:
+        if custom:
+            if not arg:
+                await event.reply(strings["no_arg_tban"])
+                return
+            arg = arg[0]
+            text += strings["a_tban"].format(arg)
+        elif not len(args) > 3:
             await event.reply(strings["no_arg_tban"])
             return
-        text += strings["a_tban"].format(str(arg))
+            text += strings["a_tban"].format(str(arg))
     elif action == 'answer':
-        txt = event.message.raw_text.split(" ", 2)[2]
-        if len(txt) <= 2:
-            await event.reply(strings["wrong_action"])
-            return
-        arg = txt
-        text += strings["a_answer"]
+        if custom:
+            if not arg:
+                await event.reply(strings["wrong_action"])
+                return
+            arg = " ".join(arg)
+            text += strings["a_answer"]
+        else:
+            txt = event.message.raw_text.split(" ")[3]
+            if len(txt) <= 2:
+                await event.reply(strings["wrong_action"])
+                return
+            arg = txt
+            text += strings["a_answer"]
     elif action == 'delete':
         text += strings["a_del"]
     elif action == 'ban':
@@ -181,26 +223,52 @@ async def add_filter(event, strings, status, chat_id, chat_title):
     elif action == 'kick':
         text += strings["a_kick"]
     elif action == 'warn':
-        raw_text = event.text.split(" ")
-        arg = None
-        if raw_text[3:]:
-            arg = " ".join(raw_text[3:])
+        if custom:
+            if not arg:
+                arg = f"Automatic action on filter:\n{handler.lower()}."
+            else:
+                arg = " ".join(arg)
+            text += strings["a_warn"].format(arg)
         else:
-            arg = f"Automatic action on filter:\n{handler.lower()}."
-
-        text += strings["a_warn"].format(arg)
+            raw_text = event.text.split(" ")
+            arg = None
+            if raw_text[3:]:
+                arg = " ".join(raw_text[3:])
+            else:
+                arg = f"Automatic action on filter:\n{handler.lower()}."
+            text += strings["a_warn"].format(arg)
     else:
         await event.reply(strings["wrong_action"])
         return
 
-    mongodb.filters.insert_one({
-        "chat_id": chat_id,
-        "handler": handler.lower(),
-        "action": action,
-        "arg": arg
+    exist = mongodb.filters.find_one({
+        'chat_id': chat_id,
+        'handler': handler.lower()
     })
-    update_handlers_cache(chat_id)
-    await event.reply(text)
+
+    if exist:
+        mongodb.filters.update_one({
+            'chat_id': chat_id,
+            'handler': handler,
+            '_id': exist["_id"]
+        }, {
+            "$set": {
+                'action': action,
+                'arg': arg
+            }
+        })
+
+        update_handlers_cache(chat_id)
+        await event.reply(text.replace('added', 'updated'))
+    else:
+        mongodb.filters.insert_one({
+            "chat_id": chat_id,
+            "handler": handler.lower(),
+            "action": action,
+            "arg": arg
+        })
+        update_handlers_cache(chat_id)
+        await event.reply(text)
 
 
 @decorator.t_command("filters", arg=True)

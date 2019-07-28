@@ -438,17 +438,18 @@
         "text": {
             "i1": "**Available commands are:**",
             "i2": "- /filter (keyword) (action) : Every time someone says 'word' , the bot will do the given action.",
-            "i3": "- /filters: Will display all filter in that chat!",
-            "i4": "- /stop (filter name) : Will stop the the given filter names",
-            "i5": "\n**Available actions are:**",
-            "i6": "- note: eg: `/filter foo note (notename)`: bot will reply to word 'foo' containing given notename.",
-            "i7": "- answer: eg `/filter foo note how are you?`: bot will reply the 'how are you?' to the word 'foo', buttons also supported.",
-            "i8": "- delete: eg: `/filter foo delete`: bot will delete the someone's message containing 'foo'.",
-            "i9": "- tban: eg: `/filter foo tban 10m`: bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
-            "i10": "- ban: eg: `/filter foo ban`: bot will ban who send message containing 'foo'",
-            "i11": "- mute: eg: `/filter foo mute`: bot will mute user who send message 'foo'",
-            "i12": "- kick: eg: `/filter foo kick`: bot will kick user who send message containing 'foo'",
-            "i13": "- warn: eg: `/filter foo warn (reason, optional)`: bot will warn user (or ban if limit exceeded) who send message containing 'foo'."
+            "i3": "- /filter '(key words)' (action) (arg): Same as previous, but supports multiple words to filter.",
+            "i4": "- /filters: Will display all filter in that chat!",
+            "i5": "- /stop (filter name) : Will stop the the given filter names",
+            "i6": "\n**Available actions are:**",
+            "i7": "- note: eg: `/filter foo note (notename)`: bot will reply to word 'foo' containing given notename.",
+            "i8": "- answer: eg `/filter foo note how are you?`: bot will reply the 'how are you?' to the word 'foo', buttons also supported.",
+            "i9": "- delete: eg: `/filter foo delete`: bot will delete the someone's message containing 'foo'.",
+            "i10": "- tban: eg: `/filter foo tban 10m`: bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
+            "i11": "- ban: eg: `/filter foo ban`: bot will ban who send message containing 'foo'",
+            "i12": "- mute: eg: `/filter foo mute`: bot will mute user who send message 'foo'",
+            "i13": "- kick: eg: `/filter foo kick`: bot will kick user who send message containing 'foo'",
+            "i14": "- warn: eg: `/filter foo warn (reason, optional)`: bot will warn user (or ban if limit exceeded) who send message containing 'foo'."
         }
     },
     "federations": {
