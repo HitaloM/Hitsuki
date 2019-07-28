@@ -72,7 +72,8 @@ async def stats(message, **kwargs):
 
 
 @dp.errors_handler()
-async def all_errors_handler(dp, update, e):
+async def all_errors_handler(dp, update, e, *args, **kwargs):
+    print(*args, **kwargs)
     logger.exception(f'The update was: {ujson.dumps(update.to_python(), indent=4)}', exc_info=True)
     return
 
