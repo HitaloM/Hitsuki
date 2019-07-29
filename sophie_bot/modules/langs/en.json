@@ -141,11 +141,11 @@
         "cant_find_filter": "I can't find this filter!",
         "filter_deleted": "Filter `{filter}` in **{chat_name}** deleted!",
 
-        "filter_ban_success": "User {user} banned due to automated action on filter **{filter}**.",
-        "filter_tban_success": "User {user} temporary banned on `{time}` due to automated action on filter **{filter}**.",
-        "filter_kick_success": "User {user} kicked due to automated action on filter **{filter}**.",
-        "filter_warn_ban": "That's {warns}/{warns} warns. {user} was banned due to\n`{reason}`",
-        "filter_warn_warned": "{user} was warned in {chat} **({current_warns}/{max_warns})** due to\n `{reason}` "
+        "filter_ban_success": "User {user} banned due to automated action on filter <code>{filter}</code>.",
+        "filter_tban_success": "User {user} temporary banned on `{time}` due to automated action on filter <code>{filter}</code>.",
+        "filter_kick_success": "User {user} kicked due to automated action on filter <code>{filter}</code>.",
+        "filter_warn_ban": "That's {warns}/{warns} warns. {user} was banned due to\n<code>{reason}</code>",
+        "filter_warn_warned": "{user} was warned in {chat} <b>({current_warns}/{max_warns})</b> due to\n <code>{reason}</code> "
     },
     "warns": {
         "user_no_admeme": "You're not an admin",
