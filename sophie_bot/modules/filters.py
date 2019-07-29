@@ -94,7 +94,7 @@ async def add_filter(message, strings, status, chat_id, chat_title, **kwargs):
 
     if args[0].startswith(("'", '"')):
         custom = True
-        raw = args[1:]
+        raw = args
         _handler = []
         for x in raw:
             if x.startswith(("'", '"')):
