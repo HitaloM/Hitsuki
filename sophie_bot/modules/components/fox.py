@@ -273,13 +273,17 @@ async def list_stable(event):
     old_msg = mongodb.old_fox_msgs.find_one({'chat_id': event.chat_id})
     new = {
         'chat_id': event.chat_id,
-        'last_msg': msg.id
+        'last_msg': msg.id,
+        'last_user_msg': event.message.id
     }
     if not old_msg:
         mongodb.old_fox_msgs.insert_one(new)
         return
     owo = []
-    owo.append(old_msg['last_msg'])
+    if 'last_msg' in old_msg:
+        owo.append(old_msg['last_msg'])
+    if 'last_user_msg' in old_msg:
+        owo.append(old_msg['last_user_msg'])
     await event.client.delete_messages(event.chat_id, owo)
 
     mongodb.old_fox_msgs.update_one({'_id': old_msg['_id']}, {'$set': new}, upsert=True)
@@ -340,7 +344,8 @@ async def check(event):
 
         new = {
             'chat_id': event.chat_id,
-            'last_msg': msg.id
+            'last_msg': msg.id,
+            'last_user_msg': event.message.id
         }
 
         if not old_msg:
@@ -348,8 +353,10 @@ async def check(event):
             return
 
         owo = []
-        owo.append(old_msg['last_msg'])
+        if 'last_msg' in old_msg:
+            owo.append(old_msg['last_msg'])
+        if 'last_user_msg' in old_msg:
+            owo.append(old_msg['last_user_msg'])
         await event.client.delete_messages(event.chat_id, owo)
-
 
         mongodb.old_fox_msgs.update_one({'_id': old_msg['_id']}, {'$set': new}, upsert=True)
