@@ -9,7 +9,6 @@ DISABLABLE_COMMANDS = []
 
 
 @decorator.command("disablable")
-@flood_limit_dec("disablable")
 @get_strings_dec("disable")
 async def list_disablable(message, strings, **kwargs):
     text = strings['disablable']
@@ -19,7 +18,6 @@ async def list_disablable(message, strings, **kwargs):
 
 
 @decorator.command("disabled")
-@flood_limit_dec("disabled")
 @connection(only_in_groups=True)
 @get_strings_dec("disable")
 async def list_disabled(message, strings, status, chat_id, chat_title, **kwargs):
