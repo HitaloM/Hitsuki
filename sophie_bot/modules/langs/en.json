@@ -160,8 +160,8 @@
         "rmv_sfl": "Warn removed by {admin}",
         "warn_list_head": "{user}'s **warnings in {chat_name}:**\n",
         "user_hasnt_warned": "{user} hasn't been warned in **{chat_name}** before!",
-        "warn_limit": "Warn limit in {chat_name} is currently: `{num}`",
-        "warn_limit_upd": "Warn limit has been updated to {}!"
+        "warn_limit": "Warn limit in {chat_name} is currently: <code>{num}</code>",
+        "warn_limit_upd": "Warn limit has been updated to <code>{}</code>!"
     },
     "msg_deleting": {
         "no_rights_purge": "You don't have rights to purge here!",

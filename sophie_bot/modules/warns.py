@@ -7,7 +7,7 @@ from telethon.tl.custom import Button
 from sophie_bot import WHITELISTED, decorator, mongodb
 from sophie_bot.modules.bans import ban_user
 from sophie_bot.modules.connections import connection, get_conn_chat
-from sophie_bot.modules.language import get_string
+from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_chat_admins, get_user,
                                       get_user_and_text, is_user_admin,
                                       user_link, user_admin_dec)
@@ -137,33 +137,20 @@ async def user_warns(event):
     await event.reply(text)
 
 
-@decorator.t_command("warnlimit", arg=True)
-async def warnlimit(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("warns", "user_no_admeme", event.chat_id))
-        return
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, admin=True, only_in_groups=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
-    
-    _arg = event.text.split(" ", 1)
-    
-    try:
-        arg = _arg[1]
-    except:
-        arg = None
-    
+@decorator.command("warnlimit")
+@user_admin_dec
+@connection(only_in_groups=True, admin=True)
+@get_strings_dec("warns")
+async def warnlimit(message, strings, status, chat_id, chat_title, **kwargs):
+    arg = message.get_args()
+
     old = mongodb.warnlimit.find_one({'chat_id': chat_id})
     if not arg:
         if old:
             num = old['num']
         else:
             num = 3
-        await event.reply(get_string("warns", "warn_limit", event.chat_id).format(
-            chat_name=chat_title, num=num))
+        await message.reply(strings["warn_limit"].format(chat_name=chat_title, num=num))
     else:
         if old:
             mongodb.warnlimit.delete_one({'_id': old['_id']})
@@ -172,7 +159,7 @@ async def warnlimit(event):
             'chat_id': chat_id,
             'num': num
         })
-        await event.reply(get_string("warns", "warn_limit_upd", event.chat_id).format(num))
+        await message.reply(strings["warn_limit_upd"].format(num))
 
 
 @decorator.t_command("resetwarns", arg=True)
