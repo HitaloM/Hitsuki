@@ -23,18 +23,6 @@ from sophie_bot.modules.users import (check_group_admin, is_user_admin,
                                       add_user_to_db, user_link_html)
 
 
-# Notes - the most modern module of SophieBot
-# Time spended:
-# MrYacha - more than 12 hours
-
-@decorator.command('owo', is_owner=True)
-@user_admin_dec
-@connection()
-@get_strings_dec("notes")
-async def test(message, strings, status, chat_id, chat_title):
-    print(message)
-
-
 RESTRICTED_SYMBOLS = ['**', '__', '`']
 
 

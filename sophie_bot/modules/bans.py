@@ -116,11 +116,11 @@ async def unmute(message, strings, status, chat_id, chat_title, **kwargs):
 
 @decorator.command("kickme")
 @get_strings_dec("bans")
-async def kickme(message, strings):
+async def kickme(message, strings, **kwargs):
     user = message.from_user.id
     chat = message.chat.id
 
-    if await ban_user(message, user['user_id'], chat, None) is True:
+    if await ban_user(message, user, chat, None) is True:
         await message.reply(strings["kickme_success"])
 
 

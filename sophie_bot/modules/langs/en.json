@@ -148,20 +148,22 @@
     },
     "warns": {
         "user_no_admeme": "You're not an admin",
-        "purged_warns": "{admin} resetted warns of {user} successfully!",
+        "purged_warns": "{admin} resetted <code>{number}</code> warns of {user} in <b>{chat_name}</b>!",
         "usr_no_wrn": "{user} hasn't got warns!",
         "usr_whitelist": "This is a whitelisted user!",
         "Admin_no_wrn": "Heck, I can't warn the admins!",
         "warn": "{admin} has warned {user} in {chat_name}\n",
-        "warn_rsn": "Reason: `{reason}`\n",
+        "warn_rsn": "Reason: <code>{reason}</code>\n",
         "warn_bun": "Warnings has been exceeded! {user} has been banned!",
         "warn_num": "Warns: {curr_warns}/{max_warns}\n",
         "rmv_warn_admin": "You're not an admin, Only admins can remove a warn!",
         "rmv_sfl": "Warn removed by {admin}",
-        "warn_list_head": "{user}'s **warnings in {chat_name}:**\n",
-        "user_hasnt_warned": "{user} hasn't been warned in **{chat_name}** before!",
-        "warn_limit": "Warn limit in {chat_name} is currently: <code>{num}</code>",
-        "warn_limit_upd": "Warn limit has been updated to <code>{}</code>!"
+        "warn_list_head": "{user}'s <b>warnings in {chat_name}:</b>\n",
+        "user_hasnt_warned": "{user} hasn't been warned in <b>{chat_name}</b> before!",
+        "warn_limit": "Warn limit in <b>{chat_name}</b> is currently: <code>{num}</code>",
+        "warn_limit_upd": "Warn limit has been updated to <code>{}</code>!",
+
+        "no_user_warns": "{user} don't have any warning yet!"
     },
     "msg_deleting": {
         "no_rights_purge": "You don't have rights to purge here!",

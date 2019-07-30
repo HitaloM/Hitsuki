@@ -2,28 +2,29 @@ import random
 import re
 import string
 
-from telethon.tl.custom import Button
+from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 
 from sophie_bot import WHITELISTED, decorator, mongodb
 from sophie_bot.modules.bans import ban_user
-from sophie_bot.modules.connections import connection, get_conn_chat
+from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import (get_chat_admins, get_user,
-                                      get_user_and_text, is_user_admin,
-                                      user_link, user_admin_dec)
+from sophie_bot.modules.users import (get_chat_admins, is_user_admin,
+                                      user_link, user_admin_dec,
+                                      aio_get_user, user_link_html)
 
 
-@decorator.t_command("warn(?!(\w))", arg=True)
+@decorator.command("warn")
 @user_admin_dec
-@connection(admin=True, only_in_groups=True)
-async def warn_user(event, status, chat_id, chat_title):  # Rewrite me on AIOGram
-    user, reason = await get_user_and_text(event)
+@connection(only_in_groups=True, admin=True)
+@get_strings_dec("warns")
+async def warn_user(message, strings, status, chat_id, chat_title, **kwargs):
+    user, reason = await aio_get_user(message)
     user_id = int(user['user_id'])
     if user_id in WHITELISTED:
-        await event.reply(get_string("warns", "usr_whitelist", event.chat_id))
+        await message.reply(strings['usr_whitelist'])
         return
     if user_id in await get_chat_admins(chat_id):
-        await event.reply(get_string("warns", "Admin_no_wrn", event.chat_id))
+        await message.reply(strings['Admin_no_wrn'])
         return
 
     rndm = randomString(15)
@@ -33,15 +34,13 @@ async def warn_user(event, status, chat_id, chat_title):  # Rewrite me on AIOGra
         'group_id': chat_id,
         'reason': str(reason)
     })
-    admin_id = event.from_id
+    admin_id = message.from_user.id
     admin = mongodb.user_list.find_one({'user_id': admin_id})
-    admin_str = await user_link(admin['user_id'])
-    user_str = await user_link(user['user_id'])
-    textx = get_string("warns", "warn", event.chat_id)
-    text = textx.format(admin=admin_str, user=user_str, chat_name=chat_title)
+    admin_str = await user_link_html(admin['user_id'])
+    user_str = await user_link_html(user['user_id'])
+    text = strings['warn'].format(admin=admin_str, user=user_str, chat_name=chat_title)
     if reason:
-        textx = get_string("warns", "warn_rsn", event.chat_id)
-        text += textx.format(reason=reason)
+        text += strings['warn_rsn'].format(reason=reason)
 
     old = mongodb.warns.find({
         'user_id': user_id,
@@ -51,13 +50,15 @@ async def warn_user(event, status, chat_id, chat_title):  # Rewrite me on AIOGra
     for suka in old:
         h += 1
 
-    buttons = [Button.inline("⚠️ Remove warn", 'remove_warn_{}'.format(rndm))]
-
+    buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(
+        "⚠️ Remove warn", callback_data='remove_warn_{}'.format(rndm)
+    ))
     rules = mongodb.rules.find_one({"chat_id": chat_id})
+
     if rules:
-        buttons.append(Button.inline("📝 Rules", 'get_note_{}_{}'.format(
-            chat_id, rules['note']
-        )))
+        buttons.insert(InlineKeyboardButton(
+            "📝 Rules", callback_data='get_note_{}_{}'.format(chat_id, rules['note'])
+        ))
 
     warn_limit = mongodb.warnlimit.find_one({'chat_id': chat_id})
 
@@ -67,19 +68,17 @@ async def warn_user(event, status, chat_id, chat_title):  # Rewrite me on AIOGra
         warn_limit = int(warn_limit['num'])
 
     if h >= warn_limit:
-        if await ban_user(event, user_id, chat_id, None) is False:
+        if await ban_user(message, user_id, chat_id, None) is False:
             return
-        textx = get_string("warns", "warn_bun", event.chat_id).format(user=user_str)
-        text += textx
+        text += strings['warn_bun'].format(user=user_str)
         mongodb.warns.delete_many({
             'user_id': user_id,
             'group_id': chat_id
         })
     else:
-        textx = get_string("warns", "warn_num", event.chat_id)
-        text += textx.format(curr_warns=h, max_warns=warn_limit)
+        text += strings['warn_num'].format(curr_warns=h, max_warns=warn_limit)
 
-    await event.reply(text, buttons=buttons, link_preview=False)
+    await message.reply(text, reply_markup=buttons, disable_web_page_preview=True)
 
 
 @decorator.CallBackQuery(b'remove_warn_')
@@ -99,42 +98,36 @@ async def remove_warn(event):
     await event.edit(textx.format(admin=user_str), link_preview=False)
 
 
-@decorator.t_command("warns", arg=True)
-async def user_warns(event):
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, admin=True, only_in_groups=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
+@decorator.command("warns")
+@user_admin_dec
+@connection(only_in_groups=True, admin=True)
+@get_strings_dec("warns")
+async def user_warns(message, strings, status, chat_id, chat_title, **kwargs):
+    user, txt = await aio_get_user(message, allow_self=True)
 
-    user, reason = await get_user_and_text(event)
-    if not user:
-        return
     user_id = int(user['user_id'])
     if user_id in WHITELISTED:
-        await event.reply(
-            "There are no warnings for this user!"
-        )
+        await message.reply(strings['no_user_warns'].format(user_link_html(user_id)))
         return
     warns = mongodb.warns.find({
         'user_id': user_id,
         'group_id': chat_id
     })
-    user_str = await user_link(user_id)
-    text = get_string("warns", "warn_list_head", event.chat_id).format(
+    user_str = await user_link_html(user_id)
+    text = strings['warn_list_head'].format(
         user=user_str, chat_name=chat_title)
-    H = 0
+    number = 0
     for warn in warns:
-        H += 1
-        rsn = warn['reason']
-        if rsn == 'None':
-            rsn = "No reason"
-        text += "{}: `{}`\n".format(H, rsn)
-    if H == 0:
-        await event.reply(get_string("warns", "user_hasnt_warned", event.chat_id).format(
+        number += 1
+        reason = warn['reason']
+        if not reason or reason == 'None':
+            reason = "No reason"
+        text += "{}: <code>{}</code>\n".format(number, reason)
+    if number == 0:
+        await message.reply(strings['user_hasnt_warned'].format(
             user=user_str, chat_name=chat_title))
         return
-    await event.reply(text)
+    await message.reply(text)
 
 
 @decorator.command("warnlimit")
@@ -143,51 +136,39 @@ async def user_warns(event):
 @get_strings_dec("warns")
 async def warnlimit(message, strings, status, chat_id, chat_title, **kwargs):
     arg = message.get_args()
-
-    old = mongodb.warnlimit.find_one({'chat_id': chat_id})
     if not arg:
-        if old:
-            num = old['num']
+        curr = mongodb.warnlimit.find_one({'chat_id': chat_id})
+        if curr:
+            num = curr['num']
         else:
             num = 3
         await message.reply(strings["warn_limit"].format(chat_name=chat_title, num=num))
     else:
-        if old:
-            mongodb.warnlimit.delete_one({'_id': old['_id']})
-        num = int(arg)
-        mongodb.warnlimit.insert_one({
+        new = {
             'chat_id': chat_id,
-            'num': num
-        })
+            'num': int(arg)
+        }
+        mongodb.warnlimit.update_one({'chat_id': chat_id}, {"$set": new}, upsert=False)
         await message.reply(strings["warn_limit_upd"].format(num))
 
 
-@decorator.t_command("resetwarns", arg=True)
-async def resetwarns(event):
-    K = await is_user_admin(event.chat_id, event.from_id)
-    if K is False:
-        await event.reply(get_string("warns", "user_no_admeme", event.chat_id))
-        return
-    status, chat_id, chat_title = await get_conn_chat(
-        event.from_id, event.chat_id, admin=True, only_in_groups=True)
-    if status is False:
-        await event.reply(chat_id)
-        return
-
-    user = await get_user(event)
+@decorator.command("resetwarns")
+@user_admin_dec
+@connection(only_in_groups=True, admin=True)
+@get_strings_dec("warns")
+async def resetwarns(message, strings, status, chat_id, chat_title, **kwargs):
+    user, txt = await aio_get_user(message)
     user_id = int(user['user_id'])
-    admin = event.from_id
-    admin_str = await user_link(admin)
-    user_str = await user_link(user_id)
-    chack = mongodb.warns.find({'group_id': chat_id, 'user_id': user_id})
+    user_str = await user_link_html(user_id)
+    check = mongodb.warns.find_one({'group_id': chat_id, 'user_id': user_id})
 
-    if chack:
-        mongodb.warns.delete_many({'group_id': chat_id, 'user_id': user_id})
-        text = get_string("warns", "purged_warns", event.chat_id)
-        await event.reply(text.format(admin=admin_str, user=user_str))
+    if check:
+        admin_str = await user_link_html(message.from_user.id)
+        purged = mongodb.warns.delete_many({'group_id': chat_id, 'user_id': user_id}).deleted_count
+        await message.reply(strings["purged_warns"].format(
+            admin=admin_str, user=user_str, number=purged, chat_name=chat_title))
     else:
-        text = get_string("warns", "usr_no_wrn", event.chat_id)
-        await event.reply(text.format(user=user_str))
+        await message.reply(strings["usr_no_wrn"].format(user=user_str))
 
 
 def randomString(stringLength):
