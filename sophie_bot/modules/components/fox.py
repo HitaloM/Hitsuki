@@ -2,6 +2,7 @@ from ftplib import FTP
 from time import gmtime, strftime
 import ujson
 import os
+import asyncio
 
 from telethon import custom
 
@@ -13,8 +14,8 @@ fox_groups = [483808054, -1001287179850, -1001280218923, -1001155400138, -100136
 fox_beta_groups = [-1001280218923, -1001362128194]
 fox_dev_chats = [-1001155400138, 483808054]
 
-BETA_CHANNEL = -1001429093106
-STABLE_CHANNEL = -1001196811863
+BETA_CHANNEL = 483808054
+STABLE_CHANNEL = 483808054
 
 global DEVICES_STABLE
 global DEVICES_BETA
@@ -78,6 +79,7 @@ async def update_devices(event):
     Omsg = await event.reply("Updating Stable devices..")
     data = ftp.mlsd("OrangeFox-Stable", ["type"])
     for device, facts in data:
+        await asyncio.sleep(0.5)
         if not facts["type"] == "dir":
             continue
 
@@ -149,6 +151,7 @@ async def update_devices(event):
     await Omsg.edit("Updating Beta devices..")
     data = ftp.mlsd("OrangeFox-Beta", ["type"])
     for device, facts in data:
+        await asyncio.sleep(0.2)
         if not facts["type"] == "dir":
             continue
 

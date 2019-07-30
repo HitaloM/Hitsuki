@@ -1,12 +1,13 @@
 import aiocron
 import requests
 import io
+import asyncio
 from time import gmtime, strftime
 
 from sophie_bot import CONFIG, bot, mongodb
 
 
-@aiocron.crontab('25 14 * * *')
+@aiocron.crontab('50 16 * * *')
 async def attime():
     url = 'https://combot.org/api/cas/export.csv'
     ffile = requests.get(url, allow_redirects=True)
@@ -21,6 +22,7 @@ async def attime():
 
     s_num = 0
     for user_id in cas_banned:
+        await asyncio.sleep(0.1)
         num += 1
         print(f"{num}/{len(cas_banned)}")
         gbanned = mongodb.blacklisted_users.find_one({'user': user_id})
