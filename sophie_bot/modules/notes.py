@@ -1,5 +1,8 @@
 import re
 import difflib
+import base64
+import bz2
+
 from time import gmtime, strftime
 
 from bson.objectid import ObjectId
@@ -71,6 +74,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     created_date = date
     creator = None
+    encrypted = "particle"
     if old:
         if 'created' in old:
             created_date = old['created']
@@ -81,6 +85,21 @@ async def save_note(event, strings, status, chat_id, chat_title):
     if not creator:
         creator = event.from_id
 
+    h = re.search(r"(\[encryption:(particle|fully|no)\])", note_text)
+    if h:
+        note_text = note_text.replace(h.group(1), "")
+        format_raw = h.group(2).lower()
+        if format_raw == 'no':
+            encrypted = False
+        elif format_raw == 'particle':
+            encrypted = "particle"
+        elif format_raw == 'fully':
+            await event.reply('Fully encryption didnt supported yet!')
+            return
+
+    if encrypted == "particle":
+        note_text = base64.urlsafe_b64encode(bz2.compress(note_text.encode()))
+
     new = ({
         'chat_id': chat_id,
         'name': note_name,
@@ -89,7 +108,8 @@ async def save_note(event, strings, status, chat_id, chat_title):
         'created': created_date,
         'updated_by': event.from_id,
         'creator': creator,
-        'file_id': file_id
+        'file_id': file_id,
+        'encrypted': encrypted
     })
 
     buttons = None
@@ -106,6 +126,8 @@ async def save_note(event, strings, status, chat_id, chat_title):
 
     text = strings["note_saved_or_updated"].format(
         note_name=note_name, status=status, chat_title=chat_title)
+    if encrypted is not False:
+        text += f"Note encrypted {encrypted}\n"
     text += strings["you_can_get_note"].format(name=note_name)
 
     await event.reply(text, buttons=buttons)
@@ -190,12 +212,19 @@ async def send_note(chat_id, group_id, msg_id, note_name,
     if not file_id:
         file_id = None
 
+    if 'encrypted' not in note or note['encrypted'] is False:
+        raw_note_text = note['text']
+
+    elif 'encrypted' in note:
+        if note['encrypted'] == 'particle':
+            raw_note_text = bz2.decompress(base64.urlsafe_b64decode(note['text'])).decode()
+
     if noformat is True:
         format = None
-        string = note['text']
+        string = raw_note_text
         buttons = ""
     else:
-        string, buttons = button_parser(group_id, note['text'])
+        string, buttons = button_parser(group_id, raw_note_text)
         h = re.search(r"(\[format:(markdown|md|html|none)\])", string)
         if h:
             string = string.replace(h.group(1), "")
