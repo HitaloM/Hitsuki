@@ -247,6 +247,33 @@ async def fed_info(message, strings, status, chat_id, chat_title, fed,
     await message.reply(text)
 
 
+@decorator.command('fbanned')
+@connection(admin=True, only_in_groups=True)
+@get_fed_dec
+@user_is_fed_admin
+@get_strings_dec("feds")
+async def fbanned_list(message, strings, status, chat_id, chat_title, fed,
+                       *args, **kwargs):
+    print(fed)
+    text = strings['fbanned_list_header'].format(fed_name=fed['fed_name'], fed_id=fed['fed_id'])
+    fbanned = mongodb.fbanned_users.find({'fed_id': fed['fed_id']})
+    for user_id in fbanned:
+        user_id = user_id['user']
+        user = mongodb.user_list.find_one({'user_id': user_id})
+        if user:
+            text += f"\n {user['first_name']} "
+            if 'last_name' in user and user['last_name']:
+                text += user['last_name']
+            text += f" ({user_id})"
+        else:
+            text += f'\n ({user_id})'
+    await message.answer_document(
+        types.InputFile(io.StringIO(text), filename="fbanned_list.txt"),
+        strings['fbanned_list_header'].format(fed_name=fed['fed_name'], fed_id=fed['fed_id']),
+        reply=message.message_id
+    )
+
+
 @decorator.command('fban')
 @connection(admin=True, only_in_groups=True)
 @get_user_and_fed_and_text_dec

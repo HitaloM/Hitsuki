@@ -297,7 +297,9 @@
         "no_fed_4": "This chat is not in any federation to list the subscribed federations!",
         "no_subfeds": "This federation isn't subscribed to any federations!",
         "list_head": "Subscribed federations are: \n",
-        "list_data": "- **{fedname}**"
+        "list_data": "- **{fedname}**",
+
+        "fbanned_list_header": "Banned in {fed_name} Federation ({fed_id}):"
     }
  },
  "HELPS": {
