@@ -333,9 +333,9 @@
             "a3": "`{last}` - Last name, ex. 'Smith'",
             "a4": "`{fullname}` - Full name, ex. 'Mike Smith'",
             "a5": "`{username}` - Gives the username, ex. '@MikeSmith009'",
-            "a6": "`{mention}` - Gives the link to user, ex. [SophieBot](https://t.me/rSophieBot)",
+            "a6": "`{mention}` - Gives the link to user, ex. [Sophie](https://t.me/rSophieBot)",
             "a7": "`{id}` - Gives the id of the user, ex. '885745757'",
-            "a8": "`{chatname}` - Gives the current chat name, ex. 'SophieBot chat'"
+            "a8": "`{chatname}` - Gives the current chat name, ex. 'Sophie chat'"
         },
         "md": {
             "a1": "You can use markdown to make your messages more expressive. This is the markdown currently supported:\n",
@@ -355,7 +355,7 @@
             "a8": "`<a href=\"http://example.com/\">hyperlink</a>`: Example of hyperlink, will shown as [hyperlink](example.com)"
         },
         "btns": {
-            "a1": "Making buttons isn't so hard as you expected. Unlike other bots SophieBot have many types of custom buttons, let's try use it!",
+            "a1": "Making buttons isn't so hard as you expected. Unlike other bots Sophie have many types of custom buttons, let's try use it!",
             "a2": "Lets start by default url buttons, url buttons have such syntax `[Button name](buttonurl:https://url.com)`.",
             "a3": "\nOk, you added many buttons to your message, but it looks ugly? You wanna make few buttons per line? This will help you:",
             "a4": "Add `:same` at the end of your link; it'll set it on the same line as the other one. For example:",
@@ -365,7 +365,7 @@
             "a8": "- `[Button name](buttonnote:name_of_note)`: With such types of button you will get a note in your PM, this done to prevent spamming notes in pm.",
             "a9": "- `[Button name](buttonalert:name_of_note)`: This one will show you popup with note data (Warning, only text supported by popups), for example this can be done for rules, you are limited only by your imagination and by 200 symbols limit for popups",
             "a10": "- `[Button name](deletemsg:admin)`: Some notes used by warning, or notify, after reading it it leaving in chat, it spammy, right? This button will remove message, it have argument to control which one can be remove message `user` or `admin`.",
-            "a11": "\nCreate your beautiful and functional notes with SophieBot."
+            "a11": "\nCreate your beautiful and functional notes with Sophie."
         }
     },
     "purges": {
@@ -422,7 +422,7 @@
             "i0": "Welcomes it's are a note trigger, use /setwelcome to set welcome trigger to note.",
             "i1": "\n**Available commands are:**",
             "i2": "- /setwelcome (notename): sets your new welcome note!",
-            "i3": "Note: Please keep in mind, SophieBot use notes for welcome, you must create note with welcome text and set note as welcome",
+            "i3": "Note: Please keep in mind, Sophie use notes for welcome, you must create note with welcome text and set note as welcome",
             "i4": "Steps:",
             "i5": "1. Create note with your welcome",
             "i6": "2. /setwelcome notename\n",
@@ -473,7 +473,7 @@
     },
     "disabling": {
         "btn": "Disabling",
-        "title": "You might not like all the SophieBot's features and wanna disable something to reduce spam in your group? If you this module for you!",
+        "title": "You might not like all the Sophie's features and wanna disable something to reduce spam in your group? If you this module for you!",
         "text": {
             "a1": "**Available commands are:**",
             "a2": "- /disable (command): Disable the command",
@@ -493,12 +493,12 @@
     },
     "lang": {
         "btn": "Language",
-        "title": "Not every can speak with perfect English, SophieBot have translation system, check it out.",
+        "title": "Not every can speak with perfect English, Sophie have translation system, check it out.",
         "text": {
             "a1": "**Available commands are:**",
             "a2": "/lang: Will show a buttons with all languages and it will show current chat language.",
             "a3": "/lang (lang): Will change the language without selecting it with buttons.",
-            "a4": "\nNot all language currently supported, help us with translation on [our crowdin page](https://crowdin.com/project/sophiebot)"
+            "a4": "\nNot all language currently supported, help us with translation on [our crowdin page](https://crowdin.com/project/Sophie)"
         }
     },
     "rules": {
@@ -507,11 +507,49 @@
         "text": {
             "a1": "**Available commands are:**",
             "a2": "- /setrules (notename): Set the rules",
-            "a3": "Note: Please keep in mind, SophieBot use notes for rules, you must create note with rules text and set it",
+            "a3": "Note: Please keep in mind, Sophie use notes for rules, you must create note with rules text and set it",
             "a4": "Steps:",
             "a5": "1. Create note with your welcome",
             "a6": "2. /setwelcome notename",
             "a7": "\nRules button will appear in the warn message"
+        }
+    },
+    "privacy": {
+        "btn": "Data privacy and security",
+        "title": "Sophie respect your privacy.",
+        "text": {
+            "a1": "Sophie team constantly improve privacy and security.",
+            "a2": "\n* Server which run Sophie:",
+            "a3": "- We use a server provided by vultr in Amsterdam",
+            "a4": "- No-one from SUDO don't have acess to it",
+            "a5": "- We have runned own password manager on it and use it everyday (we trust own server own password)",
+            "a6": "- Server secured by ssh keys and have enabled ufw"
+        },
+        "buttons": {
+            "help_btn_privacy_collection": "Which data we collect",
+            "help_btn_privacy_removing": "Removing your data"
+        },
+        "collection": {
+            "a1": "Sophie team respects your privacy",
+            "a2": "* We don't collect your privacy data",
+            "a3": "* We don't save your messages or any info about your messages",
+            "a4": "\n* We collect only data which saved in Sophie (ex. notes)",
+            "a5": "* We collecting users public data:",
+            "a6": "- We collect first and last names, used id, and a used_id",
+            "a7": "- We need this data for fast finding the user by nickname (ex. if you typing /warn @someone)",
+            "a8": "- We never use this data for make user profiles, it's just a some info to make Sophie faster and independent from Telegram's requests",
+            "a9": "\n* We collect chat datas:",
+            "a10": "- We save the chat name and chat id, we don't save chat admins and creators",
+            "a11": "- We don't use chats data in analytics",
+            "a12": "- We need this data to make Sophie support operations in multiple chats, for example broadcasts, connections, etc.",
+            "a13": "\n* Analytics:",
+            "a14": "- We use ONLY Sophie general metrics as speed, count of data types in all chats",
+            "a15": "- We log errors which generated by Sophie (They have very limited info, only a error string and date)",
+            "a16": "- We log a gbans which done by SUDO's (with gbanned user_id)"
+        },
+        "removing": {
+            "a1": "Right now no way do it automatically, but it in Sophie team To-do.",
+            "a2": "You can ask @MrYacha do it."
         }
     }
  },
