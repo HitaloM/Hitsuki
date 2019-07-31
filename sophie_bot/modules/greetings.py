@@ -19,35 +19,42 @@ from sophie_bot.modules.users import user_admin_dec, user_link_html
 
 async def do_welcomesecurity(message, strings, from_id, chat_id):
     welcome_security = mongodb.welcome_security.find_one({'chat_id': chat_id})
+
+    if 'new_chat_members' in message:
+        from_id = message.new_chat_members[0].id
+
     if welcome_security and welcome_security['security'] == 'soft':
-        buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(
-            strings['clik2tlk_btn'], callback_data='wlcm_{}_{}'.format(from_id, chat_id)
-        ))
+
         time_val = int(time.time() + 60 * 60)  # Mute 1 hour
         await mute_user(message, int(from_id), chat_id, time_val)
         text = strings['wlcm_sec'].format(mention=await user_link_html(from_id))
-        await message.reply(text, reply_markup=buttons)
+        await message.reply(text)
 
-    elif welcome_security and welcome_security['security'] == 'hard':
-        buttons = [
-            [Button.inline(strings['clik2tlk_btn'], 'wlcm_{}_{}'.format(from_id, chat_id))]
-        ]
+        buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(
+            strings['clik2tlk_btn'], callback_data='wlcm_{}_{}'.format(from_id, chat_id)
+        ))
         try:
             await mute_user(message, int(from_id), chat_id, None)
         except CantDemoteChatCreator:
             return
 
         text = strings['wlcm_sec'].format(mention=await user_link_html(from_id))
-        await message.reply(text, buttons=buttons)
+        await message.reply(text, reply_markup=buttons)
 
 
 async def do_cleanwelcome(message, chat_id, welc_msg):
     clean_welcome = mongodb.clean_welcome.find_one({'chat_id': chat_id})
     if clean_welcome:
+
+        if hasattr(welc_msg, 'id'):
+            msg_id = welc_msg.id
+        elif hasattr(welc_msg, 'message_id'):
+            msg_id = welc_msg.message_id
+
         new = {
             'chat_id': chat_id,
             'enabled': True,
-            'last_msg': welc_msg.id
+            'last_msg': msg_id
         }
         if 'last_msg' in clean_welcome:
             owo = []

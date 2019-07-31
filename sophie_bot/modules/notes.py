@@ -34,6 +34,13 @@ from sophie_bot.modules.users import (check_group_admin, is_user_admin,
 RESTRICTED_SYMBOLS = ['**', '__', '`']
 
 
+@decorator.command("owo", is_owner=True)
+async def test(message, **kwagrs):
+    text = "test " + await user_link_html(762730992, custom_name="‏")  # Here invisible symbol
+    print(await message.reply(text))
+
+
+
 @decorator.t_command("save", word_arg=True)
 @user_admin_dec
 @connection(admin=True)
@@ -109,7 +116,6 @@ async def save_note(event, strings, status, chat_id, chat_title):
         note_text = f.encrypt(note_text.encode())
         if file_id:
             file_id = f.encrypt(file_id.encode())
-        print(f.generate_key())
         encrypted = salt
 
     new = ({
@@ -211,7 +217,6 @@ async def list_notes(event, strings, status, chat_id, chat_title):
 async def send_note(chat_id, group_id, msg_id, note_name,
                     show_none=False, noformat=False, preview=False,
                     from_id="", key=False):
-    print(key)
     file_id = None
     note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': note_name})
     if not note and show_none is True:

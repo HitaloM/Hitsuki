@@ -31,6 +31,9 @@ async def check_message(message, **kwargs):
         pattern = r"( |^|[^\w])" + keyword + r"( |$|[^\w])"
         if re.search(pattern, text, flags=re.IGNORECASE):
             H = mongodb.filters.find_one({'chat_id': chat_id, "handler": {'$regex': str(pattern)}})
+            if not H:
+                update_handlers_cache(chat_id)
+                return
             action = H['action']
             if action == 'note':
                 await send_note(chat_id, chat_id, msg_id, H['arg'], show_none=True)
