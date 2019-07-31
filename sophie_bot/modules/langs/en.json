@@ -329,7 +329,8 @@
             "help_btn_notes_btns": "Buttons",
             "help_btn_notes_md": "Markdown",
             "help_btn_notes_vars": "Special vars",
-            "help_btn_notes_html": "HTML"
+            "help_btn_notes_html": "HTML",
+            "help_btn_notes_enc": "Encryption"
         },
         "vars": {
             "a1": "You can use special variable in notes, here a list of it:",
@@ -370,6 +371,14 @@
             "a9": "- `[Button name](buttonalert:name_of_note)`: This one will show you popup with note data (Warning, only text supported by popups), for example this can be done for rules, you are limited only by your imagination and by 200 symbols limit for popups",
             "a10": "- `[Button name](deletemsg:admin)`: Some notes used by warning, or notify, after reading it it leaving in chat, it spammy, right? This button will remove message, it have argument to control which one can be remove message `user` or `admin`.",
             "a11": "\nCreate your beautiful and functional notes with Sophie."
+        },
+        "enc": {
+            "a0": "Sophie respect your privacy, you allowed encrypt your notes to save your data privacy.",
+            "a1": "By default all notes encrypted with particle method.",
+            "a2": "Just add a `[encryption:fully]` in note text to encrypt it fully with password requesting.",
+            "a3": "Example:",
+            "a4": "`/save test_note This is a text of test_note [encryption:fully]`",
+            "a5": "\nYou also can disable encryption fully by `[encryption:no]`"
         }
     },
     "purges": {
