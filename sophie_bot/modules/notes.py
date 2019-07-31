@@ -70,7 +70,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     created_date = date
     creator = None
-    encrypted = "particle"
+    encrypted = "particle-v1"
     if old:
         if 'created' in old:
             created_date = old['created']
@@ -88,11 +88,11 @@ async def save_note(event, strings, status, chat_id, chat_title):
         if format_raw == 'no':
             encrypted = False
         elif format_raw == 'particle':
-            encrypted = "particle"
+            encrypted = "particle-v1"
         elif format_raw == 'fully':
             encrypted = 'fully'
 
-    if encrypted == "particle":
+    if encrypted == "particle-v1":
         note_text = base64.urlsafe_b64encode(bz2.compress(note_text.encode()))
     elif encrypted == "fully":
         password = randomString(12).encode()
@@ -139,7 +139,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
     text = strings["note_saved_or_updated"].format(
         note_name=note_name, status=status, chat_title=chat_title)
     if encrypted is not False:
-        if encrypted == "particle":
+        if encrypted == "particle-v1":
             text += f"Note encrypted particle 🔒\n"
             text += strings["you_can_get_note"].format(name=note_name)
         else:
@@ -237,7 +237,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         raw_note_text = note['text']
 
     elif 'encrypted' in note:
-        if note['encrypted'] == 'particle':
+        if note['encrypted'] == 'particle-v1':
             raw_note_text = bz2.decompress(base64.urlsafe_b64decode(note['text'])).decode()
         else:
             if not key:
