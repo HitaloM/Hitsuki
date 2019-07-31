@@ -107,6 +107,8 @@ async def save_note(event, strings, status, chat_id, chat_title):
         key = base64.urlsafe_b64encode(kdf.derive(password))
         f = Fernet(key)
         note_text = f.encrypt(note_text.encode())
+        if file_id:
+            file_id = f.encrypt(file_id.encode())
         print(f.generate_key())
         encrypted = salt
 
@@ -138,11 +140,15 @@ async def save_note(event, strings, status, chat_id, chat_title):
         note_name=note_name, status=status, chat_title=chat_title)
     if encrypted is not False:
         if encrypted == "particle":
-            text += f"Note encrypted particle\n"
+            text += f"Note encrypted particle 🔒\n"
+            text += strings["you_can_get_note"].format(name=note_name)
         else:
-            text += f"Note encrypted fully\n"
+            text += f"Note encrypted fully 🔐\n"
             text += "Password: " + password.decode() + '\n'
-    text += strings["you_can_get_note"].format(name=note_name)
+            text += strings["you_can_get_note_enc"].format(
+                name=note_name, password=password.decode())
+    else:
+        text += strings["you_can_get_note"].format(name=note_name)
 
     await event.reply(text, buttons=buttons)
 
@@ -234,6 +240,10 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         if note['encrypted'] == 'particle':
             raw_note_text = bz2.decompress(base64.urlsafe_b64decode(note['text'])).decode()
         else:
+            if not key:
+                await tbot.send_message(chat_id, "This note encrypted! Please write a password!",
+                                        reply_to=msg_id)
+                return
             salt = note['encrypted']
             kdf = PBKDF2HMAC(
                 algorithm=hashes.SHA256(),
@@ -246,8 +256,11 @@ async def send_note(chat_id, group_id, msg_id, note_name,
             f = Fernet(key)
             try:
                 raw_note_text = f.decrypt(note['text']).decode()
+                if file_id:
+                    file_id = f.decrypt(file_id).decode()
             except InvalidToken:
-                raw_note_text = "Invalid password!"
+                await tbot.send_message(chat_id, "Invalid password!", reply_to=msg_id)
+                return
 
     if noformat is True:
         format = None

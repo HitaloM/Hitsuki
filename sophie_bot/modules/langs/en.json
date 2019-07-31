@@ -13,6 +13,7 @@
         "updated": "updated",
         "note_saved_or_updated": "🗒 **Note {note_name} {status} in {chat_title}!**\n",
         "you_can_get_note": "You can retrieve this note by using `/get {name}`, or `#{name}`",
+        "you_can_get_note_enc": "You can retrieve this note by using `/get {name} {password}`",
         "dont_have_rights_to_save": "You don't have rights to save notes here!",
         "del_note": "Delete note",
         "no_note": "Can't find that note.",
