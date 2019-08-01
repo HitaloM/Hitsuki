@@ -7,6 +7,7 @@ from telethon.tl.types import ChatBannedRights
 from sophie_bot import CONFIG, SUDO, WHITELISTED, decorator, logger, mongodb, bot
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import user_link, aio_get_user, user_link_html
+from sophie_bot.modules.helper_func.decorators import need_args_dec
 
 
 GBANNED_RIGHTS = ChatBannedRights(
@@ -25,8 +26,6 @@ GBANNED_RIGHTS = ChatBannedRights(
 async def blacklist_user(message):
     user, reason = await aio_get_user(message, send_text=False)
 
-    reason = reason.replace('<', '&lt;')
-
     user_id = int(user['user_id'])
     sudo_admin = message.from_user.id
 
@@ -37,6 +36,8 @@ async def blacklist_user(message):
     if not reason:
         await message.reply("You can't blacklist user without a reason blyat!")
         return
+
+    reason = reason.replace('<', '&lt;')
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
@@ -97,6 +98,7 @@ async def blacklist_user(message):
 
 
 @decorator.command("gban")
+@need_args_dec()
 async def gban_1(message, **kwargs):
     if message.from_user.id not in SUDO:
         return
@@ -104,6 +106,7 @@ async def gban_1(message, **kwargs):
 
 
 @decorator.command("fban")
+@need_args_dec()
 async def gban_2(message, **kwargs):
     if message.chat.id == -1001302848189:
         print('owo')
@@ -111,6 +114,7 @@ async def gban_2(message, **kwargs):
 
 
 @decorator.command("ungban")
+@need_args_dec()
 async def un_blacklist_user(message, **kwargs):
     if message.from_user.id not in SUDO:
         return
