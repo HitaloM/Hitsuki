@@ -15,6 +15,7 @@
             "updated": "обновлена",
             "note_saved_or_updated": "**Заметка {note_name} {status} в {chat_title}!**\n",
             "you_can_get_note": "Вы можете получить заметку используя `/get {name}`, или `{name}`",
+            "you_can_get_note_enc": "You can retrieve this note by using `/get {name} {password}`",
             "dont_have_rights_to_save": "Вы не имеете прав сохранять заметки здесь!",
             "del_note": "Удалить заметку",
             "no_note": "Не могу найти эту заметку.",
@@ -86,7 +87,6 @@
             "welcome_hay": "Добро пожаловать {mention}! Как дела?",
             "cant_find_note": "Я не могу найти эту заметку.",
             "welcome_set_to_note": "Установка приветствия в заметку: <code>{}</code>",
-            "welcome_is_note": "Приветствие настроено на заметку: `{}`",
             "welcome_is_default": "Приветствие не настроено.",
             "no_args_serv": "Пожалуйста, добавьте аргумент yes или no , чтобы включить или выключить очистку служебных сообщений Telegram",
             "serv_yes": "Служба очистки успешно включена в этом чате!",
@@ -157,7 +157,8 @@
             "warn_list_head": "{user}'s **предупреждений в {chat_name}:**\n",
             "user_hasnt_warned": "{user} не имел предупреждений в **{chat_name}** до этого!",
             "warn_limit": "Лимит предупреждений в {chat_name}: `{num}`",
-            "warn_limit_upd": "Лимит предупреждений обновлен до {}!"
+            "warn_limit_upd": "Лимит предупреждений обновлен до {}!",
+            "no_user_warns": "{user} don't have any warning yet!"
         },
         "msg_deleting": {
             "no_rights_purge": "Вы не имеете прав чистить этот чат!",
@@ -186,14 +187,13 @@
             "paste_no_text": "Вы не предоставили текст для вставки!",
             "user_info": "<b>Информация о пользователе</b>\n",
             "info_id": "<b>ID Пользователя:</b> <code>{id}</code>\n",
-            "dc_id": "<b>ID Датацентр:</b> <code>{}</code>\n",
-            "scam": "<b>Мошенник:</b> {}\n",
-            "restricted": "<b>Ограниченный:</b> {}\n",
-            "deleted": "<b>Удалён:</b> {}",
             "info_first": "\n<b>Имя:</b> {first_name}",
             "info_last": "\n<b>Фамилия:</b> {last_name}",
             "info_username": "\n<b>Никнейм:</b> {username}",
             "info_link": "\n<b>Ссылка на пользователя:</b> {user_link}",
+            "info_saw": "\nI saw him in <code>{num}</code> groups",
+            "info_fbanned": "\nBanned in current Federation: ",
+            "info_admeme": "\nUser has admin rights in this chat.",
             "father": "\n\nЭто мой отец.",
             "sudo_crown": "\nХей! Посмотрте на него, у него есть корона, и... Ух ты! На ней гравировка <b>\"Sudo пользователь\"</b>. Мило.",
             "gbanned": "\nВсего забанено: ",
@@ -251,8 +251,8 @@
             "fban_self": "Попробуйте fban самого себя, вот это будет шоу!",
             "need_admin_to_fban": "Вы должны быть админом Федерации, чтобы использовать fban в {name} Федерации",
             "already_fbanned": "{user} уже получил fban в этой федерации.",
-            "fbanned_header": "<b>Federation ban</b>",
-            "un_fbanned_header": "<b>Federation unban</b>",
+            "fbanned_header": "<b>Бан в федерации</b>",
+            "un_fbanned_header": "<b>Разбан в федерации</b>",
             "fbanned_fed": "\nФедерация: {fed}",
             "fbanned_fadmin": "\nАдмин федерации: {fadmin}",
             "fbanned_user": "\nПользователь: {user}",
@@ -281,7 +281,8 @@
             "no_fed_4": "Этот чат не в какой-либо федерации, чтобы отписаться от какой-либо федерации!",
             "no_subfeds": "Эта федерация уже подписана на данную федерацию!",
             "list_head": "Подписанные федерации: \n",
-            "list_data": "- **{fedname}**"
+            "list_data": "- **{fedname}**",
+            "fbanned_list_header": "Banned in {fed_name} Federation ({fed_id}):"
         }
     },
     "HELPS": {
@@ -308,7 +309,8 @@
                 "help_btn_notes_btns": "Кнопки",
                 "help_btn_notes_md": "Разметка",
                 "help_btn_notes_vars": "Переменные",
-                "help_btn_notes_html": "HTML"
+                "help_btn_notes_html": "HTML",
+                "help_btn_notes_enc": "Encryption"
             },
             "vars": {
                 "a1": "Вы можете использовать специальные переменные в заметках, здесь список:",
@@ -349,6 +351,14 @@
                 "a9": "- `[Имя кнопки](buttonalert:name_of_note)`: Эта кнопка покажет поп-ап с заметкой (Обратите внимание, поп-апы поддерживают только текст), например, это может быть сделано для правил, вы ограничены только вашей фантазией и 200 символами для поп-апов",
                 "a10": "- `[Имя кнопки](deletemsg:admin)`: Некоторые заметки использутся в качестве предупржение или фильтра, после его прочтения оно остается в чате, не правдо ли это спам? Эта кнопка будет удалять сообщение, она имеет аргумент для котроля права на удаление, это `user` или `admin`.",
                 "a11": "\nСоздайте ваши красивые и функциональные заметки с помощью SophieBot."
+            },
+            "enc": {
+                "a0": "Sophie respect your privacy, you allowed encrypt your notes to save your data privacy.",
+                "a1": "By default all notes encrypted with particle method.",
+                "a2": "Just add a `[encryption:fully]` in note text to encrypt it fully with password requesting.",
+                "a3": "Example:",
+                "a4": "`/save test_note This is a text of test_note [encryption:fully]`",
+                "a5": "\nYou also can disable encryption fully by `[encryption:no]`"
             }
         },
         "purges": {
@@ -409,10 +419,10 @@
                 "i4": "- /cleanwelcome: Удаляет старые приветственные сообщения; когда новый человек присоединяется, старое сообщение удаляется.",
                 "i5": "- /welcomesecurity <off/soft/hard>: soft - ограничивает пользователей в возможности присылать медиа файлы на протяжении 24 часов, hard - ограничивает пользователей в возможности присылать сообщения, пока они не нажмут на кнопку 'Я не робот'",
                 "i6": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'",
-                "i7": "- /setwelcome off: disable welcome in chat.",
-                "i8": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat.",
-                "i9": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
-                "i10": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
+                "i7": "- /setwelcome off: отключить приветствие в чате.",
+                "i8": "- /cleanservice: Удалять сервисные сообщения Telegram о том, что пользователь присоединился или покинул чат.",
+                "i9": "- /cleanwelcome: Удалять старые сообщения с приветствием; когда присоединяется новый участник, старое сообщение удаляется.",
+                "i10": "- /welcomesecurity <off/soft/hard>: soft - запретить пользователям отправлять медиа файлы в течение 24 часов; hard - запретить пользователям отправлять сообщения до нажатия кнопки 'Я не бот'"
             }
         },
         "filters": {
@@ -428,11 +438,11 @@
                 "i7": "- tban: например: `/filter foo tban 10m`: бот забанит пользователя, который отправит сообщение, которое включает 'foo' на '10m' (minutes, минут) , Вы можете дать любое значение (m , h, d)",
                 "i8": "- ban: например: `/filter foo ban`: бот забанит пользователя, который отправит сообщение включающее 'foo'",
                 "i9": "- mute: например: `/filter foo mute`: бот замутит пользователя (навсегда), который отправил 'foo'",
+                "i10": "- tban: eg: `/filter foo tban 10m`: bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
                 "i11": "- kick: например: `/filter foo kick`: бот кикнет пользователя, который отправит сообщение, включающее 'foo'",
                 "i12": "- /filters: Бот покажет список активных фильтров в чате!",
                 "i13": "- /stop <filter name>: Остановит указанный фильтр",
-                "i14": "- kick: например: `/filter foo kick`: бот кикнет пользователя, который отправил сообщение, включающее 'foo'",
-                "i15": "- warn: например: `/filter foo warn (причина, опционально)`: бот выдаст варн (или забанит, если лимит варнов исчерпан) пользователя, который отправил сообщение, включающее 'foo'"
+                "i14": "- kick: например: `/filter foo kick`: бот кикнет пользователя, который отправил сообщение, включающее 'foo'"
             }
         },
         "federations": {
@@ -485,16 +495,54 @@
             }
         },
         "rules": {
-            "btn": "Rules",
-            "title": "Save your chat with your rules",
+            "btn": "Правила",
+            "title": "Добавьте в чат свои правила",
             "text": {
-                "a1": "**Available commands are:**",
-                "a2": "- /setrules (notename): Set the rules",
+                "a1": "**Доступные команды:**",
+                "a2": "- /setrules (notename): Добавить правила",
                 "a3": "Note: Please keep in mind, SophieBot use notes for rules, you must create note with rules text and set it",
-                "a4": "Steps:",
+                "a4": "Шаги:",
                 "a5": "1. Create note with your welcome",
                 "a6": "2. /setwelcome notename",
                 "a7": "\nRules button will appear in the warn message"
+            }
+        },
+        "privacy": {
+            "btn": "Data privacy and security",
+            "title": "Sophie respect your privacy.",
+            "text": {
+                "a1": "Sophie team constantly improve privacy and security.",
+                "a2": "\n* Server which run Sophie:",
+                "a3": "- We use a server provided by vultr in Amsterdam",
+                "a4": "- No-one from SUDO don't have acess to it",
+                "a5": "- We have runned own password manager on it and use it everyday (we trust own server own password)",
+                "a6": "- Server secured by ssh keys and have enabled ufw"
+            },
+            "buttons": {
+                "help_btn_privacy_collection": "Which data we collect",
+                "help_btn_privacy_removing": "Removing your data"
+            },
+            "collection": {
+                "a1": "Sophie team respects your privacy",
+                "a2": "* We don't collect your privacy data",
+                "a3": "* We don't save your messages or any info about your messages",
+                "a4": "\n* We collect only data which saved in Sophie (ex. notes)",
+                "a5": "* We collecting users public data:",
+                "a6": "- We collect first and last names, used id, and a used_id",
+                "a7": "- We need this data for fast finding the user by nickname (ex. if you typing /warn @someone)",
+                "a8": "- We never use this data for make user profiles, it's just a some info to make Sophie faster and independent from Telegram's requests",
+                "a9": "\n* We collect chat datas:",
+                "a10": "- We save the chat name and chat id, we don't save chat admins and creators",
+                "a11": "- We don't use chats data in analytics",
+                "a12": "- We need this data to make Sophie support operations in multiple chats, for example broadcasts, connections, etc.",
+                "a13": "\n* Analytics:",
+                "a14": "- We use ONLY Sophie general metrics as speed, count of data types in all chats",
+                "a15": "- We log errors which generated by Sophie (They have very limited info, only a error string and date)",
+                "a16": "- We log a gbans which done by SUDO's (with gbanned user_id)"
+            },
+            "removing": {
+                "a1": "Right now no way do it automatically, but it in Sophie team To-do.",
+                "a2": "You can ask @MrYacha do it."
             }
         }
     },
@@ -508,7 +556,7 @@
             "6": "Это христианский чат. Ты должен уйти!",
             "7": "Недостаточно ли сообщества для вас?",
             "8": "\"Я ухожу.\"",
-            "9": "Удоли черт бан автомат ;__;.",
+            "9": "Удоли черт бан автомат ;__;.\nЯша, я конешн все понимаю, что может что-то адекватнее?",
             "10": ";______________________;",
             "11": "Кто я сер? Я просто бот?",
             "12": "О, смотрите, это даже не смешно.",
