@@ -1,4 +1,5 @@
 import ujson
+import datetime
 
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import (ChannelParticipantsAdmins,
@@ -16,16 +17,25 @@ async def update_users(message, **kwargs):
     new_chat = message.chat
     if not new_chat.type == 'private':
 
+        old_chat = mongodb.chat_list.find_one({'chat_id': chat_id})
+
         if not hasattr(new_chat, 'username'):
             chatnick = None
         else:
             chatnick = new_chat.username
 
+        if old_chat and 'first_detected_date' in old_chat:
+            first_detected_date = old_chat['first_detected_date']
+        else:
+            print('new chat')
+            first_detected_date = datetime.datetime.now()
+
         chat_new = {
             "chat_id": chat_id,
             "chat_title": new_chat.title,
             "chat_nick": chatnick,
-            "type": new_chat.type
+            "type": new_chat.type,
+            "first_detected_date": first_detected_date
         }
 
         mongodb.chat_list.update_one({'chat_id': chat_id}, {"$set": chat_new}, upsert=True)
@@ -55,6 +65,12 @@ def update_user(chat_id, new_user):
         if not new_chat or chat_id not in new_chat:
             new_chat.append(chat_id)
 
+    if old_user and 'first_detected_date' in old_user:
+        first_detected_date = old_user['first_detected_date']
+    else:
+        print('new user')
+        first_detected_date = datetime.datetime.now()
+
     if new_user.username:
         username = new_user.username.lower()
     else:
@@ -71,7 +87,8 @@ def update_user(chat_id, new_user):
         'last_name': last_name,
         'username': username,
         'user_lang': new_user.language_code,
-        'chats': new_chat
+        'chats': new_chat,
+        'first_detected_date': first_detected_date
     }
 
     mongodb.user_list.update_one({'user_id': new_user.id}, {"$set": user_new}, upsert=True)

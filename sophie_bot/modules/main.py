@@ -5,8 +5,9 @@ import sys
 import io
 import traceback
 import ujson
+import datetime
 
-from time import gmtime, strftime
+from time import gmtime, strftime, time
 
 from sophie_bot import mongodb, tbot, decorator, dp, logger
 from sophie_bot.modules.disable import disablable_dec
@@ -59,6 +60,18 @@ async def stats(message, **kwargs):
     usrs = mongodb.user_list.count()
     chats = mongodb.chat_list.count()
     text += "\* `{}` total users, in `{}` chats\n".format(usrs, chats)
+
+    users_added = mongodb.user_list.find({
+        'first_detected_date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=2)}
+    }).count()
+
+    chats_added = mongodb.chat_list.find({
+        'first_detected_date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=2)}
+    }).count()
+
+    text += "\* `{}` new users and `{}` new chats in the last 48 hours\n".format(
+        users_added, chats_added
+    )
     text += "\* `{}` total notes\n".format(mongodb.notes.count())
     text += "\* `{}` total warns\n".format(mongodb.warns.count())
     text += "\* `{}` total gbanned users\n".format(mongodb.blacklisted_users.count())
@@ -66,6 +79,10 @@ async def stats(message, **kwargs):
         mongodb.fed_groups.count(),
         mongodb.fed_list.count(),
         mongodb.fbanned_users.count())
+    text += "\* `{}` total crash happened in this week\n".format(
+        mongodb.errors.find({
+            'date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=7)}
+        }).count())
     db = mongodb.command("dbstats")
     if 'fsTotalSize' in db:
         text += '\* Database size is `{}`, free `{}`'.format(
@@ -80,9 +97,16 @@ async def stats(message, **kwargs):
 async def all_errors_handler(message, dp):
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     logger.error("Error: " + date)
+
+    new = {
+        'error': str(sys.exc_info()[1]),
+        'date': datetime.datetime.now()
+    }
+    mongodb.errors.insert_one(new)
+
     msg = message.message
 
-    text = ":( | <b>Sorry, i got a error!</b>\n"
+    text = "<b>Sorry, I got a error!</b>\n"
     link = "<a href=\"https://t.me/YanaBotGroup\">Sophie support chat</a>"
     text += f"If you wanna you can report it - just forward this file to {link}.\n"
     text += "I won't log anything except the fact of error and date\n"
