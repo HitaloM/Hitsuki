@@ -38,13 +38,14 @@ async def check_message(message, **kwargs):
             if action == 'note':
                 await send_note(chat_id, chat_id, msg_id, H['arg'], show_none=True)
             elif action == 'answer':
-                txt, btns = button_parser(chat_id, H['arg'])
-                await tbot.send_message(
-                    chat_id,
-                    txt,
-                    buttons=btns,
-                    reply_to=msg_id
-                )
+                #txt, btns = button_parser(chat_id, H['arg'])
+                #await tbot.send_message(
+                #    chat_id,
+                #    txt,
+                #   buttons=btns,
+                #    reply_to=msg_id
+                #)
+                await message.answer(H['arg'])
             elif action == 'delete':
                 await message.delete()
             elif action == 'ban':
