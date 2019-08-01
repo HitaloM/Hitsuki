@@ -64,7 +64,7 @@ def update_user(chat_id, new_user):
         last_name = new_user.last_name.replace('<', '&lt;')
     else:
         last_name = None
-    
+
     user_new = {
         'user_id': new_user.id,
         'first_name': new_user.first_name,

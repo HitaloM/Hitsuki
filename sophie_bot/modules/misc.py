@@ -13,7 +13,7 @@ from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_user, user_admin_dec,
-                                      user_link, aio_get_user, user_link_html)
+                                      user_link, aio_get_user, user_link_html, is_user_admin)
 
 
 @decorator.command('allcommands')
@@ -226,16 +226,10 @@ async def paste_deldog(message, strings, **kwargs):
 async def user_info(message, strings, **kwargs):
     user, txt = await aio_get_user(message, allow_self=True)
     if not user:
-        print('noooo')
         return
 
-    check = mongodb.blacklisted_users.find_one({'user': user['user_id']})
-    if check:
-        gban_stat = strings['gbanned_yes']
-        gban_stat += strings["gbanned_date"].format(data=check['date'])
-        gban_stat += strings["gbanned_reason"].format(reason=check['reason'])
-    else:
-        gban_stat = 'No'
+    chat_id = message.chat.id
+    from_id = message.from_user.id
 
     text = strings["user_info"]
     text += strings["info_id"].format(id=user['user_id'])
@@ -250,11 +244,37 @@ async def user_info(message, strings, **kwargs):
 
     text += strings['info_link'].format(user_link=str(await user_link_html(user['user_id'])))
 
+    text += '\n'
+
+    if await is_user_admin(chat_id, user['user_id']) is True:
+        text += strings['info_admeme']
+
+    text += strings['info_saw'].format(num=len(user['chats']))
+
     if user['user_id'] == OWNER_ID:
         text += strings["father"]
     elif user['user_id'] in SUDO:
         text += strings['sudo_crown']
     else:
-        text += strings["gbanned"] + gban_stat
+        text += "\n"
+
+        fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
+        if fed:
+            fbanned = mongodb.fbanned_users.find_one({'user': from_id, 'fed_id': fed['fed_id']})
+            text += strings['info_fbanned']
+            if fbanned:
+                text += strings['gbanned_yes']
+                text += strings["gbanned_reason"].format(reason=fbanned['reason'])
+            else:
+                text += strings['no']
+        text += strings["gbanned"]
+
+        check = mongodb.blacklisted_users.find_one({'user': user['user_id']})
+        if check:
+            text += strings['gbanned_yes']
+            text += strings["gbanned_date"].format(data=check['date'])
+            text += strings["gbanned_reason"].format(reason=check['reason'])
+        else:
+            text += strings['no']
 
     await message.reply(text)
