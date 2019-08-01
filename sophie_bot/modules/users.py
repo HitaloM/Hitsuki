@@ -78,6 +78,8 @@ def update_user(chat_id, new_user):
 
     logger.debug(f"Users: User {new_user.id} updated")
 
+    return user_new
+
 
 async def update_admin_cache(chat_id):
     admin_list = await tbot.get_participants(
@@ -387,24 +389,18 @@ async def user_link(user_id):
 
 async def user_link_html(user_id, custom_name=False):
     user = mongodb.user_list.find_one({'user_id': user_id})
-    if custom_name is False and not user:
+    if user:
+        user_name = user['first_name'].replace('<', '&lt;')
+    else:
         try:
             user = await add_user_to_db(await tbot(GetFullUserRequest(int(user_id))))
-            user_link = "<a href=\"tg://user?id={id}\">{name}</a>".format(
-                name=user['first_name'].replace('<', '&lt;'),
-                id=user['user_id'])
         except Exception:
-            user_link = "<a href=\"tg://user?id={id}\">{name}</a>".format(
-                name=user_id, id=user_id)
-    else:
-        name = user['first_name'].replace('<', '&lt;')
-        if custom_name is not False:
-            name = custom_name
-        user_link = "<a href=\"tg://user?id={id}\">{name}</a>".format(
-            name=name,
-            id=user['user_id'])
+            user_name = str(user_id)
 
-    return user_link
+    if custom_name is not False:
+        user_name = custom_name
+
+    return "<a href=\"tg://user?id={id}\">{name}</a>".format(name=user_name, id=user_id)
 
 
 def user_admin_dec(func):

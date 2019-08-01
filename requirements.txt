@@ -8,3 +8,4 @@ cryptg
 pillow
 aiogram
 aioredis
+aiocron

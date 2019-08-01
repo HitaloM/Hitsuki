@@ -11,14 +11,20 @@
     "redis_port": 6379
 },
  "advanced":{
+    "sync_cas_bans": false,
+
+    "gbans_channel_enabled": true,
+    "gbans_channel": -1001155503575,
+
     "webhooks": false,
     "webhook_host": "https://yourdomain",
     "webapp_host": "localhost",
     "webapp_port": 8031,
 
     "skip_catch_up": true,
-    "rate_limit": true,
+    "rate_limit": false,
     "rate_limit_num": 3,
+    "block_gbanned_users": true,
     
     "sudo": [483808054, 782229305, 654839744],
     "whitelisted": [123456789, 928173281],
@@ -27,6 +33,6 @@
     "allow_commands_with_!": false,
 
     "load_components": true,
-    "not_load_this_components": ["fox"]
+    "not_load_this_components": ["afk", "fox"]
  }
 }

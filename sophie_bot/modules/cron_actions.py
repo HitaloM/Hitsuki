@@ -9,6 +9,8 @@ from sophie_bot import CONFIG, bot, mongodb
 
 @aiocron.crontab('50 16 * * *')
 async def attime():
+    if CONFIG['sync_cas_bans'] is False:
+        return
     url = 'https://combot.org/api/cas/export.csv'
     ffile = requests.get(url, allow_redirects=True)
     cas_banned = []
