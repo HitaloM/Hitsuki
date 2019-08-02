@@ -130,7 +130,7 @@ async def newFed(message, strings, regexp=None, **kwargs):
     check = mongodb.fed_list.insert_one(data)
     if check:
         await message.reply(strings['created_fed'].format(
-            name=fed_name, id=fed_id, cr=await user_link(creator)))
+            name=fed_name, id=fed_id, creator=await user_link_html(creator)))
 
 
 @decorator.command('joinfed')
