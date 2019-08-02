@@ -163,6 +163,9 @@ def get_strings_dec(module="", mas_name="STRINGS"):
                 chat_id = event.chat.id
 
             chat_lang = get_chat_lang(chat_id)
+            if chat_lang not in LANGUAGES:
+                await event.reply(f"I don't support {chat_lang}. Please change language now.")
+                return
             if module in LANGUAGES[chat_lang][mas_name]:
                 str = LANGUAGES[chat_lang][mas_name][module]
             else:
