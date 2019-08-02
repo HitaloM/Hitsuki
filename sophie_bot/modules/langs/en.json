@@ -307,6 +307,24 @@
         "list_data": "- **{fedname}**",
 
         "fbanned_list_header": "Banned in {fed_name} Federation ({fed_id}):"
+    },
+    "reports": {
+        "user_is_admin": "You're admin, why'd you need to report someone?..",
+        "user_is_whitelisted": "You're whitelisted user, why'd you need to report someone?..",
+        "reports_disabled": "Reports is <b>disabled</b> in this group.",
+        "no_user_to_report": "Which user you want to report?",
+        "report_admin": "You <b>can't</b> report admin.",
+        "report_whitedlisted": "You <b>can't</b> report whitelisted user.",
+        "reported_user": "<b>Reported</b> {user} <b>to admins.</b>",
+        "reported_reason": "\n<b>Reason:</b>\n<code>{reason}</code>",
+        "reports_on": "Reports are turned <b>on</b> in this group.",
+        "reports_off": "Reports are turned <b>off</b> in this group.",
+        "user_not_admin": "<b>You're not admin. Means you can't change reports status. </b>",
+        "reports_already_on": "<b>Reports are already turned on.</b>",
+        "reports_turned_on": "Reports turned <b>on.</b>",
+        "reports_already_off": "<b>Reports are already turned off.</b>",
+        "reports_off": "Reports turned <b>off.</b>",
+        "wrong_argument": "<b> Wrong argument. </b>"
     }
  },
  "HELPS": {
@@ -567,6 +585,17 @@
         "removing": {
             "a1": "Right now no way do it automatically, but it in Sophie team To-do.",
             "a2": "You can ask @MrYacha do it."
+        }
+    },
+    "reports": {
+        "btn": "Reports",
+        "title": "Report an annoying user to admins.",
+        "text": {
+            "a1": "**Available commands are:**",
+            "a2": "- /reports: Shows current reports status. Available for both admins and non-admins.",
+            "a3": "- /reports (**yes** or **on**)/(**no** or **off**). Available **only** for admins. Ex: /reports on",
+            "a4": "- /report (@user) (reason): Report a user to admins. Users only. Ex: /report @baduser bad user.",
+            "a5": "- @admin reason: Same as upper command but **doesn't** support custom tags to report. Ex: *replies to @baduser's message* @admin bad user."
         }
     }
  },
