@@ -1,9 +1,10 @@
 import re
 import time
 
-from telethon.tl.custom import Button
+from nostril import nonsense
 
 from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
+
 from aiogram.utils.exceptions import CantDemoteChatCreator
 
 from aiogram import types
@@ -67,7 +68,7 @@ async def do_cleanwelcome(message, chat_id, welc_msg):
         mongodb.clean_welcome.update_one({'_id': clean_welcome['_id']}, {'$set': new})
 
 
-@dp.message_handler(content_types=types.ContentTypes.NEW_CHAT_MEMBERS)
+@decorator.AioWelcome()
 @get_strings_dec("greetings")
 async def welcome_trigger(message, strings, **kwargs):
     chat_id = message.chat.id

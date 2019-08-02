@@ -9,3 +9,4 @@ pillow
 aiogram
 aioredis
 aiocron
+git+https://github.com/casics/nostril

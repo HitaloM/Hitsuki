@@ -2,6 +2,7 @@ import re
 
 from telethon import events
 from aiogram.dispatcher.handler import SkipHandler
+from aiogram import types
 
 from sophie_bot import BOT_USERNAME, CONFIG, tbot, dp
 
@@ -101,6 +102,18 @@ def AioBotDo():
             raise SkipHandler()
 
         dp.register_message_handler(new_func)
+        return new_func
+    return cascade_measage_handler
+
+
+def AioWelcome():
+    def cascade_measage_handler(func):
+
+        async def new_func(*args, **kwargs):
+            await func(*args, **kwargs)
+            raise SkipHandler()
+
+        dp.register_message_handler(new_func, content_types=types.ContentTypes.NEW_CHAT_MEMBERS)
         return new_func
     return cascade_measage_handler
 
