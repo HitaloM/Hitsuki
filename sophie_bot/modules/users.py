@@ -406,6 +406,8 @@ async def user_link(user_id):
 
 async def user_link_html(user_id, custom_name=False):
     user = mongodb.user_list.find_one({'user_id': user_id})
+    user_name = None
+
     if user:
         user_name = user['first_name'].replace('<', '&lt;')
     else:
