@@ -1,8 +1,6 @@
 import re
 import time
 
-from nostril import nonsense
-
 from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
 
 from aiogram.utils.exceptions import CantDemoteChatCreator
@@ -10,7 +8,7 @@ from aiogram.utils.exceptions import CantDemoteChatCreator
 from aiogram import types
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
-from sophie_bot import tbot, decorator, mongodb, dp
+from sophie_bot import tbot, decorator, mongodb
 from sophie_bot.modules.bans import mute_user, unmute_user
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec

@@ -1,4 +1,4 @@
-from sophie_bot import OWNER_ID, bot, dp, mongodb
+from sophie_bot import OWNER_ID, SUDO, bot, dp, mongodb
 
 from aiogram.dispatcher.filters import BoundFilter
 from aiogram import types
@@ -23,6 +23,17 @@ class IsOwner(BoundFilter):
 
     async def check(self, message: types.Message):
         if message.from_user.id == OWNER_ID:
+            return True
+
+
+class IsSudo(BoundFilter):
+    key = 'is_sudo'
+
+    def __init__(self, is_sudo):
+        self.is_owner = is_sudo
+
+    async def check(self, message: types.Message):
+        if message.from_user.id in SUDO:
             return True
 
 
@@ -77,3 +88,4 @@ dp.filters_factory.bind(NotGbanned)
 dp.filters_factory.bind(NotForwarded)
 dp.filters_factory.bind(Only_PM)
 dp.filters_factory.bind(Only_In_Groups)
+dp.filters_factory.bind(IsSudo)
