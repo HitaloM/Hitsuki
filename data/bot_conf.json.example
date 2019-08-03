@@ -13,6 +13,8 @@
  "advanced":{
     "sync_cas_bans": false,
 
+    "utoken": "Unified/BansToken",
+
     "gbans_channel_enabled": true,
     "gbans_channel": -1001155503575,
 

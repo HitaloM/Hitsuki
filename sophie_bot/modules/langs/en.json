@@ -323,7 +323,6 @@
         "reports_already_on": "<b>Reports are already turned on.</b>",
         "reports_turned_on": "Reports turned <b>on.</b>",
         "reports_already_off": "<b>Reports are already turned off.</b>",
-        "reports_off": "Reports turned <b>off.</b>",
         "wrong_argument": "<b> Wrong argument. </b>"
     }
  },

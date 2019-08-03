@@ -299,7 +299,6 @@
               "reports_already_on": "<b>Репорты уже включены в этой группе.</b>",
               "reports_turned_on": "Репорты <b>включены.</b>",
               "reports_already_off": "<b>Репорты уже выключены.</b>",
-              "reports_off": "Репорты <b>выключены.</b>",
               "wrong_argument": "<b> Неправильный аргумент. </b>"
           }
     },
