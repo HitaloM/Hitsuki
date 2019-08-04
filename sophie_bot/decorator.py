@@ -40,7 +40,7 @@ def t_command(command, arg="", word_arg="", additional="", **kwargs):
     return decorator
 
 
-def command(command, additional="", **kwargs):
+def command(command, allow_edited=True, **kwargs):
     REGISTRED_COMMANDS.append(command)
 
     def decorator(func):
@@ -55,14 +55,15 @@ def command(command, additional="", **kwargs):
         if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
             kwargs['not_forwarded'] = True
 
-        cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)".format(command, BOT_USERNAME, P=P)
+        cmd = f"^{0}(?i:{1}|{1}@{2})(?: |$)".format(P, command, BOT_USERNAME)
 
-        async def new_func(*args, **kwargs):
-            await func(*args, **kwargs)
+        async def new_func(*args, **def_kwargs):
+            await func(*args, **def_kwargs)
             raise SkipHandler()
 
         dp.register_message_handler(new_func, regexp=cmd, **kwargs)
-        dp.register_edited_message_handler(new_func, regexp=cmd, **kwargs)
+        if allow_edited is True:
+            dp.register_edited_message_handler(new_func, regexp=cmd, **kwargs)
     return decorator
 
 
