@@ -33,7 +33,7 @@ def change_info():
             if rights.change_info and rights.change_info is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
-                await event.reply(get_string("bot_rights", "change_info", event.chat_id))
+                await event.reply(get_string("bot_rights", "change_info", chat_id))
                 return
         return wrapped_1
     return decorator
@@ -69,7 +69,7 @@ def edit_messages():
             if rights.edit_messages and rights.edit_messages is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
-                await event.reply(get_string("bot_rights", "edit_messages", event.chat_id))
+                await event.reply(get_string("bot_rights", "edit_messages", chat_id))
                 return
         return wrapped_1
     return decorator
@@ -87,7 +87,7 @@ def delete_messages():
             if rights.delete_messages and rights.delete_messages is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
-                await event.reply(get_string("bot_rights", "delete_messages", event.chat_id))
+                await event.reply(get_string("bot_rights", "delete_messages", chat_id))
                 return
         return wrapped_1
     return decorator
@@ -105,7 +105,7 @@ def ban_users():
             if rights.ban_users and rights.ban_users is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
-                await event.reply(get_string("bot_rights", "ban_users", event.chat_id))
+                await event.reply(get_string("bot_rights", "ban_users", chat_id))
                 return
         return wrapped_1
     return decorator
@@ -123,7 +123,7 @@ def pin_messages():
             if rights.pin_messages and rights.pin_messages is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
-                await event.reply(get_string("bot_rights", "pin_messages", event.chat_id))
+                await event.reply(get_string("bot_rights", "pin_messages", chat_id))
                 return
         return wrapped_1
     return decorator
@@ -141,7 +141,7 @@ def add_admins():
             if rights.add_admins and rights.add_admins is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
-                await event.reply(get_string("bot_rights", "add_admins", event.chat_id))
+                await event.reply(get_string("bot_rights", "add_admins", chat_id))
                 return
         return wrapped_1
     return decorator
