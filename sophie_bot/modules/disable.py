@@ -1,6 +1,5 @@
 from sophie_bot import decorator, mongodb
 from sophie_bot.modules.connections import connection
-from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.users import user_admin_dec
 
