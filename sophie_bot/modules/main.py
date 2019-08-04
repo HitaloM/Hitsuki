@@ -7,9 +7,9 @@ import traceback
 import ujson
 import datetime
 
-from time import gmtime, strftime, time
+from time import gmtime, strftime
 
-from sophie_bot import mongodb, tbot, decorator, dp, logger
+from sophie_bot import DEBUG_MODE, mongodb, tbot, decorator, dp, logger
 from sophie_bot.modules.disable import disablable_dec
 
 from aiogram import types
@@ -95,16 +95,21 @@ async def stats(message, **kwargs):
 
 @dp.errors_handler()
 async def all_errors_handler(message, dp):
+
+    msg = message.message
+
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     logger.error("Error: " + date)
+
+    if DEBUG_MODE is True:
+        await msg.reply(str(sys.exc_info()[1]))
+        return
 
     new = {
         'error': str(sys.exc_info()[1]),
         'date': datetime.datetime.now()
     }
     mongodb.errors.insert_one(new)
-
-    msg = message.message
 
     text = "<b>Sorry, I got a error!</b>\n"
     link = "<a href=\"https://t.me/YanaBotGroup\">Sophie support chat</a>"
