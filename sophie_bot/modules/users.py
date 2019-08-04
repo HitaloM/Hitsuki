@@ -1,5 +1,6 @@
 import ujson
 import datetime
+import html
 
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import (ChannelParticipantsAdmins,
@@ -68,7 +69,6 @@ def update_user(chat_id, new_user):
     if old_user and 'first_detected_date' in old_user:
         first_detected_date = old_user['first_detected_date']
     else:
-        print('new user')
         first_detected_date = datetime.datetime.now()
 
     if new_user.username:
@@ -77,13 +77,15 @@ def update_user(chat_id, new_user):
         username = None
 
     if hasattr(new_user, 'last_name') and new_user.last_name:
-        last_name = new_user.last_name.replace('<', '&lt;')
+        last_name = html.escape(new_user.last_name)
     else:
         last_name = None
 
+    first_name = html.escape(new_user.first_name)
+
     user_new = {
         'user_id': new_user.id,
-        'first_name': new_user.first_name,
+        'first_name': first_name,
         'last_name': last_name,
         'username': username,
         'user_lang': new_user.language_code,
