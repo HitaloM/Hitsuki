@@ -13,9 +13,9 @@ from sophie_bot.modules.language import get_string
 # add_admins = rights.add_admins
 
 
-async def get_bot_rights(event):
+async def get_bot_rights(chat_id):
     bot_id = await tbot.get_me()
-    bot_req = await tbot(GetParticipantRequest(channel=event.chat_id, user_id=bot_id))
+    bot_req = await tbot(GetParticipantRequest(channel=chat_id, user_id=bot_id))
     if bot_req and hasattr(bot_req, 'participant') and hasattr(bot_req.participant, 'admin_rights'):
         return bot_req.participant.admin_rights
     return False
@@ -24,7 +24,12 @@ async def get_bot_rights(event):
 def change_info():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
-            rights = await get_bot_rights(event)
+            if hasattr(event, 'chat_id'):
+                chat_id = event.chat_id
+            elif hasattr(event, 'chat'):
+                chat_id = event.chat.id
+
+            rights = await get_bot_rights(chat_id)
             if rights.change_info and rights.change_info is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
@@ -37,7 +42,12 @@ def change_info():
 def post_messages():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
-            rights = await get_bot_rights(event)
+            if hasattr(event, 'chat_id'):
+                chat_id = event.chat_id
+            elif hasattr(event, 'chat'):
+                chat_id = event.chat.id
+
+            rights = await get_bot_rights(chat_id)
             if rights.post_messages and rights.post_messages is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
@@ -50,7 +60,12 @@ def post_messages():
 def edit_messages():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
-            rights = await get_bot_rights(event)
+            if hasattr(event, 'chat_id'):
+                chat_id = event.chat_id
+            elif hasattr(event, 'chat'):
+                chat_id = event.chat.id
+
+            rights = await get_bot_rights(chat_id)
             if rights.edit_messages and rights.edit_messages is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
@@ -63,7 +78,12 @@ def edit_messages():
 def delete_messages():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
-            rights = await get_bot_rights(event)
+            if hasattr(event, 'chat_id'):
+                chat_id = event.chat_id
+            elif hasattr(event, 'chat'):
+                chat_id = event.chat.id
+
+            rights = await get_bot_rights(chat_id)
             if rights.delete_messages and rights.delete_messages is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
@@ -76,7 +96,12 @@ def delete_messages():
 def ban_users():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
-            rights = await get_bot_rights(event)
+            if hasattr(event, 'chat_id'):
+                chat_id = event.chat_id
+            elif hasattr(event, 'chat'):
+                chat_id = event.chat.id
+
+            rights = await get_bot_rights(chat_id)
             if rights.ban_users and rights.ban_users is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
@@ -89,7 +114,12 @@ def ban_users():
 def pin_messages():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
-            rights = await get_bot_rights(event)
+            if hasattr(event, 'chat_id'):
+                chat_id = event.chat_id
+            elif hasattr(event, 'chat'):
+                chat_id = event.chat.id
+
+            rights = await get_bot_rights(chat_id)
             if rights.pin_messages and rights.pin_messages is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
@@ -102,7 +132,12 @@ def pin_messages():
 def add_admins():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
-            rights = await get_bot_rights(event)
+            if hasattr(event, 'chat_id'):
+                chat_id = event.chat_id
+            elif hasattr(event, 'chat'):
+                chat_id = event.chat.id
+
+            rights = await get_bot_rights(chat_id)
             if rights.add_admins and rights.add_admins is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:

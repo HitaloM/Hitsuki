@@ -36,8 +36,7 @@ RESTRICTED_SYMBOLS = ['**', '__', '`']
 
 @decorator.command("owo", is_owner=True)
 async def test(message, **kwagrs):
-    text = "test " + await user_link_html(762730992, custom_name="‏")  # Here invisible symbol
-    print(await message.reply(text))
+    print(message)
 
 
 @decorator.t_command("save", word_arg=True)

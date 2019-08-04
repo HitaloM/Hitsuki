@@ -168,8 +168,8 @@
     },
     "msg_deleting": {
         "no_rights_purge": "You don't have rights to purge here!",
-        "reply_to_msg": "Reply to message to start purge!",
-        "purge_done": "Purge completed!",
+        "reply_to_msg": "Reply to message!",
+        "purge_done": "Purge completed!\nThis message will be removed in 5 seconds.",
         "no_rights_del": "You don't have rights to delete messsages here!"
     },
     "misc": {
