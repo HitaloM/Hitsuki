@@ -1,26 +1,25 @@
-from telethon.tl.types import MessageActionChatMigrateTo
+from aiogram import types
 
-from sophie_bot import decorator, mongodb
+from sophie_bot import mongodb, dp, bot
 
 
-@decorator.RawAction()
-async def migrator(event):
-    if hasattr(event, "message") and isinstance(event.message.action, MessageActionChatMigrateTo):
-        old_id = event.message.to_id.chat_id
-        o_id = '-' + str(old_id)
-        new_id = event.message.action.channel_id
-        n_id = '-100' + str(new_id)
+@dp.message_handler(content_types=types.ContentTypes.MIGRATE_TO_CHAT_ID)
+async def migrator(message):
+    old_id = message.chat.id
+    new_id = message.migrate_to_chat_id
 
-        # Migrating db data
+    # Migrating data
+    for collection in mongodb.collection_names():
+        for document in mongodb[collection].find({'chat_id': old_id}):
+            mongodb[collection].update_many(
+                {'_id': document['_id']},
+                {'$set': {'chat_id': new_id}}
+            )
 
-        old = mongodb.chat_list.find_one({'chat_id': int(o_id)})
-        if old:
-            mongodb.chat_list.update_one({'_id': old['_id']}, {'$set': {'chat_id': int(n_id)}})
+    text = "<b>Chat migration</b>"
+    text += "\nThis chat was migrated!"
+    text += f"\nOld ID : <code>{old_id}</code>"
+    text += f"\nNew ID : <code>{new_id}</code>"
+    text += "\nData migrated successfully."
 
-        # Migrating notes
-
-        notes = mongodb.notes.find({'chat_id': int(o_id)})
-        for note in notes:
-            mongodb.notes.update_one({'_id': note['_id']}, {'$set': {'chat_id': int(n_id)}})
-
-        # TODO(Add more datas)
+    await bot.send_message(new_id, text)
