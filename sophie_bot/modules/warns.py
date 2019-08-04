@@ -17,7 +17,7 @@ from sophie_bot.modules.users import (get_chat_admins, is_user_admin,
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")
-async def warn_user(message, strings, status, chat_id, chat_title, **kwargs):
+async def warn_user(message, strings, status, chat_id, chat_title):
     user, reason = await aio_get_user(message)
     user_id = int(user['user_id'])
     if user_id in WHITELISTED:
@@ -102,7 +102,7 @@ async def remove_warn(event):
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")
-async def user_warns(message, strings, status, chat_id, chat_title, **kwargs):
+async def user_warns(message, strings, status, chat_id, chat_title):
     user, txt = await aio_get_user(message, allow_self=True)
 
     user_id = int(user['user_id'])
@@ -134,7 +134,7 @@ async def user_warns(message, strings, status, chat_id, chat_title, **kwargs):
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")
-async def warnlimit(message, strings, status, chat_id, chat_title, **kwargs):
+async def warnlimit(message, strings, status, chat_id, chat_title):
     arg = message.get_args()
     if not arg:
         curr = mongodb.warnlimit.find_one({'chat_id': chat_id})
@@ -156,7 +156,7 @@ async def warnlimit(message, strings, status, chat_id, chat_title, **kwargs):
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")
-async def resetwarns(message, strings, status, chat_id, chat_title, **kwargs):
+async def resetwarns(message, strings, status, chat_id, chat_title):
     user, txt = await aio_get_user(message)
     user_id = int(user['user_id'])
     user_str = await user_link_html(user_id)

@@ -45,7 +45,7 @@ async def chat_term(message, command):
 
 @decorator.command("botchanges")
 @disablable_dec("botchanges")
-async def botchanges(message, **kwargs):
+async def botchanges(message):
     command = "git log --pretty=format:\"%an: %s\" -30"
     text = "<b>Bot changes:</b>\n"
     text += "<i>Showed last 30 commits</i>\n"
@@ -55,7 +55,7 @@ async def botchanges(message, **kwargs):
 
 @decorator.command("stats")
 @disablable_dec("stats")
-async def stats(message, **kwargs):
+async def stats(message):
     text = "*Stats*\n"
     usrs = mongodb.user_list.count()
     chats = mongodb.chat_list.count()

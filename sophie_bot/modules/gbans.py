@@ -99,7 +99,7 @@ async def blacklist_user(message):
 
 @decorator.command("gban")
 @need_args_dec()
-async def gban_1(message, **kwargs):
+async def gban_1(message):
     if message.from_user.id not in SUDO:
         return
     await blacklist_user(message)
@@ -107,7 +107,7 @@ async def gban_1(message, **kwargs):
 
 @decorator.command("fban")
 @need_args_dec()
-async def gban_2(message, **kwargs):
+async def gban_2(message):
     if message.chat.id == -1001302848189:
         print('owo')
         await blacklist_user(message)
@@ -115,7 +115,7 @@ async def gban_2(message, **kwargs):
 
 @decorator.command("ungban")
 @need_args_dec()
-async def un_blacklist_user(message, **kwargs):
+async def un_blacklist_user(message):
     if message.from_user.id not in SUDO:
         return
     chat_id = message.chat.id

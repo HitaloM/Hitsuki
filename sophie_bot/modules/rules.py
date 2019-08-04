@@ -9,7 +9,7 @@ from sophie_bot.modules.notes import send_note
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("rules")
-async def setrules(message, strings, status, chat_id, chat_title, **kwargs):
+async def setrules(message, strings, status, chat_id, chat_title):
     note_to_find = message.text.split(" ", 1)[1]
 
     note = mongodb.notes.find_one({'chat_id': chat_id, 'name': note_to_find})
@@ -37,7 +37,7 @@ async def setrules(message, strings, status, chat_id, chat_title, **kwargs):
 @decorator.command("rules")
 @connection(only_in_groups=True)
 @get_strings_dec("rules")
-async def rules(message, strings, status, chat_id, chat_title, **kwargs):
+async def rules(message, strings, status, chat_id, chat_title):
     in_db = mongodb.rules.find_one({'chat_id': chat_id})
 
     if not in_db:
@@ -55,7 +55,7 @@ async def rules(message, strings, status, chat_id, chat_title, **kwargs):
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("rules")
-async def delrules(message, strings, status, chat_id, chat_title, **kwargs):
+async def delrules(message, strings, status, chat_id, chat_title):
     in_db = mongodb.rules.find_one({'chat_id': chat_id})
 
     if not in_db:

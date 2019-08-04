@@ -20,7 +20,7 @@ async def list_disablable(message, strings, **kwargs):
 @decorator.command("disabled")
 @connection(only_in_groups=True)
 @get_strings_dec("disable")
-async def list_disabled(message, strings, status, chat_id, chat_title, **kwargs):
+async def list_disabled(message, strings, status, chat_id, chat_title):
     text = strings['disabled_list'].format(chat_name=chat_title)
     commands = mongodb.disabled_cmds.find({'chat_id': chat_id})
     for command in commands:
@@ -32,7 +32,7 @@ async def list_disabled(message, strings, status, chat_id, chat_title, **kwargs)
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("disable")
-async def disable_command(message, strings, status, chat_id, chat_title, **kwargs):
+async def disable_command(message, strings, status, chat_id, chat_title):
     if len(message.text.split(" ")) <= 1:
         await message.reply(strings["wot_to_disable"])
         return
@@ -59,7 +59,7 @@ async def disable_command(message, strings, status, chat_id, chat_title, **kwarg
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("disable")
-async def enable_command(message, strings, status, chat_id, chat_title, **kwargs):
+async def enable_command(message, strings, status, chat_id, chat_title):
     if len(message.text.split(" ")) <= 1:
         await message.reply(strings["wot_to_enable"])
         return

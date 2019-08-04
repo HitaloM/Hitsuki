@@ -8,7 +8,7 @@ from sophie_bot.modules.notes import button_parser
 
 
 @decorator.command("term", is_owner=True)
-async def cmd_term(message, **kwargs):
+async def cmd_term(message):
     msg = await message.reply("Running...")
     command = str(message.text.split(" ", 1)[1])
     result = "<b>Shell:</b>\n"
@@ -94,7 +94,7 @@ async def check_message_for_smartbroadcast(event):
 
 
 @decorator.command("backup", is_owner=True)
-async def backup(message, **kwargs):
+async def backup(message):
     msg = await message.reply("Running...")
     date = strftime("%Y-%m-%dI%H:%M:%S", gmtime())
     cmd = "mkdir Backups;"

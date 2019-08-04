@@ -14,7 +14,7 @@ from sophie_bot.modules.users import (is_user_admin, user_admin_dec,
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec('bans')
-async def ban(message, strings, status, chat_id, chat_title, **kwargs):
+async def ban(message, strings, status, chat_id, chat_title):
     user, reason = await aio_get_user(message)
     if await ban_user(message, user['user_id'], chat_id, None) is True:
         admin_str = await user_link_html(message.from_user.id)
@@ -31,7 +31,7 @@ async def ban(message, strings, status, chat_id, chat_title, **kwargs):
 @decorator.command("tban")
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
-async def tban(message, status, chat_id, chat_title, **kwargs):
+async def tban(message, status, chat_id, chat_title):
     user, data = await aio_get_user(message)
     data = data.split(' ', 2)
 
@@ -59,7 +59,7 @@ async def tban(message, status, chat_id, chat_title, **kwargs):
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec('bans')
-async def kick(message, strings, status, chat_id, chat_title, **kwargs):
+async def kick(message, strings, status, chat_id, chat_title):
     user, text = await aio_get_user(message)
     if await kick_user(message, user['user_id'], chat_id) is True:
         admin_str = await user_link_html(message.from_user.id)
@@ -72,7 +72,7 @@ async def kick(message, strings, status, chat_id, chat_title, **kwargs):
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
-async def unban(message, strings, status, chat_id, chat_title, **kwargs):
+async def unban(message, strings, status, chat_id, chat_title):
     user, text = await aio_get_user(message)
     if await unban_user(message, user['user_id'], chat_id):
         admin_str = await user_link_html(message.from_user.id)
@@ -92,7 +92,7 @@ async def unban(message, strings, status, chat_id, chat_title, **kwargs):
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
-async def muter(message, strings, status, chat_id, chat_title, **kwargs):
+async def muter(message, strings, status, chat_id, chat_title):
     user, text = await aio_get_user(message)
     if await mute_user(message, user['user_id'], chat_id, None):
         admin_str = await user_link_html(message.from_user.id)
@@ -105,7 +105,7 @@ async def muter(message, strings, status, chat_id, chat_title, **kwargs):
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
-async def unmute(message, strings, status, chat_id, chat_title, **kwargs):
+async def unmute(message, strings, status, chat_id, chat_title):
     user, text = await aio_get_user(message)
     if await unmute_user(message, user['user_id'], chat_id):
         admin_str = await user_link_html(message.from_user.id)
@@ -116,7 +116,7 @@ async def unmute(message, strings, status, chat_id, chat_title, **kwargs):
 
 @decorator.command("kickme")
 @get_strings_dec("bans")
-async def kickme(message, strings, **kwargs):
+async def kickme(message, strings):
     user = message.from_user.id
     chat = message.chat.id
 
@@ -128,7 +128,7 @@ async def kickme(message, strings, **kwargs):
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
-async def tmute(message, strings, status, chat_id, chat_title, **kwargs):
+async def tmute(message, strings, status, chat_id, chat_title):
     user, data = await aio_get_user(message)
     data = data.split(' ', 2)
     time_val = data[0]

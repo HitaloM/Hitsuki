@@ -18,7 +18,7 @@ with open('sophie_bot/names.txt') as f:
 
 
 @decorator.command('checkspammer', is_sudo=True)
-async def check_manually(message, **kwargs):
+async def check_manually(message):
     # This command used to test new antispammers AI functions
     user, txt = await aio_get_user(message, allow_self=True)
 

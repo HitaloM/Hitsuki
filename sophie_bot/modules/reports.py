@@ -57,7 +57,7 @@ async def admin_handler(message: Message, strings, *args, **kwargs):
 @decorator.command("report")
 @connection(only_in_groups=True)
 @get_strings_dec('reports')
-async def report_user(message, strings, status, chat_id, chat_title, **kwargs):
+async def report_user(message, strings, status, chat_id, chat_title):
     from_id = message.from_user.id
     if (await is_user_admin(message.chat.id, from_id)) is True:
         return await message.reply(strings['user_is_admin'])
@@ -104,7 +104,7 @@ async def report_user(message, strings, status, chat_id, chat_title, **kwargs):
 @decorator.command("reports")
 @connection(only_in_groups=True)
 @get_strings_dec('reports')
-async def reports(message, strings, status, chat_id, chat_title, **kwargs):
+async def reports(message, strings, status, chat_id, chat_title):
     text = message.text.split(None, 2)
 
     reports = mongodb.reports.find_one({

@@ -55,9 +55,11 @@ def command(command, allow_edited=True, **kwargs):
         if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
             kwargs['not_forwarded'] = True
 
-        cmd = f"^{0}(?i:{1}|{1}@{2})(?: |$)".format(P, command, BOT_USERNAME)
+        cmd = "^{0}(?i:{1}|{1}@{2})(?: |$)".format(P, command, BOT_USERNAME)
 
         async def new_func(*args, **def_kwargs):
+            if 'allow_kwargs' not in kwargs:
+                def_kwargs = dict()
             await func(*args, **def_kwargs)
             raise SkipHandler()
 

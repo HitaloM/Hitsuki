@@ -164,7 +164,7 @@ async def setwelcome(message, strings, status, chat_id, chat_title, *args, **kwa
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("greetings")
-async def cleanservice(message, strings, status, chat_id, chat_title, **kwargs):
+async def cleanservice(message, strings, status, chat_id, chat_title):
     bool = message.get_args().lower()
     enable = ['yes', 'on', 'enable']
     disable = ['no', 'disable']
@@ -192,7 +192,7 @@ async def cleanservice(message, strings, status, chat_id, chat_title, **kwargs):
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("greetings")
-async def welcomeSecurity(message, strings, status, chat_id, chat_title, **kwargs):
+async def welcomeSecurity(message, strings, status, chat_id, chat_title):
     args = message.get_args().lower()
     hard = ['hard', 'high']
     soft = ['soft', 'low']
@@ -222,7 +222,7 @@ async def welcomeSecurity(message, strings, status, chat_id, chat_title, **kwarg
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("greetings")
-async def clean_welcome(message, strings, status, chat_id, chat_title, **kwargs):
+async def clean_welcome(message, strings, status, chat_id, chat_title):
     args = message.get_args().lower()
     on = ['on', 'yes', 'enable']
     off = ['off', 'no', 'disable']

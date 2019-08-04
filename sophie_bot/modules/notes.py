@@ -201,7 +201,7 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
 @disablable_dec("notes")
 @connection()
 @get_strings_dec("notes")
-async def list_notes(message, strings, status, chat_id, chat_title, **kwargs):
+async def list_notes(message, strings, status, chat_id, chat_title):
     notes = mongodb.notes.find({'chat_id': chat_id}).sort("name", 1)
     text = strings["notelist_header"].format(chat_name=chat_title)
     if notes.count() == 0:
@@ -464,7 +464,7 @@ def button_parser(chat_id, texts):
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("notes")
-async def migrate_from_yana(message, strings, status, chat_id, chat_title, **kwargs):
+async def migrate_from_yana(message, strings, status, chat_id, chat_title):
     migrated = 0
     error_migrated = 0
     all_notes = mongodb.yana_notes.find({'chat_id': chat_id})

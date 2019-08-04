@@ -13,7 +13,7 @@ from sophie_bot.modules.warns import randomString
 
 
 @decorator.AioBotDo()
-async def check_message(message, **kwargs):
+async def check_message(message):
     chat_id = message.chat.id
     filters = redis.lrange('filters_cache_{}'.format(chat_id), 0, -1)
     if not filters:
@@ -81,7 +81,7 @@ async def check_message(message, **kwargs):
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("filters")
-async def add_filter(message, strings, status, chat_id, chat_title, **kwargs):
+async def add_filter(message, strings, status, chat_id, chat_title):
     args = message.get_args().split(" ")
     if len(args) < 2:
         await message.reply(strings["wrong_action"])
@@ -214,7 +214,7 @@ async def add_filter(message, strings, status, chat_id, chat_title, **kwargs):
 @disablable_dec("filters")
 @connection()
 @get_strings_dec("filters")
-async def list_filters(message, strings, status, chat_id, chat_title, **kwargs):
+async def list_filters(message, strings, status, chat_id, chat_title):
     filters = mongodb.filters.find({'chat_id': chat_id})
     text = strings["filters_in"].format(chat_name=chat_title)
     H = 0
@@ -235,7 +235,7 @@ async def list_filters(message, strings, status, chat_id, chat_title, **kwargs):
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("filters")
-async def stop_filter(message, strings, status, chat_id, chat_title, **kwargs):
+async def stop_filter(message, strings, status, chat_id, chat_title):
     handler = message.get_args()
     filter = mongodb.filters.find_one({'chat_id': chat_id,
                                       "handler": {'$regex': str(handler)}})
