@@ -11,8 +11,12 @@
     "redis_port": 6379
 },
  "advanced":{
-    "sync_cas_bans": false,
+    "just_note": "Here advanced settings, you can just leave it by default."
+    "bot_name_additional": "",
 
+    "debug_mode": false,
+
+    "sync_cas_bans": false,
     "utoken": "Unified/BansToken",
 
     "gbans_channel_enabled": true,

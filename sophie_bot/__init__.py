@@ -35,7 +35,7 @@ MONGO_PORT = CONFIG["basic"]["mongo_port"]
 REDIS_COMM = CONFIG["basic"]["redis_conn"]
 REDIS_PORT = CONFIG["basic"]["redis_port"]
 TOKEN = CONFIG["basic"]["bot_token"]
-NAME = TOKEN.split(':')[0]
+NAME = TOKEN.split(':')[0] + CONFIG["advanced"]["bot_name_additional"]
 
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie
@@ -63,3 +63,8 @@ logger.info("----------------------")
 logger.info("|      SophieBot     |")
 logger.info("----------------------")
 logger.info("Powered by Telethon and AIOGram and bleck megic")
+
+DEBUG_MODE = CONFIG["advanced"]["debug_mode"]
+if DEBUG_MODE is True:
+    logger.setLevel(logging.DEBUG)
+    logger.info("! Enabled debug mode, please don't use it on production to repect privacy data.")
