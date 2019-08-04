@@ -55,12 +55,7 @@ def command(command, additional="", **kwargs):
         if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
             kwargs['not_forwarded'] = True
 
-        if 'word_arg' in kwargs and kwargs['word_arg'] is True:
-            cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)(\S*){2}".format(command, BOT_USERNAME, additional,
-                                                               P=P)
-        else:
-            cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_USERNAME, additional,
-                                                              P=P)
+        cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)".format(command, BOT_USERNAME, P=P)
 
         async def new_func(*args, **kwargs):
             await func(*args, **kwargs)
