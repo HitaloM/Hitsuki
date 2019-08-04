@@ -29,6 +29,7 @@ from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (check_group_admin, is_user_admin,
                                       user_admin_dec, user_link,
                                       add_user_to_db, user_link_html)
+from sophie_bot.modules.helper_func.decorators import need_args_dec
 
 
 RESTRICTED_SYMBOLS = ['**', '__', '`']
@@ -197,6 +198,7 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
 
 
 @decorator.command("notes")
+@need_args_dec
 @disablable_dec("notes")
 @connection()
 @get_strings_dec("notes")
