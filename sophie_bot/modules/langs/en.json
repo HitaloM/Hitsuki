@@ -7,7 +7,7 @@
  "STRINGS": {
     "notes": {
         "notelist_no_notes": "No notes in this chat!",
-        "notelist_header": "**Notes in {chat_name}**:\n",
+        "notelist_header": "<b>Notes in {chat_name}</b>:\n",
         "no_right_save_note": "You don't have rights to save notes here!",
         "saved": "saved",
         "updated": "updated",

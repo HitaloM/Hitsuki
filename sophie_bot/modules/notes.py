@@ -197,20 +197,19 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@decorator.t_command("notes ?(.*)")
-@flood_limit_dec("notes")
+@decorator.command("notes")
 @disablable_dec("notes")
 @connection()
 @get_strings_dec("notes")
-async def list_notes(event, strings, status, chat_id, chat_title):
+async def list_notes(message, strings, status, chat_id, chat_title, **kwargs):
     notes = mongodb.notes.find({'chat_id': chat_id}).sort("name", 1)
     text = strings["notelist_header"].format(chat_name=chat_title)
     if notes.count() == 0:
         text = strings["notelist_no_notes"]
     else:
         for note in notes:
-            text += "- `#{}`\n".format(note['name'])
-    await event.reply(text)
+            text += "- <code>#{}</code>\n".format(note['name'])
+    await message.reply(text)
 
 
 async def send_note(chat_id, group_id, msg_id, note_name,
