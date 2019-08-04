@@ -92,14 +92,16 @@ def BotDo():
     return decorator
 
 
-def AioBotDo():
+def AioBotDo(**kwargs):
     def cascade_measage_handler(func):
 
-        async def new_func(*args, **kwargs):
-            await func(*args, **kwargs)
+        async def new_func(*args, **def_kwargs):
+            if 'allow_kwargs' not in kwargs:
+                def_kwargs = dict()
+            await func(*args, **def_kwargs)
             raise SkipHandler()
 
-        dp.register_message_handler(new_func)
+        dp.register_message_handler(new_func, **kwargs)
         return new_func
     return cascade_measage_handler
 

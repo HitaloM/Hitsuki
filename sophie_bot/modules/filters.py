@@ -2,11 +2,11 @@ import re
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 
-from sophie_bot import decorator, mongodb, redis, WHITELISTED, tbot
+from sophie_bot import decorator, mongodb, redis, WHITELISTED
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.notes import send_note, button_parser
+from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.bans import ban_user, kick_user, convert_time
 from sophie_bot.modules.users import user_admin_dec, user_link, get_chat_admins, user_link_html
 from sophie_bot.modules.warns import randomString
@@ -38,13 +38,7 @@ async def check_message(message):
             if action == 'note':
                 await send_note(chat_id, chat_id, msg_id, H['arg'], show_none=True)
             elif action == 'answer':
-                #txt, btns = button_parser(chat_id, H['arg'])
-                #await tbot.send_message(
-                #    chat_id,
-                #    txt,
-                #   buttons=btns,
-                #    reply_to=msg_id
-                #)
+                # TODO
                 await message.answer(H['arg'])
             elif action == 'delete':
                 await message.delete()
