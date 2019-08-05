@@ -385,7 +385,8 @@ async def del_note_callback(event):
         note_name=note['name'], user=link), link_preview=False)
 
 
-@dp.message_handler(commands=['get'], commands_prefix='!/#')
+@decorator.command('get')
+@need_args_dec()
 async def get_note(message):
     status, chat_id, chat_title = await get_conn_chat(message['from']['id'], message['chat']['id'])
     args = message['text'].split(" ", 4)
