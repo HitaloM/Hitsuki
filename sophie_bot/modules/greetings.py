@@ -124,7 +124,6 @@ async def welcome_trigger(message, strings, **kwargs):
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("greetings")
 async def setwelcome(message, strings, status, chat_id, chat_title, *args, **kwargs):
-    chat = mongodb.chat_list.find_one({'chat_id': int(chat_id)})
     arg = message['text'].split(" ", 2)
     if len(arg) <= 1:
         return
@@ -134,12 +133,12 @@ async def setwelcome(message, strings, status, chat_id, chat_title, *args, **kwa
     note_name = arg[1]
     off = ['off', 'none', 'disable']
     if note_name in off:
-        check = mongodb.welcomes.delete_one({'chat_id': chat})
-        if check:
-            text = "Welcome disabled for this chat"
-        else:
-            text = "Welcome didn't setuped yet"
-        await message.reply(text)
+        mongodb.welcomes.update_one(
+            {'chat_id': chat_id},
+            {"$set": {'chat_id': chat_id, 'enabled': False}},
+            upsert=True
+        )
+        await message.reply(f"Welcomes disabled for <b>{chat_title}</b>!")
         return
     note = mongodb.notes.find_one({
         'chat_id': chat_id,
