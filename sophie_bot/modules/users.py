@@ -33,7 +33,7 @@ async def update_users(message, **kwargs):
 
         chat_new = {
             "chat_id": chat_id,
-            "chat_title": new_chat.title,
+            "chat_title": html.escape(new_chat.title),
             "chat_nick": chatnick,
             "type": new_chat.type,
             "first_detected_date": first_detected_date
