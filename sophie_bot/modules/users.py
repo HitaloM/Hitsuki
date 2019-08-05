@@ -411,7 +411,7 @@ async def user_link_html(user_id, custom_name=False):
     user_name = None
 
     if user:
-        user_name = user['first_name'].replace('<', '&lt;')
+        user_name = user['first_name']
     else:
         try:
             user = await add_user_to_db(await tbot(GetFullUserRequest(int(user_id))))
