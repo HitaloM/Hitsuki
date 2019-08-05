@@ -198,7 +198,6 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
 
 
 @decorator.command("notes")
-@need_args_dec
 @disablable_dec("notes")
 @connection()
 @get_strings_dec("notes")
