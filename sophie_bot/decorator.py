@@ -5,6 +5,7 @@ from aiogram.dispatcher.handler import SkipHandler
 from aiogram import types
 
 from sophie_bot import BOT_USERNAME, CONFIG, tbot, dp
+from sophie_bot.modules.helper_func.error import report_error
 
 ALLOW_F_COMMANDS = CONFIG["advanced"]["allow_forwards_commands"]
 ALLOW_COMMANDS_FROM_EXC = CONFIG["advanced"]["allow_commands_with_!"]
@@ -35,8 +36,14 @@ def t_command(command, arg="", word_arg="", additional="", **kwargs):
         else:
             cmd = "^{P}(?i:{0}|{0}@{1})$".format(command, BOT_USERNAME, additional, P=P)
 
-        tbot.add_event_handler(func, events.NewMessage(incoming=True, pattern=cmd, **kwargs))
-        tbot.add_event_handler(func, events.MessageEdited(incoming=True, pattern=cmd, **kwargs))
+        async def new_func(*args, **def_kwargs):
+            try:
+                await func(*args, **def_kwargs)
+            except Exception:
+                await report_error(args[0], telethon=True)
+
+        tbot.add_event_handler(new_func, events.NewMessage(incoming=True, pattern=cmd, **kwargs))
+        tbot.add_event_handler(new_func, events.MessageEdited(incoming=True, pattern=cmd, **kwargs))
     return decorator
 
 
