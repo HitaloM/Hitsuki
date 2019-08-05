@@ -8,7 +8,7 @@ from aiogram.utils.exceptions import CantDemoteChatCreator
 from aiogram import types
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
-from sophie_bot import tbot, decorator, mongodb
+from sophie_bot import BOT_ID, tbot, decorator, mongodb
 from sophie_bot.modules.bans import mute_user, unmute_user
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec
@@ -86,8 +86,7 @@ async def welcome_trigger(message, strings, **kwargs):
             return
 
     # Do not welcome yourselve
-    bot_id = await tbot.get_me()
-    if bot_id.id == from_id:
+    if from_id == BOT_ID:
         return
 
     reply = message.message_id
