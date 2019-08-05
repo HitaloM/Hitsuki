@@ -173,9 +173,9 @@
         "no_rights_del": "You don't have rights to delete messsages here!"
     },
     "misc": {
-        "your_id": "Your id: `{}`\n",
-        "chat_id": "Chat id: `{}`\n",
-        "user_id": "{}'s user id: `{}`\n",
+        "your_id": "Your id: <code>{}</code>\n",
+        "chat_id": "Chat id: <code>{}</code>\n",
+        "user_id": "{}'s user id: <code>{}</code>\n",
         "pinned_success": "Successfully pinned",
         "no_reply_msg": "Please reply some message to pin",
         "unpin_success": "Successfully unpinned!",
