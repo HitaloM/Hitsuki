@@ -53,7 +53,7 @@ def get_start(event):
     buttons += [[custom.Button.url(get_string("pm_menu", "btn_chat", event.chat_id),
                 'https://t.me/YanaBotGroup'),
                  custom.Button.url(get_string("pm_menu", "btn_channel", event.chat_id),
-                 'https://t.me/YanaBotNEWS')]]
+                 'https://t.me/SophieNEWS')]]
 
     return text, buttons
 
