@@ -282,9 +282,6 @@ async def fbanned_list(message, strings, status, chat_id, chat_title, fed,
 async def fban_user(message, strings, status, chat_id, chat_title, user, fed, reason,
                     *args, **kwargs):
 
-    if message.from_user.id == 172811422:
-        return
-
     if not reason:
         reason = 'No reason'
 

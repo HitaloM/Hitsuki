@@ -416,22 +416,18 @@ async def get_note(message):
             show_none=True, noformat=noformat, from_id=message['from']['id'], key=key)
 
 
-@decorator.StrictCommand("^#(.*)")
-@connection()
-async def check_hashtag(event, status, chat_id, chat_title):
-    status, chat_id, chat_title = await get_conn_chat(event.from_id, event.chat_id)
-    if event.message.reply_to_msg_id:
-        msg = event.message.reply_to_msg_id
-    else:
-        msg = event.message.id
+@dp.message_handler(regexp="#(\w+)")
+@dp.edited_message_handler(regexp="#(\w+)")
+async def check_hashtag(message: types.Message):
+    status, chat_id, chat_title = await get_conn_chat(message['from']['id'], message['chat']['id'])
     if status is False:
         await message.reply(chat_id)
         return
     note_name = message['text'][1:].split(" ", 2)[0].lower()
     if len(note_name) >= 1:
         await send_note(
-            event.chat_id, chat_id, msg, note_name,
-            from_id=event.from_id)
+            message['chat']['id'], chat_id, message['message_id'], note_name,
+            from_id=message['from']['id'])
 
 
 def button_parser(chat_id, texts):
