@@ -517,7 +517,7 @@ async def get_note_callback(event):
     try:
         await send_note(user_id, group_id, None, notename)
         await event.answer(get_string("notes", "pmed_note", event.chat_id))
-    except errors.rpcerrorlist.UserIsBlockedError or errors.rpcerrorlist.PeerIdInvalidError:
+    except (errors.rpcerrorlist.UserIsBlockedError, errors.rpcerrorlist.PeerIdInvalidError):
         await event.answer(
             get_string("notes", "user_blocked", event.chat_id), alert=True)
 
