@@ -315,7 +315,7 @@ async def aio_get_user(message, send_text=True, allow_self=False):
     # Not first because ex. admins can /warn (user) and reply to offended user
     if not user and "reply_to_message" in message:
         if len(args) > 1:
-            text = "".join(args).partition(args[0])[2]
+            text = message.get_args()
         return await get_user_by_id(message.reply_to_message.from_user.id), text
 
     if not user and allow_self is True:
