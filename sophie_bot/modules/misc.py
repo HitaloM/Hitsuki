@@ -93,14 +93,6 @@ async def unpin_message(event, strings):
 @user_admin_dec
 @bot_rights.add_admins()
 async def promote(event):
-<<<<<<< HEAD
-
-    chat = await event.get_chat()
-    admin = chat.admin_rights
-    creator = chat.creator
-=======
->>>>>>> 5563df9... Improve code style
-
     user = await get_user(event)
     if user:
         pass
