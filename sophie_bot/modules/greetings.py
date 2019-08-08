@@ -72,6 +72,9 @@ async def welcome_trigger(message, strings, **kwargs):
     chat_id = message.chat.id
     from_id = message.from_user.id
 
+    if 'new_chat_participant' in message:
+        from_id = message.new_chat_members[0].id
+
     # Don't welcome blacklisted users
     blacklisted = mongodb.blacklisted_users.find_one({'user': from_id})
     if blacklisted:
