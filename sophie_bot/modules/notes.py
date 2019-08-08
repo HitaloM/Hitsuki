@@ -52,6 +52,8 @@ async def save_note(event, strings, status, chat_id, chat_title):
             return
     if note_name[0] == "#":
         note_name = note_name[1:]
+
+    note_name = note_name.lower()
     file_id = None
     prim_text = ""
     if len(event.message.text.split(" ")) > 2:
@@ -216,6 +218,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
                     show_none=False, noformat=False, preview=False,
                     from_id="", key=False):
     file_id = None
+    note_name = note_name.lower()
     note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': note_name})
     if not note and show_none is True:
         text = get_string("notes", "note_not_found", chat_id)
