@@ -30,7 +30,7 @@ def change_info():
                 chat_id = event.chat.id
 
             rights = await get_bot_rights(chat_id)
-            if rights.change_info and rights.change_info is True:
+            if rights is not False and rights.change_info and rights.change_info is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
                 await event.reply(get_string("bot_rights", "change_info", chat_id))
@@ -48,7 +48,7 @@ def post_messages():
                 chat_id = event.chat.id
 
             rights = await get_bot_rights(chat_id)
-            if rights.post_messages and rights.post_messages is True:
+            if rights is not False and rights.post_messages and rights.post_messages is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
                 # No answer if don't have rights
@@ -66,7 +66,7 @@ def edit_messages():
                 chat_id = event.chat.id
 
             rights = await get_bot_rights(chat_id)
-            if rights.edit_messages and rights.edit_messages is True:
+            if rights is not False and rights.edit_messages and rights.edit_messages is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
                 await event.reply(get_string("bot_rights", "edit_messages", chat_id))
@@ -84,7 +84,7 @@ def delete_messages():
                 chat_id = event.chat.id
 
             rights = await get_bot_rights(chat_id)
-            if rights.delete_messages and rights.delete_messages is True:
+            if rights is not False and rights.delete_messages and rights.delete_messages is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
                 await event.reply(get_string("bot_rights", "delete_messages", chat_id))
@@ -102,7 +102,7 @@ def ban_users():
                 chat_id = event.chat.id
 
             rights = await get_bot_rights(chat_id)
-            if rights.ban_users and rights.ban_users is True:
+            if rights is not False and rights.ban_users and rights.ban_users is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
                 await event.reply(get_string("bot_rights", "ban_users", chat_id))
@@ -120,7 +120,7 @@ def pin_messages():
                 chat_id = event.chat.id
 
             rights = await get_bot_rights(chat_id)
-            if rights.pin_messages and rights.pin_messages is True:
+            if rights is not False and rights.pin_messages and rights.pin_messages is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
                 await event.reply(get_string("bot_rights", "pin_messages", chat_id))
@@ -138,7 +138,7 @@ def add_admins():
                 chat_id = event.chat.id
 
             rights = await get_bot_rights(chat_id)
-            if rights.add_admins and rights.add_admins is True:
+            if rights is not False and rights.add_admins and rights.add_admins is True:
                 return await(func(event, *dec_args, **dev_kwargs))
             else:
                 await event.reply(get_string("bot_rights", "add_admins", chat_id))
