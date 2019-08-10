@@ -322,7 +322,7 @@ async def aio_get_user(message, send_text=True, allow_self=False):
         user = await get_user_by_id(message.from_user.id)
 
     if not user:
-        print("m cri")
+        await message.answer('I can\'t get this user!')
         return None, None
 
     return user, text
