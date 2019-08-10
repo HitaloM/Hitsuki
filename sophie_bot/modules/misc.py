@@ -33,7 +33,7 @@ async def get_id(message, strings):
 
     if not user['user_id'] == message.from_user.id:
         userl = await user_link(user['user_id'])
-        text += ["user_id"].format(userl, user['user_id'])
+        text += strings["user_id"].format(userl, user['user_id'])
 
     if "reply_to_message" in message:
         userl = await user_link_html(message.reply_to_message.from_user.id)
