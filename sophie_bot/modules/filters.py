@@ -88,10 +88,7 @@ async def add_filter(message, strings, status, chat_id, chat_title):
     else:
         arg = None
 
-    custom = None
-
     if args[0].startswith(("'", '"')):
-        custom = True
         raw = args
         _handler = []
         for x in raw:
@@ -110,44 +107,7 @@ async def add_filter(message, strings, status, chat_id, chat_title):
 
     text = strings["filter_added"]
     text += strings["filter_keyword"].format(handler)
-    if action == 'note':
-        if custom:
-            if not arg:
-                await message.reply(strings["no_arg_note"])
-                return
-
-            arg = arg[0]
-            text += strings["a_send_note"].format(arg)
-        elif not len(args) > 2:
-            await message.reply(strings["no_arg_note"])
-            return
-            text += strings["a_send_note"].format(arg)
-    elif action == 'tban':
-        if custom:
-            if not arg:
-                await message.reply(strings["no_arg_tban"])
-                return
-            arg = arg[0]
-            text += strings["a_tban"].format(arg)
-        elif not len(args) > 2:
-            await message.reply(strings["no_arg_tban"])
-            return
-            text += strings["a_tban"].format(str(arg))
-    elif action == 'answer':
-        if custom:
-            if not arg:
-                await message.reply(strings["wrong_action"])
-                return
-            arg = " ".join(arg)
-            text += strings["a_answer"]
-        else:
-            if len(args) <= 2:
-                await message.reply(strings["wrong_action"])
-                return
-            txt = args[2]
-            arg = txt
-            text += strings["a_answer"]
-    elif action == 'delete':
+    if action == 'delete':
         text += strings["a_del"]
     elif action == 'ban':
         text += strings["a_ban"]
@@ -155,53 +115,40 @@ async def add_filter(message, strings, status, chat_id, chat_title):
         text += strings["a_mute"]
     elif action == 'kick':
         text += strings["a_kick"]
+
+    elif action == 'note':
+        if not arg:
+            await message.reply(strings["no_arg_note"])
+            return
+        arg = arg[0]
+        text += strings["a_send_note"].format(arg)
+    elif action == 'tban':
+        if not arg:
+            await message.reply(strings["no_arg_note"])
+            return
+        arg = arg[0]
+        text += strings["a_tban"].format(arg)
+    elif action == 'answer':
+        if not arg:
+            await message.reply(strings["no_arg_note"])
+            return
+        arg = " ".join(arg)
+        text += strings["a_answer"]
     elif action == 'warn':
-        if custom:
-            if not arg:
-                arg = f"Automatic action on filter:\n{handler.lower()}."
-            else:
-                arg = " ".join(arg)
-            text += strings["a_warn"].format(arg)
-        else:
-            raw_text = message.text.split(" ")
-            arg = None
-            if raw_text[3:]:
-                arg = " ".join(raw_text[3:])
-            else:
-                arg = f"Automatic action on filter:\n{handler.lower()}."
-            text += strings["a_warn"].format(arg)
+        if arg:
+            text += "Reason: " + arg
+        text += strings["a_warn"].format(arg)
     else:
         await message.reply(strings["wrong_action"])
         return
 
-    exist = mongodb.filters.find_one({
-        'chat_id': chat_id,
-        'handler': handler.lower()
-    })
+    mongodb.filters.update_one(
+        {'chat_id': chat_id, 'handler': handler},
+        {"$set": {'action': action, 'arg': arg}}, upsert=True
+    )
 
-    if exist:
-        mongodb.filters.update_one({
-            'chat_id': chat_id,
-            'handler': handler,
-            '_id': exist["_id"]
-        }, {
-            "$set": {
-                'action': action,
-                'arg': arg
-            }
-        })
-
-        update_handlers_cache(chat_id)
-        await message.reply(text.replace('added', 'updated'))
-    else:
-        mongodb.filters.insert_one({
-            "chat_id": chat_id,
-            "handler": handler.lower(),
-            "action": action,
-            "arg": arg
-        })
-        update_handlers_cache(chat_id)
-        await message.reply(text)
+    update_handlers_cache(chat_id)
+    await message.reply(text)
 
 
 @decorator.command("filters")
