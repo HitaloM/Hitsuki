@@ -19,6 +19,8 @@ from sophie_bot.modules.users import (get_chat_admins, is_user_admin,
 @get_strings_dec("warns")
 async def warn_user(message, strings, status, chat_id, chat_title):
     user, reason = await aio_get_user(message)
+    if not user:
+        return
     user_id = int(user['user_id'])
     if user_id in WHITELISTED:
         await message.reply(strings['usr_whitelist'])
@@ -104,6 +106,8 @@ async def remove_warn(event):
 @get_strings_dec("warns")
 async def user_warns(message, strings, status, chat_id, chat_title):
     user, txt = await aio_get_user(message, allow_self=True)
+    if not user:
+        return
 
     user_id = int(user['user_id'])
     if user_id in WHITELISTED:
@@ -158,6 +162,8 @@ async def warnlimit(message, strings, status, chat_id, chat_title):
 @get_strings_dec("warns")
 async def resetwarns(message, strings, status, chat_id, chat_title):
     user, txt = await aio_get_user(message)
+    if not user:
+        return
     user_id = int(user['user_id'])
     user_str = await user_link_html(user_id)
     check = mongodb.warns.find_one({'group_id': chat_id, 'user_id': user_id})

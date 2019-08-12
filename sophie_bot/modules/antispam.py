@@ -21,6 +21,8 @@ with open('sophie_bot/names.txt') as f:
 async def check_manually(message):
     # This command used to test new antispammers AI functions
     user, txt = await aio_get_user(message, allow_self=True)
+    if not user:
+        return
 
     user_id = user['user_id']
 

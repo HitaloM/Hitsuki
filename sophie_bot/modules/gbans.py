@@ -25,6 +25,8 @@ GBANNED_RIGHTS = ChatBannedRights(
 
 async def blacklist_user(message):
     user, reason = await aio_get_user(message, send_text=False)
+    if not user:
+        return
 
     user_id = int(user['user_id'])
     sudo_admin = message.from_user.id
@@ -119,7 +121,9 @@ async def un_blacklist_user(message):
     if message.from_user.id not in SUDO:
         return
     chat_id = message.chat.id
-    user_id = await aio_get_user(message, send_text=False)
+    user_id, txt = await aio_get_user(message)
+    if not user_id:
+        return
 
     user_id = user_id[0]['user_id']
 

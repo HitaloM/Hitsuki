@@ -18,6 +18,8 @@ from sophie_bot.modules.connections import connection, get_conn_chat
 def get_user_and_fed_and_text_dec(func):
     async def wrapped_1(message, status, chat_id, chat_title, *args, **kwargs):
         user, text = await aio_get_user(message)
+        if not user:
+            return
 
         chat_fed = None
 

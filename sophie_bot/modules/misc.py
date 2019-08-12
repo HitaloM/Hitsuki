@@ -28,6 +28,8 @@ async def all_commands_list(message):
 @get_strings_dec('misc')
 async def get_id(message, strings):
     user, txt = await aio_get_user(message, allow_self=True)
+    if not user:
+        return
     text = strings["your_id"].format(message.from_user.id)
     text += strings["chat_id"].format(message.chat.id)
 
