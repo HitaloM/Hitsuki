@@ -1,8 +1,12 @@
 import math
+import io
 import subprocess
 import datetime
+import ujson
+import requests
 
 from aiogram import types
+from aiogram.utils.exceptions import PhotoDimensions
 
 from sophie_bot import mongodb, tbot, decorator
 from sophie_bot.modules.disable import disablable_dec
@@ -73,6 +77,36 @@ async def stats(message):
         text += '\* Database size is `{}`, free `{}`'.format(
             convert_size(db['storageSize']), convert_size(536870912 - db['storageSize']))
     await message.reply(text, parse_mode=types.ParseMode.MARKDOWN)
+
+
+@decorator.command("fox")
+@disablable_dec("fox")
+async def random_fox(message):
+    while True:
+        filename = ujson.loads(requests.get('http://randomfox.ca/floof').text)['image']
+        try:
+            await message.reply_photo(
+                types.InputFile(io.BytesIO(requests.get(filename).content)),
+                caption="🦊"
+            )
+            return
+        except PhotoDimensions:
+            continue
+
+
+@decorator.command("cat")
+@disablable_dec("cat")
+async def random_cat(message):
+    while True:
+        filename = ujson.loads(requests.get('http://aws.random.cat/meow').text)['file']
+        try:
+            await message.reply_photo(
+                types.InputFile(io.BytesIO(requests.get(filename).content)),
+                caption="😺"
+            )
+            return
+        except PhotoDimensions:
+            continue
 
 
 def convert_size(size_bytes):
