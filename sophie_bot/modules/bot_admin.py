@@ -5,6 +5,7 @@ from time import gmtime, strftime
 from sophie_bot import CONFIG, OWNER_ID, tbot, decorator, mongodb, redis, logger
 from sophie_bot.modules.main import chat_term, term
 from sophie_bot.modules.notes import button_parser
+from sophie_bot.modules.users import user_owner_dec
 
 
 @decorator.command("term", is_owner=True)
@@ -141,3 +142,16 @@ async def upload_file(event):
                 allow_cache=False,
                 reply_to=event.message.id
             )
+
+
+@decorator.t_command("tcrash")
+@user_owner_dec
+async def tcrash(event):
+    test = 2 / 0
+    print(test)
+
+
+@decorator.command("crash", is_owner=True)
+async def crash(message):
+    test = 2 / 0
+    print(test)

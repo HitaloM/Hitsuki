@@ -75,12 +75,6 @@ async def stats(message):
     await message.reply(text, parse_mode=types.ParseMode.MARKDOWN)
 
 
-@decorator.t_command("owo2")
-async def owo2(message):
-    test = 2 / 0
-    print(test)
-
-
 def convert_size(size_bytes):
     if size_bytes == 0:
         return "0B"
