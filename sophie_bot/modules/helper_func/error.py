@@ -8,7 +8,9 @@ from time import gmtime, strftime
 
 from aiogram import types
 
-from sophie_bot import DEBUG_MODE, mongodb, dp, logger, bot
+from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
+
+from sophie_bot import CONFIG, DEBUG_MODE, mongodb, dp, logger, bot
 from sophie_bot.modules.helper_func.term import term
 
 
@@ -45,9 +47,9 @@ async def report_error(event, telethon=False):
     mongodb.errors.insert_one(new)
 
     text = "<b>Sorry, I encountered a error!</b>\n"
-    link = "<a href=\"https://t.me/YanaBotGroup\">Sophie support chat</a>"
-    text += f"If you wanna you can report it - just forward this file to {link}.\n"
+    text += f"If you wanna you can report it - just press yes \"Yes\" button.\n"
     text += "I won't log anything except the fact of error and date\n"
+    text += "<a href=\"https://t.me/YanaBotGroup\">Sophie support chat</a>"
 
     ftext = "Sophie error log file."
     ftext += "\n______________________\n"
@@ -71,11 +73,20 @@ async def report_error(event, telethon=False):
     ftext += "\n\n\nLast 5 commits:\n"
     ftext += await term(command)
 
+    buttons = InlineKeyboardMarkup(row_width=1).add(
+        InlineKeyboardButton("Delete message",
+                             callback_data='get_delete_msg_{}_admin'.format(chat_id))
+    )
+
+    if CONFIG['advanced']['errors_channel_enabled'] is True:
+        buttons.insert(InlineKeyboardButton("Report error", callback_data='report_error'))
+
     await bot.send_document(
         chat_id,
         types.InputFile(io.StringIO(ftext), filename="Error.txt"),
         caption=text,
-        reply_to_message_id=msg.message_id if lib == "Aiogram" else msg.message.id
+        reply_to_message_id=msg.message_id if lib == "Aiogram" else msg.message.id,
+        reply_markup=buttons
     )
 
     return
