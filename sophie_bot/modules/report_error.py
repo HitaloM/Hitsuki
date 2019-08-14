@@ -8,7 +8,7 @@ from sophie_bot.modules.users import is_user_admin
 async def report_error(query):
     channel_id = CONFIG['advanced']['errors_channel']
     chat_id = query.message.chat.id
-    if await is_user_admin(channel_id, query.from_user.id) is False:
+    if await is_user_admin(chat_id, query.from_user.id) is False:
         await query.answer("Only admins can report errors!")
         return
     await bot.forward_message(channel_id, chat_id, query.message.message_id)
