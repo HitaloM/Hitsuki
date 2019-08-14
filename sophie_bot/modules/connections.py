@@ -88,7 +88,7 @@ async def connect_with_arg(event):
     else:
         try:
             await tbot.send_message(user_id, text)
-        except errors.rpcerrorlist.UserIsBlockedError:
+        except (errors.rpcerrorlist.UserIsBlockedError, errors.rpcerrorlist.PeerIdInvalidError):
             await event.reply(get_string("connections", "connected_pm_to_me", chat).format(
                 chat_title))
             return
