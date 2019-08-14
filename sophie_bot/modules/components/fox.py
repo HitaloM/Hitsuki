@@ -4,6 +4,9 @@ import ujson
 import os
 import asyncio
 
+from operator import itemgetter
+from collections import OrderedDict
+
 from telethon import custom
 
 from sophie_bot import CONFIG, decorator, logger, tbot, mongodb
@@ -75,13 +78,16 @@ async def update_devices(event):
     released_beta = ""
 
     ftp = FTP(ftp_url, CONFIG['advanced']['ofox_ftp_user'], CONFIG['advanced']['ofox_ftp_pass'])
+    ftp.set_pasv(False)
 
-    Omsg = await event.reply("Updating Stable devices..")
+    Omsg = await event.reply("Updating Stable devices.. It can take long time.")
     data = ftp.mlsd("OrangeFox-Stable", ["type"])
     for device, facts in data:
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.2)
         if not facts["type"] == "dir":
             continue
+
+        print(device)
 
         info_file = []
         ftp.retrlines(f'RETR OrangeFox-Stable/{device}/device_info.txt', info_file.append)
@@ -154,6 +160,8 @@ async def update_devices(event):
         await asyncio.sleep(0.2)
         if not facts["type"] == "dir":
             continue
+
+        print(device)
 
         info_file = []
         ftp.retrlines(f'RETR OrangeFox-Beta/{device}/device_info.txt', info_file.append)
@@ -263,14 +271,15 @@ print(DEVICES_BETA)
 async def list_stable(event):
     if event.chat_id in fox_beta_groups:
         text = "**Beta testing devices:**\n"
-        for device in DEVICES_BETA:
+        for device in sorted(DEVICES_BETA.items(),key=lambda x: x[1]['fullname'],reverse=False):
             text += "* {} (`{}`)\n".format(
                 DEVICES_BETA[device]['fullname'], DEVICES_BETA[device]["codename"])
     elif event.chat_id in fox_groups:
         text = "**Supported devices:**\n"
-        for device in DEVICES_STABLE:
+        for device in sorted(DEVICES_STABLE.items(),key=lambda x: x[1]['fullname'],reverse=False):
+            print(device)
             text += "* {} (`{}`)\n".format(
-                DEVICES_STABLE[device]['fullname'], DEVICES_STABLE[device]["codename"])
+                DEVICES_STABLE[device[0]]['fullname'], DEVICES_STABLE[device[0]]["codename"])
     text += "\nTo get device write `/codename`"
     msg = await event.reply(text)
     old_msg = mongodb.old_fox_msgs.find_one({'chat_id': event.chat_id})
