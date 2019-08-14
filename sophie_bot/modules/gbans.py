@@ -125,7 +125,7 @@ async def un_blacklist_user(message):
     if not user_id:
         return
 
-    user_id = user_id[0]['user_id']
+    user_id = user_id['user_id']
 
     checker = 0
 
