@@ -70,9 +70,9 @@ def command(command, allow_edited=True, **kwargs):
             await func(*args, **def_kwargs)
             raise SkipHandler()
 
-        dp.register_message_handler(new_func, regexp=cmd, **kwargs)
+        dp.register_message_handler(new_func, regexp=cmd, state='*', **kwargs)
         if allow_edited is True:
-            dp.register_edited_message_handler(new_func, regexp=cmd, **kwargs)
+            dp.register_edited_message_handler(new_func, regexp=cmd, state='*', **kwargs)
     return decorator
 
 

@@ -73,7 +73,7 @@ async def blacklist_user(message):
     mongodb.blacklisted_users.insert_one(new)
 
     gbanned_ok = 0
-    if 'chats' not in user:
+    if 'chats' not in user or not user['chats']:
         try:
             await bot.kick_chat_member(message.chat.id, user_id)
         except Exception:

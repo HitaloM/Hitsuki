@@ -259,6 +259,9 @@
         "admin_already_in_fed": "User {user} already admin in <b>{name}</b> Federation",
         "admin_added_to_fed": "User {user} added to <b>{name}</b> Federation admins",
 
+        "admin_not_in_fed": "User {user} is not a <b>{name}</b> Federation admin",
+        "admin_demoted_from_fed": "User {user} demoted from <b>{name}</b> Federation admins",
+
         "chats_in_fed": "<b>Chats connected to {name} Federation:</b>\n",
 
         "fed_info": "<b>Federation info</b>\n",
@@ -266,8 +269,13 @@
         "fed_id": "ID: <code>{id}</code>\n",
         "fed_creator": "Creator: {user}\n",
         "chats_in_fed_info": "Chats in the fed: {num}\n",
+        "banned_in_fed_info": "Banned users in the fed: {num}\n",
+
+        "no_fbanned_in_fed": "Noone user was banned in {fed_name} Federation!",
 
         "fban_self": "Thats a nice show!",
+        "fban_creator": "How I can ban Federation creator?! I don't think it's funny.",
+        "fban_fed_admin": "I'm not banning a fed admin from their own fed!",
         "need_admin_to_fban": "You are not a fedadmin in {name} Federation",
         "already_fbanned": "{user} already fbanned in this federation.",
         "fbanned_header": "<b>Federation ban</b>",
