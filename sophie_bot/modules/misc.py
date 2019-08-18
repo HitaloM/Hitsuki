@@ -11,8 +11,8 @@ import sophie_bot.modules.helper_func.bot_rights as bot_rights
 from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, tbot, decorator, mongodb
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import (get_user, user_admin_dec,
-                                      user_link, aio_get_user, user_link_html, is_user_admin)
+from sophie_bot.modules.users import (get_user, user_admin_dec, aio_get_user,
+                                      user_link_html, is_user_admin)
 
 
 @decorator.command('allcommands')
@@ -34,16 +34,13 @@ async def get_id(message, strings):
     text += strings["chat_id"].format(message.chat.id)
 
     if not user['user_id'] == message.from_user.id:
-        userl = await user_link(user['user_id'])
+        userl = await user_link_html(user['user_id'])
         text += strings["user_id"].format(userl, user['user_id'])
 
-    if "reply_to_message" in message:
-        userl = await user_link_html(message.reply_to_message.from_user.id)
+    if "reply_to_message" in message and "forward_from" in message.reply_to_message and not \
+       message.reply_to_message.forward_from.id == message.reply_to_message.from_user.id:
+        userl = await user_link_html(message.reply_to_message.forward_from.id)
         text += strings["user_id"].format(userl, message.reply_to_message.from_user.id)
-        if "forward_from" in message.reply_to_message and not \
-           message.reply_to_message.forward_from.id == message.reply_to_message.from_user.id:
-            userl = await user_link_html(message.reply_to_message.forward_from.id)
-            text += strings["user_id"].format(userl, message.reply_to_message.from_user.id)
 
     await message.reply(text)
 

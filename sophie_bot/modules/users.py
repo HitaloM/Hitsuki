@@ -371,7 +371,7 @@ async def add_user_to_db(user):
             'last_name': user.user.last_name,
             'username': user.user.username,
             'user_lang': user.user.lang_code,
-            'chats': None
+            'chats': []
             }
     old = mongodb.user_list.find_one({'user_id': user['user_id']})
     if old:

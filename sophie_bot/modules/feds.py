@@ -8,7 +8,7 @@ from telethon.tl.types import ChannelParticipantCreator, ChatBannedRights
 
 from aiogram import types
 
-from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, mongodb, bot
+from sophie_bot import OWNER_ID, BOT_ID, WHITELISTED, tbot, decorator, mongodb, bot
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (is_user_admin, user_link,
                                       aio_get_user, user_link_html)
@@ -94,6 +94,9 @@ def user_is_fed_admin(func):
         elif hasattr(event, 'from_user'):
             user_id = event.from_user.id
 
+        if user_id == OWNER_ID:
+            return await func(event, *args, **kwargs)
+
         if hasattr(event, 'chat_id'):
             real_chat_id = event.chat_id
         elif hasattr(event, 'chat'):
@@ -121,8 +124,8 @@ def user_is_fed_admin(func):
 
 @decorator.command('newfed')
 @get_strings_dec("feds")
-async def newFed(message, strings, regexp=None, **kwargs):
-    args = regexp.group(1)
+async def newFed(message, strings, **kwargs):
+    args = message.get_args()
     if not args:
         await message.reply(strings['no_args'])
     fed_name = args
@@ -137,8 +140,8 @@ async def newFed(message, strings, regexp=None, **kwargs):
 
 @decorator.command('joinfed')
 @get_strings_dec("feds")
-async def join_fed_comm(message, strings, regexp=None, **kwargs):
-    fed_id = regexp.group(1)
+async def join_fed_comm(message, strings, **kwargs):
+    fed_id = message.get_args()
     chat_id = message.chat.id
     user = message.from_user.id
     peep = await tbot(
@@ -196,7 +199,7 @@ async def promote_to_fed(message, strings, status, chat_id, chat_title, user, fe
                          *args, **kwargs):
     user_id = message.from_user.id
 
-    if not user_id == fed["creator"]:
+    if not user_id == fed["creator"] and user_id != OWNER_ID:
         await message.reply(strings["only_creator_promote"])
         return
     data = {'fed_id': fed['fed_id'], 'admin': user['user_id']}
@@ -211,6 +214,30 @@ async def promote_to_fed(message, strings, status, chat_id, chat_title, user, fe
         user=await user_link_html(user['user_id']), name=fed['fed_name']))
 
 
+@decorator.command('fdemote')
+@connection(admin=True, only_in_groups=True)
+@get_user_and_fed_and_text_dec
+@user_is_fed_admin
+@get_strings_dec("feds")
+async def demote_from_fed(message, strings, status, chat_id, chat_title, user, fed, reason,
+                          *args, **kwargs):
+    user_id = message.from_user.id
+
+    if not user_id == fed["creator"] and user_id != OWNER_ID:
+        await message.reply(strings["only_creator_promote"])
+        return
+    data = {'fed_id': fed['fed_id'], 'admin': user['user_id']}
+
+    old = mongodb.fed_admins.find_one(data)
+    if not old:
+        await message.reply(strings["admin_not_in_fed"].format(
+            user=await user_link_html(user['user_id']), name=fed['fed_name']))
+        return
+    mongodb.fed_admins.delete_one({'_id': old['_id']})
+    await message.reply(strings["admin_demoted_from_fed"].format(
+        user=await user_link_html(user['user_id']), name=fed['fed_name']))
+
+
 @decorator.command('fchatlist')
 @connection(admin=True, only_in_groups=True)
 @get_fed_dec
@@ -222,7 +249,7 @@ async def fed_chat_list(message, strings, status, chat_id, chat_title, fed,
     chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
     for fed in chats:
         chat = mongodb.chat_list.find_one({'chat_id': fed['chat_id']})
-        text += '* {} (`{}`)\n'.format(chat["chat_title"], fed['chat_id'])
+        text += '* {} (<code>{}</code>)\n'.format(chat["chat_title"], fed['chat_id'])
     if len(text) > 4096:
         await message.answer_document(
             types.InputFile(io.StringIO(text), filename="chatlist.txt"),
@@ -246,6 +273,8 @@ async def fed_info(message, strings, status, chat_id, chat_title, fed,
     text += strings['fed_creator'].format(user=await user_link_html(fed['creator']))
     chats = mongodb.fed_groups.find({'fed_id': fed['fed_id']})
     text += strings['chats_in_fed_info'].format(num=chats.count())
+    fbans = mongodb.fbanned_users.find({'fed_id': fed['fed_id']})
+    text += strings['banned_in_fed_info'].format(num=fbans.count())
     await message.reply(text)
 
 
@@ -256,12 +285,15 @@ async def fed_info(message, strings, status, chat_id, chat_title, fed,
 @get_strings_dec("feds")
 async def fbanned_list(message, strings, status, chat_id, chat_title, fed,
                        *args, **kwargs):
-    print(fed)
-    text = strings['fbanned_list_header'].format(fed_name=fed['fed_name'], fed_id=fed['fed_id'])
     fbanned = mongodb.fbanned_users.find({'fed_id': fed['fed_id']})
+    if not fbanned or fbanned.count() == 0:
+        await message.reply(strings['no_fbanned_in_fed'].format(fed_name=fed['fed_name']))
+        return
+    text = strings['fbanned_list_header'].format(fed_name=fed['fed_name'], fed_id=fed['fed_id'])
     for user_id in fbanned:
         user_id = user_id['user']
         user = mongodb.user_list.find_one({'user_id': user_id})
+        fbanned = mongodb.fbanned_users.find_one({'fed_id': fed['fed_id'], 'user_id': user_id})
         if user:
             text += f"\n {user['first_name']} "
             if 'last_name' in user and user['last_name']:
@@ -269,6 +301,8 @@ async def fbanned_list(message, strings, status, chat_id, chat_title, fed,
             text += f" ({user_id})"
         else:
             text += f'\n ({user_id})'
+        if fbanned and 'reason' in fbanned:
+            text += ': ' + fbanned['reason']
     await message.answer_document(
         types.InputFile(io.StringIO(text), filename="fbanned_list.txt"),
         strings['fbanned_list_header'].format(fed_name=fed['fed_name'], fed_id=fed['fed_id']),
@@ -295,6 +329,15 @@ async def fban_user(message, strings, status, chat_id, chat_title, user, fed, re
         await message.reply(strings['fban_self'])
         return
 
+    elif user['user_id'] == fed['creator']:
+        await message.reply(strings['fban_creator'])
+        return
+
+    if mongodb.fed_admins.find_one(
+            {'fed_id': fed['fed_id'], 'admin': user['user_id']}):
+        await message.reply(strings['fban_fed_admin'])
+        return
+
     check = mongodb.fbanned_users.find_one({'user': user['user_id'], 'fed_id': fed['fed_id']})
     if check:
         await message.reply(strings['already_fbanned'].format(
@@ -316,7 +359,7 @@ async def fban_user(message, strings, status, chat_id, chat_title, user, fed, re
 
     counter = 0
     for chat in fed_chats:
-        await asyncio.sleep(1)  # Do not slow down other updates
+        await asyncio.sleep(0.5)  # Do not slow down other updates
         try:
             await bot.kick_chat_member(message.chat.id, user['user_id'])
             counter += 1

@@ -20,6 +20,13 @@ async def all_errors_handler(message, dp):
 
 
 async def report_error(event, telethon=False):
+
+    error = str(sys.exc_info()[1])
+    class_error = sys.exc_info()[0].__name__
+
+    if class_error == 'example':
+        return
+
     if telethon is True:
         msg = event
         chat_id = msg.chat_id
@@ -37,11 +44,11 @@ async def report_error(event, telethon=False):
         logger.error(traceback.format_exc())
 
     if DEBUG_MODE is True:
-        await msg.reply(str(sys.exc_info()[1]))
+        await msg.reply()
         return
 
     new = {
-        'error': str(sys.exc_info()[1]),
+        'error': error,
         'date': datetime.datetime.now()
     }
     mongodb.errors.insert_one(new)
@@ -60,14 +67,13 @@ async def report_error(event, telethon=False):
     ftext += "\nLib: " + lib
     ftext += "\nGroup ID: " + str(chat_id)
     ftext += "\nSender ID: " + str(msg.from_user.id if lib == "Aiogram" else msg.from_id)
+    ftext += "\nText: " + str(msg.text or "")
     ftext += "\n\nRaw update text:\n"
     ftext += str(event)
     ftext += "\n\nFormatted update text:\n"
     ftext += str(ujson.dumps(msg, indent=2))
     ftext += "\n\nTraceback info:\n"
     ftext += str(traceback.format_exc())
-    ftext += "\n\nError text:\n"
-    ftext += str(sys.exc_info()[1])
 
     command = "git log --pretty=format:\"%an: %s\" -5"
     ftext += "\n\n\nLast 5 commits:\n"

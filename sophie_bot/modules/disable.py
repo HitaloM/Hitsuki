@@ -23,7 +23,7 @@ async def list_disabled(message, strings, status, chat_id, chat_title):
     text = strings['disabled_list'].format(chat_name=chat_title)
     commands = mongodb.disabled_cmds.find({'chat_id': chat_id})
     for command in commands:
-        text += f"* <code>/{command}</code>\n"
+        text += f"* <code>/{command['command']}</code>\n"
     await message.reply(text)
 
 
