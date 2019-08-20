@@ -48,6 +48,7 @@ async def report_error(event, telethon=False):
         return
 
     new = {
+        'error_class_name': class_error,
         'error': error,
         'date': datetime.datetime.now()
     }
