@@ -366,18 +366,34 @@ async def get_user_by_id(user_id):
 
 
 async def add_user_to_db(user):
-    user = {'user_id': user.user.id,
-            'first_name': user.user.first_name,
-            'last_name': user.user.last_name,
-            'username': user.user.username,
-            'user_lang': user.user.lang_code,
-            'chats': []
-            }
-    old = mongodb.user_list.find_one({'user_id': user['user_id']})
-    if old:
-        mongodb.user_list.delete_one({'_id': old['_id']})
-    mongodb.user_list.insert_one(user)
-    return user
+
+    if hasattr(user, 'user'):
+        user = user.id
+
+    new_user = {
+        'user_id': user.id,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'username': user.username
+    }
+
+    user = mongodb.user_list.find_one({'user_id': new_user['user_id']})
+    if not user:
+        user = new_user
+
+    if 'chats' not in user:
+        new_user['chats'] = []
+    if 'user_lang' not in user:
+        new_user['user_lang'] = 'en'
+        if hasattr(user, 'user_lang'):
+            new_user['user_lang'] = user.user_lang
+
+    mongodb.user_list.update_one(
+        {'user_id': user['user_id']},
+        {"$set": new_user}, upsert=True
+    )
+
+    return new_user
 
 
 async def get_id_by_nick(data):

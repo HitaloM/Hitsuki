@@ -37,7 +37,8 @@ RESTRICTED_SYMBOLS = ['**', '__', '`']
 
 @decorator.command("owo", is_owner=True)
 async def test(message, **kwagrs):
-    print(message)
+    mongodb.user_list.delete_one({'user_id': 581661269})
+    print('nuked')
 
 
 @decorator.t_command("save", word_arg=True)

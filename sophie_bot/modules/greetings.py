@@ -13,7 +13,7 @@ from sophie_bot.modules.bans import mute_user, unmute_user
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.notes import send_note
-from sophie_bot.modules.users import user_admin_dec, user_link_html
+from sophie_bot.modules.users import user_admin_dec, user_link_html, add_user_to_db
 
 
 async def do_welcomesecurity(message, strings, from_id, chat_id):
@@ -70,13 +70,16 @@ async def do_cleanwelcome(message, chat_id, welc_msg):
 @get_strings_dec("greetings")
 async def welcome_trigger(message, strings, **kwargs):
     chat_id = message.chat.id
-    from_id = message.from_user.id
+    from_user = message.from_user
 
     if 'new_chat_participant' in message:
-        from_id = message.new_chat_members[0].id
+        from_user = message.new_chat_members[0]
+
+    # Add user to db
+    await add_user_to_db(from_user)
 
     # Don't welcome blacklisted users
-    blacklisted = mongodb.blacklisted_users.find_one({'user': from_id})
+    blacklisted = mongodb.blacklisted_users.find_one({'user': from_user.id})
     if blacklisted:
         return
 
@@ -84,12 +87,12 @@ async def welcome_trigger(message, strings, **kwargs):
     chat_fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
     if chat_fed:
         fed_id = chat_fed['fed_id']
-        is_banned = mongodb.fbanned_users.find_one({'user': from_id, 'fed_id': fed_id})
+        is_banned = mongodb.fbanned_users.find_one({'user': from_user.id, 'fed_id': fed_id})
         if is_banned:
             return
 
     # Do not welcome yourselve
-    if from_id == BOT_ID:
+    if from_user.id == BOT_ID:
         return
 
     reply = message.message_id
@@ -103,18 +106,18 @@ async def welcome_trigger(message, strings, **kwargs):
     welcome = mongodb.welcomes.find_one({'chat_id': chat_id})
     if not welcome:
         welc_msg = await message.reply(strings['welcome_hay'].format(
-            mention=await user_link_html(from_id)
+            mention=await user_link_html(from_user.id)
         ))
     elif welcome['enabled'] is False:
         welc_msg = None
     else:
         welc_msg = await send_note(
             chat_id, chat_id, reply, welcome['note'],
-            show_none=True, from_id=from_id
+            show_none=True, from_id=from_user.id
         )
 
     # Welcomesecurity
-    await do_welcomesecurity(message, strings, from_id, chat_id)
+    await do_welcomesecurity(message, strings, from_user.id, chat_id)
 
     # Cleanwelcome
     if welc_msg:
