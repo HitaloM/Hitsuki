@@ -125,7 +125,6 @@ async def promote(message, strings):
 @get_strings_dec('misc')
 async def demote(message, strings):
     user, txt = await aio_get_user(message)
-    print(user)
     if not user:
         return
 

@@ -28,7 +28,6 @@ async def update_users(message, **kwargs):
         if old_chat and 'first_detected_date' in old_chat:
             first_detected_date = old_chat['first_detected_date']
         else:
-            print('new chat')
             first_detected_date = datetime.datetime.now()
 
         chat_new = {

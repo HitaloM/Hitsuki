@@ -4,9 +4,6 @@ import ujson
 import os
 import asyncio
 
-from operator import itemgetter
-from collections import OrderedDict
-
 from telethon import custom
 
 from sophie_bot import CONFIG, decorator, logger, tbot, mongodb
@@ -262,8 +259,8 @@ if os.path.exists("update.json"):
     DEVICES_STABLE = jfile['stable']
     DEVICES_BETA = jfile['beta']
 
-print(DEVICES_STABLE)
-print(DEVICES_BETA)
+# print(DEVICES_STABLE)
+# print(DEVICES_BETA)
 
 
 @decorator.t_command("list")
@@ -271,13 +268,12 @@ print(DEVICES_BETA)
 async def list_stable(event):
     if event.chat_id in fox_beta_groups:
         text = "**Beta testing devices:**\n"
-        for device in sorted(DEVICES_BETA.items(),key=lambda x: x[1]['fullname'],reverse=False):
+        for device in sorted(DEVICES_BETA.items(), key=lambda x: x[1]['fullname'], reverse=False):
             text += "* {} (`{}`)\n".format(
-                DEVICES_BETA[device]['fullname'], DEVICES_BETA[device]["codename"])
+                DEVICES_BETA[device[0]]['fullname'], DEVICES_BETA[device[0]]["codename"])
     elif event.chat_id in fox_groups:
         text = "**Supported devices:**\n"
-        for device in sorted(DEVICES_STABLE.items(),key=lambda x: x[1]['fullname'],reverse=False):
-            print(device)
+        for device in sorted(DEVICES_STABLE.items(), key=lambda x: x[1]['fullname'], reverse=False):
             text += "* {} (`{}`)\n".format(
                 DEVICES_STABLE[device[0]]['fullname'], DEVICES_STABLE[device[0]]["codename"])
     text += "\nTo get device write `/codename`"
