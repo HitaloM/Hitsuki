@@ -2,10 +2,9 @@ import asyncio
 import os
 from time import gmtime, strftime
 
-from sophie_bot import CONFIG, OWNER_ID, tbot, decorator, mongodb, redis, logger
+from sophie_bot import CONFIG, tbot, decorator, mongodb, redis, logger
 from sophie_bot.modules.main import chat_term, term
 from sophie_bot.modules.notes import button_parser
-from sophie_bot.modules.users import user_owner_dec
 
 
 @decorator.command("term", is_owner=True)
@@ -17,14 +16,14 @@ async def cmd_term(message):
     await msg.edit_text(result)
 
 
-@decorator.t_command("broadcast", arg=True, from_users=OWNER_ID)
-async def broadcast(event):
+@decorator.command("broadcast", is_owner=True)
+async def broadcast(message):
     chats = mongodb.chat_list.find({})
-    raw_text = event.message.text.split(" ", 1)[1]
-    text, buttons = button_parser(event.chat_id, raw_text)
+    raw_text = message.get_args()
+    text, buttons = button_parser(message.chat.id, raw_text)
     if len(buttons) == 0:
         buttons = None
-    msg = await event.reply("Broadcasting to {} chats...".format(chats.count()))
+    msg = await message.reply("Broadcasting to {} chats...".format(chats.count()))
     num_succ = 0
     num_fail = 0
     for chat in chats:
@@ -33,17 +32,17 @@ async def broadcast(event):
             num_succ = num_succ + 1
         except Exception as err:
             num_fail = num_fail + 1
-            await msg.edit("Error:\n`{}`.\nBroadcasting will continues.".format(err))
+            await msg.edit_text("Error:\n`{}`.\nBroadcasting will continues.".format(err))
             await asyncio.sleep(2)
-            await msg.edit("Broadcasting to {} chats...".format(chats.count()))
-    await msg.edit(
+            await msg.edit_text("Broadcasting to {} chats...".format(chats.count()))
+    await msg.edit_text(
         "**Broadcast completed!** Message sended to `{}` chats successfully, \
 `{}` didn't received message.".format(num_succ, num_fail))
 
 
-@decorator.t_command("sbroadcast", arg=True, from_users=OWNER_ID)
-async def sbroadcast(event):
-    text = event.message.text.split(" ", 1)[1]
+@decorator.command("sbroadcast", is_owner=True)
+async def sbroadcast(message):
+    text = message.get_args()
     # Add chats to sbroadcast list
     chats = mongodb.chat_list.find({})
     mongodb.sbroadcast_list.drop()
@@ -55,18 +54,18 @@ async def sbroadcast(event):
         'all_chats': chats.count(),
         'recived_chats': 0
     })
-    await event.reply(
+    await message.reply(
         "Smart broadcast planned for `{}` chats".format(chats.count()))
 
 
-@decorator.t_command("stopsbroadcast", from_users=OWNER_ID)
-async def stop_sbroadcast(event):
+@decorator.command("stopsbroadcast", is_owner=True)
+async def stop_sbroadcast(message):
     old = mongodb.sbroadcast_settings.find_one({})
     mongodb.sbroadcast_list.drop()
     mongodb.sbroadcast_settings.drop()
-    await event.reply("Smart broadcast stopped."
-                      "It was sended to `{}` chats.".format(
-                          old['recived_chats']))
+    await message.reply("Smart broadcast stopped."
+                        "It was sended to `{}` chats.".format(
+                            old['recived_chats']))
 
 
 # Check on smart broadcast
@@ -114,41 +113,34 @@ async def backup(message):
     )
 
 
-@decorator.t_command("purgecaches?(s)", from_users=OWNER_ID)
-async def purge_caches(event):
+@decorator.command("purgecache", is_owner=True)
+async def purge_caches(message):
     redis.flushdb()
-    await event.reply("redis cache was cleaned.")
+    await message.reply("Redis cache was cleaned.")
 
 
-@decorator.t_command("botstop", from_users=OWNER_ID)
-async def bot_stop(event):
-    await event.reply("Goodbye...")
+@decorator.command("botstop", is_owner=True)
+async def bot_stop(message):
+    await message.reply("Goodbye...")
     exit(1)
 
 
-@decorator.t_command("upload", arg=True, from_users=OWNER_ID)
-async def upload_file(event):
-    input_str = event.pattern_match.group(1)
+@decorator.command("upload", is_owner=True)
+async def upload_file(message):
+    input_str = message.get_args()
     if os.path.exists(input_str):
-        await event.reply("Processing ...")
+        await message.reply("Processing ...")
         if os.path.exists(input_str):
             caption_rts = os.path.basename(input_str)
             myfile = open(input_str, 'rb')
-            await event.client.send_file(
-                event.chat_id,
+            await tbot.send_file(
+                message.chat.id,
                 myfile,
                 caption=caption_rts,
                 force_document=False,
                 allow_cache=False,
-                reply_to=event.message.id
+                reply_to=message.message_id
             )
-
-
-@decorator.t_command("tcrash")
-@user_owner_dec
-async def tcrash(event):
-    test = 2 / 0
-    print(test)
 
 
 @decorator.command("crash", is_owner=True)

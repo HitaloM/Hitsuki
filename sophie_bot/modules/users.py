@@ -90,7 +90,6 @@ def update_user(chat_id, new_user):
         'chats': new_chat,
         'first_detected_date': first_detected_date
     }
-
     mongodb.user_list.update_one({'user_id': new_user.id}, {"$set": user_new}, upsert=True)
 
     logger.debug(f"Users: User {new_user.id} updated")
@@ -111,7 +110,6 @@ async def update_admin_cache(chat_id):
 
 async def is_user_admin(chat_id, user_id):
     # User's pm should have admin rights
-
     if user_id in SUDO:
         return True
 
