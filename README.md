@@ -12,6 +12,12 @@ You need to configure this bot a bit before it can be used, don't worry, its eas
 + Install git, python 3.7+ and docker(for docker method) from your package manager
 + You need to know how to clone this repo
 
+
+# Docker Way
+
+## Cloning this repo
+    git clone https://github.com/MrYacha/SophieBot
+
 ## Setting config
 
 + Go to SophieBot/data
@@ -20,11 +26,6 @@ You need to configure this bot a bit before it can be used, don't worry, its eas
 + Set mongo_conn to "mongo-server"
 + Set redis_conn to "redis-server"
 + Set other configs as needed
-
-# Docker Way
-
-## Cloning this repo
-    git clone https://github.com/MrYacha/SophieBot
 
 ## Creating bridge
     docker network create sophiebot-net
@@ -40,6 +41,17 @@ You need to configure this bot a bit before it can be used, don't worry, its eas
 # I am an old man, I like to go the manual way...
 
 
+## Cloning this repo
+    git clone https://github.com/MrYacha/SophieBot
+
+
+## Setting config
+
++ Go to SophieBot/data
++ Rename bot_conf.json.example to bot_conf.json
++ Open in text editor
++ Set configs as needed
+
 ## Installing requirements
     cd SophieBot
     sudo pip3 install -r requirements.txt
@@ -50,7 +62,3 @@ You need to configure this bot a bit before it can be used, don't worry, its eas
 
     cd SophieBot
     python3 -m sophie_bot
-
-
-# Our friends:
-+ [Paperplane Telegram UserBot](https://github.com/RaphielGang/Telegram-UserBot)
