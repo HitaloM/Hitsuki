@@ -28,7 +28,6 @@ async def update_users(message, **kwargs):
         if old_chat and 'first_detected_date' in old_chat:
             first_detected_date = old_chat['first_detected_date']
         else:
-            print('new chat')
             first_detected_date = datetime.datetime.now()
 
         chat_new = {
@@ -368,7 +367,7 @@ async def get_user_by_id(user_id):
 async def add_user_to_db(user):
 
     if hasattr(user, 'user'):
-        user = user.id
+        user = user.user
 
     new_user = {
         'user_id': user.id,
@@ -378,7 +377,7 @@ async def add_user_to_db(user):
     }
 
     user = mongodb.user_list.find_one({'user_id': new_user['user_id']})
-    if not user:
+    if not user or user is None:
         user = new_user
 
     if 'chats' not in user:

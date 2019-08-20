@@ -11,7 +11,7 @@ import sophie_bot.modules.helper_func.bot_rights as bot_rights
 from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, BOT_ID, tbot, decorator, mongodb
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import (get_user, user_admin_dec, aio_get_user,
+from sophie_bot.modules.users import (user_admin_dec, aio_get_user,
                                       user_link_html, is_user_admin)
 
 
@@ -125,7 +125,6 @@ async def promote(message, strings):
 @get_strings_dec('misc')
 async def demote(message, strings):
     user, txt = await aio_get_user(message)
-    print(user)
     if not user:
         return
 
