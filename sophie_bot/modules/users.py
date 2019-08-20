@@ -3,8 +3,7 @@ import datetime
 import html
 
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import (ChannelParticipantsAdmins,
-                               MessageEntityMentionName)
+from telethon.tl.types import ChannelParticipantsAdmins
 
 from sophie_bot import OWNER_ID, SUDO, tbot, decorator, logger, mongodb, redis
 from sophie_bot.modules.helper_func.flood import flood_limit, flood_limit_dec
@@ -164,118 +163,6 @@ async def event(event):
             text += '- {} ({})\n'.format(await user_link(H['user_id']), H['user_id'])
 
     await msg.edit(text)
-
-
-async def get_user_and_text(event, send_text=True):
-    msg = event.message.raw_text.split()
-    user = await get_user(event, send_text=send_text)
-    if event.reply_to_msg_id:
-        if len(msg) >= 2:
-            text = event.message.raw_text.split(" ", 1)[1]
-        else:
-            text = None
-    else:
-        if len(msg) >= 3:
-            text = event.message.raw_text.split(" ", 2)[2]
-        else:
-            text = None
-
-    return user, text
-
-
-async def get_user(event, send_text=True):
-    msg = event.message.raw_text.split()
-    user = None
-    if event.reply_to_msg_id:
-        msg = await event.get_reply_message()
-        user = mongodb.user_list.find_one(
-            {'user_id': msg.from_id})
-
-        # Will ask Telegram for help with it.
-        if not user:
-            try:
-                user = await event.client(GetFullUserRequest(int(msg.from_id)))
-                # Add user in database
-                if user:
-                    user = await add_user_to_db(user)
-            except Exception as err:
-                logger.error(err)
-    else:
-        if len(msg) > 1:
-            arg_user = msg[1]
-        else:
-            # Wont tagged any user, lets use sender
-            user = mongodb.user_list.find_one({'user_id': event.from_id})
-            return user
-        input_str = event.pattern_match.group(1)
-        mention_entity = event.message.entities
-
-        if input_str and input_str.isdigit():
-            input_str = int(input_str)
-
-        # Search user in database
-        if '@' in arg_user:
-            # Remove '@'
-            username = arg_user[1:].lower()
-            user = mongodb.user_list.find_one({
-                'username': username
-            })
-        elif arg_user.isdigit():
-            # User id
-            arg_user = int(arg_user)
-            user = mongodb.user_list.find_one(
-                {'user_id': int(arg_user)}
-            )
-        else:
-            user = mongodb.user_list.find_one(
-                {'username': input_str}
-            )
-
-        # If we didn't find user in database will ask Telegram.
-        if not user:
-            try:
-                user = await add_user_to_db(await tbot(GetFullUserRequest(arg_user)))
-            except (ValueError, TypeError) as err:
-                logger.debug(f"cant update user E2: {err}")
-
-        # Still didn't find? Lets try get entities
-        try:
-            if mention_entity:
-                if len(mention_entity) > 1:
-                    probable_user_mention_entity = mention_entity[1]
-                else:
-                    probable_user_mention_entity = mention_entity[0]
-                if not user:
-                    if not isinstance(probable_user_mention_entity, MessageEntityMentionName):
-                        user_id = await event.client.get_entity(input_str)
-                    else:
-                        user_id = probable_user_mention_entity.user_id
-                    if user_id:
-                        userf = await event.client(GetFullUserRequest(int(user_id)))
-                        user = mongodb.user_list.find_one(
-                            {'user_id': int(userf.user.id)}
-                        )
-                        if not user and userf:
-                            user = await add_user_to_db(userf)
-        except (ValueError, TypeError) as err:
-            logger.debug(f"cant update user E3: {err}")
-
-        if not user:
-            # Last try before fail
-            try:
-                user = await event.client.get_entity(input_str)
-                if user:
-                    user = await add_user_to_db(user)
-            except (ValueError, TypeError) as err:
-                logger.debug(f"cant update user E4: {err}")
-
-    if not user and send_text is True:
-        await event.reply("I can't find this user in whole Telegram.")
-
-    if not user:
-        return None
-
-    return user
 
 
 async def aio_get_user(message, send_text=True, allow_self=False):
