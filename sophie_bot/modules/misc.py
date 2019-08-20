@@ -8,7 +8,7 @@ from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChatAdminRights
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
-from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, tbot, decorator, mongodb
+from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, BOT_ID, tbot, decorator, mongodb
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_user, user_admin_dec, aio_get_user,
@@ -88,14 +88,13 @@ async def unpin_message(event, strings):
         return
 
 
-@decorator.t_command("promote", arg=True)
+@decorator.command("promote")
 @user_admin_dec
 @bot_rights.add_admins()
-async def promote(event):
-    user = await get_user(event)
-    if user:
-        pass
-    else:
+@get_strings_dec('misc')
+async def promote(message, strings):
+    user, txt = await aio_get_user(message)
+    if not user:
         return
 
     new_rights = ChatAdminRights(
@@ -108,37 +107,31 @@ async def promote(event):
     )
 
     try:
-        await event.client(
-            EditAdminRequest(
-                event.chat_id,
-                user['user_id'],
-                new_rights
-            )
-        )
-        await event.reply(get_string('misc', 'promote_success', event.chat_id))
+        await tbot(EditAdminRequest(
+            message.chat.id,
+            user['user_id'],
+            new_rights
+        ))
+        await message.reply(strings['promote_success'])
 
     except BadRequestError:  # TODO(Better exception)
-        await event.reply(get_string('misc', 'promote_failed', event.chat_id))
+        await message.reply(strings['promote_failed'])
         return
 
 
-@decorator.t_command("demote")
+@decorator.command("demote")
 @user_admin_dec
 @bot_rights.add_admins()
-async def demote(event):
-    # Admin right check
-
-    user = await get_user(event)
-    if user:
-        pass
-    else:
+@get_strings_dec('misc')
+async def demote(message, strings):
+    user, txt = await aio_get_user(message)
+    print(user)
+    if not user:
         return
 
-    bot_id = (await tbot.get_me()).id
-    if bot_id == user['user_id']:
+    if user['user_id'] == BOT_ID:
         return
 
-    # New rights after demotion
     newrights = ChatAdminRights(
         add_admins=None,
         invite_users=None,
@@ -147,22 +140,20 @@ async def demote(event):
         delete_messages=None,
         pin_messages=None
     )
-    # Edit Admin Permission
+
     try:
-        await event.client(
-            EditAdminRequest(
-                event.chat_id,
-                user['user_id'],
-                newrights
-            )
-        )
+        await tbot(EditAdminRequest(
+            message.chat.id,
+            user['user_id'],
+            newrights
+        ))
 
     # If we catch BadRequestError from Telethon
     # Assume we don't have permission to demote
     except BadRequestError:
-        await event.reply(get_string('misc', 'demote_failed', event.chat_id))
+        await message.reply(strings['demote_failed'])
         return
-    await event.reply(get_string('misc', 'demote_success', event.chat_id))
+    await message.reply(strings['demote_success'])
 
 
 @decorator.t_command('help')
