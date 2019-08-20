@@ -1,3 +1,19 @@
+# Copyright © 2018, 2019 MrYacha (SophieBot, YanaBot)
+# Copyright © 2018, 2019 Paul Larsen (Marie)
+# This file is part of SophieBot.
+#
+# SophieBot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# SophieBot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -11,10 +27,6 @@ from typing import Union
 from sqlalchemy import Column, String, Boolean, UnicodeText, Integer, func, distinct
 
 from telethon import custom
-
-# This code completly unlinted
-# Copyright 2018-2019 YanaBot
-# Copyright 2018-2019 Marie
 
 DB_URI = 'postgresql://yacha:q@localhost:5432/y2'
 
