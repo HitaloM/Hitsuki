@@ -44,7 +44,7 @@ async def report_error(event, telethon=False):
         logger.error(traceback.format_exc())
 
     if DEBUG_MODE is True:
-        await msg.reply()
+        await msg.reply(error)
         return
 
     new = {

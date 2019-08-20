@@ -1,5 +1,7 @@
 import asyncio
 
+from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
+
 from sophie_bot import decorator, tbot, bot
 from sophie_bot.modules.helper_func import bot_rights
 from sophie_bot.modules.language import get_strings_dec
@@ -25,7 +27,12 @@ async def purge(message, strings):
             await tbot.delete_messages(chat_id, msgs)
             msgs = []
 
-    await tbot.delete_messages(chat_id, msgs)
+    try:
+        await tbot.delete_messages(chat_id, msgs)
+    except MessageDeleteForbiddenError:
+        await message.reply(strings['purge_error'])
+        return
+
     msg = await bot.send_message(chat_id, strings["purge_done"])
     await asyncio.sleep(5)
     await msg.delete()

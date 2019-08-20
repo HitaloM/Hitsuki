@@ -169,6 +169,7 @@
     "msg_deleting": {
         "no_rights_purge": "You don't have rights to purge here!",
         "reply_to_msg": "Reply to message!",
+        "purge_error": "I can't continuity the purge, mostly it's because you trying delete message older than 2 days.",
         "purge_done": "Purge completed!\nThis message will be removed in 5 seconds.",
         "no_rights_del": "You don't have rights to delete messsages here!"
     },
