@@ -26,11 +26,35 @@ from sophie_bot.modules.users import is_user_admin, user_link
 LANGUAGES = {}
 LANGS = []
 
+logger.debug("Loading English localisation..")
+f = open('sophie_bot/modules/langs/en.json', "r")
+lang = ujson.load(f)
+exec("LANGUAGES[\"" + lang['language_info']['code'] + "\"] = lang")
+LANGS += tuple([lang['language_info']['code']])
+
 for filename in os.listdir('sophie_bot/modules/langs'):
+    if filename == 'en.json':
+        continue
     logger.debug("Loading language file " + filename)
     f = open('sophie_bot/modules/langs/' + filename, "r")
     lang = ujson.load(f)
+
     exec("LANGUAGES[\"" + lang['language_info']['code'] + "\"] = lang")
+
+    for massive in lang:
+        if massive == 'language_info':
+            continue
+        for module in LANGUAGES['en'][massive]:
+            for str in LANGUAGES['en'][massive][module]:
+                if massive in lang and \
+                   module in lang[massive] and \
+                   str in lang[massive][module]:
+                    LANGUAGES[lang['language_info']['code']][massive][module][str] = \
+                        lang[massive][module][str]
+                else:
+                    LANGUAGES[lang['language_info']['code']][massive][module][str] = \
+                        LANGUAGES['en'][massive][module][str]
+
     LANGS += tuple([lang['language_info']['code']])
 
 LANGS.sort()
@@ -181,10 +205,8 @@ def get_strings_dec(module="", mas_name="STRINGS"):
             if chat_lang not in LANGUAGES:
                 await event.reply(f"I don't support {chat_lang}. Please change language now.")
                 return
-            if module in LANGUAGES[chat_lang][mas_name]:
-                str = LANGUAGES[chat_lang][mas_name][module]
-            else:
-                str = LANGUAGES['en'][mas_name][module]
+
+            str = LANGUAGES[chat_lang][mas_name][module]
             return await func(event, str, *args, **kwargs)
         return wrapped_1
     return wrapped
