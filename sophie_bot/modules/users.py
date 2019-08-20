@@ -367,7 +367,7 @@ async def get_user_by_id(user_id):
 async def add_user_to_db(user):
 
     if hasattr(user, 'user'):
-        user = user.id
+        user = user.user
 
     new_user = {
         'user_id': user.id,
@@ -377,7 +377,7 @@ async def add_user_to_db(user):
     }
 
     user = mongodb.user_list.find_one({'user_id': new_user['user_id']})
-    if not user:
+    if not user or user is None:
         user = new_user
 
     if 'chats' not in user:
