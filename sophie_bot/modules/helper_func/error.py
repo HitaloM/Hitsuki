@@ -39,7 +39,10 @@ async def report_error(event, telethon=False):
     error = str(sys.exc_info()[1])
     class_error = sys.exc_info()[0].__name__
 
-    if class_error == 'example':
+    if class_error == 'ChatWriteForbiddenError':
+        # This error mean bot is muted in chat
+        return
+    elif class_error == 'BadRequest' and error == 'Have no rights to send a message':
         return
 
     if telethon is True:
