@@ -34,15 +34,8 @@ async def update_users(message, **kwargs):
 
         old_chat = mongodb.chat_list.find_one({'chat_id': chat_id})
 
-        if not hasattr(new_chat, 'username'):
-            chatnick = None
-        else:
-            chatnick = new_chat.username
-
-        if old_chat and 'first_detected_date' in old_chat:
-            first_detected_date = old_chat['first_detected_date']
-        else:
-            first_detected_date = datetime.datetime.now()
+        chatnick = new_chat.username if 'username' in new_chat else None
+        first_detected_date = old_chat['first_detected_date'] if 'first_detected_date' in old_chat else datetime.datetime.now()
 
         chat_new = {
             "chat_id": chat_id,
@@ -79,20 +72,9 @@ def update_user(chat_id, new_user):
         if not new_chat or chat_id not in new_chat:
             new_chat.append(chat_id)
 
-    if old_user and 'first_detected_date' in old_user:
-        first_detected_date = old_user['first_detected_date']
-    else:
-        first_detected_date = datetime.datetime.now()
-
-    if new_user.username:
-        username = new_user.username.lower()
-    else:
-        username = None
-
-    if hasattr(new_user, 'last_name') and new_user.last_name:
-        last_name = html.escape(new_user.last_name)
-    else:
-        last_name = None
+    first_detected_date = old_user['first_detected_date'] if old_user and 'first_detected_date' in old_user else datetime.datetime.now()
+    username = new_user.username or None
+    last_name = html.escape(new_user.last_name) if 'last_name' in new_user else None
 
     first_name = html.escape(new_user.first_name)
 
