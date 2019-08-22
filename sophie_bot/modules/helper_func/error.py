@@ -73,7 +73,7 @@ async def report_error(event, telethon=False):
     mongodb.errors.insert_one(new)
 
     text = "<b>Sorry, I encountered a error!</b>\n"
-    text += f"If you wanna you can report it - just press yes \"Yes\" button.\n"
+    text += f"If you wanna you can report it - just press the \"Report error\" button.\n"
     text += "I won't log anything except the fact of error and date\n"
     text += "<a href=\"https://t.me/YanaBotGroup\">Sophie support chat</a>"
 
