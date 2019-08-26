@@ -116,7 +116,6 @@ async def remove_warn(event):
 
 
 @decorator.command("warns")
-@user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")
 async def user_warns(message, strings, status, chat_id, chat_title):
