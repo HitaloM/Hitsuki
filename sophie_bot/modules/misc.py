@@ -46,7 +46,8 @@ async def get_id(message, strings):
     if not user:
         return
     text = strings["your_id"].format(message.from_user.id)
-    text += strings["chat_id"].format(message.chat.id)
+    if message.chat.id != message.from_user.id:
+        text += strings["chat_id"].format(message.chat.id)
 
     if not user['user_id'] == message.from_user.id:
         userl = await user_link_html(user['user_id'])
@@ -55,7 +56,7 @@ async def get_id(message, strings):
     if "reply_to_message" in message and "forward_from" in message.reply_to_message and not \
        message.reply_to_message.forward_from.id == message.reply_to_message.from_user.id:
         userl = await user_link_html(message.reply_to_message.forward_from.id)
-        text += strings["user_id"].format(userl, message.reply_to_message.from_user.id)
+        text += strings["user_id"].format(userl, message.reply_to_message.forward_from.id)
 
     await message.reply(text)
 
