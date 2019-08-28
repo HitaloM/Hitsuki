@@ -40,9 +40,12 @@ async def do_welcomesecurity(message, strings, from_id, chat_id):
     if welcome_security and welcome_security['security'] == 'soft':
 
         time_val = int(time.time() + 60 * 60)  # Mute 1 hour
-        await mute_user(message, int(from_id), chat_id, time_val)
-        text = strings['wlcm_sec'].format(mention=await user_link_html(from_id))
-        await message.reply(text)
+        try:
+            await mute_user(message, int(from_id), chat_id, time_val)
+        except CantDemoteChatCreator:
+            return
+
+    elif welcome_security and welcome_security['security'] == 'hard':
 
         buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(
             strings['clik2tlk_btn'], callback_data='wlcm_{}_{}'.format(from_id, chat_id)
