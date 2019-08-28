@@ -166,8 +166,8 @@ async def warnlimit(message, strings, status, chat_id, chat_title):
             'chat_id': chat_id,
             'num': int(arg)
         }
-        mongodb.warnlimit.update_one({'chat_id': chat_id}, {"$set": new}, upsert=False)
-        await message.reply(strings["warn_limit_upd"].format(num))
+        mongodb.warnlimit.update_one({'chat_id': chat_id}, {"$set": new}, upsert=True)
+        await message.reply(strings["warn_limit_upd"].format(arg))
 
 
 @decorator.command("resetwarns")
