@@ -21,7 +21,6 @@ from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import ChannelParticipantsAdmins
 
 from sophie_bot import OWNER_ID, SUDO, tbot, decorator, logger, mongodb, redis
-from sophie_bot.modules.helper_func.flood import flood_limit, flood_limit_dec
 
 
 @decorator.AioBotDo()
@@ -147,8 +146,7 @@ async def check_group_admin(event, user_id, no_msg=False):
         return True
     else:
         if no_msg is False:
-            if await flood_limit(event, "admin-check") is True:
-                await event.reply("You should be a admin to do it!")
+            await event.reply("You should be a admin to do it!")
         return False
 
 
@@ -163,7 +161,6 @@ async def get_chat_admins(chat_id):
 
 
 @decorator.t_command("adminlist")
-@flood_limit_dec("adminlist")
 async def event(event):
     msg = await event.reply("Updating cache now...")
     await update_admin_cache(event.chat_id)

@@ -22,7 +22,6 @@ import asyncio
 from telethon import custom
 
 from sophie_bot import CONFIG, decorator, logger, tbot, mongodb
-from sophie_bot.modules.helper_func.flood import flood_limit_dec
 
 ftp_url = "ftp.orangefox.website"
 fox_groups = [483808054, -1001287179850, -1001280218923, -1001155400138, -1001362128194]
@@ -279,7 +278,6 @@ if os.path.exists("update.json"):
 
 
 @decorator.t_command("list")
-@flood_limit_dec("list")
 async def list_stable(event):
     if event.chat_id in fox_beta_groups:
         text = "**Beta testing devices:**\n"

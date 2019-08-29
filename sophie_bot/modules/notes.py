@@ -39,7 +39,6 @@ from aiogram import types
 from sophie_bot import BOT_ID, tbot, decorator, mongodb, logger, dp
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
-from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (check_group_admin, is_user_admin,
                                       user_admin_dec, user_link,
@@ -389,7 +388,6 @@ async def send_note(chat_id, group_id, msg_id, note_name,
 
 
 @decorator.CallBackQuery(b'delnote_', compile=True)
-@flood_limit_dec("delnote_handler")
 async def del_note_callback(event):
     user_id = event.query.user_id
     if await is_user_admin(event.chat_id, user_id) is False:

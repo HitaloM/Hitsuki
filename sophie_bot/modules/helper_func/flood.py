@@ -16,46 +16,17 @@
 from sophie_bot import SUDO, redis
 
 
-async def flood_limit(command, chat_id):
-
-    if chat_id in SUDO:
+async def prevent_flooding(message, command):
+    user_id = message.from_user.id
+    if user_id in SUDO:
         return True
+    key = 'antiflood_{}_{}'.format(user_id, command)
+    num = redis.incr(key, 1)
+    redis.incr(key, 10)
 
-    db_name = 'flood_command_{}_{}'.format(chat_id, command)
-    redis.incr(db_name, 1)
-    number = int(redis.get(db_name))
-    redis.expire(db_name, 60)
-    if number > 7:
+    if num == 10:
+        redis.expire(key, 120)
+        await message.reply("Aniflood limit reached, please wait 2 minutes!")
+    elif num > 10:
         return False
-        redis.expire(db_name, 120)
-    if number > 6:
-        return False
-        redis.expire(db_name, 120)
-    else:
-        return True
-
-
-def flood_limit_dec(cmd):
-    def wrapped(func):
-        async def wrapped_1(event, *args):
-            if hasattr(event, 'from_id'):
-                user_id = event.from_id
-            elif hasattr(event, 'from_user'):
-                user_id = event.from_user.id
-
-            status = await flood_limit(user_id, cmd)
-            if status is False:
-                return
-            return await func(event)
-        return wrapped_1
-    return wrapped
-
-
-def rate_limit(limit: int, key=None):
-    def decorator(func):
-        setattr(func, 'throttling_rate_limit', limit)
-        if key:
-            setattr(func, 'throttling_key', key)
-        return func
-
-    return decorator
+    return True
