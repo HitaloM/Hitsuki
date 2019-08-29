@@ -61,8 +61,8 @@ redis = redis.StrictRedis(
 
 tbot = TelegramClient(NAME, API_ID, API_HASH)
 
-# Init the bot
-tbot.start(bot_token=CONFIG["basic"]["bot_token"])
+# Telethon
+tbot.start(bot_token=TOKEN)
 
 # AIOGram
 bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)

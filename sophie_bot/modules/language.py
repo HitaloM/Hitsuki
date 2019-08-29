@@ -20,7 +20,6 @@ import ujson
 from telethon.tl.custom import Button
 
 from sophie_bot import decorator, logger, mongodb, redis
-from sophie_bot.modules.helper_func.flood import flood_limit
 from sophie_bot.modules.users import is_user_admin, user_link
 
 LANGUAGES = {}
@@ -64,9 +63,6 @@ logger.info("Languages loaded: {}".format(LANGS))
 
 @decorator.t_command("lang")
 async def lang(event):
-    if await flood_limit(event, 'lang') is False:
-        return
-
     if event.chat_id == event.from_id:
         pm = True
     else:
@@ -84,8 +80,6 @@ async def lang(event):
 @decorator.t_command("lang", arg=True)
 async def lang_with_arg(event):
     if not event.pattern_match.group(1):
-        return
-    if await flood_limit(event, 'lang') is False:
         return
 
     arg = event.pattern_match.group(1).lower()

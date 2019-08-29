@@ -19,7 +19,6 @@ from telethon import custom
 from telethon.tl.custom import Button
 
 from sophie_bot import decorator, logger, mongodb
-from sophie_bot.modules.helper_func.flood import flood_limit_dec
 from sophie_bot.modules.language import (LANGUAGES, get_chat_lang, get_string,
                                          lang_info)
 
@@ -33,7 +32,6 @@ logger.info("Help loaded for: {}".format(HELP))
 
 
 @decorator.t_command('start')
-@flood_limit_dec("start")
 async def start(event):
     if not event.from_id == event.chat_id:
         await event.reply('Hey there, My name is Sophie!')
@@ -43,7 +41,6 @@ async def start(event):
 
 
 @decorator.t_command('help')
-@flood_limit_dec("help")
 async def help(event):
     await help_handler(event)
 

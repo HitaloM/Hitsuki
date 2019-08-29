@@ -21,10 +21,12 @@ from aiogram import types
 
 from sophie_bot import BOT_USERNAME, CONFIG, tbot, dp
 from sophie_bot.modules.helper_func.error import report_error
+from sophie_bot.modules.helper_func.flood import prevent_flooding
 
 ALLOW_F_COMMANDS = CONFIG["advanced"]["allow_forwards_commands"]
 ALLOW_COMMANDS_FROM_EXC = CONFIG["advanced"]["allow_commands_with_!"]
 BLOCK_GBANNED_USERS = CONFIG["advanced"]["block_gbanned_users"]
+RATE_LIMIT = CONFIG["advanced"]["rate_limit"]
 
 REGISTRED_COMMANDS = []
 
@@ -51,11 +53,11 @@ def t_command(command, arg="", word_arg="", additional="", **kwargs):
         else:
             cmd = "^{P}(?i:{0}|{0}@{1})$".format(command, BOT_USERNAME, additional, P=P)
 
-        async def new_func(*args, **def_kwargs):
+        async def new_func(event, *args, **def_kwargs):
             try:
-                await func(*args, **def_kwargs)
+                await func(event, *args, **def_kwargs)
             except Exception:
-                await report_error(args[0], telethon=True)
+                await report_error(event, telethon=True)
 
         tbot.add_event_handler(new_func, events.NewMessage(incoming=True, pattern=cmd, **kwargs))
         tbot.add_event_handler(new_func, events.MessageEdited(incoming=True, pattern=cmd, **kwargs))
@@ -79,10 +81,12 @@ def command(command, allow_edited=True, **kwargs):
 
         cmd = "^{0}(?i:{1}|{1}@{2})(?: |$)".format(P, command, BOT_USERNAME)
 
-        async def new_func(*args, **def_kwargs):
+        async def new_func(message, *args, **def_kwargs):
+            if RATE_LIMIT and await prevent_flooding(message, command) is False:
+                return
             if 'allow_kwargs' not in kwargs:
                 def_kwargs = dict()
-            await func(*args, **def_kwargs)
+            await func(message, *args, **def_kwargs)
             raise SkipHandler()
 
         dp.register_message_handler(new_func, regexp=cmd, state='*', **kwargs)
