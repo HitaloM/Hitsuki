@@ -158,10 +158,12 @@ async def cancel_handle1r(message: types.Message, state: FSMContext):
     await message.reply('Cancelled.')
 
 
-@decorator.command('addfilter', state='*')
+@decorator.command('addfilter', allow_kwargs=True)
+@user_admin_dec
 @connection(admin=True)
 @get_strings_dec("filters")
-async def new_filter(message, strings, status, chat_id, chat_title):
+async def new_filter(message, strings, status, chat_id, chat_title, state=False, **kwargs):
+    await state.finish()
     await NewFilter.handler.set()
     await message.reply(strings['write_keyword'])
 
@@ -322,7 +324,7 @@ async def add_filter_time(query: types.CallbackQuery, callback_data: dict, state
 
 @dp.message_handler(state=NewFilter.time)
 @get_strings_dec("filters")
-async def add_filter_time_manual(message, strings, state):
+async def add_filter_time_manual(message, strings, state, **kwargs):
     text = message.text
     if not any(text.endswith(unit) for unit in ('m', 'h', 'd')):
         text = strings['time_not_valid']

@@ -64,7 +64,7 @@ def t_command(command, arg="", word_arg="", additional="", **kwargs):
     return decorator
 
 
-def command(command, allow_edited=True, **kwargs):
+def command(command, allow_edited=True, allow_kwargs=False, **kwargs):
     REGISTRED_COMMANDS.append(command)
 
     def decorator(func):
@@ -84,7 +84,7 @@ def command(command, allow_edited=True, **kwargs):
         async def new_func(message, *args, **def_kwargs):
             if RATE_LIMIT and await prevent_flooding(message, command) is False:
                 return
-            if 'allow_kwargs' not in kwargs:
+            if allow_kwargs is False:
                 def_kwargs = dict()
             await func(message, *args, **def_kwargs)
             raise SkipHandler()
