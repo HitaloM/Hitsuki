@@ -18,7 +18,7 @@ import logging
 import asyncio
 import redis
 import ujson
-from aiogram.contrib.fsm_storage.redis import RedisStorage2
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from pymongo import MongoClient
 from telethon import TelegramClient
 from aiogram import Bot, Dispatcher, types
@@ -26,7 +26,7 @@ from aiogram import Bot, Dispatcher, types
 # enable logging
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s: %(message)s",
-    level=logging.INFO)
+    level=logging.DEBUG)
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +66,7 @@ tbot.start(bot_token=TOKEN)
 
 # AIOGram
 bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
-storage = RedisStorage2(db=5)
+storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
 bot_info = asyncio.get_event_loop().run_until_complete(bot.get_me())

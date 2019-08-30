@@ -187,6 +187,15 @@ def lang_info(chat_id, pm=False):
     return text, buttons
 
 
+def get_strings(chat_id, module="", mas_name="STRINGS"):
+    chat_lang = get_chat_lang(chat_id)
+    if chat_lang not in LANGUAGES:
+        return False  # TODO: Change lang to en
+
+    str = LANGUAGES[chat_lang][mas_name][module]
+    return str
+
+
 def get_strings_dec(module="", mas_name="STRINGS"):
     def wrapped(func):
         async def wrapped_1(event, *args, **kwargs):
@@ -194,13 +203,10 @@ def get_strings_dec(module="", mas_name="STRINGS"):
                 chat_id = event.chat_id
             elif hasattr(event, 'chat'):
                 chat_id = event.chat.id
+            elif hasattr(event, 'message'):
+                chat_id = event.message.chat.id
 
-            chat_lang = get_chat_lang(chat_id)
-            if chat_lang not in LANGUAGES:
-                await event.reply(f"I don't support {chat_lang}. Please change language now.")
-                return
-
-            str = LANGUAGES[chat_lang][mas_name][module]
+            str = get_strings(chat_id, module=module, mas_name=mas_name)
             return await func(event, str, *args, **kwargs)
         return wrapped_1
     return wrapped

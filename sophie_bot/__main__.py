@@ -35,8 +35,6 @@ WEBHOOK_URL = f"{WEBHOOK_HOST}{TOKEN}"
 WEBAPP_HOST = CONFIG["advanced"]["webapp_host"]
 WEBAPP_PORT = CONFIG["advanced"]["webapp_port"]
 
-DEFAULT_RATE_LIMIT = CONFIG["advanced"]["rate_limit_num"]
-
 loop = asyncio.get_event_loop()
 
 import_module("sophie_bot.modules.helper_func.bount_filter")

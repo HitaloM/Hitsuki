@@ -194,31 +194,34 @@ async def aio_get_user(message, send_text=True, allow_self=False):
         if mention == args[1]:
             if len(args) > 2:
                 text = args[2]
-            return await get_user_by_username(mention), text
+            user = await get_user_by_username(mention)
 
-    # Ok, now we really be unsure, so don't return right away
-    if len(args) > 1:
-        if args[1].isdigit():
-            user = await get_user_by_id(args[1])
+    if not user:
+        # Ok, now we really be unsure, so don't return right away
+        if len(args) > 1:
+            if args[1].isdigit():
+                user = await get_user_by_id(args[1])
 
             # Admin can mess a @
             # if not user:
             #    user = await get_user_by_username(args[1])
 
-    if len(args) > 2:
-        text = args[2]
+        if len(args) > 2:
+            text = args[2]
 
-    # Not first because ex. admins can /warn (user) and reply to offended user
-    if not user and "reply_to_message" in message:
-        if len(args) > 1:
-            text = message.get_args()
-        return await get_user_by_id(message.reply_to_message.from_user.id), text
+        # Not first because ex. admins can /warn (user) and reply to offended user
+        if not user and "reply_to_message" in message:
+            if len(args) > 1:
+                text = message.get_args()
+            return await get_user_by_id(message.reply_to_message.from_user.id), text
 
-    if not user and allow_self is True:
-        user = await get_user_by_id(message.from_user.id)
+        if not user and allow_self is True:
+            user = await get_user_by_id(message.from_user.id)
 
-    if not user:
-        await message.answer('I can\'t get this user!')
+    if not user and send_text is True:
+        await message.answer('I cant get the user!')
+        return None, None
+    elif not user:
         return None, None
 
     return user, text
@@ -229,13 +232,10 @@ async def get_user_by_username(username):
     if '@' in username:
         # Remove '@'
         username = username[1:].lower()
-        user = mongodb.user_list.find_one({
-            'username': username
-        })
-    else:
-        user = mongodb.user_list.find_one(
-            {'username': username}
-        )
+
+    user = mongodb.user_list.find_one(
+        {'username': username}
+    )
 
     # Ohnu, we don't have this user in DB
     if not user:
@@ -309,7 +309,7 @@ async def user_link(user_id):
             user = await add_user_to_db(await tbot(GetFullUserRequest(int(user_id))))
             user_link = "[{}](tg://user?id={})".format(
                 user['first_name'], user['user_id'])
-        except Exception:
+        except (ValueError, TypeError):
             user_link = "[{}](tg://user?id={})".format(
                 user_id, user_id)
     else:
@@ -319,7 +319,7 @@ async def user_link(user_id):
     return user_link
 
 
-async def user_link_html(user_id, custom_name=False):
+async def user_link_html(user_id, custom_name=None):
     user = mongodb.user_list.find_one({'user_id': user_id})
     user_name = None
 
@@ -328,10 +328,10 @@ async def user_link_html(user_id, custom_name=False):
     else:
         try:
             user = await add_user_to_db(await tbot(GetFullUserRequest(int(user_id))))
-        except Exception:
+        except (ValueError, TypeError):
             user_name = str(user_id)
 
-    if custom_name is not False:
+    if custom_name:
         user_name = custom_name
 
     return "<a href=\"tg://user?id={id}\">{name}</a>".format(name=user_name, id=user_id)
