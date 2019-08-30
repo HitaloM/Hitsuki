@@ -28,8 +28,6 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 from time import gmtime, strftime
 
-from bson.objectid import ObjectId
-
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon import custom, errors, utils
 from telethon.tl.custom import Button
@@ -40,7 +38,7 @@ from sophie_bot import BOT_ID, tbot, decorator, mongodb, logger, dp
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import (check_group_admin, is_user_admin,
+from sophie_bot.modules.users import (check_group_admin,
                                       user_admin_dec, user_link,
                                       add_user_to_db, user_link_html)
 from sophie_bot.modules.helper_func.decorators import need_args_dec
@@ -51,8 +49,7 @@ RESTRICTED_SYMBOLS = ['**', '__', '`']
 
 @decorator.command("owo", is_owner=True)
 async def test(message, **kwagrs):
-    mongodb.user_list.delete_one({'user_id': 581661269})
-    print('nuked')
+    print(message)
 
 
 @decorator.t_command("save", word_arg=True)
@@ -154,23 +151,19 @@ async def save_note(event, strings, status, chat_id, chat_title):
     else:
         new = mongodb.notes.insert_one(new).inserted_id
 
-        buttons = [
-            [Button.inline(strings["del_note"], 'delnote_{}'.format(new))]
-        ]
-
     text = strings["note_saved_or_updated"].format(
         note_name=note_name, status=status, chat_title=chat_title)
-    if encrypted is not False:
-        if encrypted == "particle-v1":
-            text += f"Note encrypted particle 🔒\n"
-            text += strings["you_can_get_note"].format(name=note_name)
-        else:
-            text += f"Note encrypted fully 🔐\n"
-            text += "Password: " + password.decode() + '\n'
-            text += strings["you_can_get_note_enc"].format(
-                name=note_name, password=password.decode())
-    else:
+
+    if encrypted is False:
+        text += strings["note_not_encrypted"]
         text += strings["you_can_get_note"].format(name=note_name)
+    elif encrypted == "particle-v1":
+        text += strings["you_can_get_note"].format(name=note_name)
+    else:
+        text += strings["note_encrypted_fully"]
+        text += strings["password"].format(passwor=password.decode())
+        text += strings["you_can_get_note_enc"].format(
+            name=note_name, password=password.decode())
 
     await event.reply(text, buttons=buttons)
 
@@ -344,17 +337,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         else:
             chatname = "None"
 
-        if noformat is True:
-            string = string.format(
-                first="{first}",
-                last="{last}",
-                fullname="{fullname}",
-                username="{username}",
-                mention="{mention}",
-                id="{id}",
-                chatname="{chatname}",
-            )
-        else:
+        if noformat is False:
             if format == "md":
                 mention_str = await user_link(from_id)
             elif format == "html":
@@ -362,15 +345,19 @@ async def send_note(chat_id, group_id, msg_id, note_name,
             elif format == "none":
                 mention_str = full_name
 
-            string = string.format(
-                first=user['first_name'],
-                last=last_name,
-                fullname=full_name,
-                username=username,
-                id=from_id,
-                mention=mention_str,
-                chatname=chatname
-            )
+            try:
+                string = string.format(
+                    first=user['first_name'],
+                    last=last_name,
+                    fullname=full_name,
+                    username=username,
+                    id=from_id,
+                    mention=mention_str,
+                    chatname=chatname
+                )
+            except KeyError as var:
+                await tbot.send_message(chat_id, f"variable `{var}` not supported! Please delete it from note.", reply_to=msg_id)
+                return
 
     try:
         return await tbot.send_message(
@@ -387,28 +374,11 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         logger.error("Error in send_note/send_message: " + str(err))
 
 
-@decorator.CallBackQuery(b'delnote_', compile=True)
-async def del_note_callback(event):
-    user_id = event.query.user_id
-    if await is_user_admin(event.chat_id, user_id) is False:
-        return
-    note_id = re.search(r'delnote_(.*)', str(event.data)).group(1)[:-1]
-    note = mongodb.notes.find_one({'_id': ObjectId(note_id)})
-    if note:
-        mongodb.notes.delete_one({'_id': note['_id']})
-
-    link = await user_link(user_id)
-    await event.edit(get_string("notes", "note_deleted_by", event.chat_id).format(
-        note_name=note['name'], user=link), link_preview=False)
-
-
 @decorator.command('get')
 @need_args_dec()
-async def get_note(message):
-    status, chat_id, chat_title = await get_conn_chat(message['from']['id'], message['chat']['id'])
+@connection()
+async def get_note(message, status, chat_id, chat_title):
     args = message['text'].split(" ", 4)
-    if not args:
-        return
 
     key = False
 
@@ -426,8 +396,8 @@ async def get_note(message):
         noformat = False
     if len(note_name) >= 1:
         await send_note(
-            message['chat']['id'], chat_id, message['message_id'], note_name,
-            show_none=True, noformat=noformat, from_id=message['from']['id'], key=key)
+            message.chat.id, chat_id, message.message_id, note_name,
+            show_none=True, noformat=noformat, from_id=message.from_user.id, key=key)
 
 
 @dp.message_handler(regexp="#(\w+)")

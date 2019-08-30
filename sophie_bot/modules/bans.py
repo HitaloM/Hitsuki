@@ -15,14 +15,24 @@
 
 import time
 
-from telethon.tl.functions.channels import GetParticipantRequest
-from telethon.tl.types import ChannelParticipantBanned
+from aiogram.utils.exceptions import NotEnoughRightsToRestrict
+
+from telethon.tl.functions.channels import EditBannedRequest, GetParticipantRequest
+from telethon.tl.types import ChatBannedRights, ChannelParticipantBanned
+from telethon.errors.rpcerrorlist import ChatAdminRequiredError
 
 from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, mongodb, bot
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (is_user_admin, user_admin_dec,
                                       aio_get_user, user_link_html)
+
+
+class NotEnoughRights(Exception):
+    def __init__(self, right):
+        super(NotEnoughRights, self).__init__(right)
+
+        self.errors = right
 
 
 @decorator.command("ban")
@@ -190,7 +200,15 @@ async def ban_user(message, user_id, chat_id, time_val, no_msg=False):
             await message.reply(get_string("bans", "user_admin_ban", real_chat_id))
         return False
 
-    await bot.kick_chat_member(chat_id, user_id)
+    banned_rights = ChatBannedRights(
+        until_date=time_val,
+        view_messages=True
+    )
+
+    try:
+        await tbot(EditBannedRequest(chat_id, user_id, banned_rights))
+    except ChatAdminRequiredError:
+        raise NotEnoughRights('ban')
 
     return True
 
@@ -207,8 +225,11 @@ async def kick_user(message, user_id, chat_id, no_msg=False):
             await message.reply(get_string("bans", "user_admin_kick", real_chat_id))
         return False
 
-    await bot.kick_chat_member(chat_id, user_id)
-    await bot.unban_chat_member(chat_id, user_id)
+    try:
+        await bot.kick_chat_member(chat_id, user_id)
+        await bot.unban_chat_member(chat_id, user_id)
+    except NotEnoughRightsToRestrict:
+        raise NotEnoughRights('mute')
 
     return True
 
@@ -232,7 +253,7 @@ async def unban_user(message, user_id, chat_id):
     return True
 
 
-async def mute_user(message, user_id, chat_id, time_val):
+async def mute_user(message, user_id, chat_id, time_val, no_msg=False):
     real_chat_id = message.chat.id
     if str(user_id) in WHITELISTED:
         await message.reply("This user is whitelisted")
@@ -245,12 +266,15 @@ async def mute_user(message, user_id, chat_id, time_val):
         await message.reply(get_string("bans", "user_admin_mute", real_chat_id))
         return False
 
-    await bot.restrict_chat_member(
-        chat_id,
-        user_id,
-        time_val,
-        can_send_messages=False
-    )
+    try:
+        await bot.restrict_chat_member(
+            chat_id,
+            user_id,
+            time_val,
+            can_send_messages=False
+        )
+    except NotEnoughRightsToRestrict:
+        raise NotEnoughRights('mute')
 
     return True
 
@@ -265,11 +289,14 @@ async def unmute_user(message, user_id, chat_id):
         await message.reply(get_string("bans", "user_admin_unmute", real_chat_id))
         return False
 
-    await bot.restrict_chat_member(
-        chat_id,
-        user_id,
-        can_send_messages=True
-    )
+    try:
+        await bot.restrict_chat_member(
+            chat_id,
+            user_id,
+            can_send_messages=True
+        )
+    except NotEnoughRightsToRestrict:
+        raise NotEnoughRights('unmute')
 
     return True
 

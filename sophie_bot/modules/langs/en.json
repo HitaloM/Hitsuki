@@ -14,6 +14,11 @@
         "note_saved_or_updated": "🗒 **Note {note_name} {status} in {chat_title}!**\n",
         "you_can_get_note": "You can retrieve this note by using `/get {name}`, or `#{name}`",
         "you_can_get_note_enc": "You can retrieve this note by using `/get {name} {password}`",
+
+        "note_not_encrypted": "Note not encrypted! 🔓",
+        "note_encrypted_fully": "Note encrypted fully 🔐\n",
+        "password": "password: <code>{password}</code>\n",
+
         "dont_have_rights_to_save": "You don't have rights to save notes here!",
         "del_note": "🗑 Delete note",
         "no_note": "Can't find that note.",
@@ -118,34 +123,71 @@
         "success_remove_rules_note": "Successfully removed rules note in <b>{}</b>."
     },
     "filters": {
-        "dont_have_right": "You don't have rights to save filters here!",
-        "filter_added": "Filter added\n",
-        "filter_keyword": "keyword: <b>{}</b>\n",
-        "no_arg_note": "Please write in arguments what note you want to send on this filter",
-        "a_send_note": "Action: <b>send note</b> <code>{}</code>",
-        "no_arg_tban": "Please write in arguments how long you want the user to be banned for",
-        "a_tban": "Action: <b>temporary ban sender for</b> <code>{}</code>",
-        "a_answer": "Action: answer on message",
-        "a_del": "Action: <b>delete message*</b>",
-        "a_ban": "Action: <b>ban sender</b>",
-        "a_mute": "Action: <b>mute sender</b>",
-        "a_kick": "Action: <b>kick sender</b>",
-        "a_warn": "Action: <b>warn sender</b> with following reason:\n<code>{}</code>",
-        "wrong_action": "Wrong action! Read the help.",
         "filters_in": "Filters in <b>{chat_name}</b>:\n",
 
         "no_filters_in": "No filters in <b>{}</b>!",
         "filtes_in": "<b>Filters in {}:</b>\n",
 
-        "no_rights_stop": "You don't have rights to stop filters here!",
         "cant_find_filter": "I can't find this filter!",
         "filter_deleted": "Filter <code>{filter}</code> in <b>{chat_name}</b> deleted!",
 
         "filter_ban_success": "User {user} banned due to automated action on filter <code>{filter}</code>.",
-        "filter_tban_success": "User {user} temporary banned on <code>{time}</code> due to automated action on filter <code>{filter}</code>.",
+        "filter_mute_success": "User {user} muted due to automated action on filter <code>{filter}</code>.",
+        "filter_tban_success": "User {user} temporary banned on <code>{time}</code> {unit} due to automated action on filter <code>{filter}</code>.",
+        "filter_tmute_success": "User {user} temporary muted on <code>{time}</code> {unit} due to automated action on filter <code>{filter}</code>.",
         "filter_kick_success": "User {user} kicked due to automated action on filter <code>{filter}</code>.",
         "filter_warn_ban": "That's {warns}/{warns} warns. {user} was banned due to\n<code>{reason}</code>",
-        "filter_warn_warned": "{user} was warned in {chat} <b>({current_warns}/{max_warns})</b> due to\n <code>{reason}</code> "
+        "filter_warn_warned": "{user} was warned in {chat} \nHandler: <code>{handler}</code>\nWarns: {current_warns}/{max_warns}\nReason:\n<code>{reason}</code> ",
+
+        "not_enoff_rights": "I don't have rights to-do filter action!",
+
+        "write_keyword": "Please write keyword / key words.",
+        "handler_added": "Great! I will answer on \"<code>{handler}</code>\".",
+        "select_action": "\nNow please select a action for this filter:",
+
+        "action_note": "Send note",
+        "action_answer": "Answer on message",
+        "action_delmsg": "Just delete message",
+        "action_warn": "Warn user",
+        "action_ban": "Ban user",
+        "action_mute": "Mute user",
+        "action_kick": "Kick user",
+
+        "del_origin_off": "❌ Delete origin message: OFF",
+        "del_origin_on": "❌ Delete origin message: ON",
+
+        "exit": "❗️ Exit",
+        "back": "◀️ Back",
+
+        "write_reason": "Great! Please write reason with which we will do this action.",
+        "write_notename": "Great! Please write notename.",
+        "write_text": "Great! Please write text for answer.",
+
+        "select_time": "<b>Great! Now select time for this action.</b>",
+        "select_time_tip": "\nYou can also manually write time, for example write '2d'",
+        "select_time_btns": "\nOr select time by buttons below:",
+
+        "time_f": "Forever",
+        "time_2h": "2 hours",
+        "time_5h": "5 hours",
+        "time_24h": "24 hours",
+        "time_2d": "2 Days",
+        "time_1w": "1 Week",
+
+        "time_not_valid": "Time value isn't valid!",
+        
+        "cant_find_note": "Sorry, I can't find this note",
+
+        "filter_added": "<b>Filter added!</b>",
+        "filter_updated": "<b>Filter updated!</b>",
+
+        "new_filter_chat": "\nChat: <b>{chat_title}</b>",
+        "new_filter_handler": "\nHandler: <code>{handler}</code>",
+        "new_filter_action": "\nAction: <code>{action}</code>",
+        "new_filter_also_del_msg": "\nAlso delete origin message",
+        "new_filter_time": "\nTime: on <code>{time}</code>",
+        "new_filter_note": "\nNote: <code>{note}</code>",
+        "new_filter_reason": "\nReason:\n"
     },
     "warns": {
         "user_no_admeme": "You're not an admin",
@@ -477,22 +519,12 @@
     },
     "filters": {
         "btn": "Filters",
-        "title": "Make your chat more lively with filters; The bot will reply to certain words!",
+        "title": "Make your chat more lively with filters",
         "text": {
             "i1": "**Available commands are:**",
-            "i2": "- /filter (keyword) (action) : Every time someone says 'word' , the bot will do the given action.",
-            "i3": "- /filter '(key words)' (action) (arg): Same as previous, but supports multiple words to filter.",
+            "i2": "- /addfilter: Add new filter in chat.",
             "i4": "- /filters: Will display all filter in that chat!",
-            "i5": "- /stop (filter name) : Will stop the the given filter names",
-            "i6": "\n**Available actions are:**",
-            "i7": "- note: eg: `/filter foo note (notename)`: bot will reply to word 'foo' containing given notename.",
-            "i8": "- answer: eg `/filter foo note how are you?`: bot will reply the 'how are you?' to the word 'foo', buttons also supported.",
-            "i9": "- delete: eg: `/filter foo delete`: bot will delete the someone's message containing 'foo'.",
-            "i10": "- tban: eg: `/filter foo tban 10m`: bot will tban when someone send message containing 'foo' for '10m' (minutes) , you can give any value in (m , h, d)",
-            "i11": "- ban: eg: `/filter foo ban`: bot will ban who send message containing 'foo'",
-            "i12": "- mute: eg: `/filter foo mute`: bot will mute user who send message 'foo'",
-            "i13": "- kick: eg: `/filter foo kick`: bot will kick user who send message containing 'foo'",
-            "i14": "- warn: eg: `/filter foo warn (reason, optional)`: bot will warn user (or ban if limit exceeded) who send message containing 'foo'."
+            "i5": "- /delfilter (keyword/key words) : Will stop the the given filter names"
         }
     },
     "federations": {
