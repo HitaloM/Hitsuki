@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 
-from sophie_bot import decorator, mongodb
+from sophie_bot import SUDO, decorator, mongodb
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.users import user_admin_dec
@@ -107,11 +107,16 @@ def disablable_dec(command):
             elif hasattr(event, 'chat'):
                 chat_id = event.chat.id
 
+            if hasattr(event, 'from_id'):
+                user_id = event.from_id
+            elif hasattr(event, 'from_user'):
+                user_id = event.from_user.id
+
             check = mongodb.disabled_cmds.find_one({
                 "chat_id": chat_id,
                 "command": command
             })
-            if check:
+            if check and user_id not in SUDO:
                 return
             return await func(event, *args, **kwargs)
         return wrapped_1
