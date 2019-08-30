@@ -22,7 +22,36 @@ global DISABLABLE_COMMANDS
 DISABLABLE_COMMANDS = []
 
 
+def disablable_dec(command):
+    if command not in DISABLABLE_COMMANDS:
+        DISABLABLE_COMMANDS.append(command)
+
+    def wrapped(func):
+        async def wrapped_1(event, *args, **kwargs):
+
+            if hasattr(event, 'chat_id'):
+                chat_id = event.chat_id
+            elif hasattr(event, 'chat'):
+                chat_id = event.chat.id
+
+            if hasattr(event, 'from_id'):
+                user_id = event.from_id
+            elif hasattr(event, 'from_user'):
+                user_id = event.from_user.id
+
+            check = mongodb.disabled_cmds.find_one({
+                "chat_id": chat_id,
+                "command": command
+            })
+            if check and user_id not in SUDO:
+                return
+            return await func(event, *args, **kwargs)
+        return wrapped_1
+    return wrapped
+
+
 @decorator.command("disablable")
+@disablable_dec('disablable')
 @get_strings_dec("disable")
 async def list_disablable(message, strings, **kwargs):
     text = strings['disablable']
@@ -93,31 +122,3 @@ async def enable_command(message, strings, status, chat_id, chat_title):
     mongodb.disabled_cmds.delete_one({'_id': old['_id']})
     await message.reply(strings["enabled"].format(
         cmd=cmd, chat_name=chat_title))
-
-
-def disablable_dec(command):
-    if command not in DISABLABLE_COMMANDS:
-        DISABLABLE_COMMANDS.append(command)
-
-    def wrapped(func):
-        async def wrapped_1(event, *args, **kwargs):
-
-            if hasattr(event, 'chat_id'):
-                chat_id = event.chat_id
-            elif hasattr(event, 'chat'):
-                chat_id = event.chat.id
-
-            if hasattr(event, 'from_id'):
-                user_id = event.from_id
-            elif hasattr(event, 'from_user'):
-                user_id = event.from_user.id
-
-            check = mongodb.disabled_cmds.find_one({
-                "chat_id": chat_id,
-                "command": command
-            })
-            if check and user_id not in SUDO:
-                return
-            return await func(event, *args, **kwargs)
-        return wrapped_1
-    return wrapped
