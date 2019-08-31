@@ -112,7 +112,7 @@ async def check_message_for_smartbroadcast(event):
 async def backup(message):
     msg = await message.reply("Running...")
     date = strftime("%Y-%m-%dI%H:%M:%S", gmtime())
-    cmd = "mkdir Backups;"
+    cmd = "mkdir Backups; "
     cmd += f"mongodump --uri \"{CONFIG['basic']['mongo_conn']}/sophie\" "
     cmd += f"--forceTableScan --gzip --archive > Backups/dump_{date}.gz"
     await term(cmd)
