@@ -64,7 +64,7 @@ def t_command(command, arg="", word_arg="", additional="", **kwargs):
     return decorator
 
 
-def command(command, allow_edited=True, allow_kwargs=False, **kwargs):
+def command(command, allow_edited=True, allow_kwargs=False, args=True, **kwargs):
     REGISTRED_COMMANDS.append(command)
 
     def decorator(func):
@@ -79,7 +79,12 @@ def command(command, allow_edited=True, allow_kwargs=False, **kwargs):
         if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
             kwargs['not_forwarded'] = True
 
-        cmd = "^{0}(?i:{1}|{1}@{2})(?: |$)".format(P, command, BOT_USERNAME)
+        cmd = "^{0}(?i:{1}|{1}@{2})".format(P, command, BOT_USERNAME)
+
+        if args is True:
+            cmd += "(?: |$)"
+        else:
+            cmd += "$"
 
         async def new_func(message, *args, **def_kwargs):
             if RATE_LIMIT and await prevent_flooding(message, command) is False:

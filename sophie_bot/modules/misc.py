@@ -18,6 +18,7 @@ import random
 from requests import post
 
 from telethon.errors import BadRequestError, ChatNotModifiedError
+from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from telethon.tl.custom import Button
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChatAdminRights
@@ -169,17 +170,6 @@ async def demote(message, strings):
         await message.reply(strings['demote_failed'])
         return
     await message.reply(strings['demote_success'])
-
-
-@decorator.t_command('help')
-@get_strings_dec('misc')
-async def help(event, strings):
-    if event.chat_id != event.from_id:
-        buttons = [
-            [Button.url(strings['help_btn'], url='https://t.me/{}?start=help'.format(BOT_USERNAME))]
-        ]
-        text = strings['help_txt']
-        await event.reply(text, buttons=buttons)
 
 
 @decorator.command('paste')

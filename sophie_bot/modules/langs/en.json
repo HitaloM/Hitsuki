@@ -398,11 +398,11 @@
             "i15": "This will retrieve the note and send it without formatting it; getting you the raw markdown, allowing you to make easy edits."
         },
         "buttons": {
-            "help_btn_notes_btns": "Buttons",
-            "help_btn_notes_md": "Markdown",
-            "help_btn_notes_vars": "Special vars",
-            "help_btn_notes_html": "HTML",
-            "help_btn_notes_enc": "Encryption"
+            "btns": "Buttons",
+            "md": "Markdown",
+            "vars": "Special vars",
+            "html": "HTML",
+            "enc": "Encryption"
         },
         "vars": {
             "a1": "You can use special variable in notes, here a list of it:",
@@ -601,8 +601,8 @@
             "a6": "- Server secured by ssh keys and have enabled ufw"
         },
         "buttons": {
-            "help_btn_privacy_collection": "Which data we collect",
-            "help_btn_privacy_removing": "Removing your data"
+            "collection": "Which data we collect",
+            "removing": "Removing your data"
         },
         "collection": {
             "a1": "Sophie team respects your privacy",

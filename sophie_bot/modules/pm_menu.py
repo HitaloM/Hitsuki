@@ -13,14 +13,21 @@
 #
 # You should have received a copy of the GNU General Public License
 
-import re
+import html
 
-from telethon import custom
 from telethon.tl.custom import Button
 
-from sophie_bot import decorator, logger, mongodb
+from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.dispatcher.filters.builtin import CommandStart
+
+from sophie_bot import BOT_USERNAME, decorator, logger, mongodb, dp, bot
 from sophie_bot.modules.language import (LANGUAGES, get_chat_lang, get_string,
-                                         lang_info)
+                                         lang_info, get_strings_dec, get_strings)
+
+from aiogram.utils.callback_data import CallbackData
+help_page_cp = CallbackData('help_page', 'module')
+help_btn_cp = CallbackData('help_btn', 'module', 'btn')
+
 
 # Generate help cache
 HELP = []
@@ -31,41 +38,52 @@ HELP = sorted(HELP)
 logger.info("Help loaded for: {}".format(HELP))
 
 
-@decorator.t_command('start')
+@decorator.command('start', args=False, only_groups=True)
 async def start(event):
-    if not event.from_id == event.chat_id:
-        await event.reply('Hey there, My name is Sophie!')
-        return
-    text, buttons = get_start(event)
-    await event.reply(text, buttons=buttons)
+    await event.reply('Hey there, My name is Sophie!')
+    return
 
 
-@decorator.t_command('help')
-async def help(event):
-    await help_handler(event)
+@decorator.command('start', args=False, only_pm=True)
+async def start_pm(message):
+    text, buttons = get_start(message.chat.id)
+    await message.reply(text, reply_markup=buttons)
 
 
-async def help_handler(event):
-    if not event.from_id == event.chat_id:
-        return
-    text, buttons = get_help(event)
-    await event.reply(text, buttons=buttons)
+@decorator.command('help', only_groups=True)
+@get_strings_dec('misc')
+async def help_btn(message, strings):
+    buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(
+        strings['help_btn'], url=f'https://t.me/{BOT_USERNAME}?start=help'
+    ))
+    text = strings['help_txt']
+    await message.reply(text, reply_markup=buttons)
+
+
+@decorator.command('help', only_pm=True)
+async def help(message):
+    text, buttons = get_help(message.chat.id)
+    await message.reply(text, reply_markup=buttons)
 
 
 @decorator.CallBackQuery(b'get_start')
 async def get_start_callback(event):
     text, buttons = get_start(event)
-    await event.edit(text, buttons=buttons)
+    await event.edit(text, reply_markup=buttons)
 
 
-def get_start(event):
-    text = get_string("pm_menu", "start_hi", event.chat_id)
-    buttons = [[Button.inline(get_string("pm_menu", "btn_help", event.chat_id), 'get_help')]]
-    buttons += [[Button.inline(get_string("pm_menu", "btn_lang", event.chat_id), 'set_lang')]]
-    buttons += [[custom.Button.url(get_string("pm_menu", "btn_chat", event.chat_id),
-                'https://t.me/YanaBotGroup'),
-                 custom.Button.url(get_string("pm_menu", "btn_channel", event.chat_id),
-                 'https://t.me/SophieNEWS')]]
+def get_start(chat_id):
+    strings = get_strings(chat_id, module='pm_menu')
+
+    text = strings["start_hi"]
+    buttons = InlineKeyboardMarkup()
+    buttons.add(InlineKeyboardButton(strings["btn_help"], callback_data='get_help'))
+    buttons.add(InlineKeyboardButton(strings["btn_lang"], callback_data='set_lang'))
+
+    buttons.add(
+        InlineKeyboardButton(strings["btn_chat"], url='https://t.me/YanaBotGrou'),
+        InlineKeyboardButton(strings["btn_channel"], url='https://t.me/SophieNEWS'),
+    )
 
     return text, buttons
 
@@ -82,85 +100,67 @@ async def set_lang_callback(event):
         await event.reply(text, buttons=buttons)
 
 
-@decorator.CallBackQuery(b'get_help')
-async def get_help_callback(event):
-    text, buttons = get_help(event)
-    try:
-        await event.edit(text, buttons=buttons)
-    except Exception:
-        await event.reply(text, buttons=buttons)
+@dp.callback_query_handler(regexp='get_help')
+async def get_help_callback(query):
+    chat_id = query.message.chat.id
+    text, buttons = get_help(chat_id)
+    await bot.edit_message_text(text, chat_id, query.message.message_id, reply_markup=buttons)
 
 
-def get_help(event):
+def get_help(chat_id):
     text = "Select module to get help"
-    chat_id = event.chat_id
-    buttons = []
     counter = 0
+    buttons = InlineKeyboardMarkup(row_width=2)
     for module in HELP:
         counter += 1
         btn_name = get_string(module, "btn", chat_id, dir="HELPS")
-        t = [Button.inline(btn_name, 'mod_help_' + module)]
-        if counter % 2 == 0:
-            new = buttons[-1] + t
-            buttons = buttons[:-1]
-            buttons.append(new)
-        else:
-            buttons.append(t)
+        buttons.insert(InlineKeyboardButton(btn_name, callback_data=help_page_cp.new(module=module)))
     return text, buttons
 
 
-@decorator.CallBackQuery(r'mod_help_(.*)', compile=True)
-async def get_mod_help_callback(event):
-    chat_id = event.chat_id
-    module = re.search('mod_help_(.*)', str(event.data)).group(1)[:-1]
+@dp.callback_query_handler(help_page_cp.filter())
+async def get_mod_help_callback(query, callback_data=False, **kwargs):
+    print(query)
+    chat_id = query.message.chat.id
+    module = callback_data['module']
     text = get_string(module, "title", chat_id, dir="HELPS")
     text += '\n'
     lang = get_chat_lang(chat_id)
-    buttons = []
+    buttons = InlineKeyboardMarkup(row_width=2)
     for string in get_string(module, "text", chat_id, dir="HELPS"):
-        if "HELPS" in LANGUAGES[lang]:
-            text += LANGUAGES[lang]["HELPS"][module]['text'][string]
-        else:
-            text += LANGUAGES["en"]["HELPS"][module]['text'][string]
+        text += LANGUAGES[lang]["HELPS"][module]['text'][string]
         text += '\n'
     if 'buttons' in LANGUAGES[lang]["HELPS"][module]:
         counter = 0
         for btn in LANGUAGES[lang]["HELPS"][module]['buttons']:
             counter += 1
             btn_name = LANGUAGES[lang]["HELPS"][module]['buttons'][btn]
-            t = [Button.inline(btn_name, btn)]
-            if counter % 2 == 0:
-                new = buttons[-1] + t
-                buttons = buttons[:-1]
-                buttons.append(new)
-            else:
-                buttons.append(t)
-    buttons += [[Button.inline("Back", 'get_help')]]
-    await event.edit(text, buttons=buttons)
+            buttons.insert(InlineKeyboardButton(
+                btn_name, callback_data=help_btn_cp.new(module=module, btn=btn)))
+    buttons.add(InlineKeyboardButton("Back", callback_data='get_help'))
+    text = html.escape(text)
+    await bot.edit_message_text(text, chat_id, query.message.message_id, reply_markup=buttons)
 
 
-@decorator.CallBackQuery('help_btn_(.*)', compile=True)
-async def get_help_button_callback(event):
-    event_raw = re.search('help_btn_(.*)_(.*)', str(event.data))
-    module = event_raw.group(1)
-    data = event_raw.group(2)[:-1]
-    chat_id = event.chat_id
+@dp.callback_query_handler(help_btn_cp.filter())
+async def get_help_button_callback(query, callback_data=False, **kwargs):
+    module = callback_data['module']
+    data = callback_data['btn']
+    chat_id = query.message.chat.id
     lang = get_chat_lang(chat_id)
     text = ""
     if data in LANGUAGES[lang]["HELPS"][module]:
         for btn in get_string(module, data, chat_id, dir="HELPS"):
             text += LANGUAGES[lang]["HELPS"][module][data][btn]
             text += '\n'
-    buttons = [[Button.inline("Back", 'mod_help_' + module)]]
-    if module == 'notes' and data == 'md':
-        await event.edit(text, buttons=buttons, parse_mode='html')
-    else:
-        await event.edit(text, buttons=buttons)
+    buttons = InlineKeyboardMarkup().add(InlineKeyboardButton("Back", callback_data='get_help'))
+    await bot.edit_message_text(text, chat_id, query.message.message_id, reply_markup=buttons)
 
 
-@decorator.t_command('start help')  # '/start help' is cmd gen by help button
-async def help_btn(event):
-    await help_handler(event)
+@dp.message_handler(CommandStart('help'))
+async def help_start(message):
+    text, buttons = get_help(message.chat.id)
+    await message.answer(text, reply_markup=buttons)
 
 
 @decorator.t_command('start rules(.*)')
