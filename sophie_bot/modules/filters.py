@@ -61,7 +61,7 @@ async def check_message(message):
     for keyword in filters:
         keyword = keyword.decode("utf-8")
         keyword = re.escape(keyword)
-        keyword = keyword.replace('\(\+\)', '.*')
+        keyword = keyword.replace(r'\(\+\)', '.*')
         pattern = r"( |^|[^\w])" + keyword + r"( |$|[^\w])"
         if re.search(pattern, text, flags=re.IGNORECASE):
             filter = mongodb.filters_v2.find_one(
