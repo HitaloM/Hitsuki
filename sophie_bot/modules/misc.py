@@ -18,13 +18,11 @@ import random
 from requests import post
 
 from telethon.errors import BadRequestError, ChatNotModifiedError
-from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
-from telethon.tl.custom import Button
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChatAdminRights
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
-from sophie_bot import OWNER_ID, SUDO, BOT_USERNAME, BOT_ID, tbot, decorator, mongodb
+from sophie_bot import OWNER_ID, SUDO, BOT_ID, tbot, decorator, mongodb
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (user_admin_dec, aio_get_user,
