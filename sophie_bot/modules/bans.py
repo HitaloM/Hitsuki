@@ -21,6 +21,8 @@ from telethon.tl.functions.channels import EditBannedRequest, GetParticipantRequ
 from telethon.tl.types import ChatBannedRights, ChannelParticipantBanned
 from telethon.errors.rpcerrorlist import ChatAdminRequiredError
 
+import sophie_bot.modules.helper_func.bot_rights as bot_rights
+
 from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, mongodb, bot
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
@@ -37,6 +39,7 @@ class NotEnoughRights(Exception):
 
 @decorator.command("ban")
 @user_admin_dec
+@bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec('bans')
 async def ban(message, strings, status, chat_id, chat_title):
@@ -57,6 +60,7 @@ async def ban(message, strings, status, chat_id, chat_title):
 
 @decorator.command("tban")
 @user_admin_dec
+@bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
 async def tban(message, status, chat_id, chat_title):
     user, data = await aio_get_user(message)
@@ -86,6 +90,7 @@ async def tban(message, status, chat_id, chat_title):
 
 @decorator.command("kick")
 @user_admin_dec
+@bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec('bans')
 async def kick(message, strings, status, chat_id, chat_title):
@@ -101,6 +106,7 @@ async def kick(message, strings, status, chat_id, chat_title):
 
 @decorator.command("unban")
 @user_admin_dec
+@bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
 async def unban(message, strings, status, chat_id, chat_title):
@@ -123,6 +129,7 @@ async def unban(message, strings, status, chat_id, chat_title):
 
 @decorator.command("mute")
 @user_admin_dec
+@bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
 async def muter(message, strings, status, chat_id, chat_title):
@@ -138,6 +145,7 @@ async def muter(message, strings, status, chat_id, chat_title):
 
 @decorator.command("unmute")
 @user_admin_dec
+@bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
 async def unmute(message, strings, status, chat_id, chat_title):
@@ -152,6 +160,7 @@ async def unmute(message, strings, status, chat_id, chat_title):
 
 
 @decorator.command("kickme")
+@bot_rights.ban_users()
 @get_strings_dec("bans")
 async def kickme(message, strings):
     user = message.from_user.id
@@ -163,6 +172,7 @@ async def kickme(message, strings):
 
 @decorator.command("tmute")
 @user_admin_dec
+@bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
 async def tmute(message, strings, status, chat_id, chat_title):
