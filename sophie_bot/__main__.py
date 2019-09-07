@@ -73,7 +73,7 @@ async def on_shutdown(dp):
 
 # Catch up missed updates
 if CATCH_UP is False:
-    logger.info("Catch up missed updates..")
+    logger.info("Telethon: Catch up missed updates..")
 
     try:
         asyncio.ensure_future(tbot.catch_up())
@@ -95,11 +95,11 @@ def exit_gracefully(signum, frame):
 
 # Run loop
 logger.info("Running loop..")
-logger.info("tbot is alive!")
+logger.info("Telethon is alive!")
 signal.signal(signal.SIGINT, exit_gracefully)
 
 if CONFIG['advanced']['webhooks'] is True:
-    logger.info("Using webhooks method")
+    logger.info("Aiogram: Using webhooks method")
     executor.start_webhook(
         dispatcher=dp,
         webhook_path=TOKEN,
@@ -110,6 +110,6 @@ if CONFIG['advanced']['webhooks'] is True:
         port=WEBAPP_PORT
     )
 else:
-    logger.info("Using polling method")
+    logger.info("Aiogram: Using polling method")
     executor.start_polling(dp, skip_updates=CATCH_UP)
 # asyncio.get_event_loop().run_forever()
