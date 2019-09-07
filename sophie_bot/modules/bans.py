@@ -52,7 +52,8 @@ async def ban(message, strings, status, chat_id, chat_title):
 @decorator.command("tban")
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
-async def tban(message, status, chat_id, chat_title):
+@get_strings_dec('bans')
+async def tban(message, strings, status, chat_id, chat_title):
     user, data = await aio_get_user(message)
     if not user:
         return
@@ -68,14 +69,18 @@ async def tban(message, status, chat_id, chat_title):
     if any(time_val.endswith(unit) for unit in ('m', 'h', 'd')):
         bantime, unit_str = await convert_time(message, time_val)
 
-    if await ban_user(message, user['user_id'], chat_id, bantime) is True:
-        admin_str = await user_link_html(message.from_user.id)
-        user_str = await user_link_html(user['user_id'])
-        text = "User {} banned by {} in {}!\n".format(user_str, admin_str, chat_title)
-        text += "For <code>{}</code> {}\n".format(time_val[:-1], unit_str)
-        if reason:
-            text += "Reason: <code>{}</code>".format(reason)
-        await message.reply(text, disable_web_page_preview=True)
+        if await ban_user(message, user['user_id'], chat_id, bantime) is True:
+            admin_str = await user_link_html(message.from_user.id)
+            user_str = await user_link_html(user['user_id'])
+            text = "User {} banned by {} in {}!\n".format(user_str, admin_str, chat_title)
+            text += "For <code>{}</code> {}\n".format(time_val[:-1], unit_str)
+            if reason:
+                text += "Reason: <code>{}</code>".format(reason)
+            await message.reply(text, disable_web_page_preview=True)
+
+    else:
+        await message.reply(strings['invalid_time'])
+        return
 
 
 @decorator.command("kick")
@@ -175,6 +180,9 @@ async def tmute(message, strings, status, chat_id, chat_title):
             await message.reply(strings["tmute_sucess"].format(
                 admin=admin_str, user=user_str,
                 time=time_val[:-1], unit=unit_str))
+    else:
+        await message.reply(strings['invalid_time'])
+        return
 
 
 async def ban_user(message, user_id, chat_id, time_val, no_msg=False):

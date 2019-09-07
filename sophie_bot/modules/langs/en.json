@@ -69,6 +69,7 @@
         "kickme_success": "Okay.. No problem!",
         "tmute_sucess": "Admin {admin} muted {user} for {time} {unit} !",
         "usernt_banned": "This user isn't banned in the first place!",
+        "invalid_time": "Invalid time type specified. Expected m, h, or d",
 
         "user_gbanned": "\n\nWarning! This user is globally banned becuase:\n`{reason}`"
     },
