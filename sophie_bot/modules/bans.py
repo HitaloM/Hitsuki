@@ -22,17 +22,11 @@ from telethon.tl.types import ChatBannedRights, ChannelParticipantBanned
 from telethon.errors.rpcerrorlist import ChatAdminRequiredError
 
 from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, mongodb, bot
+from sophie_bot.modules.helper_func.own_errors import NotEnoughRights
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (is_user_admin, user_admin_dec,
                                       aio_get_user, user_link_html)
-
-
-class NotEnoughRights(Exception):
-    def __init__(self, right):
-        super(NotEnoughRights, self).__init__(right)
-
-        self.errors = right
 
 
 @decorator.command("ban")
