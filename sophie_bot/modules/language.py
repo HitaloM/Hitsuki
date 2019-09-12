@@ -119,8 +119,8 @@ async def set_lang_callback(event):
     if K is False:
         await event.answer("You don't have rights to set language here!", alert=True)
         return
-    event_data = re.search(r'select_lang_(.*)', str(event.data))
-    lang = event_data.group(1)[:-1]
+    event_data = re.search(r'select_lang_(.*)', event.data.decode("utf-8"))
+    lang = event_data.group(1)
     redis.set('lang_cache_{}'.format(chat), lang)
     old = mongodb.lang.find_one({'chat_id': chat})
     if old:

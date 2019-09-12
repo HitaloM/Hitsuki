@@ -9,7 +9,6 @@ Backups/
 .stignore
 sophie.log
 *.zip
-.vscode
 XDG_CACHE_HOME
-update.json
 changelog.txt
+OrangeFox-temp-builds/

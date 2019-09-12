@@ -16,14 +16,16 @@
 import aiocron
 import requests
 import io
+import os
 import asyncio
 from time import gmtime, strftime
 
-from sophie_bot import CONFIG, bot, mongodb
+from sophie_bot.modules.main import term
+from sophie_bot import CONFIG, bot, mongodb, tbot
 
 
-@aiocron.crontab('50 16 * * *')
-async def attime():
+@aiocron.crontab('25 * * * *')
+async def import_cas_bans():
     if CONFIG['sync_cas_bans'] is False:
         return
     url = 'https://combot.org/api/cas/export.csv'
@@ -59,3 +61,25 @@ async def attime():
     text = f"Imported {s_num} CAS bans."
     if CONFIG['advanced']['gbans_channel_enabled'] is True:
         await bot.send_message(CONFIG['advanced']['gbans_channel'], text)
+
+
+@aiocron.crontab('50 * * * *')
+async def backup():
+    if CONFIG['advanced']['auto_backups_enabled'] is False:
+        return
+    channel_id = CONFIG['advanced']['auto_backups_channel']
+    await bot.send_message(channel_id, "Running backup...")
+    date = strftime("%Y-%m-%dI%H:%M:%S", gmtime())
+    cmd = "mkdir Backups; "
+    cmd += f"mongodump --uri \"{CONFIG['basic']['mongo_conn']}/sophie\" "
+    cmd += f"--forceTableScan --gzip --archive > Backups/dump_{date}.gz"
+    await term(cmd)
+    if not os.path.exists(f"Backups/dump_{date}.gz"):
+        await bot.send_message(channel_id, "<b>Error!</b>")
+        return
+    await bot.send_message(channel_id, f"<b>Done!</b>\nBackup under <code>Backups/dump_{date}.gz</code>")
+    await tbot.send_file(
+        channel_id,
+        f"Backups/dump_{date}.gz",
+        caption="Backup file"
+    )

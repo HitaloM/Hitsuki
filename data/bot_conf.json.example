@@ -19,8 +19,14 @@
     "sync_cas_bans": false,
     "utoken": "Unified/BansToken",
 
-    "gbans_channel_enabled": true,
-    "gbans_channel": -1001155503575,
+    "errors_channel_enabled": false,
+    "errors_channel": CHANNEL_ID,
+
+    "gbans_channel_enabled": false,
+    "gbans_channel": CHANNEL_ID,
+
+    "auto_backups_enabled": false,
+    "auto_backups_channel": CHANNEL_ID,
 
     "webhooks": false,
     "webhook_host": "https://yourdomain",
@@ -29,8 +35,7 @@
 
     "skip_catch_up": true,
     "rate_limit": false,
-    "rate_limit_num": 3,
-    "block_gbanned_users": true,
+    "block_gbanned_users": false,
     
     "sudo": [483808054, 782229305, 654839744],
     "whitelisted": [123456789, 928173281],
