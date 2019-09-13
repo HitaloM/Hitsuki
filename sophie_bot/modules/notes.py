@@ -21,6 +21,8 @@ import os
 import random
 import string
 
+import time
+
 from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -49,7 +51,9 @@ RESTRICTED_SYMBOLS = ['**', '__', '`']
 
 @decorator.command("owo", is_owner=True)
 async def test(message, **kwagrs):
-    print(message)
+    await message.reply('owo')
+    time.sleep(999)
+    await message.reply('owo11')
 
 
 @decorator.t_command("save", word_arg=True)

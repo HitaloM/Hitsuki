@@ -15,6 +15,7 @@
 
 import sys
 import asyncio
+import threading
 import signal
 
 from importlib import import_module
@@ -91,6 +92,7 @@ def exit_gracefully(signum, frame):
         exit(1)
     logger.info("----------------------")
     sys.exit(1)
+
 
 
 # Run loop
