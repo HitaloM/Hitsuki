@@ -13,14 +13,14 @@
 #
 # You should have received a copy of the GNU General Public License
 
-import sys
+import os
 import asyncio
-import threading
 import signal
+import threading
 
 from importlib import import_module
 
-from sophie_bot import CONFIG, TOKEN, tbot, redis, logger, dp, bot
+from sophie_bot import CONFIG, TOKEN, tbot, redis, logger, dp, bot, flask
 from sophie_bot.modules import ALL_MODULES
 
 from aiogram import executor
@@ -91,9 +91,17 @@ def exit_gracefully(signum, frame):
         logger.error(err)
         exit(1)
     logger.info("----------------------")
-    sys.exit(1)
+    os.kill(os.getpid(), signal.SIGUSR1)
 
 
+# Run flask
+def start():
+    flask.run(debug=True, use_reloader=False)
+
+
+i = None
+fthread = threading.Thread(target=start)
+fthread.start()
 
 # Run loop
 logger.info("Running loop..")

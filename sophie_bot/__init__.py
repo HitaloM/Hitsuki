@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 
 import logging
+from flask import Flask
 
 import asyncio
 import redis
@@ -79,6 +80,9 @@ tbot.start(bot_token=TOKEN)
 bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
 storage = RedisStorage()
 dp = Dispatcher(bot, storage=storage)
+
+# Flask
+flask = Flask(__name__)
 
 bot_info = asyncio.get_event_loop().run_until_complete(bot.get_me())
 BOT_USERNAME = bot_info.username  # bot_info.username
