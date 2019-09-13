@@ -43,7 +43,7 @@ logger.info("Powered by Telethon and AIOGram and bleck megic")
 DEBUG_MODE = CONFIG["advanced"]["debug_mode"]
 if DEBUG_MODE is True:
     logger.setLevel(logging.DEBUG)
-    logger.warn("! Enabled debug mode, please don't use it on production to repect privacy data.")
+    logger.warn("! Enabled debug mode, please don't use it on production to repect data privacy.")
 
 
 OWNER_ID = int(CONFIG["basic"]["owner_id"])

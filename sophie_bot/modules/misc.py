@@ -90,10 +90,10 @@ async def pinMessage(event, strings):
         return
 
 
-@decorator.t_command("runs")
+@decorator.command("runs")
 @get_strings_dec("RUNS", mas_name="RANDOM_STRINGS")
-async def runs(event, strings):
-    await event.reply(strings[random.choice(list(strings))])
+async def runs(message, strings):
+    await message.reply(strings[random.choice(list(strings))])
 
 
 @decorator.t_command("unpin")
