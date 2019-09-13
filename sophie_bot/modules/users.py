@@ -202,10 +202,6 @@ async def aio_get_user(message, send_text=True, allow_self=False):
             if args[1].isdigit():
                 user = await get_user_by_id(args[1])
 
-            # Admin can mess a @
-            # if not user:
-            #    user = await get_user_by_username(args[1])
-
         if len(args) > 2:
             text = args[2]
 
@@ -218,10 +214,9 @@ async def aio_get_user(message, send_text=True, allow_self=False):
         if not user and allow_self is True:
             user = await get_user_by_id(message.from_user.id)
 
-    if not user and send_text is True:
-        await message.answer('I cant get the user!')
-        return None, None
-    elif not user:
+    if not user:
+        if send_text:
+            await message.answer("I can't get the user!")
         return None, None
 
     return user, text

@@ -1,6 +1,6 @@
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.users import is_user_admin
-from sophie_bot import decorator, bot, mongodb, redis
+from sophie_bot import decorator, mongodb, redis
 
 
 ALLOWED_LOCKS = (
@@ -20,28 +20,31 @@ async def locks_processor(message):
 
     key = 'locks_cache_{}'.format(chat_id)
     locks = None
-    if redis.llen(key) == 0:
-        return
     if redis.exists(key) > 0:
         locks = redis.lrange(key, 0, -1)
     if not locks:
-        update_locks_cache(chat_id)
+        if not update_locks_cache(chat_id):
+            return
         locks = redis.lrange(key, 0, -1)
     locks = [x.decode('utf-8') for x in locks]
 
     if 'all' in locks:
         await message.delete()
 
+
 def update_locks_cache(chat_id):
     key = 'locks_cache_{}'.format(chat_id)
     redis.delete(key)
     data = mongodb.locks.find_one({'chat_id': chat_id})
+    if not data:
+        return False
     for lock in data:
         if lock == 'chat_id' or lock == '_id':
             continue
         if data[lock] is True:
             redis.lpush(key, lock)
     redis.expire(key, 3600)
+    return True
 
 
 @decorator.command('locktypes')
@@ -74,6 +77,6 @@ async def unlock(message, status, chat_id, chat_title):
         await message.reply('You cant unlock this!')
         return
 
-    mongodb.locks.update_one({'chat_id': chat_id}, {"$set": {item: False}}, upsert=True)
+    mongodb.locks.update_one({'chat_id': chat_id}, {"$unset": {item: 1}})
     update_locks_cache(chat_id)
     await message.reply(f'Unlocked <code>{item}</code> in <b>{chat_title}</b>!')

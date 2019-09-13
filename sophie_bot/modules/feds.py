@@ -106,7 +106,7 @@ def user_is_fed_admin(func):
 
         if hasattr(event, 'from_id'):
             user_id = event.from_id
-        elif hasattr(event, 'from_user'):
+        elif 'from' in event:
             user_id = event.from_user.id
 
         if user_id == OWNER_ID:

@@ -39,7 +39,7 @@ GBANNED_RIGHTS = ChatBannedRights(
 
 
 async def blacklist_user(message):
-    user, reason = await aio_get_user(message, send_text=False)
+    user, reason = await aio_get_user(message)
     if not user:
         return
 

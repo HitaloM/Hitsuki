@@ -31,13 +31,6 @@ from sophie_bot.modules.users import (is_user_admin, user_admin_dec,
                                       aio_get_user, user_link_html)
 
 
-class NotEnoughRights(Exception):
-    def __init__(self, right):
-        super(NotEnoughRights, self).__init__(right)
-
-        self.errors = right
-
-
 @decorator.command("ban")
 @user_admin_dec
 @bot_rights.ban_users()
