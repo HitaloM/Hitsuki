@@ -11,3 +11,5 @@ aiogram
 aioredis
 aiocron
 git+https://github.com/casics/nostril
+flask
+flask_bootstrap

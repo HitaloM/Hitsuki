@@ -16,10 +16,12 @@
 from time import gmtime, strftime
 import asyncio
 
+from flask import jsonify, request
+
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
-from sophie_bot import CONFIG, SUDO, WHITELISTED, decorator, logger, mongodb, bot
+from sophie_bot import CONFIG, SUDO, WHITELISTED, decorator, logger, mongodb, bot, flask
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import user_link, aio_get_user, user_link_html
 from sophie_bot.modules.helper_func.decorators import need_args_dec
@@ -250,3 +252,19 @@ async def gban_helper_2(event, strings):
         except Exception as err:
             logger.info(f'Error on gbanning {from_id} in {event.chat_id} \n {err}')
             pass
+
+
+@flask.route('/api/is_user_gbanned/<user_id>')
+def is_gbanned(user_id: int):
+    print(request.headers)
+    gbanned = mongodb.blacklisted_users.find_one({'user': user_id})
+    if not gbanned:
+        data = {'user_id': user_id, 'gbanned': False}
+        return jsonify(data)
+    data = mongodb.user_list.find_one({'user_id': user_id})
+    if not data:
+        data = {}
+
+    data.update(gbanned)
+    del data['_id']
+    return jsonify(data)

@@ -15,6 +15,8 @@
 
 import re
 
+from importlib import import_module
+
 from telethon import events
 from aiogram.dispatcher.handler import SkipHandler
 from aiogram import types
@@ -22,6 +24,8 @@ from aiogram import types
 from sophie_bot import BOT_USERNAME, CONFIG, tbot, dp
 from sophie_bot.modules.helper_func.error import report_error
 from sophie_bot.modules.helper_func.flood import prevent_flooding
+
+import_module("sophie_bot.modules.helper_func.bount_filter")
 
 ALLOW_F_COMMANDS = CONFIG["advanced"]["allow_forwards_commands"]
 ALLOW_COMMANDS_FROM_EXC = CONFIG["advanced"]["allow_commands_with_!"]
@@ -100,26 +104,12 @@ def command(command, allow_edited=True, allow_kwargs=False, args=True, **kwargs)
     return decorator
 
 
-def cust_command(*args, **kwargs):
-    def decorator(func):
-        tbot.add_event_handler(func, events.NewMessage(*args, **kwargs))
-        tbot.add_event_handler(func, events.MessageEdited(*args, **kwargs))
-    return decorator
-
-
 def CallBackQuery(data, compile=True):
     def decorator(func):
         if compile is True:
             tbot.add_event_handler(func, events.CallbackQuery(data=re.compile(data)))
         else:
             tbot.add_event_handler(func, events.CallbackQuery(data=data))
-    return decorator
-
-
-def BotDo():
-    def decorator(func):
-        tbot.add_event_handler(func, events.NewMessage())
-        tbot.add_event_handler(func, events.MessageEdited())
     return decorator
 
 
@@ -166,10 +156,4 @@ def StrictCommand(cmd):
 def ChatAction():
     def decorator(func):
         tbot.add_event_handler(func, events.ChatAction)
-    return decorator
-
-
-def RawAction():
-    def decorator(func):
-        tbot.add_event_handler(func, events.Raw)
     return decorator
