@@ -13,14 +13,12 @@
 #
 # You should have received a copy of the GNU General Public License
 
-import html
-
 from telethon.tl.custom import Button
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher.filters.builtin import CommandStart
 
-from sophie_bot import BOT_USERNAME, decorator, logger, mongodb, dp, bot
+from sophie_bot import BOT_USERNAME, decorator, logger, dp, bot
 from sophie_bot.modules.language import (LANGUAGES, get_chat_lang, get_string,
                                          lang_info, get_strings_dec, get_strings)
 
@@ -120,8 +118,8 @@ def get_help(chat_id):
 
 @dp.callback_query_handler(help_page_cp.filter())
 async def get_mod_help_callback(query, callback_data=False, **kwargs):
-    print(query)
     chat_id = query.message.chat.id
+    message = query.message
     module = callback_data['module']
     text = get_string(module, "title", chat_id, dir="HELPS")
     text += '\n'
@@ -138,12 +136,12 @@ async def get_mod_help_callback(query, callback_data=False, **kwargs):
             buttons.insert(InlineKeyboardButton(
                 btn_name, callback_data=help_btn_cp.new(module=module, btn=btn)))
     buttons.add(InlineKeyboardButton("Back", callback_data='get_help'))
-    text = html.escape(text)
-    await bot.edit_message_text(text, chat_id, query.message.message_id, reply_markup=buttons)
+    await message.edit_text(text, reply_markup=buttons)
 
 
 @dp.callback_query_handler(help_btn_cp.filter())
 async def get_help_button_callback(query, callback_data=False, **kwargs):
+    message = query.message
     module = callback_data['module']
     data = callback_data['btn']
     chat_id = query.message.chat.id
@@ -154,20 +152,10 @@ async def get_help_button_callback(query, callback_data=False, **kwargs):
             text += LANGUAGES[lang]["HELPS"][module][data][btn]
             text += '\n'
     buttons = InlineKeyboardMarkup().add(InlineKeyboardButton("Back", callback_data='get_help'))
-    await bot.edit_message_text(text, chat_id, query.message.message_id, reply_markup=buttons)
+    await message.edit_text(text, reply_markup=buttons)
 
 
 @dp.message_handler(CommandStart('help'))
 async def help_start(message):
     text, buttons = get_help(message.chat.id)
     await message.answer(text, reply_markup=buttons)
-
-
-@decorator.t_command('start rules(.*)')
-async def rules_handler(event):
-    if event.from_id == event.chat_id:
-        chat = event.pattern_match.group(1)
-        rules1 = mongodb.rules.find_one({'chat': int(chat)})
-        rules = rules1['rule']
-
-        await event.respond(rules)

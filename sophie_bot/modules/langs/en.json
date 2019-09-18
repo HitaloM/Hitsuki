@@ -37,7 +37,7 @@
         "delmsg_no_arg": "deletemsg button can contain only 'admin' or 'user' argument!",
         "bot_msg" : "I'm sorry, I can't get this message, probably this a other bot's message. I can't save it.",
         "pmed_note": "I pm'ed note to you!",
-        "notename_cant_contain": "Note name can't conatin `{}` !",
+        "notename_cant_contain": "Note name can't contain `{}` !",
 
         "note_saved_or_updated_in_fed": "**Note {note_name} {status} in {fed_name} Federation!**\n",
         "note_already_in_chat": "Note `{note_name}` already exits in **{chat_name}** chat, remove it before trying save."
@@ -69,7 +69,6 @@
         "kickme_success": "Okay.. No problem!",
         "tmute_sucess": "Admin {admin} muted {user} for {time} {unit} !",
         "usernt_banned": "This user isn't banned in the first place!",
-        "invalid_time": "Invalid time type specified. Expected m, h, or d",
 
         "user_gbanned": "\n\nWarning! This user is globally banned becuase:\n`{reason}`"
     },
@@ -250,11 +249,11 @@
         "info_admeme": "\nUser has admin rights in this chat.",
 
         "father": "\nHe is my creator.",
-        "sudo_crown": "\nHey! Look at him, he has a crown, lemme let me see it.. Whaow, it has a engraving 'sudo user'.",
+        "sudo_crown": "\nHey! Look at him, he has a crown, let me see it.. Whaow, it has a engraving <b>'sudo user'</b>.",
 
         "gbanned": "\nGlobally banned: ",
         "no": "No",
-        "gbanned_yes": "Yes\n",
+        "gbanned_yes": "<b>Yes!</b>\n",
         "gbanned_date": "Data: <code>{data}</code>\n",
         "gbanned_reason": "Reason: <code>{reason}</code>\n"
     },
@@ -262,11 +261,11 @@
         "user_is_blacklisted": "User {user} is blacklisted so has been removed. \nReason: __{rsn}__"
     },
     "pm_menu": {
-        "start_hi": "Hey there! My name is Sophie :3, I help you manage your group in an efficient way! Press on /help for Help",
+        "start_hi": "Hey there! My name is Sophie, I help you manage your group in an efficient way!",
         "btn_help": "❔ Help",
         "btn_lang": "🇷🇺 Language",
-        "btn_chat": "👥 Group",
-        "btn_channel": "📡 Channel"
+        "btn_chat": "👥 Sophie Group",
+        "btn_channel": "📡 Sophie News"
     },
     "disable": {
         "disablable": "<b>Disablable commands are:</b>\n",
@@ -284,7 +283,7 @@
         "change_info": "I don't have rights to change group info, please make me admin with that right.",
         "edit_messages": "I don't have right to edit channel messages!",
         "delete_messages": "I don't have rights to delete messages here.",
-        "ban_users": "I don't have rights to ban users, please make me admin with that right.",
+        "ban_user": "I don't have rights to ban users, please make me admin with that right.",
         "pin_messages": "I don't have rights to pin messages, please make me admin with that right.",
         "add_admins": "I don't have rights to add admin, please make me admin with that right."
     },
@@ -383,7 +382,7 @@
         "btn": "Notes",
         "title": "Notes are great to save random tidbits of information; a phone number, a nice gif, a funny picture - anything!",
         "text": {
-            "i1": "\n**Available commands are:**",
+            "i1": "\n<b>Available commands are:</b>",
             "i2": "- /save (name) (data): Replying to a message will save that message. Even works on media!",
             "i3": "- /get (name): get the note registered to that word.",
             "i4": "- /clear (name): delete the note",
@@ -392,7 +391,7 @@
             "i7": "- /noteinfo (name): Show detailed info about note, who updated and created note",
             "i8": "\nAn example of how to save a note would be via:",
             "i9": "`/save data This is example note!`",
-            "i11": "\nNow, anyone using `/get data`, or `#data` will be replied to with `This is example note!`.",
+            "i11": "\nNow, anyone using <code>/get data</code>, or <code>#data</code> will be replied to with <code>This is example note!</code>.",
             "i12": "\nIf you want to save an image, gif, or sticker, or any other data, do the following:",
             "i13": "`save word` while replying to a sticker or whatever data you'd like. Now, the note at `#word` contains a sticker which will be sent as a reply.",
             "i14": "\nTip: to retrieve a note without the formatting, use `/get (name) noformat`",
@@ -407,13 +406,13 @@
         },
         "vars": {
             "a1": "You can use special variable in notes, here a list of it:",
-            "a2": "`{first}` - First name, will something like 'Mike'",
-            "a3": "`{last}` - Last name, ex. 'Smith'",
-            "a4": "`{fullname}` - Full name, ex. 'Mike Smith'",
-            "a5": "`{username}` - Gives the username, ex. '@MikeSmith009'",
-            "a6": "`{mention}` - Gives the link to user, ex. [Sophie](https://t.me/rSophieBot)",
-            "a7": "`{id}` - Gives the id of the user, ex. '885745757'",
-            "a8": "`{chatname}` - Gives the current chat name, ex. 'Sophie chat'"
+            "a2": "<code>{first}</code> - First name, will something like 'Mike'",
+            "a3": "<code>{last}</code> - Last name, ex. 'Smith'",
+            "a4": "<code>{fullname}</code> - Full name, ex. 'Mike Smith'",
+            "a5": "<code>{username}</code> - Gives the username, ex. '@MikeSmith009'",
+            "a6": "<code>{mention}</code> - Gives the link to user, ex. <a href=\"https://t.me/rSophieBot/\">Sophie</a>",
+            "a7": "<code>{id}</code> - Gives the id of the user, ex. '885745757'",
+            "a8": "<code>{chatname}</code> - Gives the current chat name, ex. 'Sophie chat'"
         },
         "md": {
             "a1": "You can use markdown to make your messages more expressive. This is the markdown currently supported:\n",
@@ -434,15 +433,15 @@
         },
         "btns": {
             "a1": "Making buttons isn't so hard as you expected. Unlike other bots Sophie have many types of custom buttons, let's try use it!",
-            "a2": "Lets start by default url buttons, url buttons have such syntax `[Button name](buttonurl:https://url.com)`.",
+            "a2": "Lets start by default url buttons, url buttons have such syntax <code>[Button name](buttonurl:https://url.com)</code>.",
             "a3": "\nOk, you added many buttons to your message, but it looks ugly? You wanna make few buttons per line? This will help you:",
-            "a4": "Add `:same` at the end of your link; it'll set it on the same line as the other one. For example:",
-            "a5": "`[Button 1](buttonurl:https://url.com)`\n[Button 2](buttonurl:https://url.com:same)",
+            "a4": "Add <code>:same</code> at the end of your link; it'll set it on the same line as the other one. For example:",
+            "a5": "<code>[Button 1](buttonurl:https://url.com)</code>\n[Button 2](buttonurl:https://url.com:same)",
             "a6": "You can set more than 2 buttons per row, do not overdo it.",
             "a7": "\nOk, you just created you note with many buttons, you will see that you do not have enough just url buttons, see other's:",
-            "a8": "- `[Button name](buttonnote:name_of_note)`: With such types of button you will get a note in your PM, this done to prevent spamming notes in pm.",
-            "a9": "- `[Button name](buttonalert:name_of_note)`: This one will show you popup with note data (Warning, only text supported by popups), for example this can be done for rules, you are limited only by your imagination and by 200 symbols limit for popups",
-            "a10": "- `[Button name](deletemsg:admin)`: Some notes used by warning, or notify, after reading it it leaving in chat, it spammy, right? This button will remove message, it have argument to control which one can be remove message `user` or `admin`.",
+            "a8": "- <code>[Button name](buttonnote:name_of_note)</code>: With such types of button you will get a note in your PM, this done to prevent spamming notes in pm.",
+            "a9": "- <code>[Button name](buttonalert:name_of_note)</code>: This one will show you popup with note data (Warning, only text supported by popups), for example this can be done for rules, you are limited only by your imagination and by 200 symbols limit for popups",
+            "a10": "- <code>[Button name](deletemsg:admin)</code>: Some notes used by warning, or notify, after reading it it leaving in chat, it spammy, right? This button will remove message, it have argument to control which one can be remove message `user` or `admin`.",
             "a11": "\nCreate your beautiful and functional notes with Sophie."
         },
         "enc": {
@@ -450,15 +449,15 @@
             "a1": "By default all notes encrypted with particle method.",
             "a2": "Just add a `[encryption:fully]` in note text to encrypt it fully with password requesting.",
             "a3": "Example:",
-            "a4": "`/save test_note This is a text of test_note [encryption:fully]`",
-            "a5": "\nYou also can disable encryption fully by `[encryption:no]`"
+            "a4": "<code>/save test_note This is a text of test_note [encryption:fully]</code>",
+            "a5": "\nYou also can disable encryption fully by <code>[encryption:no]</code>"
         }
     },
     "purges": {
         "btn": "Purges",
         "title": "Need to delete lots of messages? That's what purges are for!",
         "text": {
-            "i1": "\n**Available commands are:**",
+            "i1": "\n<b>Available commands are:</b>",
             "i2": "- /purge: deletes all messages from the message you replied to, to the current message.",
             "i3": "- /del: deletes the message you replied to."
         }
@@ -467,7 +466,7 @@
         "btn": "Warnings",
         "title": "Keep your members in check with warnings; stop them getting out of control!",
         "text": {
-            "i1": "\n**Available commands are:**",
+            "i1": "\n<b>Available commands are:</b>",
             "i2": "- /warn (reason): warn a user for the specified reason .",
             "i3": "- /warns: returns the list of warns, with reasons, for that user.",
             "i5": "- /resetwarns: reset all of a user's warns.",
@@ -482,7 +481,7 @@
         "btn": "Misc",
         "title": "An \"odds and ends\" module for small, simple commands which don't really fit anywhere",
         "text": {
-            "i1": "\n**Available commands are:**",
+            "i1": "\n<b>Available commands are:</b>",
             "i2": "- /id: get a id of user and chat.",
             "i3": "- /stats: show bot stats.",
             "i4": "- /botchanges: show bot changes (commit history)",
@@ -495,7 +494,7 @@
         "title": "Sometimes, you just want to add some notes and filters to a group chat, but you don't want everyone to see; This is where connections come in...",
         "text": {
             "i0": "This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)",
-            "i1": "\n**Available commands are:**",
+            "i1": "\n<b>Available commands are:</b>",
             "i2": "- /connect (chat): connect to the chat with chat username/ID, allowing you to view/edit contents.",
             "i3": "- /connect: show last 3 chats to fast connect.",
             "i4": "\nYou can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids."
@@ -506,7 +505,7 @@
         "title": "Give your members a warm welcome with the greetings module!",
         "text": {
             "i0": "Welcomes it's are a note trigger, use /setwelcome to set welcome trigger to note.",
-            "i1": "\n**Available commands are:**",
+            "i1": "\n<b>Available commands are:</b>",
             "i2": "- /setwelcome (notename): sets your new welcome note!",
             "i3": "Note: Please keep in mind, Sophie use notes for welcome, you must create note with welcome text and set note as welcome",
             "i4": "Steps:",
@@ -515,14 +514,14 @@
             "i7": "- /setwelcome off: disable welcome in chat.",
             "i8": "- /cleanservice: Remove Telegram service messages about user joined or leaved chat.",
             "i9": "- /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.",
-            "i10": "- /welcomesecurity <off/soft/hard>: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
+            "i10": "- /welcomesecurity [off/soft/hard]: soft - restrict user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'"
         }
     },
     "filters": {
         "btn": "Filters",
         "title": "Make your chat more lively with filters",
         "text": {
-            "i1": "**Available commands are:**",
+            "i1": "<b>Available commands are:</b>",
             "i2": "- /addfilter: Add new filter in chat.",
             "i4": "- /filters: Will display all filter in that chat!",
             "i5": "- /delfilter (keyword/key words) : Will stop the the given filter names"
@@ -530,28 +529,27 @@
     },
     "federations": {
         "btn": "Federations",
-        "title": "Ah, group management. It's all fun and games, until you start getting spammers in, and you need to ban them. Then you need to start banning more, and more, and it gets painful. But then you have multiple groups, and you don't want these spammers in any of your groups - how can you deal? Do you have to ban them manually, in all your groups?",
+        "title": "Group management.. It's fun, until you start getting spammers in all your chats, and you need to ban them. Then you need to start banning more, and more, and it gets painful. How can you deal? Do you have to ban them manually, in all your groups?",
         "text": {
             "i0": "No more! With federations, you can make a ban in one chat overlap to all your other chats. You can even appoint federation admins, so that your trustworthiest admins can ban across all the chats that you want to protect.",
-            "i1": "\n**Available commands are:**",
+            "i1": "\n<b>Available commands are:</b>",
             "i2": "- /newfed (fedname): Creates a new federation with the given name. Users are only allowed to own one federation. Using this method when you already have a fed will simply change the federation name.",
             "i3": "- /joinfed (FedID): Joins the current chat to the federation. Each chat can only be in one federation. Only chat owners can do this.",
-            "i4": "- /finfo: Show info about current chat Federation, you can /finfo (FedID) - to see info about other Federation.",
+            "i4": "- /finfo: Show info about current chat Federation, you can <code>/finfo (Fed ID)</code> - to see info about other Federation.",
             "i5": "\nFederation admins, they can use a fban command and others, to control they use this commands:",
             "i6": "- /fpromote (user): Promotes the user to fed admin in your fed.",
             "i7": "- /fdemote (user): Demotes the user from fed admin to normal user, in your fed.",
             "i8": "\nOnly to Federation admins:",
             "i9": "- /fban (user): Bans a user from the current chat's federation.",
             "i10": "- /unfban (user): Unbans a user the current chat's federation.",
-            "i11": "\nOther commands:",
-            "i12": "/fchats: Show list of chats which connected to Federation."
+            "i11": "/fchats: Show list of chats which connected to Federation."
         }
     },
     "disabling": {
         "btn": "Disabling",
         "title": "You might not like all the Sophie's features and wanna disable something to reduce spam in your group? If you this module for you!",
         "text": {
-            "a1": "**Available commands are:**",
+            "i1": "<b>Available commands are:</b>",
             "a2": "- /disable (command): Disable the command",
             "a3": "- /enable (command): Enable the command",
             "a4": "- /disablable: See command list which commands can be disabled.",
@@ -562,7 +560,7 @@
         "btn": "Pinning",
         "title": "You wanna pin the message? Here you go.",
         "text": {
-            "a1": "**Available commands are:**",
+            "i1": "<b>Available commands are:</b>",
             "a2": "- /pin: pin the message you replied to; add 'loud' to send a notification to group members.",
             "a3": "- /unpin: Unpin the message."
         }
@@ -571,22 +569,22 @@
         "btn": "Language",
         "title": "Not every can speak with perfect English, Sophie have translation system, check it out.",
         "text": {
-            "a1": "**Available commands are:**",
+            "i1": "<b>Available commands are:</b>",
             "a2": "/lang: Will show a buttons with all languages and it will show current chat language.",
             "a3": "/lang (lang): Will change the language without selecting it with buttons.",
-            "a4": "\nNot all language currently supported, help us with translation on [our crowdin page](https://crowdin.com/project/Sophie)"
+            "a4": "\nNot all language currently supported, help us with translation on <a href=\"https://crowdin.com/project/Sophie\">our crowdin page</a>"
         }
     },
     "rules": {
         "btn": "Rules",
         "title": "Save your chat with your rules",
         "text": {
-            "a1": "**Available commands are:**",
+            "i1": "<b>Available commands are:</b>",
             "a2": "- /setrules (notename): Set the rules",
             "a3": "Note: Please keep in mind, Sophie use notes for rules, you must create note with rules text and set it",
             "a4": "Steps:",
-            "a5": "1. Create note with your welcome",
-            "a6": "2. /setwelcome notename",
+            "a5": "1. Create note with your rules",
+            "a6": "2. /setrules (notename)",
             "a7": "\nRules button will appear in the warn message"
         }
     },
@@ -598,8 +596,7 @@
             "a2": "\n* Server which run Sophie:",
             "a3": "- We use a server provided by vultr in Amsterdam",
             "a4": "- No-one from SUDO don't have acess to it",
-            "a5": "- We have runned own password manager on it and use it everyday (we trust own server own password)",
-            "a6": "- Server secured by ssh keys and have enabled ufw"
+            "a5": "- Server secured by ssh keys and have enabled ufw"
         },
         "buttons": {
             "collection": "Which data we collect",
@@ -620,7 +617,7 @@
             "a12": "- We need this data to make Sophie support operations in multiple chats, for example broadcasts, connections, etc.",
             "a13": "\n* Analytics:",
             "a14": "- We use ONLY Sophie general metrics as speed, count of data types in all chats",
-            "a15": "- We log errors which generated by Sophie (They have very limited info, only a error string and date)",
+            "a15": "- We auto-log errors which generated by Sophie (They have very limited info, only a error string and date)",
             "a16": "- We log a gbans which done by SUDO's (with gbanned user_id)"
         },
         "removing": {
@@ -632,75 +629,36 @@
         "btn": "Reports",
         "title": "Report an annoying user to admins.",
         "text": {
-            "a1": "**Available commands are:**",
-            "a2": "- /reports: Shows current reports status. Available for both admins and non-admins.",
-            "a3": "- /reports (**yes** or **on**)/(**no** or **off**). Available **only** for admins. Ex: /reports on",
+            "i1": "<b>Available commands are:</b>",
             "a4": "- /report (@user) (reason): Report a user to admins. Users only. Ex: /report @baduser bad user.",
-            "a5": "- @admin reason: Same as upper command but **doesn't** support custom tags to report. Ex: *replies to @baduser's message* @admin bad user."
+            "a5": "- @admin reason: Same as upper command but doesn't support custom tags to report."
         }
     }
  },
  "RANDOM_STRINGS": {
     "RUNS": {
-       "1": "Wew dat boi noped de fugg outta here.",
-       "2": "OwO where you going?",
-       "3": ";___; sir pls.",
-       "4": "BOI!",
-       "5": "Fugg off!",
-       "6": "This is a christian server. You shold leave!",
-       "7": "Is this group not potable enough for you?",
-       "8": "\"I go away.\"",
-       "9": "Stahp running pls ;__;",
-       "10": ";______________________;",
-       "11": "But whoi sar?",
-       "12": "Oh please you aren't even funny.",
-       "13": "Stop baiting!",
-       "14": "Are you running away from me? Okay cya boi.",
-       "15": "Run for the potable water! Stay hydrated!",
-       "16": "Oof, sick b8 m8",
-       "17": "( ͡° ͜ʖ ͡°)( ͡° ͜ʖ ͡°)",
-       "18": "Please. End your existence thanks.",
-       "19": "NoU∞.",
-       "20": "Well…",
-       "21": "That just happened.",
-       "22": "Big if true.",
-       "23": "Wow, I didn't know you could even rebut that.",
-       "24": "That's not a rebuttle!",
-       "25": "Delet this!",
-       "26": "Yeah yeah, just tap /kickme already.",
-       "27": "Leave please, and never come back thanks.",
-       "28": "The absolute mad man! I can't believe you just say that.",
-       "29": "Can you not.",
-       "30": "UwU.",
-       "31": "OwO",
-       "32": "Keep doing what you're doing, hopefully you'll be banned soon.",
-       "33": "Heck, I thought this was a Christian server ;_;.",
-       "34": "No curr.",
-       "35": "Delet, delet, wee woo wee woo!.",
-       "36": "Who even are you?",
-       "37": "Yesn't Men't.",
-       "38": "Non't Urselfn't.",
-       "39": "/Walksn't*",
-       "40": "Not if I ban you first.",
-       "41": "Birthn't yourself.",
-       "42": "Okay have fun with your exercise sar.",
-       "43": "What's the sense of your life?",
-       "44": "Nuuuuuuuuuuuu",
-       "45": "M cri",
-       "46": "Suka blyat!",
-       "47": "Sir, why?",
-       "48": "Why you doing this? I cry.",
-       "49": "Someone really wrote this strings for me.",
-       "50": "Alexa, play despacito!",
-       "51": "TODO: WRITE THIS STRING.",
-       "52": "Jepo, replace this string on some kool.",
-       "53": "32... Wait, what?! I forgot translate number to string, let me remember how I used to do it.",
-       "54": "Plox sir",
-       "55": "Wait, oh, stop.. I can't send stickers ;_;",
-       "56": "Help me!!",
-       "57": "/runs",
-       "58": "I thought you are smarter.",
-       "59": "Meaow! 😺"
+       "1": "Nuuuuuuuuuuuu",
+       "2": "M cri",
+       "3": "Suka blyat!",
+       "4": "Sir, why?",
+       "5": "Why you doing this? I cry.",
+       "6": "Someone really wrote this strings for me ;_;",
+       "7": "Alexa, play despacito!",
+       "8": "TODO: WRITE THIS STRING.",
+       "9": "Jepo, replace this string on something kool.",
+       "10": "10... Wait, what?! I forgot translate number to string, let me remember how I used to do it.",
+       "11": "Plox sir",
+       "12": "Wait, oh, stop.. I can't send stickers ;_;",
+       "13": "Help me!!",
+       "14": "/runs",
+       "15": "I thought you are smarter.",
+       "16": "Meaow! 😺",
+       "17": "Runs from Rose",
+       "18": "If you thought I will send you new joke strings - you are wrong, i won't!",
+       "19": "SaNd NeW KrANUl LeNk",
+       "20": "ᅠ",
+       "21": "?_?",
+       "22": "OwO"
     }
  }
 }
