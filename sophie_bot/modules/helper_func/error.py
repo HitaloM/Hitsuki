@@ -75,14 +75,11 @@ async def report_error(event, telethon=False):
 
     text = "<b>Sorry, I encountered a error!</b>\n"
     text += f"If you wanna you can report it - just press the \"Report error\" button.\n"
-    text += "I won't log anything except the fact of error and date\n"
+    text += "Till you press report button your data will be only here.\n"
     text += "<a href=\"https://t.me/YanaBotGroup\">Sophie support chat</a>"
 
     ftext = "Sophie error log file."
     ftext += "\n______________________\n"
-    ftext += "\nNotice:\nThis file uploaded ONLY here, we logged only fact of error and date, "
-    ftext += "we respect your privacy, you may not report this error if you've "
-    ftext += "any confidential data here, noone will see your data\n\n"
     ftext += "\nDate: " + date
     ftext += "\nLib: " + lib
     ftext += "\nGroup ID: " + str(chat_id)
@@ -90,10 +87,10 @@ async def report_error(event, telethon=False):
     ftext += "\nText: " + str(msg.text or "")
     ftext += "\n\nRaw update text:\n"
     ftext += str(event)
-    ftext += "\n\nFormatted update text:\n"
-    ftext += str(ujson.dumps(msg, indent=2))
     ftext += "\n\nTraceback info:\n"
     ftext += str(traceback.format_exc())
+    ftext += "\n\nFormatted update text:\n"
+    ftext += str(ujson.dumps(msg, indent=2))
 
     command = "git log --pretty=format:\"%an: %s\" -5"
     ftext += "\n\n\nLast 5 commits:\n"

@@ -66,10 +66,10 @@ async def blacklist_user(message):
     text += "\nDate: <code>" + date + '</code>'
     text += "\nReason: <code>" + reason + '</code>'
 
-    old = mongodb.blacklisted_users.find_one({'user': user_id})
+    old = mongodb.blacklisted_users.find_one({'user_id': user_id})
     if old:
         new = {
-            'user': user_id,
+            'user_id': user_id,
             'date': old['date'],
             'by': old['by'],
             'reason': reason
@@ -81,7 +81,7 @@ async def blacklist_user(message):
     msg = await message.reply(text + "\nStatus: <b>Gbanning...</b>")
 
     new = {
-        'user': user_id,
+        'user_id': user_id,
         'date': date,
         'reason': reason,
         'by': sudo_admin
@@ -147,9 +147,9 @@ async def un_blacklist_user(message):
     checker = 0
 
     try:
-        precheck = mongodb.gbanned_groups.find({'user': user_id})
+        precheck = mongodb.gbanned_groups.find({'user_id': user_id})
         if precheck:
-            chats = mongodb.gbanned_groups.find({'user': user_id})
+            chats = mongodb.gbanned_groups.find({'user_id': user_id})
         else:
             chats = chat_id
         for chat in chats:
@@ -158,7 +158,7 @@ async def un_blacklist_user(message):
     except Exception:
         pass
 
-    old = mongodb.blacklisted_users.find_one({'user': user_id})
+    old = mongodb.blacklisted_users.find_one({'user_id': user_id})
     if not old:
         await message.reply("This user isn't blacklisted!")
         return
@@ -175,7 +175,7 @@ async def un_blacklist_user(message):
 async def gban_trigger(event):
     user_id = event.from_id
 
-    K = mongodb.blacklisted_users.find_one({'user': user_id})
+    K = mongodb.blacklisted_users.find_one({'user_id': user_id})
     if K:
         banned_rights = ChatBannedRights(
             until_date=None,
@@ -199,7 +199,7 @@ async def gban_trigger(event):
             )
 
             if ban:
-                mongodb.gbanned_groups.insert_one({'user': user_id, 'chat': event.chat_id})
+                mongodb.gbanned_groups.insert_one({'user_id': user_id, 'chat_id': event.chat_id})
                 await event.reply(get_string("gbans", "user_is_blacklisted", event.chat_id).format(
                                   await user_link(user_id), K['reason']))
 
@@ -217,7 +217,7 @@ async def gban_helper_2(event, strings):
         else:
             from_id = event.action_message.from_id
 
-        K = mongodb.blacklisted_users.find_one({'user': from_id})
+        K = mongodb.blacklisted_users.find_one({'user_id': from_id})
         if not K:
             return
 
@@ -243,7 +243,7 @@ async def gban_helper_2(event, strings):
             )
 
             if ban:
-                mongodb.gbanned_groups.insert_one({'user': from_id, 'chat': event.chat_id})
+                mongodb.gbanned_groups.insert_one({'user_id': from_id, 'chat_id': event.chat_id})
                 msg = await event.reply(strings['user_is_blacklisted'].format(
                                         user=await user_link(from_id), rsn=K['reason']))
                 await asyncio.sleep(5)

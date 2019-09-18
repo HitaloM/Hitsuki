@@ -33,10 +33,12 @@ async def report_error(query):
                              callback_data='get_delete_msg_{}_admin'.format(chat_id))
     )
 
-    await bot.edit_message_caption(
-        chat_id,
-        query.message.message_id,
-        caption=query.message.caption,
+    text = "<b>Sorry, I encountered a error!</b>\n"
+    text += "Error reported, your report file will be erased in 3 weeks.\n"
+    text += "<a href=\"https://t.me/SophieSupport\">Sophie support chat</a>"
+
+    await query.message.edit_caption(
+        text,
         reply_markup=buttons
     )
 
