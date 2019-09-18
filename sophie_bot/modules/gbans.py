@@ -244,10 +244,11 @@ async def gban_helper_2(event, strings):
 
             if ban:
                 mongodb.gbanned_groups.insert_one({'user_id': from_id, 'chat_id': event.chat_id})
-                msg = await event.reply(strings['user_is_blacklisted'].format(
-                                        user=await user_link(from_id), rsn=K['reason']))
-                await asyncio.sleep(5)
-                await event.client.delete_messages(event.chat_id, msg)
+                await event.reply(
+                    strings['user_is_blacklisted'].format(
+                        user=await user_link(from_id),
+                        rsn=K['reason']
+                    ))
 
         except Exception as err:
             logger.info(f'Error on gbanning {from_id} in {event.chat_id} \n {err}')
