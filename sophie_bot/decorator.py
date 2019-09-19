@@ -123,6 +123,7 @@ def AioBotDo(**kwargs):
             raise SkipHandler()
 
         dp.register_message_handler(new_func, **kwargs)
+        dp.register_edited_message_handler(new_func, **kwargs)
         return new_func
     return cascade_measage_handler
 
