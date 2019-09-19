@@ -17,16 +17,10 @@ import re
 import difflib
 import base64
 import bz2
-import os
 import random
 import string
 
 import time
-
-from cryptography.fernet import Fernet, InvalidToken
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 from time import gmtime, strftime
 
@@ -105,7 +99,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
     if not creator:
         creator = event.from_id
 
-    h = re.search(r"(\[encryption:(particle|fully|no)\])", note_text)
+    h = re.search(r"(\[encryption:(particle|no)\])", note_text)
     if h:
         note_text = note_text.replace(h.group(1), "")
         format_raw = h.group(2).lower()
@@ -113,27 +107,9 @@ async def save_note(event, strings, status, chat_id, chat_title):
             encrypted = False
         elif format_raw == 'particle':
             encrypted = "particle-v1"
-        elif format_raw == 'fully':
-            encrypted = 'fully'
 
     if encrypted == "particle-v1":
         note_text = base64.urlsafe_b64encode(bz2.compress(note_text.encode()))
-    elif encrypted == "fully":
-        password = randomString(12).encode()
-        salt = os.urandom(16)
-        kdf = PBKDF2HMAC(
-            algorithm=hashes.SHA256(),
-            length=32,
-            salt=salt,
-            iterations=100000,
-            backend=default_backend()
-        )
-        key = base64.urlsafe_b64encode(kdf.derive(password))
-        f = Fernet(key)
-        note_text = f.encrypt(note_text.encode())
-        if file_id:
-            file_id = f.encrypt(file_id.encode())
-        encrypted = salt
 
     new = ({
         'chat_id': chat_id,
@@ -163,11 +139,6 @@ async def save_note(event, strings, status, chat_id, chat_title):
         text += strings["you_can_get_note"].format(name=note_name)
     elif encrypted == "particle-v1":
         text += strings["you_can_get_note"].format(name=note_name)
-    else:
-        text += strings["note_encrypted_fully"]
-        text += strings["password"].format(passwor=password.decode())
-        text += strings["you_can_get_note_enc"].format(
-            name=note_name, password=password.decode())
 
     await event.reply(text, buttons=buttons)
 
@@ -228,7 +199,7 @@ async def list_notes(message, strings, status, chat_id, chat_title):
 
 async def send_note(chat_id, group_id, msg_id, note_name,
                     show_none=False, noformat=False, preview=False,
-                    from_id="", key=False):
+                    from_id=""):
     file_id = None
     note_name = note_name.lower()
     note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': note_name})
@@ -257,28 +228,6 @@ async def send_note(chat_id, group_id, msg_id, note_name,
     elif 'encrypted' in note:
         if note['encrypted'] == 'particle-v1':
             raw_note_text = bz2.decompress(base64.urlsafe_b64decode(note['text'])).decode()
-        else:
-            if not key:
-                await tbot.send_message(chat_id, "This note encrypted! Please write a password!",
-                                        reply_to=msg_id)
-                return
-            salt = note['encrypted']
-            kdf = PBKDF2HMAC(
-                algorithm=hashes.SHA256(),
-                length=32,
-                salt=salt,
-                iterations=100000,
-                backend=default_backend()
-            )
-            key = base64.urlsafe_b64encode(kdf.derive(key.encode()))
-            f = Fernet(key)
-            try:
-                raw_note_text = f.decrypt(note['text']).decode()
-                if file_id:
-                    file_id = f.decrypt(file_id).decode()
-            except InvalidToken:
-                await tbot.send_message(chat_id, "Invalid password!", reply_to=msg_id)
-                return
 
     if noformat is True:
         format = None
@@ -384,15 +333,12 @@ async def send_note(chat_id, group_id, msg_id, note_name,
 async def get_note(message, status, chat_id, chat_title):
     args = message['text'].split(" ", 4)
 
-    key = False
-
     note_name = args[1].lower()
     if note_name[0] == "#":
         note_name = note_name[1:]
     if len(args) >= 3 and args[2].lower() == "noformat":
         noformat = True
     elif len(args) >= 3:
-        key = args[2]
         noformat = False
         if len(args) >= 4 and args[3].lower() == "noformat":
             noformat = True
@@ -401,7 +347,7 @@ async def get_note(message, status, chat_id, chat_title):
     if len(note_name) >= 1:
         await send_note(
             message.chat.id, chat_id, message.message_id, note_name,
-            show_none=True, noformat=noformat, from_id=message.from_user.id, key=key)
+            show_none=True, noformat=noformat, from_id=message.from_user.id)
 
 
 @dp.message_handler(regexp="#(\w+)")
