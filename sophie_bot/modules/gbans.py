@@ -258,9 +258,9 @@ async def gban_helper_2(event, strings):
 @flask.route('/api/is_user_gbanned/<user_id>')
 def is_gbanned(user_id: int):
     print(request.headers)
-    gbanned = mongodb.blacklisted_users.find_one({'user': user_id})
+    gbanned = mongodb.blacklisted_users.find_one({'user_id': int(user_id)})
     if not gbanned:
-        data = {'user_id': user_id, 'gbanned': False}
+        data = {'user_id': int(user_id), 'gbanned': False}
         return jsonify(data)
     data = mongodb.user_list.find_one({'user_id': user_id})
     if not data:
