@@ -13,12 +13,14 @@
 #
 # You should have received a copy of the GNU General Public License
 
+import ujson
+import shutil
 import asyncio
 import os
 from time import gmtime, strftime
 
-from sophie_bot import CONFIG, tbot, decorator, mongodb, redis, logger
-from sophie_bot.modules.main import chat_term, term
+from sophie_bot import CONFIG, tbot, decorator, mongodb, redis, logger, bot
+from sophie_bot.modules.main import chat_term, term, convert_size
 from sophie_bot.modules.notes import button_parser
 
 
@@ -109,22 +111,52 @@ async def check_message_for_smartbroadcast(event):
 
 
 @decorator.command("backup", is_owner=True)
-async def backup(message):
-    msg = await message.reply("Running...")
-    date = strftime("%Y-%m-%dI%H:%M:%S", gmtime())
-    cmd = "mkdir Backups; "
-    cmd += f"mongodump --uri \"{CONFIG['basic']['mongo_conn']}/sophie\" "
-    cmd += f"--forceTableScan --gzip --archive > Backups/dump_{date}.gz"
-    await term(cmd)
-    if not os.path.exists(f"Backups/dump_{date}.gz"):
-        await msg.edit_text("<b>Error!</b>")
+async def chat_backup(message):
+    await do_backup(message.chat.id, message.message_id)
+
+
+async def do_backup(chat_id, reply=False):
+    await bot.send_message(chat_id, "Dumping the DB, please wait...", reply_to_message_id=reply)
+    date = strftime("%Y-%m-%d_%H:%M:%S", gmtime())
+    file_name = f"Backups/dump_{date}.7z"
+    if not os.path.exists("Backups/"):
+        os.mkdir("Backups/")
+    await term(f"mongodump --uri \"{CONFIG['basic']['mongo_conn']}\" --out=Backups/tempbackup")
+
+    # Let's also save Redis cache
+    with open('Backups/tempbackup/redis_keys.json', 'w+') as f:
+        keys = redis.keys()
+        new = {}
+        for key in keys:
+            key_type = redis.type(key)
+            if key_type == 'string':
+                new[key] = redis.get(key)
+            elif key_type == 'list':
+                new[key] = list(redis.lrange(key, 0, -1))
+        f.write(ujson.dumps(new, indent=2))
+
+    # Copy config file
+    shutil.copyfile('data/bot_conf.json', 'Backups/tempbackup/bot_conf.json')
+
+    await bot.send_message(chat_id, "Compressing and uploading to Telegram...", reply_to_message_id=reply)
+    password = CONFIG['advanced']['backups_password']
+    await term(f"cd Backups/tempbackup/; 7z a -mx9 ../../{file_name} * -p{password} -mhe=on")
+    shutil.rmtree('Backups/tempbackup')
+
+    if not os.path.exists(file_name):
+        await bot.send_message(chat_id, "Error!", reply_to_message_id=reply)
         return
-    await msg.edit_text("<b>Done!</b>\nBackup under <code>Backups/dump_{}.gz</code>".format(date))
+
+    text = "<b>Backup created!</b>"
+    size = convert_size(os.path.getsize(file_name))
+    text += f"\nBackup name: <code>{file_name}</code>"
+    text += f"\nSize: <code>{size}</code>"
     await tbot.send_file(
-        message.chat.id,
-        f"Backups/dump_{date}.gz",
-        reply_to=message.message_id,
-        caption="Backup file",
+        chat_id,
+        file_name,
+        reply_to=reply,
+        caption=text,
+        parse_mode="html"
     )
 
 
