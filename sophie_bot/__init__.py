@@ -69,7 +69,7 @@ mongodb = MongoClient(MONGO_CONN).sophie
 
 # Init Redis
 redis = redis.StrictRedis(
-    host=REDIS_COMM, port=REDIS_PORT, db='1')  # decode_respone=True
+    host=REDIS_COMM, port=REDIS_PORT, db='1', decode_responses=True)
 
 tbot = TelegramClient(NAME, API_ID, API_HASH)
 

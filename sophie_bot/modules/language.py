@@ -153,7 +153,7 @@ def get_string(module, text, chat_id, dir="STRINGS"):
 def get_chat_lang(chat_id):
     r = redis.get('lang_cache_{}'.format(chat_id))
     if r:
-        return r.decode('utf-8')
+        return r
     else:
         db_lang = mongodb.lang.find_one({'chat_id': chat_id})
         if db_lang:

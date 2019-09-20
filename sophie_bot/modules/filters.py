@@ -59,7 +59,7 @@ async def check_message(message):
     if text.split()[0][1:] == 'delfilter':
         return
     for keyword in filters:
-        keyword = keyword.decode("utf-8")
+        # keyword = keyword.decode("utf-8")
         keyword = re.escape(keyword)
         keyword = keyword.replace(r'\(\+\)', '.*')
         pattern = r"( |^|[^\w])" + keyword + r"( |$|[^\w])"
