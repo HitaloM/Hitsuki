@@ -195,6 +195,9 @@ async def aio_get_user(message, send_text=True, allow_self=False):
             if len(args) > 2:
                 text = args[2]
             user = await get_user_by_username(mention)
+            if not user:
+                await message.answer("I can't get the user!")
+                return None, None
 
     if not user:
         # Ok, now we really be unsure, so don't return right away
