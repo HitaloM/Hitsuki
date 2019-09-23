@@ -18,12 +18,12 @@ import random
 from requests import post
 
 from telethon.errors import BadRequestError, ChatNotModifiedError
-from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChatAdminRights
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
-from sophie_bot import OWNER_ID, SUDO, BOT_ID, tbot, decorator, mongodb
+from sophie_bot import OWNER_ID, SUDO, BOT_ID, tbot, decorator, mongodb, bot
 from sophie_bot.modules.disable import disablable_dec
+from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (user_admin_dec, aio_get_user,
                                       user_link_html, is_user_admin)
@@ -104,30 +104,45 @@ async def unpin_message(event, strings):
 
 
 @decorator.command("promote")
-@user_admin_dec
 @bot_rights.add_admins()
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
 @get_strings_dec('misc')
-async def promote(message, strings):
-    user, txt = await aio_get_user(message)
+async def promote(message, strings, status, chat_id, chat_title):
+    user, args = await aio_get_user(message)
+
+    print(args)
+
     if not user:
         return
 
-    new_rights = ChatAdminRights(
-        add_admins=True,
-        invite_users=True,
-        change_info=True,
-        ban_users=True,
-        delete_messages=True,
-        pin_messages=True
+    text = strings['promote_success'].format(
+        user=await user_link_html(user['user_id']),
+        chat_name=chat_title
     )
 
+    if args:
+        title = args
+        if len(title) > 16:
+            await message.reply(strings['rank_to_loong'])
+            return
+        text += strings['promote_title'].format(role=title)
+    else:
+        title = args
+
     try:
-        await tbot(EditAdminRequest(
+        await tbot.edit_admin(
             message.chat.id,
             user['user_id'],
-            new_rights
-        ))
-        await message.reply(strings['promote_success'])
+            add_admins=True,
+            invite_users=True,
+            change_info=True,
+            ban_users=True,
+            delete_messages=True,
+            pin_messages=True,
+            title=title
+        )
+        await message.reply(text)
 
     except BadRequestError:  # TODO(Better exception)
         await message.reply(strings['promote_failed'])
@@ -146,27 +161,13 @@ async def demote(message, strings):
     if user['user_id'] == BOT_ID:
         return
 
-    newrights = ChatAdminRights(
-        add_admins=None,
-        invite_users=None,
-        change_info=None,
-        ban_users=None,
-        delete_messages=None,
-        pin_messages=None
+    await bot.promote_chat_member(
+        message.chat.id,
+        user['user_id']
     )
 
-    try:
-        await tbot(EditAdminRequest(
-            message.chat.id,
-            user['user_id'],
-            newrights
-        ))
-
-    # If we catch BadRequestError from Telethon
-    # Assume we don't have permission to demote
-    except BadRequestError:
-        await message.reply(strings['demote_failed'])
-        return
+    # await message.reply(strings['demote_failed'])
+    # return
     await message.reply(strings['demote_success'])
 
 
