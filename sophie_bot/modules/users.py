@@ -229,10 +229,10 @@ async def get_user_by_username(username):
     # Search username in database
     if '@' in username:
         # Remove '@'
-        username = username[1:].lower()
+        username = username[1:]
 
     user = mongodb.user_list.find_one(
-        {'username': username}
+        {'username': username.lower()}
     )
 
     # Ohnu, we don't have this user in DB
@@ -245,14 +245,14 @@ async def get_user_by_username(username):
     return user
 
 
-async def get_user_by_id(user_id):
+async def get_user_by_id(user_id: int):
     user = mongodb.user_list.find_one(
-        {'user_id': int(user_id)}
+        {'user_id': user_id}
     )
     # Ohnu, we don't have this user in DB
     if not user:
         try:
-            user = await add_user_to_db(await tbot(GetFullUserRequest(int(user_id))))
+            user = await add_user_to_db(await tbot(GetFullUserRequest(user_id)))
         except (ValueError, TypeError):
             user = None
 
