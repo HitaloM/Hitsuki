@@ -17,14 +17,15 @@ import random
 
 from requests import post
 
-from telethon.errors import BadRequestError, ChatNotModifiedError
-from telethon.tl.types import ChatAdminRights
+from telethon.errors import BadRequestError
+
+from aiogram.utils.exceptions import BadRequest
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
 from sophie_bot import OWNER_ID, SUDO, BOT_ID, tbot, decorator, mongodb, bot
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.connections import connection
-from sophie_bot.modules.language import get_string, get_strings_dec
+from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.users import (user_admin_dec, aio_get_user,
                                       user_link_html, is_user_admin)
 
@@ -60,28 +61,25 @@ async def get_id(message, strings):
     await message.reply(text)
 
 
-@decorator.t_command("pin", arg=True)
+@decorator.command("pin")
 @user_admin_dec
 @bot_rights.pin_messages()
 @get_strings_dec('misc')
-async def pinMessage(event, strings):
-    tagged_message = await event.get_reply_message()
-    if not tagged_message:
-        await event.reply(get_string('misc', 'no_reply_msg', event.chat_id))
+async def pinMessage(message, strings):
+    if 'reply_to_message' not in message:
+        await message.reply(strings['no_reply_msg'])
         return
-    msg_2_pin = tagged_message.id
-    chk = event.pattern_match.group(1)
-    args = chk.lower()
+    msg_2_pin = message.reply_to_message.message_id
+    args = message.get_args().lower()
     tru_txt = ['loud', 'notify']
-    chat = event.chat_id
     if args in tru_txt:
-        notify = True
-    else:
         notify = False
+    else:
+        notify = True
     try:
-        await tbot.pin_message(chat, msg_2_pin, notify=notify)
-    except ChatNotModifiedError:
-        await event.reply(strings['chat_not_modified_pin'])
+        await bot.pin_chat_message(message.chat.id, msg_2_pin, disable_notification=notify)
+    except BadRequest:
+        await message.reply(strings['chat_not_modified_pin'])
         return
 
 
@@ -91,15 +89,16 @@ async def runs(message, strings):
     await message.reply(strings[random.choice(list(strings))])
 
 
-@decorator.t_command("unpin")
+@decorator.command("unpin")
 @user_admin_dec
 @bot_rights.pin_messages()
+@connection(admin=True, only_in_groups=True)
 @get_strings_dec('misc')
-async def unpin_message(event, strings):
+async def unpin_message(message, strings, status, chat_id, chat_title):
     try:
-        await tbot.pin_message(event.chat_id, None)
-    except ChatNotModifiedError:
-        await event.reply(strings['chat_not_modified_unpin'])
+        await bot.unpin_chat_message(chat_id)
+    except BadRequest:
+        await message.reply(strings['chat_not_modified_unpin'])
         return
 
 
@@ -132,7 +131,7 @@ async def promote(message, strings, status, chat_id, chat_title):
 
     try:
         await tbot.edit_admin(
-            message.chat.id,
+            chat_id,
             user['user_id'],
             add_admins=True,
             invite_users=True,
