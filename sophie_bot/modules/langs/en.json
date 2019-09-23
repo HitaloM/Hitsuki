@@ -470,7 +470,7 @@
             "i2": "- /warn (reason): warn a user for the specified reason .",
             "i3": "- /warns: returns the list of warns, with reasons, for that user.",
             "i5": "- /resetwarns: reset all of a user's warns.",
-            "i6": "- /setwarnlimit: sets the number of warns before an action is taken upon the user.",
+            "i6": "- /warnlimit (number): sets the number of warns before an action is taken upon the user.",
             "i7": "\nIf you're looking for a way to automatically warn users when they say certain things, go to the blacklists module.",
             "i8": "\nAn example of how to set a new multiword warning:",
             "i9": "`/warn @user Because warning is fun`",
