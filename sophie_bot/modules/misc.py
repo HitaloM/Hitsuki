@@ -17,8 +17,6 @@ import random
 
 from requests import post
 
-from telethon.errors import BadRequestError
-
 from aiogram.utils.exceptions import BadRequest
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
@@ -110,8 +108,6 @@ async def unpin_message(message, strings, status, chat_id, chat_title):
 async def promote(message, strings, status, chat_id, chat_title):
     user, args = await aio_get_user(message)
 
-    print(args)
-
     if not user:
         return
 
@@ -129,23 +125,22 @@ async def promote(message, strings, status, chat_id, chat_title):
     else:
         title = args
 
-    try:
-        await tbot.edit_admin(
-            chat_id,
-            user['user_id'],
-            add_admins=True,
-            invite_users=True,
-            change_info=True,
-            ban_users=True,
-            delete_messages=True,
-            pin_messages=True,
-            title=title
-        )
-        await message.reply(text)
+    await tbot.edit_admin(
+        chat_id,
+        user['user_id'],
+        add_admins=True,
+        invite_users=True,
+        change_info=True,
+        ban_users=True,
+        delete_messages=True,
+        pin_messages=True,
+        title=title
+    )
+    await message.reply(text)
 
-    except BadRequestError:  # TODO(Better exception)
-        await message.reply(strings['promote_failed'])
-        return
+    # except BadRequestError:
+    #    await message.reply(strings['promote_failed'])
+    #    return
 
 
 @decorator.command("demote")
