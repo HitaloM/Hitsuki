@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 
 import random
-import ujson
 
 from requests import post
 
@@ -28,11 +27,6 @@ from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (user_admin_dec, aio_get_user,
                                       user_link_html, is_user_admin)
-
-
-@decorator.command('getevent', is_admin=True)
-async def getevent(message):
-    await message.answer(str(ujson.dumps(message, indent=2)))
 
 
 @decorator.command('allcommands')
