@@ -17,6 +17,8 @@ import ujson
 import shutil
 import asyncio
 import os
+import html
+
 from time import gmtime, strftime
 
 from sophie_bot import CONFIG, tbot, decorator, mongodb, redis, logger, bot
@@ -29,7 +31,7 @@ async def cmd_term(message):
     msg = await message.reply("Running...")
     command = str(message.text.split(" ", 1)[1])
     result = "<b>Shell:</b>\n"
-    result += await chat_term(message, command)
+    result += html.escape(await chat_term(message, command))
     await msg.edit_text(result)
 
 
