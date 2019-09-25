@@ -25,7 +25,7 @@ from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.users import (user_admin_dec, aio_get_user,
-                                      user_link_html, is_user_admin)
+                                      user_link_html, is_user_admin, update_admin_cache)
 
 
 @decorator.command('allcommands', is_sudo=True)
@@ -136,6 +136,7 @@ async def promote(message, strings, status, chat_id, chat_title):
         pin_messages=True,
         title=title
     )
+    await update_admin_cache(chat_id)
     await message.reply(text)
 
     # except BadRequestError:
@@ -144,10 +145,11 @@ async def promote(message, strings, status, chat_id, chat_title):
 
 
 @decorator.command("demote")
-@user_admin_dec
 @bot_rights.add_admins()
+@user_admin_dec
+@connection(admin=True, only_in_groups=True)
 @get_strings_dec('misc')
-async def demote(message, strings):
+async def demote(message, strings, status, chat_id, chat_title):
     user, txt = await aio_get_user(message)
     if not user:
         return
@@ -156,13 +158,17 @@ async def demote(message, strings):
         return
 
     await bot.promote_chat_member(
-        message.chat.id,
+        chat_id,
         user['user_id']
     )
 
     # await message.reply(strings['demote_failed'])
     # return
-    await message.reply(strings['demote_success'])
+    await update_admin_cache(chat_id)
+    await message.reply(strings['demote_success'].format(
+        user=await user_link_html(user['user_id']),
+        chat_name=chat_title
+    ))
 
 
 @decorator.command('paste')

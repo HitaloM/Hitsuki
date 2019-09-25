@@ -226,7 +226,7 @@
         "promote_title": "\nWith custom role <code>{role}</code>!",
         "rank_to_loong": "Error: custom role text can't be longer than 16 symbols.",
         "promote_failed": "Promotion failed! Check if I have rights to",
-        "demote_success": "Demoted.",
+        "demote_success": "{user} successfully demoted in {chat_name}.",
         "demote_failed": "Demotion failed. Maybe I can't demote or the person is promoted by someone else",
         "chat_not_modified_pin": "That message is already pinned!",
         "chat_not_modified_unpin": "There is no pinned message to unpin!",
