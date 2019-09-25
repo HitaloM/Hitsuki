@@ -28,7 +28,7 @@ from sophie_bot.modules.users import (user_admin_dec, aio_get_user,
                                       user_link_html, is_user_admin)
 
 
-@decorator.command('allcommands')
+@decorator.command('allcommands', is_sudo=True)
 async def all_commands_list(message):
     txt = ""
     for cmd in decorator.REGISTRED_COMMANDS:
