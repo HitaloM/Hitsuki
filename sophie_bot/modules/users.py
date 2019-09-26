@@ -201,7 +201,7 @@ async def aio_get_user(message, send_text=True, allow_self=False):
 
     if not user:
         # Ok, now we really be unsure, so don't return right away
-        if len(args) >= 1:
+        if len(args) > 1:
             if args[1].isdigit():
                 user = await get_user_by_id(int(args[1]))
 
