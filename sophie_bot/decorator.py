@@ -97,9 +97,6 @@ def command(commands, allow_edited=True, allow_kwargs=False, args=True, **kwargs
             if not idx == len(commands) - 1:
                 regex += "|"
 
-            if commands[0] == 'notes':
-                print(regex)
-
         async def new_func(message, *args, **def_kwargs):
             if RATE_LIMIT and await prevent_flooding(message, commands[0]) is False:
                 return
