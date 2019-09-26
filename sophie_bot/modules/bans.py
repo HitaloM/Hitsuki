@@ -238,7 +238,8 @@ async def kick_user(message, user_id, chat_id, no_msg=False):
         return False
 
     try:
-        await bot.kick_participant(chat_id, user_id)
+        await tbot.kick_participant(chat_id, user_id)
+        await bot.unban_chat_member(chat_id, user_id)
     except NotEnoughRightsToRestrict:
         raise NotEnoughRights('kick')
 
