@@ -40,6 +40,8 @@ GBANNED_RIGHTS = ChatBannedRights(
 )
 
 
+@decorator.command("gban")
+@need_args_dec()
 async def blacklist_user(message):
     user, reason = await aio_get_user(message)
     if not user:
@@ -116,24 +118,7 @@ async def blacklist_user(message):
         await bot.send_message(CONFIG['advanced']['gbans_channel'], ttext)
 
 
-@decorator.command("gban")
-@need_args_dec()
-async def gban_1(message):
-    if message.from_user.id not in SUDO:
-        return
-    await blacklist_user(message)
-
-
-@decorator.command("fban")
-@need_args_dec()
-async def gban_2(message):
-    if message.chat.id == -1001302848189:
-        print('owo')
-        await blacklist_user(message)
-
-
 @decorator.command("ungban")
-@need_args_dec()
 async def un_blacklist_user(message):
     if message.from_user.id not in SUDO:
         return

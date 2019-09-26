@@ -27,9 +27,9 @@ COUNTRY_EMOJIS = '🇦🇨🇦🇩🇦🇪🇦🇫🇦🇬🇦🇮🇦🇱🇦�
 
 # Testing module
 
-with open('sophie_bot/names.txt') as f:
-    for line in f:
-        NAMES.append(line.lower().replace('\n', ''))
+#with open('sophie_bot/names.txt') as f:
+#    for line in f:
+#        NAMES.append(line.lower().replace('\n', ''))
 
 
 @decorator.command('checkspammer', is_sudo=True)

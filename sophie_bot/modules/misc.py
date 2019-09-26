@@ -28,14 +28,6 @@ from sophie_bot.modules.users import (user_admin_dec, aio_get_user,
                                       user_link_html, is_user_admin, update_admin_cache)
 
 
-@decorator.command('allcommands', is_sudo=True)
-async def all_commands_list(message):
-    txt = ""
-    for cmd in decorator.REGISTRED_COMMANDS:
-        txt += "* /" + cmd + "\n"
-    await message.reply(txt)
-
-
 @decorator.command("id")
 @disablable_dec("id")
 @get_strings_dec('misc')

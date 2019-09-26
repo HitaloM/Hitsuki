@@ -19,7 +19,7 @@ import io
 import asyncio
 from time import gmtime, strftime
 
-from sophie_bot.modules.bot_admin import do_backup
+from sophie_bot.modules.sudo_and_owner_stuff import do_backup
 from sophie_bot import CONFIG, bot, mongodb
 
 
@@ -66,5 +66,5 @@ async def import_cas_bans():
 async def backup():
     if CONFIG['advanced']['auto_backups_enabled'] is False:
         return
-    channel_id = CONFIG['advanced']['auto_backups_channel']
+    channel_id = CONFIG['advanced']['logs_channel_id']
     await do_backup(channel_id)

@@ -18,12 +18,26 @@ import shutil
 import asyncio
 import os
 import html
+import requests
 
 from time import gmtime, strftime
 
 from sophie_bot import CONFIG, tbot, decorator, mongodb, redis, logger, bot
 from sophie_bot.modules.main import chat_term, term, convert_size
 from sophie_bot.modules.notes import button_parser
+
+
+@decorator.command('allcommands', is_sudo=True)
+async def all_commands_list(message):
+    txt = ""
+    for cmd in decorator.REGISTRED_COMMANDS:
+        txt += "* /" + cmd + "\n"
+    await message.reply(txt)
+
+
+@decorator.command('ip', is_owner=True)
+async def get_bot_ip(message):
+    await message.reply(requests.get("http://ipinfo.io/ip").text)
 
 
 @decorator.command("term", is_owner=True)
