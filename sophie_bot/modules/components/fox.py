@@ -205,25 +205,25 @@ async def upload_file(message, state, **kwargs):
     await msg.edit_text(text)
 
 
-@dp.callback_query_handler(regexp='fox_changelog_change', state=ReleaseState.releasing)
+@dp.callback_query_handler(regexp='fox_changelog_change', state='*')
 async def change_changelog(query, state):
     await ReleaseState.write_changelog.set()
     await query.message.edit_text("Please write new changelog")
 
 
-@dp.callback_query_handler(regexp='fox_add_build_bugs', state=ReleaseState.releasing)
+@dp.callback_query_handler(regexp='fox_add_build_bugs', state='*')
 async def change_build_bugs(query, state):
     await ReleaseState.write_bugs.set()
     await query.message.edit_text("Please write build bugs")
 
 
-@dp.callback_query_handler(regexp='fox_add_build_notes', state=ReleaseState.releasing)
+@dp.callback_query_handler(regexp='fox_add_build_notes', state='*')
 async def change_build_notes(query, state):
     await ReleaseState.write_build_notes.set()
     await query.message.edit_text("Please write special build notes")
 
 
-@dp.callback_query_handler(regexp='fox_del_build_notes', state=ReleaseState.releasing)
+@dp.callback_query_handler(regexp='fox_del_build_notes', state='*')
 async def del_build_notes(query, state):
     async with state.proxy() as data:
         del data['special_notes']
