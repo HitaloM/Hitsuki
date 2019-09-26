@@ -68,39 +68,49 @@ def t_command(command, arg="", word_arg="", additional="", **kwargs):
     return decorator
 
 
-def command(command, allow_edited=True, allow_kwargs=False, args=True, **kwargs):
-    REGISTRED_COMMANDS.append(command)
+def command(commands, allow_edited=True, allow_kwargs=False, args=True, **kwargs):
+    if type(commands) == str:
+        commands = [commands]
 
     def decorator(func):
-        if ALLOW_COMMANDS_FROM_EXC is True:
+        if ALLOW_COMMANDS_FROM_EXC:
             P = '[/!]'
         else:
             P = '/'
 
-        if 'not_gbanned' not in kwargs and BLOCK_GBANNED_USERS is True:
+        if 'not_gbanned' not in kwargs and BLOCK_GBANNED_USERS:
             kwargs['not_gbanned'] = True
 
         if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
             kwargs['not_forwarded'] = True
 
-        cmd = "^{0}(?i:{1}|{1}@{2})".format(P, command, BOT_USERNAME)
+        regex = ""
+        for idx, cmd in enumerate(commands):
+            REGISTRED_COMMANDS.append(cmd)
+            regex += "^{0}(?i:{1}|{1}@{2})".format(P, cmd, BOT_USERNAME)
 
-        if args is True:
-            cmd += "(?: |$)"
-        else:
-            cmd += "$"
+            if args:
+                regex += "(?: |$)"
+            else:
+                regex += "$"
+
+            if not idx == len(commands) - 1:
+                regex += "|"
+
+            if commands[0] == 'notes':
+                print(regex)
 
         async def new_func(message, *args, **def_kwargs):
-            if RATE_LIMIT and await prevent_flooding(message, command) is False:
+            if RATE_LIMIT and await prevent_flooding(message, commands[0]) is False:
                 return
             if allow_kwargs is False:
                 def_kwargs = dict()
             await func(message, *args, **def_kwargs)
             raise SkipHandler()
 
-        dp.register_message_handler(new_func, regexp=cmd, **kwargs)
+        dp.register_message_handler(new_func, regexp=regex, **kwargs)
         if allow_edited is True:
-            dp.register_edited_message_handler(new_func, regexp=cmd, **kwargs)
+            dp.register_edited_message_handler(new_func, regexp=regex, **kwargs)
     return decorator
 
 

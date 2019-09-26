@@ -182,7 +182,7 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@decorator.command("notes")
+@decorator.command(["notes", "saved"])
 @disablable_dec("notes")
 @connection()
 @get_strings_dec("notes")
