@@ -40,7 +40,7 @@ GBANNED_RIGHTS = ChatBannedRights(
 )
 
 
-@decorator.command("gban")
+@decorator.command("gban", is_sudo=True)
 @need_args_dec()
 async def blacklist_user(message):
     user, reason = await aio_get_user(message)
