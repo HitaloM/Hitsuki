@@ -25,7 +25,7 @@ from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_chat_admins, is_user_admin,
                                       user_link, user_admin_dec,
-                                      aio_get_user, user_link_html)
+                                      aio_get_user, user_link_html, is_user_premium)
 
 
 @decorator.command("warn")
@@ -83,6 +83,9 @@ async def warn_user(message, strings, status, chat_id, chat_title):
         warn_limit = 3
     else:
         warn_limit = int(warn_limit['num'])
+
+    if is_user_premium(user_id):
+        warn_limit += 1
 
     if h >= warn_limit:
         if await ban_user(message, user_id, chat_id, None) is False:

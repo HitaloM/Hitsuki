@@ -24,7 +24,7 @@ from sophie_bot import OWNER_ID, SUDO, BOT_ID, tbot, decorator, mongodb, bot
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec
-from sophie_bot.modules.users import (user_admin_dec, aio_get_user,
+from sophie_bot.modules.users import (user_admin_dec, aio_get_user, is_user_premium,
                                       user_link_html, is_user_admin, update_admin_cache)
 
 
@@ -231,6 +231,8 @@ async def user_info(message, strings, **kwargs):
         text += strings["father"]
     elif user['user_id'] in SUDO:
         text += strings['sudo_crown']
+    elif is_user_premium(user['user_id']):
+        text += strings['user_premium']
     else:
         text += "\n"
 

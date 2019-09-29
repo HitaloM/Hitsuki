@@ -25,6 +25,7 @@ from time import gmtime, strftime
 from sophie_bot import CONFIG, tbot, decorator, mongodb, redis, logger, bot
 from sophie_bot.modules.main import chat_term, term, convert_size
 from sophie_bot.modules.notes import button_parser
+from sophie_bot.modules.users import aio_get_user, user_link_html
 
 
 @decorator.command('allcommands', is_sudo=True)
@@ -210,3 +211,37 @@ async def upload_file(message):
 async def crash(message):
     test = 2 / 0
     print(test)
+
+
+@decorator.command("ppromote", is_sudo=True)
+async def promote_to_gold(message):
+    user, txt = await aio_get_user(message)
+    if not user:
+        return
+
+    user_id = user['user_id']
+
+    check = mongodb.premium_users.find_one({'user_id': user_id})
+    if check:
+        await message.reply("This user already have gold rights!")
+        return
+
+    mongodb.premium_users.insert_one({'user_id': user_id})
+    await message.reply(f"{await user_link_html(user_id)} now premium!")
+
+
+@decorator.command("pdemote", is_sudo=True)
+async def promote_to_gold(message):
+    user, txt = await aio_get_user(message)
+    if not user:
+        return
+
+    user_id = user['user_id']
+
+    check = mongodb.premium_users.find_one({'user_id': user_id})
+    if not check:
+        await message.reply("This user don't have gold rights!")
+        return
+
+    mongodb.premium_users.delete_one({'user_id': user_id})
+    await message.reply(f"{await user_link_html(user_id)} demoted from premium users!")

@@ -364,3 +364,10 @@ def user_owner_dec(func):
             return
         return await func(message)
     return wrapped
+
+
+def is_user_premium(user_id):
+    check = mongodb.premium_users.find_one({'user_id': user_id})
+    if check:
+        return True
+    return False
