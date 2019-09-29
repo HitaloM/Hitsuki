@@ -231,7 +231,7 @@ async def promote_to_gold(message):
 
 
 @decorator.command("pdemote", is_sudo=True)
-async def promote_to_gold(message):
+async def demote_from_gold(message):
     user, txt = await aio_get_user(message)
     if not user:
         return

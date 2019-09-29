@@ -7,9 +7,14 @@ You also gain an advantage of isolating your server from the Sophie Bot.
 
 You need to configure this bot a bit before it can be used, don't worry, its easy!
 
+
+# Warning
+If you see "SyntaxError: invalid syntax" error - install python3.8+!
+
+
 # Requirements
 
-+ Install git, python 3.7+ and docker(for docker method) from your package manager
++ Install git, python 3.8+ and docker(for docker method) from your package manager
 + You need to know how to clone this repo
 
 

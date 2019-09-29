@@ -236,13 +236,11 @@ async def user_info(message, strings, **kwargs):
     else:
         text += "\n"
 
-        fed = mongodb.fed_groups.find_one({'chat_id': chat_id})
-        if fed:
-            fbanned = mongodb.fbanned_users.find_one({'user': from_id, 'fed_id': fed['fed_id']})
+        if fed_data := mongodb.fed_groups.find_one({'chat_id': chat_id}):
             text += strings['info_fbanned']
-            if fbanned:
+            if fbanned_data := mongodb.fbanned_users.find_one({'user': from_id, 'fed_id': fed_data['fed_id']}):
                 text += strings['gbanned_yes']
-                text += strings["gbanned_reason"].format(reason=fbanned['reason'])
+                text += strings["gbanned_reason"].format(reason=fbanned_data['reason'])
             else:
                 text += strings['no']
         text += strings["gbanned"]

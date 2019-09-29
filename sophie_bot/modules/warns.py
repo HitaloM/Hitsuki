@@ -77,12 +77,10 @@ async def warn_user(message, strings, status, chat_id, chat_title):
             "📝 Rules", callback_data='get_note_{}_{}'.format(chat_id, rules['note'])
         ))
 
-    warn_limit = mongodb.warnlimit.find_one({'chat_id': chat_id})
-
-    if not warn_limit:
+    if not (db_data := mongodb.warnlimit.find_one({'chat_id': chat_id})):
         warn_limit = 3
     else:
-        warn_limit = int(warn_limit['num'])
+        warn_limit = int(db_data['num'])
 
     if is_user_premium(user_id):
         warn_limit += 1

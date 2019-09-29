@@ -7,5 +7,5 @@
         "--ignore=W605,I100,H301",
         "--verbose"
     ],
-    "python.pythonPath": "/usr/bin/python3.7"
+    "python.pythonPath": "/bin/python3.8"
 }
