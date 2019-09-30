@@ -13,6 +13,8 @@
 #
 # You should have received a copy of the GNU General Public License
 
+import html
+
 from time import gmtime, strftime
 import asyncio
 
@@ -21,23 +23,13 @@ from flask import jsonify, request
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
+from aiogram.utils.exceptions import BadRequest
+
 from sophie_bot import CONFIG, SUDO, WHITELISTED, decorator, logger, mongodb, bot, flask
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import user_link, aio_get_user, user_link_html
+from sophie_bot.modules.users import user_link, aio_get_user, user_link_html, is_user_admin
 from sophie_bot.modules.helper_func.decorators import need_args_dec
-
-
-GBANNED_RIGHTS = ChatBannedRights(
-    until_date=None,
-    view_messages=True,
-    send_messages=True,
-    send_media=True,
-    send_stickers=True,
-    send_gifs=True,
-    send_games=True,
-    send_inline=True,
-    embed_links=True,
-)
+import sophie_bot.modules.helper_func.bot_rights as bot_rights
 
 
 @decorator.command("gban", is_sudo=True)
@@ -55,64 +47,67 @@ async def blacklist_user(message):
         return
 
     if not reason:
-        await message.reply("You can't blacklist user without a reason blyat!")
+        await message.reply("You can't blacklist user without a reason!")
         return
 
-    reason = reason.replace('<', '&lt;')
+    reason = html.escape(reason)
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
-    text = "{} <b>blacklisted!</b>".format(await user_link_html(user_id))
+    text = "<b>New blacklisted user!</b>"
+    text += "\nUser: " + await user_link_html(user_id)
     text += "\nID: <code>" + str(user_id) + '</code>'
-    text += "\nBy: " + await user_link_html(sudo_admin)
     text += "\nDate: <code>" + date + '</code>'
-    text += "\nReason: <code>" + reason + '</code>'
 
-    old = mongodb.blacklisted_users.find_one({'user_id': user_id})
-    if old:
-        new = {
-            'user_id': user_id,
-            'date': old['date'],
-            'by': old['by'],
-            'reason': reason
-        }
-        mongodb.blacklisted_users.update_one({'_id': old['_id']}, {"$set": new}, upsert=False)
-        await message.reply("This user already blacklisted! I'll update the reason.")
+    if old := mongodb.blacklisted_users.find_one({'user_id': user_id}):
+        mongodb.blacklisted_users.update_one({'_id': old['_id']}, {"$set": {'reason': reason}}, upsert=False)
+
+        text += f"\nOld reason: <code>{old['reason']}</code>"
+        text += f"\nNew reason: <code>{reason}</code>"
+
+        await message.reply(text)
+        if CONFIG['advanced']['gbans_channel_enabled'] is True:
+            await bot.send_message(CONFIG['advanced']['gbans_channel'], text)
         return
 
-    msg = await message.reply(text + "\nStatus: <b>Gbanning...</b>")
+    text += "\nBy: " + await user_link_html(sudo_admin) + f" ({sudo_admin})"
+    text += "\nReason: <code>" + reason + '</code>'
+
+    msg = await message.reply(text + "\nStatus: <b>Blacklisting user...</b>")
+
+    gbanned_chats = []
+    if 'chats' not in user or not user['chats']:
+        try:
+            await bot.kick_chat_member(message.chat.id, user_id)
+            gbanned_chats += message.chat.id
+            ttext = text + "\nStatus: <b>User banned only in this chat</b>"
+            await msg.edit_text(ttext)
+        except Exception:
+            pass
+
+    for chat_id in user['chats']:
+        await asyncio.sleep(0.2)
+        try:
+            await bot.kick_chat_member(chat_id, user_id)
+            gbanned_chats.append(int(chat_id))
+        except BadRequest:
+            pass
 
     new = {
         'user_id': user_id,
         'date': date,
         'reason': reason,
-        'by': sudo_admin
+        'by': sudo_admin,
+        'gbanned_chats': gbanned_chats
     }
 
     mongodb.blacklisted_users.insert_one(new)
 
-    gbanned_ok = 0
-    if 'chats' not in user or not user['chats']:
-        try:
-            await bot.kick_chat_member(message.chat.id, user_id)
-        except Exception:
-            pass
+    if len(gbanned_chats) > 0:
+        ttext = text + f"\nStatus: <b>Done, user banned in {len(gbanned_chats)}/{len(user['chats'])} chats.</b>"
+    else:
         ttext = text + "\nStatus: <b>User not banned in any chat, but added in blacklist</b>"
-        await msg.edit_text(ttext)
-        if CONFIG['advanced']['gbans_channel_enabled'] is True:
-            await bot.send_message(CONFIG['advanced']['gbans_channel'], ttext)
-            return
 
-    for chat in user['chats']:
-        await asyncio.sleep(0.2)
-        try:
-            await bot.kick_chat_member(chat, user_id)
-            gbanned_ok += 1
-        except Exception:
-            continue
-
-    ttext = text + "\nStatus: <b>Done, user gbanned in {}/{} chats.</b>".format(
-        gbanned_ok, len(user['chats']))
     await msg.edit_text(ttext)
     if CONFIG['advanced']['gbans_channel_enabled'] is True:
         await bot.send_message(CONFIG['advanced']['gbans_channel'], ttext)
@@ -123,121 +118,95 @@ async def un_blacklist_user(message):
     if message.from_user.id not in SUDO:
         return
     chat_id = message.chat.id
-    user_id, txt = await aio_get_user(message)
-    if not user_id:
+    user, txt = await aio_get_user(message)
+    if not user:
         return
 
-    user_id = user_id['user_id']
+    user_id = user['user_id']
 
     checker = 0
 
-    try:
-        precheck = mongodb.gbanned_groups.find({'user_id': user_id})
-        if precheck:
-            chats = mongodb.gbanned_groups.find({'user_id': user_id})
-        else:
-            chats = chat_id
-        for chat in chats:
-            await bot.unban_chat_member(chat['chat_id'], user_id)
-        checker += 1
-    except Exception:
-        pass
-
-    old = mongodb.blacklisted_users.find_one({'user_id': user_id})
-    if not old:
-        await message.reply("This user isn't blacklisted!")
+    # Unban user from previously banned chats
+    if gbanned := mongodb.blacklisted_users.find_one({'user_id': user_id}):
+        if 'gbanned_chats' in gbanned:
+            for chat in gbanned['gbanned_chats']:
+                await bot.unban_chat_member(chat, user_id)
+                checker += 1
+    else:
+        await message.reply(f"{await user_link_html(user_id)} isn't blacklisted! Do you wanna change it? 😏")
         return
-    mongodb.blacklisted_users.delete_one({'_id': old['_id']})
-    text = "Sudo {} unblacklisted {}.\nStatus: <b>unbanned in {} chats</b>".format(
-        await user_link_html(message.from_user.id), await user_link_html(user_id), checker)
+
+    mongodb.blacklisted_users.delete_one({'_id': gbanned['_id']})
+    text = "<b>New un-blacklisted user!</b>"
+    text += "\nUser: " + await user_link_html(user_id)
+    text += f"\nID: <code>{user_id}</code>"
+    text += f"\nDate: <code>{strftime('%Y-%m-%d %H:%M:%S', gmtime())}</code>"
+    text += "\nBy: " + await user_link_html(message.from_user.id) + f" ({message.from_user.id})"
+    if checker > 0:
+        text += f"\nStatus: <b>unbanned in {checker}/{len(user['chats'])} chats</b>"
+    else:
+        text += "\nStatus: <b>User not unbanned in any chat, but removed from DB</b>"
+
     await message.reply(text)
 
     if CONFIG['advanced']['gbans_channel_enabled'] is True:
         await bot.send_message(CONFIG['advanced']['gbans_channel'], text)
 
 
-@decorator.insurgent()
-async def gban_trigger(event):
-    user_id = event.from_id
-
-    K = mongodb.blacklisted_users.find_one({'user_id': user_id})
-    if K:
-        banned_rights = ChatBannedRights(
-            until_date=None,
-            view_messages=True,
-            send_messages=True,
-            send_media=True,
-            send_stickers=True,
-            send_gifs=True,
-            send_games=True,
-            send_inline=True,
-            embed_links=True,
-        )
-
-        try:
-            ban = await event.client(
-                EditBannedRequest(
-                    event.chat_id,
-                    user_id,
-                    banned_rights
-                )
-            )
-
-            if ban:
-                mongodb.gbanned_groups.insert_one({'user_id': user_id, 'chat_id': event.chat_id})
-                await event.reply(get_string("gbans", "user_is_blacklisted", event.chat_id).format(
-                                  await user_link(user_id), K['reason']))
-
-        except Exception:
-            pass
-
-
-@decorator.ChatAction()
+@decorator.AioBotDo()
+@bot_rights.ban_users()
 @get_strings_dec('gbans')
-async def gban_helper_2(event, strings):
-    if event.user_joined is True or event.user_added is True:
-        await asyncio.sleep(2)  # Sleep 2 seconds before check user to allow Simon gban user
-        if hasattr(event.action_message.action, 'users'):
-            from_id = event.action_message.action.users[0]
-        else:
-            from_id = event.action_message.from_id
+async def gban_trigger(message, strings, **kwargs):
+    user_id = message.from_user.id
+    chat_id = message.chat.id
 
-        K = mongodb.blacklisted_users.find_one({'user_id': from_id})
-        if not K:
-            return
+    if await is_user_admin(chat_id, user_id):
+        return
 
-        banned_rights = ChatBannedRights(
-            until_date=None,
-            view_messages=True,
-            send_messages=True,
-            send_media=True,
-            send_stickers=True,
-            send_gifs=True,
-            send_games=True,
-            send_inline=True,
-            embed_links=True,
-        )
+    if not (gbanned := mongodb.blacklisted_users.find_one({'user_id': user_id})):
+        return
 
-        try:
-            ban = await event.client(
-                EditBannedRequest(
-                    event.chat_id,
-                    from_id,
-                    banned_rights
-                )
-            )
+    if chat_id in gbanned['force_unbanned_chats']:
+        return
 
-            if ban:
-                mongodb.gbanned_groups.insert_one({'user_id': from_id, 'chat_id': event.chat_id})
-                await event.reply(
-                    strings['user_is_blacklisted'].format(
-                        user=await user_link(from_id),
-                        rsn=K['reason']
-                    ))
+    await bot.kick_chat_member(chat_id, user_id)
 
-        except Exception as err:
-            logger.info(f'Error on gbanning {from_id} in {event.chat_id} \n {err}')
-            pass
+    mongodb.blacklisted_users.update_one(
+        {'_id': gbanned['_id']},
+        {"$set": {'gbanned_chats': gbanned['gbanned_chats'].remove(chat_id)}},
+        upsert=False
+    )
+    await event.reply(strings['user_is_blacklisted'].format(
+        await user_link_html(user_id), gbanned['reason']))
+
+
+@decorator.AioWelcome()
+@bot_rights.ban_users()
+@get_strings_dec('gbans')
+async def gban_helper_welcome(message, strings, **kwargs):
+    if hasattr(event.action_message.action, 'users'):
+        user_id = event.action_message.action.users[0]
+    else:
+        user_id = event.action_message.from_id
+
+    if await is_user_admin(chat_id, user_id):
+        return
+
+    if not (gbanned := mongodb.blacklisted_users.find_one({'user_id': user_id})):
+        return
+
+    if chat_id in gbanned['force_unbanned_chats']:
+        return
+
+    await bot.kick_chat_member(chat_id, user_id)
+
+    mongodb.blacklisted_users.update_one(
+        {'_id': gbanned['_id']},
+        {"$set": {'gbanned_chats': gbanned['gbanned_chats'].remove(chat_id)}},
+        upsert=False
+    )
+    await event.reply(strings['user_is_blacklisted'].format(
+        await user_link_html(user_id), gbanned['reason']))
 
 
 @flask.route('/api/is_user_gbanned/<user_id>')

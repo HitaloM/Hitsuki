@@ -7,5 +7,7 @@
         "--ignore=W605,I100,H301",
         "--verbose"
     ],
-    "python.pythonPath": "/bin/python3.8"
+    "python.pythonPath": "/bin/python3.8",
+    "python.linting.pep8Enabled": false,
+    "python.linting.prospectorEnabled": false
 }

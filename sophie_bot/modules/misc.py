@@ -245,7 +245,7 @@ async def user_info(message, strings, **kwargs):
                 text += strings['no']
         text += strings["gbanned"]
 
-        check = mongodb.blacklisted_users.find_one({'user': user['user_id']})
+        check = mongodb.blacklisted_users.find_one({'user_id': user['user_id']})
         if check:
             text += strings['gbanned_yes']
             text += strings["gbanned_date"].format(data=check['date'])

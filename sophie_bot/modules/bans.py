@@ -117,10 +117,12 @@ async def unban(message, strings, status, chat_id, chat_title):
         user_str = await user_link_html(user['user_id'])
         text = strings["user_unbanned"]
 
-        gbanned = mongodb.blacklisted_users.find_one({'user': user['user_id']})
-        if gbanned:
-            text += strings["user_gbanned"].format(
-                reason=gbanned['reason']
+        if gbanned := mongodb.blacklisted_users.find_one({'user_id': user['user_id']}):
+            text += strings["user_gbanned"].format(reason=gbanned['reason'])
+            mongodb.blacklisted_users.update_one(
+                {'_id': gbanned['_id']},
+                {"$addToSet": {'force_unbanned_chats': {'$each': [chat_id]}}},
+                upsert=False
             )
 
         await message.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
@@ -317,7 +319,6 @@ async def unmute_user(message, user_id, chat_id):
 
 
 async def convert_time(event, time_val):
-
     if hasattr(event, 'chat_id'):
         chat_id = event.chat_id
     elif hasattr(event, 'chat'):

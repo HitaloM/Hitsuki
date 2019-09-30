@@ -70,7 +70,7 @@
         "tmute_sucess": "Admin {admin} has muted {user} for {time} {unit} !",
         "usernt_banned": "This user wasn't banned in the first place!",
 
-        "user_gbanned": "\n\nWarning! This user is globally banned becuase:\n`{reason}`"
+        "user_gbanned": "\n\n<b>Warning! This user is globally banned becuase:</b>\n<code>{reason}</code>"
     },
     "connections": {
         "can't_find_chat_use_id": "I am not able to find this chat, try using chat id instead.",
@@ -261,7 +261,7 @@
         "gbanned_reason": "Reason: <code>{reason}</code>\n"
     },
     "gbans": {
-        "user_is_blacklisted": "User {user} is blacklisted so has been removed. \nReason: __{rsn}__"
+        "user_is_blacklisted": "User {user} is blacklisted, so has been removed.\nReason: <code>{rsn}</code>"
     },
     "pm_menu": {
         "start_hi": "Hey there! My name is Sophie, I help you manage your group in an efficient way!",
