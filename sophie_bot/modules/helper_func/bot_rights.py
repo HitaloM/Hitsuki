@@ -15,7 +15,7 @@
 
 from telethon.tl.functions.channels import GetParticipantRequest
 
-from sophie_bot import tbot
+from sophie_bot import BOT_ID, tbot
 from sophie_bot.modules.language import get_string
 
 # Help
@@ -29,8 +29,10 @@ from sophie_bot.modules.language import get_string
 
 
 async def get_bot_rights(chat_id):
-    bot_id = await tbot.get_me()
-    bot_req = await tbot(GetParticipantRequest(channel=chat_id, user_id=bot_id))
+    try:
+        bot_req = await tbot(GetParticipantRequest(channel=chat_id, user_id=BOT_ID))
+    except Exception:
+        return False
     if bot_req and hasattr(bot_req, 'participant') and hasattr(bot_req.participant, 'admin_rights'):
         return bot_req.participant.admin_rights
     return False

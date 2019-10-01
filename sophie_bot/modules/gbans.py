@@ -153,7 +153,7 @@ async def un_blacklist_user(message):
         await bot.send_message(CONFIG['advanced']['gbans_channel'], text)
 
 
-@decorator.register()
+@decorator.register(only_groups=True)
 @bot_rights.ban_users()
 @get_strings_dec('gbans')
 async def gban_trigger(message, strings, **kwargs):
@@ -183,7 +183,7 @@ async def gban_trigger(message, strings, **kwargs):
         await user_link_html(user_id), gbanned['reason']))
 
 
-@decorator.register(f='welcome')
+@decorator.register(f='welcome', only_groups=True)
 @bot_rights.ban_users()
 @get_strings_dec('gbans')
 async def gban_helper_welcome(message, strings, **kwargs):
