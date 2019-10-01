@@ -40,7 +40,7 @@ async def warn_user(message, strings, status, chat_id, chat_title):
     if user_id in WHITELISTED:
         await message.reply(strings['usr_whitelist'])
         return
-    if user_id in await get_chat_admins(chat_id):
+    if is_user_admin(chat_id, user_id):
         await message.reply(strings['Admin_no_wrn'])
         return
 
