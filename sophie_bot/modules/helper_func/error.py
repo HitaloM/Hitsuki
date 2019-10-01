@@ -46,7 +46,7 @@ async def report_error(event, telethon=False):
     elif class_error == 'RetryAfter':
         return
 
-    if telethon is True:
+    if telethon:
         msg = event
         chat_id = msg.chat_id
         lib = 'Telethon'
@@ -62,10 +62,10 @@ async def report_error(event, telethon=False):
     logger.error("Error: " + date)
     logger.error("Lib: " + lib)
 
-    if telethon is True:
+    if telethon:
         logger.error(traceback.format_exc())
 
-    if DEBUG_MODE is True:
+    if DEBUG_MODE:
         await msg.reply(error)
         return
 
@@ -104,7 +104,7 @@ async def report_error(event, telethon=False):
                              callback_data='get_delete_msg_{}_admin'.format(chat_id))
     )
 
-    if CONFIG['advanced']['errors_channel_enabled'] is True:
+    if CONFIG['advanced']['errors_channel_enabled']:
         buttons.insert(InlineKeyboardButton("Report error", callback_data='report_error'))
 
     await bot.send_document(
