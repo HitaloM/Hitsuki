@@ -18,6 +18,7 @@ import coloredlogs
 import asyncio
 import redis
 import ujson
+import sys
 
 from flask import Flask
 
@@ -44,6 +45,10 @@ logger.info("----------------------")
 logger.info("|      SophieBot     |")
 logger.info("----------------------")
 logger.info("Powered by Telethon and AIOGram and bleck megic")
+
+if not (platform := sys.platform == 'linux' or 'linux2'):
+    logger.error("SophieBot support only Linux systems, your OS is " + platform)
+    exit(1)
 
 DEBUG_MODE = CONFIG["advanced"]["debug_mode"]
 if DEBUG_MODE is True:
