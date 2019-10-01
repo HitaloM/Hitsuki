@@ -205,8 +205,8 @@
         "user_hasnt_warned": "{user} hasn't been warned in <b>{chat_name}</b> before!",
         "warn_limit": "Warn limit in <b>{chat_name}</b> is currently: <code>{num}</code>",
         "warn_limit_upd": "Warn limit has been updated to <code>{}</code>!",
-
-        "no_user_warns": "{user} don't have any warning yet!"
+        "no_user_warns": "{user} don't have any warning yet!",
+        "warnlimit_too_small": "Specified warnlimit is too small. Minimal - 2."
     },
     "msg_deleting": {
         "no_rights_purge": "You don't have enough rights to purge here!",
@@ -227,6 +227,7 @@
         "rank_to_loong": "Error: custom role text can't be longer than 16 symbols.",
         "promote_failed": "Promotion failed! Check if I have rights to",
         "demote_success": "{user} was successfully demoted in {chat_name}!",
+        "demote_not_admin": "That user isn't admin.",
         "demote_failed": "Demotion failed. Maybe I can't demote or the person is promoted by someone else",
         "chat_not_modified_pin": "That message is already pinned!",
         "chat_not_modified_unpin": "There isn't any pinned message to unpin!",
@@ -237,7 +238,7 @@
         "paste_success_extra": "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}",
         "paste_success": "<b>Pasted successfully!</b>\nDogbin URL: {}",
         "paste_fail": "Failed to reach Dogbin!",
-        "paste_no_text": "You haven't supplied text to paste!",
+        "paste_no_text": "You didn't supply text to paste!",
 
         "user_info": "<b>User info:</b>\n",
         "info_id": "ID: <code>{id}</code>",
@@ -251,12 +252,12 @@
         "info_admeme": "\nUser has admin rights in this chat.",
 
         "father": "\nHe is my creator.",
-        "sudo_crown": "\nHey! Look at him, he has a crown, let me see it.. Whaow, it has a engraving <b>'sudo user'</b>.",
-        "user_premium": "\nThis user is Premium!",
+        "sudo_crown": "\nHey! Look at him, that user has a crown, let me see it.. Whaow, it has a engraving <b>'sudo user'</b>.",
+        "user_premium": "\nThis user has Premium status!",
 
         "gbanned": "\nGlobally banned: ",
         "no": "No",
-        "gbanned_yes": "<b>Yes!</b>\n",
+        "gbanned_yes": "<b>Yes.</b>\n",
         "gbanned_date": "Data: <code>{data}</code>\n",
         "gbanned_reason": "Reason: <code>{reason}</code>\n"
     },
@@ -320,7 +321,7 @@
         "no_fbanned_in_fed": "There isn't any fbanned user in {fed_name} Federation!",
 
         "fban_self": "That's a nice show!",
-        "fban_creator": "How can I ban Federation creator?! I don't think it's funny.",
+        "fban_creator": "How can I ban Federation creator?! I don't think it gonna be funny.",
         "fban_fed_admin": "I'm not going to ban a fed admin from their own fed!",
         "need_admin_to_fban": "You are not a fedadmin in {name} Federation",
         "already_fbanned": "{user} already fbanned in this federation.",

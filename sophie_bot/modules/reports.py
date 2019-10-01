@@ -50,7 +50,8 @@ async def admin_handler(message, strings, *args, **kwargs):
 
     try:
         if message.text.split(None, 2)[1]:
-            text += strings['reported_reason'].format(reason=message.text.split(None, 2)[1])
+            reason = ' '.join(message.text.split(None, 2)[1:])
+            text += strings['reported_reason'].format(reason=reason)
     except Exception:
         pass
 

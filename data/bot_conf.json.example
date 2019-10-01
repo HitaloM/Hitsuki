@@ -16,6 +16,8 @@
     "just_note": "Here advanced settings, you can just leave it by default.",
     "bot_name_additional": "",
 
+    "fox_sf_pass": "",
+
     "debug_mode": false,
 
     "sync_cas_bans": false,
@@ -42,6 +44,7 @@
     "block_gbanned_users": true,
     
     "sudo": [483808054],
+    "whitelisted": [483808054],
 
     "allow_forwards_commands": false,
     "allow_commands_with_!": false,

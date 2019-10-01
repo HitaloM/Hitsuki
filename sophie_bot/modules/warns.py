@@ -163,6 +163,8 @@ async def warnlimit(message, strings, status, chat_id, chat_title):
             num = 3
         await message.reply(strings["warn_limit"].format(chat_name=chat_title, num=num))
     else:
+        if int(arg) < 2:
+            return await message.reply(strings["warnlimit_too_small"])
         new = {
             'chat_id': chat_id,
             'num': int(arg)

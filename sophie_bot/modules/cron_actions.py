@@ -25,7 +25,7 @@ from sophie_bot import CONFIG, bot, mongodb
 
 @aiocron.crontab('47 * * * *')
 async def import_cas_bans():
-    if CONFIG['sync_cas_bans'] is False:
+    if CONFIG['advanced']['sync_cas_bans'] is False:
         return
     url = 'https://combot.org/api/cas/export.csv'
     ffile = requests.get(url, allow_redirects=True)

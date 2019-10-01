@@ -149,6 +149,17 @@ async def demote(message, strings, status, chat_id, chat_title):
     if user['user_id'] == BOT_ID:
         return
 
+    admins = await bot.get_chat_administrators(chat_id)
+
+    real_admin = False
+    for admin in admins:
+        if user['user_id'] == admin.user.id:
+            real_admin = True
+            break
+
+    if not real_admin:
+        return await message.reply(strings['demote_not_admin'])
+
     await bot.promote_chat_member(
         chat_id,
         user['user_id']

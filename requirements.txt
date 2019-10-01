@@ -5,7 +5,7 @@ redis
 pymongo
 dnspython # needed to connect to cloud MongoDB instances
 cryptg
-cryptography
+cryptography>=2.5 # needed for pysftp (fox module)
 pillow
 aiogram
 aioredis
@@ -13,3 +13,4 @@ aiocron
 git+https://github.com/casics/nostril
 flask
 flask_bootstrap
+pysftp
