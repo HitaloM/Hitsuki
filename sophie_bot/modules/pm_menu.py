@@ -36,7 +36,7 @@ HELP = sorted(HELP)
 logger.info("Help loaded for: {}".format(HELP))
 
 
-@decorator.command('start', args=False, only_groups=True)
+@decorator.command(['start', 'ping'], args=False, only_groups=True)
 async def start(event):
     await event.reply('Hey there, My name is Sophie!')
     return
