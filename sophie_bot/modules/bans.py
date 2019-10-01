@@ -29,7 +29,7 @@ from sophie_bot.modules.helper_func.own_errors import NotEnoughRights
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (is_user_admin, user_admin_dec,
-                                      get_user_and_text, user_link_html)
+                                      get_user_and_text, user_link_html, update_admin_cache)
 
 
 @decorator.register(cmds="ban")
@@ -201,6 +201,8 @@ async def tmute(message, strings, status, chat_id, chat_title):
 async def ban_user(message, user_id, chat_id, time_val, no_msg=False):
     real_chat_id = message.chat.id
 
+    await update_admin_cache(real_chat_id)
+
     if str(user_id) in WHITELISTED:
         if no_msg is False:
             await message.reply("This user is whitelisted")
@@ -230,6 +232,8 @@ async def ban_user(message, user_id, chat_id, time_val, no_msg=False):
 
 async def kick_user(message, user_id, chat_id, no_msg=False):
     real_chat_id = message.chat.id
+
+    await update_admin_cache(real_chat_id)
 
     if user_id == BOT_ID:
         if no_msg is False:
@@ -270,6 +274,9 @@ async def unban_user(message, user_id, chat_id):
 
 async def mute_user(message, user_id, chat_id, time_val, no_msg=False):
     real_chat_id = message.chat.id
+
+    await update_admin_cache(real_chat_id)
+
     if str(user_id) in WHITELISTED:
         await message.reply("This user is whitelisted")
         return
