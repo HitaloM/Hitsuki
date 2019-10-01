@@ -51,9 +51,12 @@ async def report_error(event, telethon=False):
         chat_id = msg.chat_id
         lib = 'Telethon'
     else:
-        msg = event.message
-        chat_id = msg.chat.id
         lib = 'Aiogram'
+        if 'callback_query' in event:
+            msg = event.callback_query.message
+        else:
+            msg = event.message
+        chat_id = msg.chat.id
 
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     logger.error("Error: " + date)
