@@ -158,12 +158,12 @@ async def clear_note(event, strings, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@decorator.command("noteinfo", arg=True)
+@decorator.register(cmds="noteinfo")
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("notes")
-async def noteinfo(event, strings, status, chat_id, chat_title):
-    note_name = event.pattern_match.group(1)
+async def noteinfo(message, strings, status, chat_id, chat_title):
+    note_name = message.get_args()
     note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
     if not note:
         text = strings["cant_find_note"]
@@ -175,7 +175,7 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
         text += strings["note_info_updated"].format(
             data=note['date'], user=await user_link_html(note['updated_by']))
 
-    await event.reply(text)
+    await message.reply(text)
 
 
 @decorator.register(cmds=["notes", "saved"])

@@ -268,7 +268,7 @@ async def user_info(message, strings, **kwargs):
     await message.reply(text)
 
 
-@decorator.command("adminlist")
+@decorator.register(cmds="adminlist")
 @disablable_dec("adminlist")
 async def adminlist(message):
     msg = await message.reply("Updating cache now...")

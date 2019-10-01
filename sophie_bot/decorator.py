@@ -28,10 +28,10 @@ from sophie_bot.modules.helper_func.flood import prevent_flooding
 
 import_module("sophie_bot.modules.helper_func.bount_filter")
 
-ALLOW_F_COMMANDS = CONFIG["advanced"]["allow_forwards_commands"]
-ALLOW_COMMANDS_FROM_EXC = CONFIG["advanced"]["allow_commands_with_!"]
-BLOCK_GBANNED_USERS = CONFIG["advanced"]["block_gbanned_users"]
-RATE_LIMIT = CONFIG["advanced"]["rate_limit"]
+ALLOW_F_COMMANDS = CONFIG["Advanced"]["allow_forwards_commands"]
+ALLOW_COMMANDS_FROM_EXC = CONFIG["Advanced"]["allow_commands_with_!"]
+BLOCK_GBANNED_USERS = CONFIG["Advanced"]["block_gbanned_users"]
+RATE_LIMIT = CONFIG["Advanced"]["rate_limit"]
 
 REGISTRED_COMMANDS = []
 

@@ -19,6 +19,7 @@ import asyncio
 import redis
 import ujson
 import sys
+import yaml
 
 from flask import Flask
 
@@ -37,9 +38,10 @@ logger = logging.getLogger(__name__)
 coloredlogs.install(level='DEBUG', logger=logger)
 
 
-f = open('data/bot_conf.json', "r")
+f = open('data/bot_conf.yaml', "r")
 
-CONFIG = ujson.load(f)
+CONFIG = yaml.load(f)
+print(CONFIG)
 
 logger.info("----------------------")
 logger.info("|      SophieBot     |")
@@ -50,28 +52,28 @@ if not (platform := sys.platform == 'linux' or 'linux2'):
     logger.error("SophieBot support only Linux systems, your OS is " + platform)
     exit(1)
 
-DEBUG_MODE = CONFIG["advanced"]["debug_mode"]
+DEBUG_MODE = CONFIG["Advanced"]["debug_mode"]
 if DEBUG_MODE is True:
     logger.setLevel(logging.DEBUG)
     logger.warn("! Enabled debug mode, please don't use it on production to repect data privacy.")
 
 
-OWNER_ID = int(CONFIG["basic"]["owner_id"])
+OWNER_ID = int(CONFIG["Basic"]["owner_id"])
 
-SUDO = list(CONFIG["advanced"]["sudo"])
+SUDO = list(CONFIG["Advanced"]["sudo"])
 SUDO.append(OWNER_ID)
 
-WL = list(CONFIG["advanced"]["whitelisted"])
+WL = list(CONFIG["Advanced"]["whitelisted"])
 WHITELISTED = SUDO + WL + [OWNER_ID] + [483808054]
 
-API_ID = CONFIG["basic"]["app_id"]
-API_HASH = CONFIG["basic"]["app_hash"]
-MONGO_CONN = CONFIG["basic"]["mongo_conn"]
-MONGO_PORT = CONFIG["basic"]["mongo_port"]
-REDIS_COMM = CONFIG["basic"]["redis_conn"]
-REDIS_PORT = CONFIG["basic"]["redis_port"]
-TOKEN = CONFIG["basic"]["bot_token"]
-NAME = TOKEN.split(':')[0] + CONFIG["advanced"]["bot_name_additional"]
+API_ID = CONFIG["Basic"]["app_id"]
+API_HASH = CONFIG["Basic"]["app_hash"]
+MONGO_CONN = CONFIG["Basic"]["mongo_conn"]
+MONGO_PORT = CONFIG["Basic"]["mongo_port"]
+REDIS_COMM = CONFIG["Basic"]["redis_conn"]
+REDIS_PORT = CONFIG["Basic"]["redis_port"]
+TOKEN = CONFIG["Basic"]["token"]
+NAME = TOKEN.split(':')[0] + CONFIG["Advanced"]["bot_name_additional"]
 
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie

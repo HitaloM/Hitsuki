@@ -25,8 +25,8 @@ from sophie_bot.modules import ALL_MODULES
 
 from aiogram import executor
 
-LOAD_COMPONENTS = CONFIG["advanced"]["load_components"]
-CATCH_UP = CONFIG["advanced"]["skip_catch_up"]
+LOAD_COMPONENTS = CONFIG["Advanced"]["load_components"]
+CATCH_UP = CONFIG["Advanced"]["skip_catch_up"]
 
 LOADED_MODULES = []
 

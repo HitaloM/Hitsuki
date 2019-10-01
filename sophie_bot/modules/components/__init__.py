@@ -3,7 +3,7 @@ import glob
 
 from sophie_bot import CONFIG, logger
 
-NO_LOAD_COMPONENTS = CONFIG["advanced"]["not_load_this_components"]
+NO_LOAD_COMPONENTS = CONFIG["Advanced"]["not_load_this_components"]
 
 
 def list_all_components():

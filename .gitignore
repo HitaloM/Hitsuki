@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 *.session
 *.session-journal
-*/bot_conf.json
+*/bot_conf.yaml
 output.txt
 Backups/
 .stignore

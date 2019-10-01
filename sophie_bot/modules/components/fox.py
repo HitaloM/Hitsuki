@@ -43,7 +43,7 @@ FOX_BETA_CHANNEL = -1001429093106
 
 SF_host = 'web.sourceforge.net'
 SF_user = 'mryacha'
-SF_pass = CONFIG['advanced']['fox_sf_pass']
+SF_pass = CONFIG['Advanced']['fox_sf_pass']
 
 # FOX_FILES_LOCAL = '/home/yacha/ofoxtest/'
 FOX_FILES_LOCAL = '/var/www/fox_files/'
