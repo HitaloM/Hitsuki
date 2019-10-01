@@ -36,19 +36,19 @@ HELP = sorted(HELP)
 logger.info("Help loaded for: {}".format(HELP))
 
 
-@decorator.command(['start', 'ping'], args=False, only_groups=True)
+@decorator.register(cmds=['start', 'ping'], args=False, only_groups=True)
 async def start(event):
     await event.reply('Hey there, My name is Sophie!')
     return
 
 
-@decorator.command('start', args=False, only_pm=True)
+@decorator.register(cmds='start', args=False, only_pm=True)
 async def start_pm(message):
     text, buttons = get_start(message.chat.id)
     await message.reply(text, reply_markup=buttons)
 
 
-@decorator.command('help', only_groups=True)
+@decorator.register(cmds='help', only_groups=True)
 @get_strings_dec('misc')
 async def help_btn(message, strings):
     buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(
@@ -58,7 +58,7 @@ async def help_btn(message, strings):
     await message.reply(text, reply_markup=buttons)
 
 
-@decorator.command('help', only_pm=True)
+@decorator.register(cmds='help', only_pm=True)
 async def help(message):
     text, buttons = get_help(message.chat.id)
     await message.reply(text, reply_markup=buttons)

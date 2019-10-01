@@ -44,7 +44,7 @@ async def chat_term(message, command):
     return result
 
 
-@decorator.command("botchanges")
+@decorator.register(cmds="botchanges")
 @disablable_dec("botchanges")
 async def botchanges(message):
     command = "git log --pretty=format:\"%an: %s\" -30"
@@ -54,7 +54,7 @@ async def botchanges(message):
     await message.reply(text, parse_mode=types.ParseMode.HTML)
 
 
-@decorator.command("stats")
+@decorator.register(cmds="stats")
 @disablable_dec("stats")
 async def stats(message):
     text = "*Stats*\n"
@@ -94,7 +94,7 @@ async def stats(message):
     await message.reply(text, parse_mode=types.ParseMode.MARKDOWN)
 
 
-@decorator.command("fox")
+@decorator.register(cmds="fox")
 @disablable_dec("fox")
 async def random_fox(message):
     while True:
@@ -109,7 +109,7 @@ async def random_fox(message):
             continue
 
 
-@decorator.command("cat")
+@decorator.register(cmds="cat")
 @disablable_dec("cat")
 async def random_cat(message):
     while True:

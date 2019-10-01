@@ -112,7 +112,7 @@ def ofox_chat(func):
 
 
 # Functions
-@decorator.command('release', state='*')
+@decorator.register(cmds='release', state='*')
 @dev_chat
 async def release_new_build(message):
     await ReleaseState.sel_build_type.set()
@@ -448,7 +448,7 @@ async def releasing(query, state):
 # Change device
 
 
-@decorator.command('changedevice')
+@decorator.register(cmds='changedevice')
 @dev_chat
 async def change_device_info_cmd(message):
     device_codename = message.get_args().lower()
@@ -646,7 +646,7 @@ async def del_default_notes(query, callback_data, state):
     await change_device_info(query.message, device, edit=True)
 
 
-@decorator.command('list')
+@decorator.register(cmds='list')
 @ofox_chat
 async def list_all_device(message, **args):
     chat_id = message.chat.id

@@ -46,7 +46,7 @@ new_filter_cb = CallbackData('new_filter', 'action')
 new_filter_time_cb = CallbackData('select_filter_time', 'time')
 
 
-@decorator.AioBotDo()
+@decorator.register()
 async def check_message(message):
     chat_id = message.chat.id
     filters = redis.lrange('filters_cache_{}'.format(chat_id), 0, -1)
@@ -158,7 +158,7 @@ async def cancel_handle1r(message: types.Message, state: FSMContext):
     await message.reply('Cancelled.')
 
 
-@decorator.command('addfilter', allow_kwargs=True)
+@decorator.register(cmds='addfilter', allow_kwargs=True)
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("filters")
@@ -410,7 +410,7 @@ async def add_new_filter(**data):
     return False
 
 
-@decorator.command("filters")
+@decorator.register(cmds="filters")
 @disablable_dec("filters")
 @connection()
 @get_strings_dec("filters")
@@ -432,7 +432,7 @@ async def list_filters(message, strings, status, chat_id, chat_title):
     await message.reply(text)
 
 
-@decorator.command("delfilter")
+@decorator.register(cmds="delfilter")
 @need_args_dec()
 @user_admin_dec
 @need_args_dec()

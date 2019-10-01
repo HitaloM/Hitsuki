@@ -61,7 +61,7 @@ async def admin_handler(message, strings, *args, **kwargs):
     await message.reply(text)
 
 
-@decorator.command("report")
+@decorator.register(cmds="report")
 @disablable_dec('report')
 @connection(only_in_groups=True)
 @get_strings_dec('reports')

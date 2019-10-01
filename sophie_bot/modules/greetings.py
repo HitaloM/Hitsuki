@@ -83,7 +83,7 @@ async def do_cleanwelcome(message, chat_id, welc_msg):
         mongodb.clean_welcome.update_one({'_id': clean_welcome['_id']}, {'$set': new})
 
 
-@decorator.AioWelcome()
+@decorator.register(f='welcome')
 @get_strings_dec("greetings")
 async def welcome_trigger(message, strings, **kwargs):
     chat_id = message.chat.id
@@ -141,7 +141,7 @@ async def welcome_trigger(message, strings, **kwargs):
         await do_cleanwelcome(message, chat_id, welc_msg)
 
 
-@decorator.command("setwelcome")
+@decorator.register(cmds="setwelcome")
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("greetings")
@@ -181,7 +181,7 @@ async def setwelcome(message, strings, status, chat_id, chat_title, *args, **kwa
                         parse_mode=types.ParseMode.HTML)
 
 
-@decorator.command('cleanservice')
+@decorator.register(cmds='cleanservice')
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("greetings")
@@ -209,7 +209,7 @@ async def cleanservice(message, strings, status, chat_id, chat_title):
         return
 
 
-@decorator.command('welcomesecurity')
+@decorator.register(cmds='welcomesecurity')
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("greetings")
@@ -239,7 +239,7 @@ async def welcomeSecurity(message, strings, status, chat_id, chat_title):
         await message.reply(strings['wlcm_sec_off'].format(chat_name=chat_title))
 
 
-@decorator.command('cleanwelcome')
+@decorator.register(cmds='cleanwelcome')
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("greetings")

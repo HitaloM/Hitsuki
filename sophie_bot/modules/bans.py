@@ -32,7 +32,7 @@ from sophie_bot.modules.users import (is_user_admin, user_admin_dec,
                                       get_user_and_text, user_link_html)
 
 
-@decorator.command("ban")
+@decorator.register(cmds="ban")
 @user_admin_dec
 @bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
@@ -53,7 +53,7 @@ async def ban(message, strings, status, chat_id, chat_title):
         )
 
 
-@decorator.command("tban")
+@decorator.register(cmds="tban")
 @user_admin_dec
 @bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
@@ -88,7 +88,7 @@ async def tban(message, strings, status, chat_id, chat_title):
         return
 
 
-@decorator.command("kick")
+@decorator.register(cmds="kick")
 @user_admin_dec
 @bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
@@ -104,7 +104,7 @@ async def kick(message, strings, status, chat_id, chat_title):
         await message.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
-@decorator.command("unban")
+@decorator.register(cmds="unban")
 @user_admin_dec
 @bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
@@ -129,7 +129,7 @@ async def unban(message, strings, status, chat_id, chat_title):
         await message.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
-@decorator.command("mute")
+@decorator.register(cmds="mute")
 @user_admin_dec
 @bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
@@ -145,7 +145,7 @@ async def muter(message, strings, status, chat_id, chat_title):
         await message.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
-@decorator.command("unmute")
+@decorator.register(cmds="unmute")
 @user_admin_dec
 @bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)
@@ -161,7 +161,7 @@ async def unmute(message, strings, status, chat_id, chat_title):
         await message.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
-@decorator.command("kickme")
+@decorator.register(cmds="kickme")
 @bot_rights.ban_users()
 @get_strings_dec("bans")
 async def kickme(message, strings):
@@ -172,7 +172,7 @@ async def kickme(message, strings):
         await message.reply(strings["kickme_success"])
 
 
-@decorator.command("tmute")
+@decorator.register(cmds="tmute")
 @user_admin_dec
 @bot_rights.ban_users()
 @connection(admin=True, only_in_groups=True)

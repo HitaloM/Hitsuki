@@ -10,7 +10,7 @@ ALLOWED_LOCKS = (
 
 
 # Locks processor
-@decorator.AioBotDo()
+@decorator.register()
 async def locks_processor(message):
     # Get locks
     chat_id = message.chat.id
@@ -47,7 +47,7 @@ def update_locks_cache(chat_id):
     return True
 
 
-@decorator.command('locktypes')
+@decorator.register(cmds='locktypes')
 async def locktypes_list(message):
     text = "<b>Lock-able items are:</b>\n"
     for item in ALLOWED_LOCKS:
@@ -56,7 +56,7 @@ async def locktypes_list(message):
     await message.reply(text)
 
 
-@decorator.command('lock')
+@decorator.register(cmds='lock')
 @connection(admin=True, only_in_groups=True)
 async def lock(message, status, chat_id, chat_title):
     item = message.get_args().lower()
@@ -69,7 +69,7 @@ async def lock(message, status, chat_id, chat_title):
     await message.reply(f'Locked <code>{item}</code> in <b>{chat_title}</b>!')
 
 
-@decorator.command('unlock')
+@decorator.register(cmds='unlock')
 @connection(admin=True, only_in_groups=True)
 async def unlock(message, status, chat_id, chat_title):
     item = message.get_args().lower()

@@ -35,6 +35,62 @@ RATE_LIMIT = CONFIG["advanced"]["rate_limit"]
 REGISTRED_COMMANDS = []
 
 
+def register(cmds=None, f=None, allow_edited=True, allow_kwargs=False, *args, **kwargs):
+
+    if cmds and type(cmds) == str:
+        cmds = [cmds]
+
+    register_kwargs = {}
+
+    if cmds:
+        if ALLOW_COMMANDS_FROM_EXC:
+            regex = r'^[/!]'
+        else:
+            regex = r'^/'
+
+        if 'not_gbanned' not in kwargs and BLOCK_GBANNED_USERS:
+            kwargs['not_gbanned'] = True
+        if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
+            kwargs['not_forwarded'] = True
+
+        for idx, cmd in enumerate(cmds):
+            REGISTRED_COMMANDS.append(cmd)
+            regex += r"(?i:{0}|{0}@{1})".format(cmd, BOT_USERNAME)
+
+            if 'args' in kwargs:
+                del kwargs['args']
+                regex += "(?: |$)"
+            else:
+                regex += "$"
+
+            if not idx == len(cmds) - 1:
+                regex += "|"
+
+        register_kwargs['regexp'] = regex
+
+    elif f == 'welcome':
+        register_kwargs['content_types'] = types.ContentTypes.NEW_CHAT_MEMBERS
+
+    register_kwargs.update(kwargs)
+
+    def decorator(func):
+        async def new_func(message, *args, **def_kwargs):
+
+            if RATE_LIMIT and await prevent_flooding(message, message.text) is False:
+                return
+
+            if allow_kwargs is False:
+                def_kwargs = dict()
+            await func(message, *args, **def_kwargs)
+            raise SkipHandler()
+
+        dp.register_message_handler(new_func, *args, **register_kwargs)
+        if allow_edited is True:
+            dp.register_edited_message_handler(new_func, *args, **register_kwargs)
+
+    return decorator
+
+
 def t_command(command, arg="", word_arg="", additional="", **kwargs):
     REGISTRED_COMMANDS.append(command)
 
@@ -68,49 +124,6 @@ def t_command(command, arg="", word_arg="", additional="", **kwargs):
     return decorator
 
 
-def command(commands, allow_edited=True, allow_kwargs=False, args=True, **kwargs):
-    if type(commands) == str:
-        commands = [commands]
-
-    def decorator(func):
-        if ALLOW_COMMANDS_FROM_EXC:
-            P = '[/!]'
-        else:
-            P = '/'
-
-        if 'not_gbanned' not in kwargs and BLOCK_GBANNED_USERS:
-            kwargs['not_gbanned'] = True
-
-        if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
-            kwargs['not_forwarded'] = True
-
-        regex = ""
-        for idx, cmd in enumerate(commands):
-            REGISTRED_COMMANDS.append(cmd)
-            regex += "^{0}(?i:{1}|{1}@{2})".format(P, cmd, BOT_USERNAME)
-
-            if args:
-                regex += "(?: |$)"
-            else:
-                regex += "$"
-
-            if not idx == len(commands) - 1:
-                regex += "|"
-
-        async def new_func(message, *args, **def_kwargs):
-            if RATE_LIMIT and await prevent_flooding(message, commands[0]) is False:
-                return
-            if allow_kwargs is False:
-                def_kwargs = dict()
-            await func(message, *args, **def_kwargs)
-            raise SkipHandler()
-
-        dp.register_message_handler(new_func, regexp=regex, **kwargs)
-        if allow_edited is True:
-            dp.register_edited_message_handler(new_func, regexp=regex, **kwargs)
-    return decorator
-
-
 def CallBackQuery(data, compile=True):
     def decorator(func):
         if compile is True:
@@ -118,33 +131,6 @@ def CallBackQuery(data, compile=True):
         else:
             tbot.add_event_handler(func, events.CallbackQuery(data=data))
     return decorator
-
-
-def AioBotDo(**kwargs):
-    def cascade_measage_handler(func):
-
-        async def new_func(*args, **def_kwargs):
-            if 'allow_kwargs' not in kwargs:
-                def_kwargs = dict()
-            await func(*args, **def_kwargs)
-            raise SkipHandler()
-
-        dp.register_message_handler(new_func, **kwargs)
-        dp.register_edited_message_handler(new_func, **kwargs)
-        return new_func
-    return cascade_measage_handler
-
-
-def AioWelcome():
-    def cascade_measage_handler(func):
-
-        async def new_func(*args, **kwargs):
-            await func(*args, **kwargs)
-            raise SkipHandler()
-
-        dp.register_message_handler(new_func, content_types=types.ContentTypes.NEW_CHAT_MEMBERS)
-        return new_func
-    return cascade_measage_handler
 
 
 def insurgent():

@@ -32,7 +32,7 @@ from sophie_bot.modules.helper_func.decorators import need_args_dec
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
 
 
-@decorator.command("gban", is_sudo=True)
+@decorator.register(cmds="gban", is_sudo=True)
 @need_args_dec()
 async def blacklist_user(message):
     user, reason = await get_user_and_text(message)
@@ -113,7 +113,7 @@ async def blacklist_user(message):
         await bot.send_message(CONFIG['advanced']['gbans_channel'], ttext)
 
 
-@decorator.command("ungban")
+@decorator.register(cmds="ungban")
 async def un_blacklist_user(message):
     if message.from_user.id not in SUDO:
         return
@@ -153,12 +153,15 @@ async def un_blacklist_user(message):
         await bot.send_message(CONFIG['advanced']['gbans_channel'], text)
 
 
-@decorator.AioBotDo()
+@decorator.register()
 @bot_rights.ban_users()
 @get_strings_dec('gbans')
 async def gban_trigger(message, strings, **kwargs):
     user_id = message.from_user.id
     chat_id = message.chat.id
+
+    if user_id == chat_id:
+        return
 
     if await is_user_admin(chat_id, user_id):
         return
@@ -180,7 +183,7 @@ async def gban_trigger(message, strings, **kwargs):
         await user_link_html(user_id), gbanned['reason']))
 
 
-@decorator.AioWelcome()
+@decorator.register(f='welcome')
 @bot_rights.ban_users()
 @get_strings_dec('gbans')
 async def gban_helper_welcome(message, strings, **kwargs):

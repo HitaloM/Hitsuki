@@ -28,7 +28,7 @@ from sophie_bot.modules.users import (user_admin_dec, get_user_and_text, is_user
                                       user_link_html, is_user_admin, update_admin_cache)
 
 
-@decorator.command("id")
+@decorator.register(cmds="id")
 @disablable_dec("id")
 @get_strings_dec('misc')
 async def get_id(message, strings):
@@ -51,7 +51,7 @@ async def get_id(message, strings):
     await message.reply(text)
 
 
-@decorator.command("pin")
+@decorator.register(cmds="pin")
 @user_admin_dec
 @bot_rights.pin_messages()
 @get_strings_dec('misc')
@@ -73,13 +73,13 @@ async def pinMessage(message, strings):
         return
 
 
-@decorator.command("runs")
+@decorator.register(cmds="runs")
 @get_strings_dec("RUNS", mas_name="RANDOM_STRINGS")
 async def runs(message, strings):
     await message.reply(strings[random.choice(list(strings))])
 
 
-@decorator.command("unpin")
+@decorator.register(cmds="unpin")
 @user_admin_dec
 @bot_rights.pin_messages()
 @connection(admin=True, only_in_groups=True)
@@ -92,7 +92,7 @@ async def unpin_message(message, strings, status, chat_id, chat_title):
         return
 
 
-@decorator.command("promote")
+@decorator.register(cmds="promote")
 @bot_rights.add_admins()
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
@@ -136,7 +136,7 @@ async def promote(message, strings, status, chat_id, chat_title):
     #    return
 
 
-@decorator.command("demote")
+@decorator.register(cmds="demote")
 @bot_rights.add_admins()
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
@@ -174,7 +174,7 @@ async def demote(message, strings, status, chat_id, chat_title):
     ))
 
 
-@decorator.command('paste')
+@decorator.register(cmds='paste')
 @get_strings_dec('misc')
 async def paste_deldog(message, strings, **kwargs):
     DOGBIN_URL = "https://del.dog/"
@@ -208,7 +208,7 @@ async def paste_deldog(message, strings, **kwargs):
     await message.reply(reply_text, disable_web_page_preview=True)
 
 
-@decorator.command("info")
+@decorator.register(cmds="info")
 @get_strings_dec("misc")
 async def user_info(message, strings, **kwargs):
     user, txt = await get_user_and_text(message, allow_self=True)

@@ -137,7 +137,7 @@ def user_is_fed_admin(func):
 # Commands
 
 
-@decorator.command('newfed')
+@decorator.register(cmds='newfed')
 @get_strings_dec("feds")
 async def newFed(message, strings, **kwargs):
     args = message.get_args()
@@ -153,7 +153,7 @@ async def newFed(message, strings, **kwargs):
             name=fed_name, id=fed_id, creator=await user_link_html(creator)))
 
 
-@decorator.command('joinfed')
+@decorator.register(cmds='joinfed')
 @get_strings_dec("feds")
 async def join_fed_comm(message, strings, **kwargs):
     fed_id = message.get_args()
@@ -184,7 +184,7 @@ async def join_fed_comm(message, strings, **kwargs):
     await message.reply(strings['join_fed_success'].format(name=check['fed_name']))
 
 
-@decorator.command('leavefed')
+@decorator.register(cmds='leavefed')
 @get_strings_dec("feds")
 async def leave_fed_comm(message, strings, **kwargs):
     chat_id = message.chat.id
@@ -205,7 +205,7 @@ async def leave_fed_comm(message, strings, **kwargs):
     await message.reply(strings['leave_fed_success'])
 
 
-@decorator.command('fpromote')
+@decorator.register(cmds='fpromote')
 @connection(admin=True, only_in_groups=True)
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin
@@ -229,7 +229,7 @@ async def promote_to_fed(message, strings, status, chat_id, chat_title, user, fe
         user=await user_link_html(user['user_id']), name=fed['fed_name']))
 
 
-@decorator.command('fdemote')
+@decorator.register(cmds='fdemote')
 @connection(admin=True, only_in_groups=True)
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin
@@ -253,7 +253,7 @@ async def demote_from_fed(message, strings, status, chat_id, chat_title, user, f
         user=await user_link_html(user['user_id']), name=fed['fed_name']))
 
 
-@decorator.command('fchatlist')
+@decorator.register(cmds='fchatlist')
 @connection(admin=True, only_in_groups=True)
 @get_fed_dec
 @user_is_fed_admin
@@ -275,7 +275,7 @@ async def fed_chat_list(message, strings, status, chat_id, chat_title, fed,
     await message.reply(text)
 
 
-@decorator.command('finfo')
+@decorator.register(cmds='finfo')
 @connection(admin=True, only_in_groups=True)
 @get_fed_dec
 @user_is_fed_admin
@@ -293,7 +293,7 @@ async def fed_info(message, strings, status, chat_id, chat_title, fed,
     await message.reply(text)
 
 
-@decorator.command('fbanned')
+@decorator.register(cmds='fbanned')
 @connection(admin=True, only_in_groups=True)
 @get_fed_dec
 @user_is_fed_admin
@@ -325,7 +325,7 @@ async def fbanned_list(message, strings, status, chat_id, chat_title, fed,
     )
 
 
-@decorator.command('fban')
+@decorator.register(cmds='fban')
 @connection(admin=True, only_in_groups=True)
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin
@@ -394,7 +394,7 @@ async def fban_user(message, strings, status, chat_id, chat_title, user, fed, re
     # TODO(Notify all fedadmins)
 
 
-@decorator.command('unfban')
+@decorator.register(cmds='unfban')
 @connection(admin=True, only_in_groups=True)
 @get_user_and_fed_and_text_dec
 @user_is_fed_admin

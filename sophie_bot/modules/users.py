@@ -23,7 +23,7 @@ from telethon.tl.types import ChannelParticipantsAdmins
 from sophie_bot import OWNER_ID, SUDO, tbot, decorator, logger, mongodb, redis
 
 
-@decorator.AioBotDo()
+@decorator.register()
 async def update_users(message, **kwargs):
     chat_id = message.chat.id
 

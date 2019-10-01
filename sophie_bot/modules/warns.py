@@ -28,7 +28,7 @@ from sophie_bot.modules.users import (get_chat_admins, is_user_admin,
                                       get_user_and_text, user_link_html, is_user_premium)
 
 
-@decorator.command("warn")
+@decorator.register(cmds="warn")
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")
@@ -116,7 +116,7 @@ async def remove_warn(event):
     await event.edit(textx.format(admin=user_str), link_preview=False)
 
 
-@decorator.command("warns")
+@decorator.register(cmds="warns")
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")
 async def user_warns(message, strings, status, chat_id, chat_title):
@@ -149,7 +149,7 @@ async def user_warns(message, strings, status, chat_id, chat_title):
     await message.reply(text)
 
 
-@decorator.command("warnlimit")
+@decorator.register(cmds="warnlimit")
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")
@@ -173,7 +173,7 @@ async def warnlimit(message, strings, status, chat_id, chat_title):
         await message.reply(strings["warn_limit_upd"].format(arg))
 
 
-@decorator.command("resetwarns")
+@decorator.register(cmds="resetwarns")
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")

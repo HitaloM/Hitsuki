@@ -23,7 +23,7 @@ from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.users import user_admin_dec
 
 
-@decorator.command("purge")
+@decorator.register(cmds="purge")
 @bot_rights.delete_messages()
 @user_admin_dec
 @get_strings_dec('msg_deleting')
@@ -53,7 +53,7 @@ async def purge(message, strings):
     await msg.delete()
 
 
-@decorator.command("del")
+@decorator.register(cmds="del")
 @bot_rights.delete_messages()
 @user_admin_dec
 @get_strings_dec('msg_deleting')

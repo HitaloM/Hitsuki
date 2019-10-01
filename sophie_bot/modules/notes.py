@@ -20,8 +20,6 @@ import bz2
 import random
 import string
 
-import time
-
 from time import gmtime, strftime
 
 from telethon.tl.functions.users import GetFullUserRequest
@@ -43,11 +41,9 @@ from sophie_bot.modules.helper_func.decorators import need_args_dec
 RESTRICTED_SYMBOLS = ['**', '__', '`']
 
 
-@decorator.command("owo", is_owner=True)
+@decorator.register(cmds="owo")
 async def test(message, **kwagrs):
     await message.reply('owo')
-    time.sleep(999)
-    await message.reply('owo11')
 
 
 @decorator.t_command("save", word_arg=True)
@@ -182,7 +178,7 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@decorator.command(["notes", "saved"])
+@decorator.register(cmds=["notes", "saved"])
 @disablable_dec("notes")
 @connection()
 @get_strings_dec("notes")
@@ -327,7 +323,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         logger.error("Error in send_note/send_message: " + str(err))
 
 
-@decorator.command('get')
+@decorator.register(cmds='get')
 @need_args_dec()
 @connection()
 async def get_note(message, status, chat_id, chat_title):
@@ -394,7 +390,7 @@ def button_parser(chat_id, texts):
     return text, buttons
 
 
-@decorator.command("migrateyana")
+@decorator.register(cmds="migrateyana")
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("notes")

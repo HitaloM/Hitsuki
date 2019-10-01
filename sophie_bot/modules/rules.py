@@ -20,7 +20,7 @@ from sophie_bot.modules.users import user_admin_dec
 from sophie_bot.modules.notes import send_note
 
 
-@decorator.command("setrules")
+@decorator.register(cmds="setrules")
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("rules")
@@ -49,7 +49,7 @@ async def setrules(message, strings, status, chat_id, chat_title):
     return await message.reply(strings['set_note'].format(note_to_find))
 
 
-@decorator.command("rules")
+@decorator.register(cmds="rules")
 @connection(only_in_groups=True)
 @get_strings_dec("rules")
 async def rules(message, strings, status, chat_id, chat_title):
@@ -66,7 +66,7 @@ async def rules(message, strings, status, chat_id, chat_title):
     await send_note(chat_id, chat_id, message.message_id, in_db['note'])
 
 
-@decorator.command("delrules")
+@decorator.register(cmds="delrules")
 @user_admin_dec
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("rules")

@@ -50,7 +50,7 @@ def disablable_dec(command):
     return wrapped
 
 
-@decorator.command("disablable")
+@decorator.register(cmds="disablable")
 @disablable_dec('disablable')
 @get_strings_dec("disable")
 async def list_disablable(message, strings, **kwargs):
@@ -60,7 +60,7 @@ async def list_disablable(message, strings, **kwargs):
     await message.reply(text)
 
 
-@decorator.command("disabled")
+@decorator.register(cmds="disabled")
 @connection(only_in_groups=True)
 @get_strings_dec("disable")
 async def list_disabled(message, strings, status, chat_id, chat_title):
@@ -71,7 +71,7 @@ async def list_disabled(message, strings, status, chat_id, chat_title):
     await message.reply(text)
 
 
-@decorator.command("disable")
+@decorator.register(cmds="disable")
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("disable")
@@ -98,7 +98,7 @@ async def disable_command(message, strings, status, chat_id, chat_title):
         cmd=cmd, chat_name=chat_title))
 
 
-@decorator.command("enable")
+@decorator.register(cmds="enable")
 @user_admin_dec
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("disable")

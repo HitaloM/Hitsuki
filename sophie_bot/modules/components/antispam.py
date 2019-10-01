@@ -32,7 +32,7 @@ COUNTRY_EMOJIS = '🇦🇨🇦🇩🇦🇪🇦🇫🇦🇬🇦🇮🇦🇱🇦�
 #        NAMES.append(line.lower().replace('\n', ''))
 
 
-@decorator.command('checkspammer', is_sudo=True)
+@decorator.register(cmds='checkspammer', is_sudo=True)
 async def check_manually(message):
     # This command used to test new antispammers AI functions
     user, txt = await get_user_and_text(message, allow_self=True)

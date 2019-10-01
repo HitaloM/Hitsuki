@@ -28,7 +28,7 @@ from sophie_bot.modules.notes import button_parser
 from sophie_bot.modules.users import get_user_and_text, user_link_html
 
 
-@decorator.command('allcommands', is_sudo=True)
+@decorator.register(cmds='allcommands', is_sudo=True)
 async def all_commands_list(message):
     txt = ""
     for cmd in decorator.REGISTRED_COMMANDS:
@@ -36,12 +36,12 @@ async def all_commands_list(message):
     await message.reply(txt)
 
 
-@decorator.command('ip', is_owner=True)
+@decorator.register(cmds='ip', is_owner=True)
 async def get_bot_ip(message):
     await message.reply(requests.get("http://ipinfo.io/ip").text)
 
 
-@decorator.command("term", is_owner=True)
+@decorator.register(cmds="term", is_owner=True)
 async def cmd_term(message):
     msg = await message.reply("Running...")
     command = str(message.text.split(" ", 1)[1])
@@ -50,7 +50,7 @@ async def cmd_term(message):
     await msg.edit_text(result)
 
 
-@decorator.command("broadcast", is_owner=True)
+@decorator.register(cmds="broadcast", is_owner=True)
 async def broadcast(message):
     chats = mongodb.chat_list.find({})
     raw_text = message.get_args()
@@ -74,7 +74,7 @@ async def broadcast(message):
 `{}` didn't received message.".format(num_succ, num_fail))
 
 
-@decorator.command("sbroadcast", is_owner=True)
+@decorator.register(cmds="sbroadcast", is_owner=True)
 async def sbroadcast(message):
     text = message.get_args()
     # Add chats to sbroadcast list
@@ -92,7 +92,7 @@ async def sbroadcast(message):
         "Smart broadcast planned for `{}` chats".format(chats.count()))
 
 
-@decorator.command("stopsbroadcast", is_owner=True)
+@decorator.register(cmds="stopsbroadcast", is_owner=True)
 async def stop_sbroadcast(message):
     old = mongodb.sbroadcast_settings.find_one({})
     mongodb.sbroadcast_list.drop()
@@ -127,7 +127,7 @@ async def check_message_for_smartbroadcast(event):
             }, upsert=False)
 
 
-@decorator.command("backup", is_owner=True)
+@decorator.register(cmds="backup", is_owner=True)
 async def chat_backup(message):
     await do_backup(message.chat.id, message.message_id)
 
@@ -177,19 +177,19 @@ async def do_backup(chat_id, reply=False):
     )
 
 
-@decorator.command("purgecache", is_owner=True)
+@decorator.register(cmds="purgecache", is_owner=True)
 async def purge_caches(message):
     redis.flushdb()
     await message.reply("Redis cache was cleaned.")
 
 
-@decorator.command("botstop", is_owner=True)
+@decorator.register(cmds="botstop", is_owner=True)
 async def bot_stop(message):
     await message.reply("Goodbye...")
     exit(1)
 
 
-@decorator.command("upload", is_owner=True)
+@decorator.register(cmds="upload", is_owner=True)
 async def upload_file(message):
     input_str = message.get_args()
     if os.path.exists(input_str):
@@ -207,13 +207,13 @@ async def upload_file(message):
             )
 
 
-@decorator.command("crash", is_owner=True)
+@decorator.register(cmds="crash", is_owner=True)
 async def crash(message):
     test = 2 / 0
     print(test)
 
 
-@decorator.command("ppromote", is_sudo=True)
+@decorator.register(cmds="ppromote", is_sudo=True)
 async def promote_to_gold(message):
     user, txt = await get_user_and_text(message)
     if not user:
@@ -230,7 +230,7 @@ async def promote_to_gold(message):
     await message.reply(f"{await user_link_html(user_id)} now premium!")
 
 
-@decorator.command("pdemote", is_sudo=True)
+@decorator.register(cmds="pdemote", is_sudo=True)
 async def demote_from_gold(message):
     user, txt = await get_user_and_text(message)
     if not user:
