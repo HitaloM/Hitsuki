@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 
 import re
+import time
 
 from importlib import import_module
 
@@ -21,7 +22,7 @@ from telethon import events
 from aiogram.dispatcher.handler import SkipHandler
 from aiogram import types
 
-from sophie_bot import BOT_USERNAME, CONFIG, tbot, dp
+from sophie_bot import BOT_USERNAME, CONFIG, DEBUG_MODE, tbot, dp, logger
 from sophie_bot.modules.helper_func.error import report_error
 from sophie_bot.modules.helper_func.flood import prevent_flooding
 
@@ -81,7 +82,13 @@ def register(cmds=None, f=None, allow_edited=True, allow_kwargs=False, *args, **
 
             if allow_kwargs is False:
                 def_kwargs = dict()
-            await func(message, *args, **def_kwargs)
+            if DEBUG_MODE:
+                logger.debug('[*] Starting {}.'.format(func.__name__))
+                start = time.time()
+                await func(message, *args, **def_kwargs)
+                logger.debug('[*] {} Time: {} sec.'.format(func.__name__, time.time() - start))
+            else:
+                await func(message, *args, **def_kwargs)
             raise SkipHandler()
 
         dp.register_message_handler(new_func, *args, **register_kwargs)
