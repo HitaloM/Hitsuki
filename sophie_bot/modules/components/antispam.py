@@ -19,7 +19,7 @@ from nostril import nonsense
 
 from sophie_bot import CONFIG, decorator, tbot, mongodb
 from telethon.tl.functions.photos import GetUserPhotosRequest
-from sophie_bot.modules.users import aio_get_user, user_link_html
+from sophie_bot.modules.users import get_user_and_text, user_link_html
 
 
 NAMES = []
@@ -35,7 +35,7 @@ COUNTRY_EMOJIS = '🇦🇨🇦🇩🇦🇪🇦🇫🇦🇬🇦🇮🇦🇱🇦�
 @decorator.command('checkspammer', is_sudo=True)
 async def check_manually(message):
     # This command used to test new antispammers AI functions
-    user, txt = await aio_get_user(message, allow_self=True)
+    user, txt = await get_user_and_text(message, allow_self=True)
     if not user:
         return
 

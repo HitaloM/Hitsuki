@@ -16,7 +16,7 @@
 from sophie_bot import WHITELISTED, decorator, dp
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec
-from sophie_bot.modules.users import is_user_admin, user_link_html, get_chat_admins, aio_get_user
+from sophie_bot.modules.users import is_user_admin, user_link_html, get_chat_admins, get_user_and_text
 from sophie_bot.modules.disable import disablable_dec
 
 
@@ -73,7 +73,7 @@ async def report_user(message, strings, status, chat_id, chat_title):
     if from_id in WHITELISTED:
         return await message.reply(strings['user_is_whitelisted'])
 
-    user, text = await aio_get_user(message)
+    user, text = await get_user_and_text(message)
 
     if not user:
         return await message.reply(strings['no_user_to_report'])

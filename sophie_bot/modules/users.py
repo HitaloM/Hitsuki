@@ -175,7 +175,7 @@ async def event(event):
     await msg.edit(text)
 
 
-async def aio_get_user(message, send_text=True, allow_self=False):
+async def get_user_and_text(message, send_text=True, allow_self=False):
     args = message.text.split(None, 2)
     user = None
     text = None

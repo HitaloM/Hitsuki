@@ -29,7 +29,7 @@ from sophie_bot.modules.helper_func.own_errors import NotEnoughRights
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (is_user_admin, user_admin_dec,
-                                      aio_get_user, user_link_html)
+                                      get_user_and_text, user_link_html)
 
 
 @decorator.command("ban")
@@ -38,7 +38,7 @@ from sophie_bot.modules.users import (is_user_admin, user_admin_dec,
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec('bans')
 async def ban(message, strings, status, chat_id, chat_title):
-    user, reason = await aio_get_user(message)
+    user, reason = await get_user_and_text(message)
     if not user:
         return
     if await ban_user(message, user['user_id'], chat_id, None) is True:
@@ -59,7 +59,7 @@ async def ban(message, strings, status, chat_id, chat_title):
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec('bans')
 async def tban(message, strings, status, chat_id, chat_title):
-    user, data = await aio_get_user(message)
+    user, data = await get_user_and_text(message)
     if not user:
         return
     data = data.split(' ', 2)
@@ -94,7 +94,7 @@ async def tban(message, strings, status, chat_id, chat_title):
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec('bans')
 async def kick(message, strings, status, chat_id, chat_title):
-    user, text = await aio_get_user(message)
+    user, text = await get_user_and_text(message)
     if not user:
         return
     if await kick_user(message, user['user_id'], chat_id) is True:
@@ -110,7 +110,7 @@ async def kick(message, strings, status, chat_id, chat_title):
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
 async def unban(message, strings, status, chat_id, chat_title):
-    user, text = await aio_get_user(message)
+    user, text = await get_user_and_text(message)
     if not user:
         return
     if await unban_user(message, user['user_id'], chat_id):
@@ -135,7 +135,7 @@ async def unban(message, strings, status, chat_id, chat_title):
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
 async def muter(message, strings, status, chat_id, chat_title):
-    user, text = await aio_get_user(message)
+    user, text = await get_user_and_text(message)
     if not user:
         return
     if await mute_user(message, user['user_id'], chat_id, None):
@@ -151,7 +151,7 @@ async def muter(message, strings, status, chat_id, chat_title):
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
 async def unmute(message, strings, status, chat_id, chat_title):
-    user, text = await aio_get_user(message)
+    user, text = await get_user_and_text(message)
     if not user:
         return
     if await unmute_user(message, user['user_id'], chat_id):
@@ -178,7 +178,7 @@ async def kickme(message, strings):
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec("bans")
 async def tmute(message, strings, status, chat_id, chat_title):
-    user, data = await aio_get_user(message)
+    user, data = await get_user_and_text(message)
     if not user:
         return
     data = data.split(' ', 2)

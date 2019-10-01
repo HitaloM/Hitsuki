@@ -27,7 +27,7 @@ from aiogram.utils.exceptions import BadRequest
 
 from sophie_bot import CONFIG, SUDO, WHITELISTED, decorator, logger, mongodb, bot, flask
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import user_link, aio_get_user, user_link_html, is_user_admin
+from sophie_bot.modules.users import user_link, get_user_and_text, user_link_html, is_user_admin
 from sophie_bot.modules.helper_func.decorators import need_args_dec
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
 
@@ -35,7 +35,7 @@ import sophie_bot.modules.helper_func.bot_rights as bot_rights
 @decorator.command("gban", is_sudo=True)
 @need_args_dec()
 async def blacklist_user(message):
-    user, reason = await aio_get_user(message)
+    user, reason = await get_user_and_text(message)
     if not user:
         return
 
@@ -118,7 +118,7 @@ async def un_blacklist_user(message):
     if message.from_user.id not in SUDO:
         return
     chat_id = message.chat.id
-    user, txt = await aio_get_user(message)
+    user, txt = await get_user_and_text(message)
     if not user:
         return
 

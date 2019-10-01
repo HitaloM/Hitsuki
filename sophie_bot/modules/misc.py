@@ -24,7 +24,7 @@ from sophie_bot import OWNER_ID, SUDO, BOT_ID, tbot, decorator, mongodb, bot
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec
-from sophie_bot.modules.users import (user_admin_dec, aio_get_user, is_user_premium,
+from sophie_bot.modules.users import (user_admin_dec, get_user_and_text, is_user_premium,
                                       user_link_html, is_user_admin, update_admin_cache)
 
 
@@ -32,7 +32,7 @@ from sophie_bot.modules.users import (user_admin_dec, aio_get_user, is_user_prem
 @disablable_dec("id")
 @get_strings_dec('misc')
 async def get_id(message, strings):
-    user, txt = await aio_get_user(message, allow_self=True)
+    user, txt = await get_user_and_text(message, allow_self=True)
     if not user:
         return
     text = strings["your_id"].format(message.from_user.id)
@@ -98,7 +98,7 @@ async def unpin_message(message, strings, status, chat_id, chat_title):
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec('misc')
 async def promote(message, strings, status, chat_id, chat_title):
-    user, args = await aio_get_user(message)
+    user, args = await get_user_and_text(message)
 
     if not user:
         return
@@ -142,7 +142,7 @@ async def promote(message, strings, status, chat_id, chat_title):
 @connection(admin=True, only_in_groups=True)
 @get_strings_dec('misc')
 async def demote(message, strings, status, chat_id, chat_title):
-    user, txt = await aio_get_user(message)
+    user, txt = await get_user_and_text(message)
     if not user:
         return
 
@@ -211,7 +211,7 @@ async def paste_deldog(message, strings, **kwargs):
 @decorator.command("info")
 @get_strings_dec("misc")
 async def user_info(message, strings, **kwargs):
-    user, txt = await aio_get_user(message, allow_self=True)
+    user, txt = await get_user_and_text(message, allow_self=True)
     if not user:
         return
 

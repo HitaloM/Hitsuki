@@ -25,7 +25,7 @@ from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (get_chat_admins, is_user_admin,
                                       user_link, user_admin_dec,
-                                      aio_get_user, user_link_html, is_user_premium)
+                                      get_user_and_text, user_link_html, is_user_premium)
 
 
 @decorator.command("warn")
@@ -33,7 +33,7 @@ from sophie_bot.modules.users import (get_chat_admins, is_user_admin,
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")
 async def warn_user(message, strings, status, chat_id, chat_title):
-    user, reason = await aio_get_user(message)
+    user, reason = await get_user_and_text(message)
     if not user:
         return
     user_id = int(user['user_id'])
@@ -120,7 +120,7 @@ async def remove_warn(event):
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")
 async def user_warns(message, strings, status, chat_id, chat_title):
-    user, txt = await aio_get_user(message, allow_self=True)
+    user, txt = await get_user_and_text(message, allow_self=True)
     if not user:
         return
 
@@ -178,7 +178,7 @@ async def warnlimit(message, strings, status, chat_id, chat_title):
 @connection(only_in_groups=True, admin=True)
 @get_strings_dec("warns")
 async def resetwarns(message, strings, status, chat_id, chat_title):
-    user, txt = await aio_get_user(message)
+    user, txt = await get_user_and_text(message)
     if not user:
         return
     user_id = int(user['user_id'])

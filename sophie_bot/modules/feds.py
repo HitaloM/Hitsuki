@@ -26,13 +26,13 @@ from aiogram import types
 from sophie_bot import OWNER_ID, BOT_ID, WHITELISTED, tbot, decorator, mongodb, bot
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (is_user_admin, user_link,
-                                      aio_get_user, user_link_html)
+                                      get_user_and_text, user_link_html)
 from sophie_bot.modules.connections import connection, get_conn_chat
 
 
 def get_user_and_fed_and_text_dec(func):
     async def wrapped_1(message, status, chat_id, chat_title, *args, **kwargs):
-        user, text = await aio_get_user(message)
+        user, text = await get_user_and_text(message)
         if not user:
             return
 

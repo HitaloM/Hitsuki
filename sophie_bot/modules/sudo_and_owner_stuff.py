@@ -25,7 +25,7 @@ from time import gmtime, strftime
 from sophie_bot import CONFIG, tbot, decorator, mongodb, redis, logger, bot
 from sophie_bot.modules.main import chat_term, term, convert_size
 from sophie_bot.modules.notes import button_parser
-from sophie_bot.modules.users import aio_get_user, user_link_html
+from sophie_bot.modules.users import get_user_and_text, user_link_html
 
 
 @decorator.command('allcommands', is_sudo=True)
@@ -215,7 +215,7 @@ async def crash(message):
 
 @decorator.command("ppromote", is_sudo=True)
 async def promote_to_gold(message):
-    user, txt = await aio_get_user(message)
+    user, txt = await get_user_and_text(message)
     if not user:
         return
 
@@ -232,7 +232,7 @@ async def promote_to_gold(message):
 
 @decorator.command("pdemote", is_sudo=True)
 async def demote_from_gold(message):
-    user, txt = await aio_get_user(message)
+    user, txt = await get_user_and_text(message)
     if not user:
         return
 
