@@ -14,12 +14,15 @@
 # You should have received a copy of the GNU General Public License
 
 import logging
-from flask import Flask
-
+import coloredlogs
 import asyncio
 import redis
 import ujson
+
+from flask import Flask
+
 from aiogram.contrib.fsm_storage.redis import RedisStorage
+
 from pymongo import MongoClient
 from telethon import TelegramClient
 from aiogram import Bot, Dispatcher, types
@@ -30,6 +33,7 @@ logging.basicConfig(
     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+coloredlogs.install(level='DEBUG', logger=logger)
 
 
 f = open('data/bot_conf.json', "r")
