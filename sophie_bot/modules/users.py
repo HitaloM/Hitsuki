@@ -301,20 +301,13 @@ async def get_id_by_nick(data):
 
 
 async def user_link(user_id):
-    user = mongodb.user_list.find_one({'user_id': user_id})
-    if not user:
-        try:
-            user = await add_user_to_db(await tbot(GetFullUserRequest(int(user_id))))
-            user_link = "[{}](tg://user?id={})".format(
-                user['first_name'], user['user_id'])
-        except (ValueError, TypeError):
-            user_link = "[{}](tg://user?id={})".format(
-                user_id, user_id)
+    user = await get_user_by_id(user_id)
+    if user and 'first_name' in user:
+        name = user['first_name']
     else:
-        user_link = "[{}](tg://user?id={})".format(
-            user['first_name'], user['user_id'])
+        name = user_id
 
-    return user_link
+    return f"[{name}](tg://user?id={id})"
 
 
 async def user_link_html(user_id, custom_name=None):
