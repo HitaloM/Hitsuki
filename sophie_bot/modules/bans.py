@@ -168,7 +168,7 @@ async def kickme(message, strings):
     user = message.from_user.id
     chat = message.chat.id
 
-    if await ban_user(message, user, chat, None) is True:
+    if await kick_user(message, user, chat, None) is True:
         await message.reply(strings["kickme_success"])
 
 
