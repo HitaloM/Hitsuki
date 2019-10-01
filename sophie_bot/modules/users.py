@@ -160,21 +160,6 @@ async def get_chat_admins(chat_id):
     return admins
 
 
-@decorator.t_command("adminlist")
-async def event(event):
-    msg = await event.reply("Updating cache now...")
-    await update_admin_cache(event.chat_id)
-    dump = redis.get('admins_cache_{}'.format(event.chat_id))
-    admins = ujson.decode(dump)
-    text = '**Admin in this group:**\n'
-    for admin in admins:
-        H = mongodb.user_list.find_one({'user_id': admin})
-        if H:
-            text += '- {} ({})\n'.format(await user_link(H['user_id']), H['user_id'])
-
-    await msg.edit(text)
-
-
 async def get_user_and_text(message, send_text=True, allow_self=False):
     args = message.text.split(None, 2)
     user = None

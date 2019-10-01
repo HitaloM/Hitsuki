@@ -265,3 +265,19 @@ async def user_info(message, strings, **kwargs):
             text += strings['no']
 
     await message.reply(text)
+
+
+@decorator.command("adminlist")
+@disablable_dec("adminlist")
+async def adminlist(message):
+    msg = await message.reply("Updating cache now...")
+    await update_admin_cache(message.chat.id)
+    dump = redis.get('admins_cache_{}'.format(message.chat.id))
+    admins = ujson.decode(dump)
+    text = '<b>Admin in this group:</b>\n'
+    for admin in admins:
+        H = mongodb.user_list.find_one({'user_id': admin})
+        if H:
+            text += '- {} ({})\n'.format(await user_link_html(H['user_id']), H['user_id'])
+
+    await msg.edit(text)

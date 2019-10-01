@@ -158,7 +158,7 @@ async def clear_note(event, strings, status, chat_id, chat_title):
     await event.reply(text)
 
 
-@decorator.t_command("noteinfo", arg=True)
+@decorator.command("noteinfo", arg=True)
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("notes")
@@ -171,9 +171,9 @@ async def noteinfo(event, strings, status, chat_id, chat_title):
         text = strings["note_info_title"]
         text += strings["note_info_note"].format(note_name=note_name)
         text += strings["note_info_created"].format(
-            data=note['created'], user=await user_link(note['creator']))
+            data=note['created'], user=await user_link_html(note['creator']))
         text += strings["note_info_updated"].format(
-            data=note['date'], user=await user_link(note['updated_by']))
+            data=note['date'], user=await user_link_html(note['updated_by']))
 
     await event.reply(text)
 
