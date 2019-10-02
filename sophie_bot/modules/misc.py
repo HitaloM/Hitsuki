@@ -62,7 +62,10 @@ async def pinMessage(message, strings):
         await message.reply(strings['no_reply_msg'])
         return
     msg_2_pin = message.reply_to_message.message_id
-    args = message.get_args().lower()
+    args = message.get_args()
+    if args:
+        args = args.lower()
+
     tru_txt = ['loud', 'notify']
     if args in tru_txt:
         notify = False
