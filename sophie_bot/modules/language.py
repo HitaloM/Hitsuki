@@ -16,6 +16,7 @@
 import os
 import re
 import ujson
+import yaml
 
 from telethon.tl.custom import Button
 
@@ -26,13 +27,13 @@ LANGUAGES = {}
 LANGS = []
 
 logger.debug("Loading English localisation..")
-f = open('sophie_bot/modules/langs/en.json', "r")
-lang = ujson.load(f)
+f = open('sophie_bot/modules/langs/en.yaml', "r")
+lang = yaml.load(f, Loader=yaml.CLoader)
 exec("LANGUAGES[\"" + lang['language_info']['code'] + "\"] = lang")
 LANGS += tuple([lang['language_info']['code']])
 
 for filename in os.listdir('sophie_bot/modules/langs'):
-    if filename == 'en.json':
+    if filename == 'en.yaml':
         continue
     logger.debug("Loading language file " + filename)
     f = open('sophie_bot/modules/langs/' + filename, "r")

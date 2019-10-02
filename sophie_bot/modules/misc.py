@@ -77,7 +77,7 @@ async def pinMessage(message, strings):
 @get_strings_dec("RUNS", mas_name="RANDOM_STRINGS")
 @disablable_dec('runs')
 async def runs(message, strings):
-    await message.reply(strings[random.choice(list(strings))])
+    await message.reply(random.choice(list(strings)))
 
 
 @decorator.register(cmds="unpin")
