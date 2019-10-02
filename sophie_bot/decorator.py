@@ -58,11 +58,11 @@ def register(cmds=None, f=None, allow_edited=True, allow_kwargs=False, *args, **
             REGISTRED_COMMANDS.append(cmd)
             regex += r"(?i:{0}|{0}@{1})".format(cmd, BOT_USERNAME)
 
-            if 'args' in kwargs:
-                del kwargs['args']
-                regex += "(?: |$)"
-            else:
+            if 'disable_args' in kwargs:
+                del kwargs['disable_args']
                 regex += "$"
+            else:
+                regex += "(?: |$)"
 
             if not idx == len(cmds) - 1:
                 regex += "|"

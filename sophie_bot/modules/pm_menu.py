@@ -36,13 +36,13 @@ HELP = sorted(HELP)
 logger.info("Help loaded for: {}".format(HELP))
 
 
-@decorator.register(cmds=['start', 'ping'], args=False, only_groups=True)
+@decorator.register(cmds=['start', 'ping'], disable_args=True, only_groups=True)
 async def start(event):
     await event.reply('Hey there, My name is Sophie!')
     return
 
 
-@decorator.register(cmds='start', args=False, only_pm=True)
+@decorator.register(cmds='start', disable_args=True, only_pm=True)
 async def start_pm(message):
     text, buttons = get_start(message.chat.id)
     await message.reply(text, reply_markup=buttons)
@@ -121,13 +121,9 @@ async def get_mod_help_callback(query, callback_data=False, **kwargs):
     chat_id = query.message.chat.id
     message = query.message
     module = callback_data['module']
-    text = get_string(module, "title", chat_id, dir="HELPS")
-    text += '\n'
     lang = get_chat_lang(chat_id)
     buttons = InlineKeyboardMarkup(row_width=2)
-    for string in get_string(module, "text", chat_id, dir="HELPS"):
-        text += LANGUAGES[lang]["HELPS"][module]['text'][string]
-        text += '\n'
+    text = LANGUAGES[lang]["HELPS"][module]['text']
     if 'buttons' in LANGUAGES[lang]["HELPS"][module]:
         counter = 0
         for btn in LANGUAGES[lang]["HELPS"][module]['buttons']:
@@ -147,10 +143,7 @@ async def get_help_button_callback(query, callback_data=False, **kwargs):
     chat_id = query.message.chat.id
     lang = get_chat_lang(chat_id)
     text = ""
-    if data in LANGUAGES[lang]["HELPS"][module]:
-        for btn in get_string(module, data, chat_id, dir="HELPS"):
-            text += LANGUAGES[lang]["HELPS"][module][data][btn]
-            text += '\n'
+    text += LANGUAGES[lang]["HELPS"][module][data]
     buttons = InlineKeyboardMarkup().add(InlineKeyboardButton("Back", callback_data='get_help'))
     await message.edit_text(text, reply_markup=buttons)
 
