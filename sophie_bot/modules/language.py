@@ -15,7 +15,6 @@
 
 import os
 import re
-import ujson
 import yaml
 
 from telethon.tl.custom import Button
@@ -26,36 +25,21 @@ from sophie_bot.modules.users import is_user_admin, user_link
 LANGUAGES = {}
 LANGS = []
 
-logger.debug("Loading English localisation..")
-f = open('sophie_bot/modules/langs/en.yaml', "r")
-lang = yaml.load(f, Loader=yaml.CLoader)
-exec("LANGUAGES[\"" + lang['language_info']['code'] + "\"] = lang")
-LANGS += tuple([lang['language_info']['code']])
+# logger.debug("Loading English localisation..")
+# f = open('sophie_bot/modules/langs/en.yaml', "r")
+# lang = yaml.load(f, Loader=yaml.CLoader)
+# LANGUAGES[lang['language_info']['code']] = lang
+# LANGS.append(lang['language_info']['code'])
 
 for filename in os.listdir('sophie_bot/modules/langs'):
-    if filename == 'en.yaml':
-        continue
     logger.debug("Loading language file " + filename)
     f = open('sophie_bot/modules/langs/' + filename, "r")
-    lang = ujson.load(f)
+    lang = yaml.load(f, Loader=yaml.CLoader)
 
-    exec("LANGUAGES[\"" + lang['language_info']['code'] + "\"] = lang")
+    lang_code = lang['language_info']['code']
+    LANGS.append(lang_code)
+    LANGUAGES[lang_code] = lang
 
-    for massive in lang:
-        if massive == 'language_info':
-            continue
-        for module in LANGUAGES['en'][massive]:
-            for str in LANGUAGES['en'][massive][module]:
-                if massive in lang and \
-                   module in lang[massive] and \
-                   str in lang[massive][module]:
-                    LANGUAGES[lang['language_info']['code']][massive][module][str] = \
-                        lang[massive][module][str]
-                else:
-                    LANGUAGES[lang['language_info']['code']][massive][module][str] = \
-                        LANGUAGES['en'][massive][module][str]
-
-    LANGS += tuple([lang['language_info']['code']])
 
 LANGS.sort()
 

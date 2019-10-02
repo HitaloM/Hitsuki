@@ -40,8 +40,7 @@ coloredlogs.install(level='INFO', logger=logger)
 
 f = open('data/bot_conf.yaml', "r")
 
-CONFIG = yaml.load(f)
-print(CONFIG)
+CONFIG = yaml.load(f, Loader=yaml.CLoader)
 
 logger.info("----------------------")
 logger.info("|      SophieBot     |")
@@ -55,6 +54,7 @@ if not (platform := sys.platform == 'linux' or 'linux2'):
 DEBUG_MODE = CONFIG["Advanced"]["debug_mode"]
 if DEBUG_MODE is True:
     logger.setLevel(logging.DEBUG)
+    coloredlogs.set_level('DEBUG')
     logger.warn("! Enabled debug mode, please don't use it on production to repect data privacy.")
 
 
