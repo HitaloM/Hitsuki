@@ -57,7 +57,7 @@ STRINGS:
         user_admin_ban: "This is an admin, I can't ban them."
         user_admin_mute: "This is an admin, I can't mute them."
         user_admin_kick: "This is an admin, I can't kick them."
-        user_admin_unmute: "I've unmuted thast user."
+        user_admin_unmute: "I've unmuted that user."
         user_mooted: "{admin} has muted {user} in {chat_name}."
         user_unmooted: "{admin} has unmuted {user} in {chat_name}."
         kickme_admin: "I can't kick you!"
