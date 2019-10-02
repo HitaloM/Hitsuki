@@ -1,42 +1,598 @@
+---
 language_info:
-    name: Russian
-    small_name: eng
-    flag: "🇺🇸"
-    code: ru
+  name: Russian
+  small_name: rus
+  flag: "🇺🇸"
+  code: ru
+STRINGS:
+  notes:
+    notelist_no_notes: "There aren't any notes in this chat!"
+    notelist_header: "<b>Заметки в {chat_name}</b>:\n"
+    no_right_save_note: "Вы не имеете права оставлять заметки в этом чате!"
+    saved: сохранена
+    updated: обновлена
+    note_saved_or_updated: "**Заметка {note_name} {status} в {chat_title}!**\n"
+    you_can_get_note: "Вы можете получить заметку используя `/get {name}`, или `{name}`"
+    you_can_get_note_enc: "Вы можете получить эту заметку используя `/get {name} {password}`"
+    note_not_encrypted: "Note not encrypted! 🔓"
+    note_encrypted_fully: "Note encrypted fully 🔐\n"
+    password: "password: <code>{password}</code>\n"
+    dont_have_rights_to_save: "Вы не имеете прав сохранять заметки здесь!"
+    del_note: "Удалить заметку"
+    no_note: "Не могу найти эту заметку."
+    note_removed: "Заметка `{note_name}` удалена в **{chat_name}**!"
+    cant_find_note: "Я не могу найти эту заметку в **{chat_name}**!"
+    note_info_title: "<b>Note info</b>\n"
+    note_info_note: "Note: <code>{note_name}</code>\n"
+    note_info_updated: "Last updated in: <code>{data}</code> by {user}\n"
+    note_info_created: "Note created in: <code>{data}</code> by {user}\n"
+    note_info_crt_not_cached: "Creator wasn't cached, I can't find him.\n"
+    note_not_found: "Заметка не найдена!"
+    note_deleted_by: "Заметка {note_name} удалена {user}."
+    user_blocked: "Write /start in my PM and click on the button again!"
+    note_so_big: "This note is bigger than the Telegram's limit of 200 characters!"
+    only_admins_can_rmw: "Только админы могут удалять заметки."
+    delmsg_no_arg: "Кнопка deletemsg может иметь только аргумент 'admin' или 'user'!"
+    bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
+    pmed_note: "I have PM'ed that note to you!"
+    notename_cant_contain: "Note name can't contain `{}` !"
+    note_saved_or_updated_in_fed: "**Заметка {note_name} {status} в {fed_name} федерации**\n"
+    note_already_in_chat: "Note `{note_name}` already exists in **{chat_name}** chat, remove it before trying to save."
+  bans:
+    user_banned: "User {user} has been banned by {admin} in {chat_name}!\n"
+    reason: "Причина: {reason}"
+    u_dont_have_rights: "Вы не имеете прав банить пользователей здесь!"
+    time_var_incorrect: "Значение времени недопустимо!"
+    bot_cant_be_banned: "Are you crazy?! I'm not gonna ban myself!"
+    u_dont_have_rights_kick: "Вы не имеете прав кикать пользователей отсюда!"
+    u_dont_have_rights_mute: "Вы не имеете прав затыкать пользователей здесь!"
+    u_dont_have_rights_unban: "Вы не имеете прав разбанивать пользователей здесь!"
+    u_dont_have_rights_unmute: "Вы не имеете прав возвращать пользователей из мута здесь!"
+    bot_cant_be_kicked: "Are you crazy?! I'm not gonna kick myself!"
+    bot_cant_be_muted: "Ты сумасшедший?! Заткни себя!"
+    bot_cant_be_unbanned: "Ehh! I wasn't banned before!!!"
+    bot_cant_be_unmuted: "Uhh! I wasn't muted to unmute!?"
+    user_kicked: "{admin} has kicked {user} in {chat_name}"
+    user_unbanned: "{admin} has unbanned {user} in {chat_name} successfully"
+    user_admin_ban: "This is an admin, I can't ban them."
+    user_admin_mute: "This is an admin, I can't mute them."
+    user_admin_kick: "This is an admin, I can't kick them."
+    user_admin_unmute: "Mm?! Unmuted."
+    user_mooted: "{admin} has muted {user} in {chat_name}."
+    user_unmooted: "{admin} has unmuted {user} in {chat_name}."
+    kickme_admin: "Я не могу кикнуть тебя!"
+    whitelisted: "Ха-ха-ха - нет! Вы в белом списке!"
+    kickme_success: "Хорошо.. нет проблем!"
+    tmute_sucess: "Admin {admin} has muted {user} for {time} {unit} !"
+    usernt_banned: "This user wasn't banned in the first place!"
+    user_gbanned: "\n\n<b>Warning! This user is globally banned becuase:</b>\n<code>{reason}</code>"
+  connections:
+    cant_find_chat_use_id: "I am not able to find this chat, try using chat id instead."
+    cant_find_chat: "Я не могу найти этот чат."
+    not_in_group: "Вы не в группе, к которой вы пытаетесь подключиться, войдите и напишите любое сообщение там."
+    connected: "Успешное подключено к **{}**!"
+    connected_pm_to_me: "Your PM has been successfully connected to **{}**! Write to @rSophieBot to start using connection."
+    pm_connected: "Your PM has been successfully connected to **{}**!"
+    history_empty: "You're not connected to any chat for history, connect via `/connect (chat id)`"
+    connected_chat: "**Текущий подключенный чат:**\n`"
+    select_chat_to_connect: "`\n\n**Select a chat to connect:**"
+    u_wasnt_connected: "Вы не были подключены к какому-либо чату раньше!"
+    disconnected: "Вы были отключены от {} ."
+    not_in_chat: "Вы больше не в этом чате, я отключу вас."
+    u_should_be_admin: "Вы должны быть администратором в {}!"
+    usage_only_in_groups: "Использование ограничено только в группах!"
+  greetings:
+    welcome_hay: "Добро пожаловать {mention}! Как дела?"
+    cant_find_note: "Я не могу найти эту заметку."
+    welcome_set_to_note: "Установка приветствия в заметку: <code>{}</code>"
+    welcome_is_default: "Приветствие не настроено."
+    no_args_serv: "Пожалуйста, добавьте аргумент yes или no , чтобы включить или выключить очистку служебных сообщений Telegram"
+    serv_yes: "Служба очистки успешно включена в этом чате!"
+    serv_no: "Служба очистки успешно включена в этом чате!"
+    noArgs: "Дайте какой-либо аргумент."
+    wlcm_sec_hard: "Защита Входа установлена **HARD** в этом чате!"
+    wlcm_sec_soft: "Защита Входа установлена **SOFT** в этом чате!"
+    wlcm_sec_off: "Защита Входа выключена в этом чате!"
+    clik2tlk_btn: "Нажмите здесь чтобы говорить"
+    wlcm_sec: "Hey {mention}, Please click the button below to prove that you aren't a bot!"
+    not_trgt_usr: "Вы не должны нажимать эту кнопку!"
+    trgt_success: "Отлично! Вы снова можете писать сообщения!"
+    not_trgt: "Вы не должны нажимать эту кнопку!"
+    cln_wel_alr_enabled: "Cleaning welcomes is already enabled for <b>{chat_name}</b>!"
+    cln_wel_alr_disabled: "Cleaning welcomes was not enabled for <b>{chat_name}</b>."
+    cln_wel_disabled: "Очистка приветствий `disabled` для **{chat_name}**."
+    cln_wel_enabled: "Очистка приветствий `enabled` для **{chat_name}**."
+    cln_wel_s_enabled: "Очистка приветствий включена для **{chat_name}**."
+    cln_wel_s_disabled: "Очистка приветствий отключена для **{chat_name}**."
+  rules:
+    cannot_find_note: "I can't find the note <code>{}</code>"
+    set_note: "<code>{}</code> теперь заметка для правил"
+    didnt_set_note: "В этой группе нет ещё заметки для правил"
+    cannot_find_set_note: "Я не могу найти заметку для правил."
+    havent_set_rules_note: "Вы ещё не установили заметку для правил."
+    success_remove_rules_note: "Успешно удалила заметку о правилах в <b>{}</b>."
+  filters:
+    filters_in: "Заметки в **{chat_name}**:\n"
+    no_filters_in: "Нет фильтров в **{}**!"
+    filtes_in: "**Фильтры в {}:**\n"
+    cant_find_filter: "Я не могу найти этот фильтр!"
+    filter_deleted: "Фильтр `{filter}` в **{chat_name}** удалён!"
+    filter_ban_success: "User {user} has been banned due to automated action on filter <code>{filter}</code>."
+    filter_mute_success: "User {user} has been muted due to automated action on filter <code>{filter}</code>."
+    filter_tban_success: "User {user} temporary got banned on <code>{time}</code> {unit} due to automated action on filter <code>{filter}</code>."
+    filter_tmute_success: "User {user} temporary got muted on <code>{time}</code> {unit} due to automated action on filter <code>{filter}</code>."
+    filter_kick_success: "Пользователь {user} кикнут из-за автоматического действия фильтра **{filter}**."
+    filter_warn_ban: "That's {warns}/{warns} warns. {user} was banned due to\n<code>{reason}</code>."
+    filter_warn_warned: "{user} was warned in {chat} \nHandler: <code>{handler}</code>\nWarns: {current_warns}/{max_warns}\nReason:\n<code>{reason}</code> "
+    not_enoff_rights: "I don't have enough rights to do filter action here!"
+    write_keyword: "Please write keyword / key words."
+    handler_added: "Great! I will answer on '<code>{handler}</code>'."
+    select_action: "\nNow please select a action for this filter:"
+    action_note: "Send note"
+    action_answer: "Answer on message"
+    action_delmsg: "Just delete message"
+    action_warn: "Warn user"
+    action_ban: "Ban user"
+    action_mute: "Mute user"
+    action_kick: "Kick user"
+    del_origin_off: "❌ Delete origin message: OFF"
+    del_origin_on: "❌ Delete origin message: ON"
+    exit: "❗️ Exit"
+    back: "◀️ Back"
+    write_reason: "Great! Please write reason with which we will do this action."
+    write_notename: "Great! Please write notename."
+    write_text: "Great! Please write text for answer."
+    select_time: "<b>Great! Now select time for this action.</b>"
+    select_time_tip: "\nYou can also manually write time, for example write '2d'"
+    select_time_btns: "\nOr select time by buttons below:"
+    time_f: Forever
+    time_2h: "2 hours"
+    time_5h: "5 hours"
+    time_24h: "24 hours"
+    time_2d: "2 Days"
+    time_1w: "1 Week"
+    time_not_valid: "Значение времени недопустимо!"
+    cant_find_note: "Sorry, I can't find this note."
+    filter_added: "<b>Filter added successfully!</b>"
+    filter_updated: "<b>Filter updated successfully!</b>"
+    new_filter_chat: "\nChat: <b>{chat_title}</b>"
+    new_filter_handler: "\nHandler: <code>{handler}</code>"
+    new_filter_action: "\nAction: <code>{action}</code>"
+    new_filter_also_del_msg: "\nAlso delete origin message."
+    new_filter_time: "\nTime: on <code>{time}</code>"
+    new_filter_note: "\nNote: <code>{note}</code>"
+    new_filter_reason: "\nПричина:\n"
+  warns:
+    user_no_admeme: "Вы не админ."
+    purged_warns: "{admin} reset <code>{number}</code> warns of {user} in <b>{chat_name}</b>!"
+    usr_no_wrn: "{user} hasn't got any warn yet!"
+    usr_whitelist: "Это один из пользователей в белом списке!"
+    Admin_no_wrn: "Чёрт, я не могу дать предупреждение админу!"
+    warn: "{admin} выдал варн {user} в {chat_name}\n"
+    warn_rsn: "Причина: `{reason}`\n"
+    warn_bun: "Предупреждения превышены! {user} был забанен!"
+    warn_num: "Предупреждения: {curr_warns}/{max_warns}\n"
+    rmv_warn_admin: "Вы не админ, только админы могут это делать!"
+    rmv_sfl: "Предупреждение удалено {admin}"
+    warn_list_head: "{user}'s **предупреждений в {chat_name}:**\n"
+    user_hasnt_warned: "{user} не имел предупреждений в **{chat_name}** до этого!"
+    warn_limit: "Лимит предупреждений в {chat_name}: `{num}`"
+    warn_limit_upd: "Лимит предупреждений обновлен до {}!"
+    no_user_warns: "{user} не имеет каких-либо предупреждений!"
+    warnlimit_too_small: "Specified warnlimit is too small. Minimal - 2."
+  msg_deleting:
+    no_rights_purge: "You don't have enough rights to purge here!"
+    reply_to_msg: "Reply to a message to delete!"
+    purge_error: "I can't continuity the purge, mostly it's because you trying delete message older than 2 days."
+    purge_done: "Пурж завершён!\nЭто сообщение будет удалено через 5 секунд."
+    no_rights_del: "Вы не имеете прав удалять сообщения здесь!"
+  misc:
+    your_id: "Your id: <code>{}</code>\n"
+    chat_id: "Chat id: <code>{}</code>\n"
+    user_id: "{}'s user id: <code>{}</code>\n"
+    pinned_success: "Успешно закреплено!"
+    no_reply_msg: "Please reply to a message to pin!"
+    unpin_success: "Успешно откреплено!"
+    promote_success: "{user} was successfully promoted in {chat_name}!"
+    promote_title: "\nWith custom role <code>{role}</code>!"
+    rank_to_loong: "Error: custom role text can't be longer than 16 symbols."
+    promote_failed: "Повышение провалилось! Проверьте, имею ли я права для этого"
+    demote_success: "{user} was successfully demoted in {chat_name}!"
+    demote_not_admin: "That user isn't admin."
+    demote_failed: "Понижение провалилось. Проверьте, имею ли я нужные права"
+    chat_not_modified_pin: "Вы пытаетесь закрепить уже закреплённое сообщение!"
+    chat_not_modified_unpin: "There isn't any pinned message to unpin!"
+    help_btn: "Нажмите на меня, чтобы получить помощь!"
+    help_txt: "Click the button below for help!"
+    paste_success_extra: "**Успешно вставлено!**\nСокращенный url: {}\nURL оригинального Dogbin: {}"
+    paste_success: "**Успешно вставлено!**\nURL Dogbin: {}"
+    paste_fail: "Проблема соединения с Dogbin!"
+    paste_no_text: "You didn't supply text to paste!"
+    user_info: "<b>Информация о пользователе</b>\n"
+    info_id: "<b>ID Пользователя:</b> <code>{id}</code>\n"
+    info_first: "\n<b>Имя:</b> {first_name}"
+    info_last: "\n<b>Фамилия:</b> {last_name}"
+    info_username: "\n<b>Никнейм:</b> {username}"
+    info_link: "\n<b>Ссылка на пользователя:</b> {user_link}"
+    info_saw: "\nЯ видела его в <code>{num}</code> группах"
+    info_fbanned: "\nЗабанен в текущей Федерации: "
+    info_admeme: "\nПользователь имеет права администратора в этом чате."
+    father: "\nHe is my creator."
+    sudo_crown: "\nHey! Look at him, that user has a crown, let me see it.. Whaow, it has a engraving <b>'sudo user'</b>."
+    user_premium: "\nThis user has Premium status!"
+    gbanned: "\nВсего забанено: "
+    no: false
+    gbanned_yes: "<b>Yes.</b>\n"
+    gbanned_date: "Дата: `{data}`\n"
+    gbanned_reason: "Причина: '{reason}'\n"
+  gbans:
+    user_is_blacklisted: "User {user} is blacklisted, so has been removed.\nReason: <code>{rsn}</code>"
+  pm_menu:
+    start_hi: "Hey there! My name is Sophie, I help you manage your group in an efficient way!"
+    btn_help: "❔ Помощь"
+    btn_lang: "🇷🇺 Язык"
+    btn_chat: "👥 Sophie Group"
+    btn_channel: "📡 Sophie News"
+  disable:
+    disablable: "<b>Отключенные команды:</b>\n"
+    disabled_list: "<b>Отключенные команды в чате {chat_name}:</b>\n"
+    wot_to_disable: "What do you wanna disable?"
+    already_disabled: "Эта команда уже отключена!"
+    disabled: "Команда `{}` отключена в **{}**!"
+    wot_to_enable: "What do you wanna enable?"
+    already_enabled: "Эта команда не отключена!"
+    enabled: "Команда `{}` включена в **{}**!"
+  bot_rights:
+    change_info: "У меня нет права менять информацию группы, сделайте меня админом с этим правом."
+    edit_messages: "У меня нет права редактировать сообщения канала!"
+    delete_messages: "У меня нет прав удалять сообщения здесь."
+    ban_user: "У меня нет прав блокировать пользователей, сделайте меня админом с этим правом."
+    pin_messages: "У меня нет прав закреплять сообщения, сделайте меня админом с этим правом."
+    add_admins: "У меня нет прав добавлять админа, сделайте меня админом с этим правом."
+  feds:
+    no_args: "Укажите имя Федерации чтобы создать Федерацию!"
+    only_creators: "Только создатели группы могут вступать/покидать Федерацию!"
+    created_fed: "Поздравления! Вы успешно создали Федерацию\n\nИмя: {name}\nID: <code>{id}</code>\nСоздатель: {creator}\n"
+    fed_id_invalid: "The given Federation ID is invalid! Please give me a Valid ID. "
+    joined_fed_already: "Этот чат уже вступил в Федерацию! Используйте /leavefed чтобы покинуть её"
+    join_fed_success: "Отлично! Федерация этого чата теперь **{name}**!"
+    chat_not_in_fed: "This chat is not in any federation yet."
+    leave_fed_success: "Чат покинул федерацию."
+    only_creator_promote: "Только создатель Федерации может fpromote пользователей."
+    admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
+    admin_added_to_fed: "Пользователь {user} добавлен в админы **{name}** Федерации."
+    admin_not_in_fed: "User {user} is not a <b>{name}</b> Federation admin."
+    admin_demoted_from_fed: "User {user} demoted from <b>{name}</b> Federation admins."
+    chats_in_fed: "**Чаты, подключенные к {name} Федерации:**\n"
+    fed_info: "**Информация о федерации**:\n"
+    fed_name: "**Имя:** {name}\n"
+    fed_id: "**ID:** {id}\n"
+    fed_creator: "**Создатель:** {user}\n"
+    chats_in_fed_info: "**Чаты в этой федерации:** {num}\n"
+    banned_in_fed_info: "Banned users in the fed: {num}\n"
+    no_fbanned_in_fed: "There isn't any fbanned user in {fed_name} Federation!"
+    fban_self: "That's a nice show!"
+    fban_creator: "How can I ban Federation creator?! I don't think it gonna be funny."
+    fban_fed_admin: "I'm not going to ban a fed admin from their own fed!"
+    need_admin_to_fban: "Вы должны быть админом Федерации, чтобы использовать fban в {name} Федерации"
+    already_fbanned: "{user} уже получил fban в этой федерации."
+    fbanned_header: "<b>Бан в федерации</b>"
+    un_fbanned_header: "<b>Разбан в федерации</b>"
+    fbanned_fed: "\nФедерация: {fed}"
+    fbanned_fadmin: "\nАдмин федерации: {fadmin}"
+    fbanned_user: "\nПользователь: {user}"
+    fbanned_reason: "\nПричина: <code>{reason}</code>"
+    fbanned_process: "\nСтатус: Banning in {num} chats"
+    un_fbanned_process: "\nСтатус: Разбан в {num} чатов"
+    fbanned_done: "\nСтатус: <b>Готово!</b> Пользователь забанен в <code>{num}</code> чатов!"
+    un_fbanned_done: "\nСтатус: <b>Готово!</b> Пользователь разбанен в <code>{num}</code> чатов!"
+    user_wl: "Этот пользователь в белом списке."
+    fban_usr_rmvd: "Пользователь {user} забанен в этой федерации. Поэтому он был удалён!\nПричина: {rsn}"
+    unfban_self: "Черт, как я вообще могу разбанить себя?!"
+    user_not_fbanned: "{user} wasn't fbanned in this federation."
+    unfban_started: "Разбан {user} в {fed_name} федерации начат.."
+    unfban_completed: "{user} разбанен в {fed_name} федерации"
+    no_fed_2: "Этот чат не в какой-либо федерации, чтобы отписаться от какой-либо федерации."
+    no_arg_given: "Как я могу подписаться на любую федерацию без Fed ID?!"
+    only_creator: "Только создатель федерации может подписаться на любую федерацию."
+    invalid_fedid: "Указанный идентификатор Fed недействителен!"
+    subfed_success: "Эта федерация успешно подписана на **{fedname}** федерацию."
+    already_subfed: "This federation is already subscribed to the given federation."
+    no_fed_3: "Этот чат не в какой-либо федерации, чтобы отписаться от какой-либо федерации."
+    no_arg_given_2: "Как я могу подписаться на любую федерацию без Fed ID"
+    only_creator_2: "Только создатель федерации может отписаться от любой федерации"
+    fbanned_list_header: "Забанен в {fed_name} Федерации ({fed_id}):"
+  reports:
+    user_is_admin: "You're an admin here, why'd you need to report someone?.."
+    user_is_whitelisted: "You're a whitelisted user, why'd you need to report someone?.."
+    reports_disabled: "Reports are currently <b>disabled</b> in this group."
+    no_user_to_report: "На какого пользователя Вы хотите пожаловаться?"
+    report_admin: "Вы <b>не можете</b> пожаловаться на админа."
+    report_whitedlisted: "You <b>can't</b> report a whitelisted user."
+    reported_user: "<b>Я сьябидничала</b> {user} <b>админам></b>"
+    reported_reason: "\n<b>Причина:</b>\n<code>{reason}</code>"
+    reports_on: "Репорты <b>включены</b> в этой группе."
+    reports_off: "Репорты <b>выключены</b> в этой группе."
+    user_not_admin: "<b>You're not an admin. Means you can't change reports status. </b>"
+    reports_already_on: "<b>Репорты уже включены. Нафига их заново врубать то?..</b>"
+    reports_turned_on: "Репорты <b>включены.</b>"
+    reports_already_off: "<b>Репорты уже выключены. Нафига их заново вырубать то?..</b>"
+    wrong_argument: "<b> Не правильный аргумент. </b>"
+HELPS:
+  notes:
+    btn: Заметки
+    text: |
+      Notes are great to save random tidbits of information; a phone number, a nice gif, a funny picture - anything!
 
+      <b>Available commands are:</b>
+      - /save (name) (data): Replying to a message will save that message. Even works on media!
+      - /get (name): get the note registered to that word.
+      - /clear (name): deletes the note
+      - /notes: Lists all notes
+      - /saved: same as /notes
+      - /noteinfo (name): Shows detailed info about note, who updated and created note
+
+      An example of how to save a note would be via:
+      <code>/save data This is example note!</code>
+      Now, anyone using <code>/get data</code>, or <code>#data</code> will be replied to with <code>This is example note!</code>.
+
+      If you want to save an image, gif, or sticker, or any other data, do the following:
+      <code>/save word</code> while replying to a sticker or whatever data you'd like. Now, the note at <code>#word</code> contains a sticker which will be sent as a reply.
+
+      Tip: to retrieve a note without the formatting, use <code>/get (name) noformat</code>
+      This will retrieve the note and send it without formatting it; getting you the raw markdown, allowing you to make easy edits.
+    buttons:
+      btns: Кнопки
+      md: Разметка
+      vars: "Переменные"
+      html: HTML
+      enc: Шифрование
+    vars: |
+      You can use special variable in notes, here is a list of it:
+      <code>{first}</code> - First name, will something like 'Mike'
+      <code>{last}</code> - Last name, ex. 'Smith'
+      <code>{fullname}</code> - Full name, ex. 'Mike Smith'
+      <code>{username}</code> - Gives the username, ex. '@MikeSmith009'
+      <code>{mention}</code> - Gives the link to user, ex. <a href=\"https://t.me/rSophieBot/\">Sophie</a>
+      <code>{id}</code> - Gives the id of the user, ex. '885745757'
+      <code>{chatname}</code> - Gives the current chat name, ex. 'Sophie chat'
+    md: |
+      You can use markdown to make your messages more expressive. This is the markdown currently supported:
+
+      <code>`code words`</code>: backticks allow you to wrap your words in monospace fonts. Shows as: <code>code words</code>
+      <code>**bold words**</code>: asterixes are used for bold font. Shows as: <b>bold words</b>
+      <code>__italic words__</code>: underscores are used for italics. Shows as: <i>italic words</i>
+      <code>[hyperlink](example.com)</code>: this is used for hyperlinks, and will show as such: <a href=\"http://example.com/\">hyperlink</a>. Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown.
+    html: |
+      Markdown is easy, but when you will be making many notes, note by note, you will see obvious flaws, every extra '*' can broke your perfect note."
+      How about HTML? Let's try use it instead of markdown. Please read before the 'Markdown' guide."
+
+      To use the HTML in the note add the `[format:html]` to the end of note, you can fully disable formatting note by `[format:none]`.
+
+      HTML markdown:"
+      `<code>code words</code>`: will shows as '`blue text`'"
+      a6: "`<b>bold text</b>`: will shows as **bold text**"
+      a7: "`<i>italic text</i>`: will shows as __italic text__"
+      a8: "`<a href=\"http://example.com/\">hyperlink</a>`: Example of hyperlink, will shown as [hyperlink](example.com)"
+    btns: |
+      Making buttons isn't so hard as you expected. Unlike other bots Sophie have many types of custom buttons, let's try to use it!
+      Lets start by default url buttons, url buttons have such syntax <code>[Button name](buttonurl:https://url.com)</code>.
+
+      Ok, you added many buttons to your message, but it looks ugly? You wanna make few buttons per line? This will help you:
+      Add <code>:same</code> at the end of your link; it'll set it on the same line as the other one. For example:
+      <code>[Button 1](buttonurl:https://url.com)</code>\n[Button 2](buttonurl:https://url.com:same)
+      You can set more than 2 buttons per row, do not overdo it.
+
+      Ok, you just created you note with many buttons, you will see that you do not have enough just url buttons, see other's:
+      - <code>[Button name](buttonnote:name_of_note)</code>: With such types of button you will get a note in your PM, this done to prevent spamming notes in pm.
+      - <code>[Button name](buttonalert:name_of_note)</code>: This one will show you popup with note data (Warning, only text supported by popups), for example this can be done for rules, you are limited only by your imagination and by 200 symbols limit for popups
+      - <code>[Button name](deletemsg:admin)</code>: Some notes used by warning, or notify, after reading it it leaving in chat, it spammy, right? This button will remove message, it have argument to control which one can be remove message `user` or `admin`.
+      \nCreate your beautiful and functional notes with Sophie.
+    enc: |
+      Sophie respects your privacy, you are allowed to encrypt your notes to save your data privacy.
+      By default all notes are encrypted with particle method.
+      Just add a <code>[encryption:fully]</code> in note text to encrypt it fully with password requesting.
+      Example:
+      <code>/save test_note This is a text of test_note [encryption:fully]</code>
+
+      You can also disable encryption fully by <code>[encryption:no]</code>
+  purges:
+    btn: Чистка
+    text: |
+      Need to delete a lot of messages? That's what purges are for!
+
+      <b>Available commands are:</b>
+      - /purge: deletes all messages from the message you replied to, to the current message.
+      - /del: deletes the message you replied to.
+  warns:
+    btn: Предупреждения
+    text: |
+      Keep your members in check with warnings; stop them getting out of control!
+
+      <b>Available commands are:</b>
+      - /warn (reason): warns a user for the specified reason.
+      - /warns: returns the list of warns, with reasons, for that user.
+      - /resetwarns: resets all of a user's warns.
+      - /warnlimit (number): sets the number of warns before an action is taken upon the user.
+
+      If you're looking for a way to automatically warn users when they say certain things, go to the filters module.
+  misc:
+    btn: Прочее
+    text: |
+      An 'odds and ends' module for small, simple commands which don't really fit anywhere
+
+      <b>Available commands are:</b>
+      - /id: gives an ID of user and chat.
+      - /stats: shows bot stats.
+      - /botchanges: shows bot changes (commit history)
+      - /runs: responds with a randomly generated 'run away' string.
+      - /paste (text): Pastes text to the Dogbin.
+  connections:
+    btn: Соединения
+    text: |
+      Sometimes, you just want to add some notes and filters to a group chat, but you don't want everyone to see; This is where connections come in...
+      This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+
+      <b>Available commands are:</b>
+      - /connect (chat): connects to the chat with chat username/ID, allowing you to view/edit contents.
+      - /connect: shows last 3 chats to fast connect.
+
+      You can retrieve the chat ID by using the /id command in your chat. Don't be surprised if the id is negative, all super groups have negative ids.
+  greetings:
+    btn: Приветствие
+    text: |
+      Give your members a warm welcome with the greetings module!
+      Welcomes are a note trigger, use /setwelcome to set welcome trigger to note.
+
+      <b>Available commands are:</b>
+      - /setwelcome (notename): sets your new welcome note!
+      Note: Please keep in mind, Sophie uses notes for welcome, you must create note with welcome text and set note as welcome.
+      Steps:
+      1. Create note with your welcome
+      2. /setwelcome notename
+
+      - /setwelcome off: disable welcome in chat."
+      - /cleanservice: Remove Telegram service messages about user joined or leaved chat.
+      - /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.
+      - /welcomesecurity [off/soft/hard]: soft - restricts user's permission to send media files for 24 hours, hard - restict user's permission to send messages until they click on the button 'I'm not a bot'.
+  filters:
+    btn: Фильтры
+    text: |
+      Make your chat more lively with filters
+      <b>Available commands are:</b>
+      - /addfilter: Add a new filter in your chat.
+      - /delfilter (keyword/key words): Will stop the given filter
+      - /filters: Will display all filters in that chat!
+  federations:
+    btn: Федерация
+    text: |
+      Group management.. It's fun, until you start getting spammers in all your chats, and you need to ban them. Then you need to start banning more, and more, and it gets painful. How can you deal? Do you have to ban them manually, in all your groups?
+      No more! With federations, you can make a ban in one chat overlap to all your other chats. You can even appoint federation admins, so that your trustworthiest admins can ban across all the chats that you want to protect.
+
+      <b>Available commands are:</b>
+      - /newfed (fedname): Creates a new federation with the given name. Users are allowed to own one federation only. Using this method when you already have a fed will simply change the federation name.
+      - /joinfed (FedID): Joins the current chat to the federation. Each chat can only be in one federation. Only chat owners can do this.
+      - /finfo: Shows info about current chat Federation, you can <code>/finfo (Fed ID)</code> - to see info about other Federation.
+
+      Federation admins, they can use a fban command and others, to control they use this commands:
+      - /fpromote (user): Promotes the user to fed admin in your fed.
+      - /fdemote (user): Demotes the user from fed admin to normal user, in your fed.
+
+      Only to Federation admins:
+      - /fban (user): Bans a user from the current chat's federation.
+      - /unfban (user): Unbans a user the current chat's federation.
+      - /fchats: Shows a list of all chats which connected to your Federation.
+  disabling:
+    btn: Выключение
+    text: |
+      You might not like all the Sophie's features and wanna disable something to reduce spam in your group? If yes!, then this module is for you!
+      <b>Available commands are:</b>
+      - /disable (command): Disables the command
+      - /enable (command): Enables the command
+      - /disablable: See command list which commands can be disabled.
+      - /disabled: List of disabled commands in current chat.
+  pin:
+    btn: Закрепление
+    text: |
+      You wanna pin the message? Here you go.
+      <b>Available commands are:</b>
+      - /pin: pins the message you replied to; add <code>loud</code> to send a notification to group members.
+      - /unpin: Unpins the message.
+  lang:
+    btn: Язык
+    text: |
+      Not everyone can speak with perfect English, Sophie have a translation system, check it out.
+      <b>Available commands are:</b>
+      /lang: Will show a buttons with all languages and it will show current chat language.
+      /lang (lang): Will change the language without selecting it with buttons.
+
+      Not all the languages are currently supported, help us with translation on <a href=\"https://crowdin.com/project/Sophie\">our crowdin page</a>
+  rules:
+    btn: Правила
+    text: |
+      Save your chat with your rules
+      <b>Available commands are:</b>
+      - /setrules (notename): Set the rules
+      - /rules: Get the rules
+      Note: Please keep in mind, Sophie uses notes for rules, you must create note with rules text and set it
+      Steps:
+      1. Create note with your rules
+      2. /setrules (notename)
+      \nRules button will appear in the warn message
+  privacy:
+    btn: "Конфиденциальность и безопасность"
+    text: |
+      Sophie respects your privacy.
+      Sophie team constantly improve privacy and security.
+      <b>Server which run Sophie:</b>
+      - We use a server provided by vultr in Amsterdam.
+      - None of the SUDO have access to it.
+      - Server is totally secured by ssh keys and have enabled ufw.
+    buttons:
+      collection: "Data which we collect"
+      removing: "Удаление данных"
+    collection: |
+      Sophie team respects your privacy
+      - We don't collect your privacy data
+      - We don't save your messages or any info about your messages
+      - We collect only data which saved in Sophie (ex. notes)
+
+      <b>We are collecting users public data only:</b>
+      - We collect first and last names, used id and a used_id"
+      - We need this data for fast finding the user by nickname (ex. if you typing /warn @someone)
+      - We never use this data to make user profiles, it's just a some info to make Sophie faster and independent from Telegram's requests
+
+      <b>We collect chat datas:</b>
+      - We save the chat name and chat id, we don't save chat admins and creators
+      - We don't use chats data in analytics
+      - We need this data to make Sophie support operations in multiple chats, for example broadcasts, connections, etc.
+      <b>Analytics:</b>
+      - We use ONLY Sophie general metrics as speed, count of data types in all chats
+      - We auto-log errors which generated by Sophie (They have very limited info, only a error string and date)
+      - We log a gbans which done by SUDO's (with gbanned user_id)"
+    removing: |
+      Right now there is no way to do it automatically, but it is in Sophie team To-Do list.
+      However you can ask @MrYacha to do it manually.
+  reports:
+    btn: Репорты
+    text: |
+      Report an annoying user to admins.
+      <b>Available commands are:</b>
+      - /report (@user) (reason): Report a user to admins. Users only. Ex. /report @baduser bad user.
+      - @admin (reason): Same as upper command but doesn't support custom tags to report.
 RANDOM_STRINGS:
-    RUNS:
-        - "Nuuuuuuuuuuuu"
-        - "M cri"
-        - "Suka blyat!"
-        - "Sir, why?"
-        - "Why you doing this? I cry."
-        - "Someone really wrote this strings for me ;_;"
-        - "Alexa, play despacito!"
-        - "TODO: WRITE THIS STRING."
-        - "Jepo, replace this string on something kool."
-        - "Plox sir"
-        - "Wait, oh, stop.. I can't send stickers ;_;"
-        - "/runs"
-        - "Meaow! 😺"
-        - "Try /cat"
-        - "Runs from Rose"
-        - "Runs from Yana"
-        - "Runs from Haruka"
-        - "If you thought I will send you new joke strings - you are wrong, I won't!"
-        - "SaNd NeW KrANUl LeNk"
-        - "ᅠ"
-        - "?_?"
-        - "OwO"
-        - "ls there any race!?"
-        - "Access denied!!"
-        - "Okay you run and lemme see how long you can.."
-        - "Epuc"
-        - "It's Epuc"
-        - "I'm so poor..."
-        - "Sup?"
-        - "Yeah, press /runs more 😏"
-        - "U r smol"
-        - ">~<"
-        - "@admins plz <code>/disable /runs</code>"
-        - "Spam spam spam spam spam"
+  RUNS:
+    - "Нууууууууууууууууууууууууууууууууууууууууууу"
+    - "Я плакат"
+    - "Suka blyat!"
+    - "Сер, почему?"
+    - "Почему ты это делаешь? Я плачу."
+    - "Кто-то действительно написал это для меня ;_;"
+    - "Alexa, play despacito!"
+    - "TODO: НАПИСАТЬ ЭТУ СТРОКУ."
+    - "Jepo, replace this string on something kool."
+    - "Пожалуйста, чел"
+    - "Подождите, ой, стоп.. Я не могу отправить стикер ;_;"
+    - "/runs"
+    - "Мяу! 😺"
+    - "Try /cat"
+    - "Runs from Rose"
+    - "Runs from Yana"
+    - "Runs from Haruka"
+    - "If you thought I will send you new joke strings - you are wrong, I won't!"
+    - "SaNd NeW KrANUl LeNk"
+    - "ᅠ"
+    - "?_?"
+    - "OwO"
+    - "ls there any race!?"
+    - "Access denied!!"
+    - "Okay you run and lemme see how long you can.."
+    - "Epuc"
+    - "It's Epuc"
+    - "I'm so poor..."
+    - "Sup?"
+    - "Yeah, press /runs more 😏"
+    - "U r smol"
+    - ">~<"
+    - "@admins plz <code>/disable /runs</code>"
+    - "Spam spam spam spam spam"
