@@ -35,7 +35,7 @@ logging.basicConfig(
     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-coloredlogs.install(level='DEBUG', logger=logger)
+coloredlogs.install(level='INFO', logger=logger)
 
 
 f = open('data/bot_conf.yaml', "r")

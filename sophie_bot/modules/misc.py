@@ -17,6 +17,8 @@ import random
 
 from requests import post
 
+from telethon.tl.functions.channels import GetParticipantRequest, EditAdminRequest
+
 from aiogram.utils.exceptions import BadRequest
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
@@ -60,7 +62,10 @@ async def pinMessage(message, strings):
         await message.reply(strings['no_reply_msg'])
         return
     msg_2_pin = message.reply_to_message.message_id
-    args = message.get_args().lower()
+    args = message.get_args()
+    if args:
+        args = args.lower()
+
     tru_txt = ['loud', 'notify']
     if args in tru_txt:
         notify = False
@@ -116,25 +121,22 @@ async def promote(message, strings, status, chat_id, chat_title):
             return
         text += strings['promote_title'].format(role=title)
     else:
-        title = args
+        title = ''  # None won't work
 
-    await tbot.edit_admin(
-        chat_id,
-        user['user_id'],
-        add_admins=True,
-        invite_users=True,
-        change_info=True,
-        ban_users=True,
-        delete_messages=True,
-        pin_messages=True,
-        title=title
-    )
+    self_user = await tbot(GetParticipantRequest(chat_id, BOT_ID))
+    admin_rights = self_user.participant.admin_rights
+    # admin_rights = admin_rights.add_admin=False
+    try:
+        await tbot(EditAdminRequest(
+            channel=chat_id,
+            user_id=user['user_id'],
+            admin_rights=admin_rights,
+            rank=title))
+    except BadRequest:
+        return await message.reply(strings['promote_failed'])
+
     await update_admin_cache(chat_id)
     await message.reply(text)
-
-    # except BadRequestError:
-    #    await message.reply(strings['promote_failed'])
-    #    return
 
 
 @decorator.register(cmds="demote")
@@ -150,24 +152,18 @@ async def demote(message, strings, status, chat_id, chat_title):
     if user['user_id'] == BOT_ID:
         return
 
-    admins = await bot.get_chat_administrators(chat_id)
-
-    real_admin = False
-    for admin in admins:
-        if user['user_id'] == admin.user.id:
-            real_admin = True
-            break
-
-    if not real_admin:
+    raw_user_info = await bot.get_chat_member(chat_id, user['user_id'])
+    if raw_user_info['status'] == 'member':
         return await message.reply(strings['demote_not_admin'])
 
-    await bot.promote_chat_member(
-        chat_id,
-        user['user_id']
-    )
+    try:
+        await bot.promote_chat_member(
+            chat_id,
+            user['user_id']
+        )
+    except BadRequest:
+        return await message.reply(strings['demote_failed'])
 
-    # await message.reply(strings['demote_failed'])
-    # return
     await update_admin_cache(chat_id)
     await message.reply(strings['demote_success'].format(
         user=await user_link_html(user['user_id']),
