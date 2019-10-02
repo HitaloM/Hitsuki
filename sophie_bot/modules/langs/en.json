@@ -228,7 +228,7 @@
         "promote_failed": "Promotion failed! Check if I have rights to",
         "demote_success": "{user} was successfully demoted in {chat_name}!",
         "demote_not_admin": "That user isn't admin.",
-        "demote_failed": "Demotion failed. Maybe I can't demote or the person is promoted by someone else",
+        "demote_failed": "Demotion failed. Maybe I can't demote or that user is promoted by someone else",
         "chat_not_modified_pin": "That message is already pinned!",
         "chat_not_modified_unpin": "There isn't any pinned message to unpin!",
 
