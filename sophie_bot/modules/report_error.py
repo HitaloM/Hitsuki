@@ -15,13 +15,14 @@
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 
-from sophie_bot import CONFIG, dp, bot
+from sophie_bot import dp, bot
 from sophie_bot.modules.users import is_user_admin
+from sophie_bot.config import get_config_key
 
 
 @dp.callback_query_handler(regexp='report_error')
 async def report_error(query):
-    channel_id = CONFIG['advanced']['errors_channel']
+    channel_id = get_config_key("errors_channel")
     chat_id = query.message.chat.id
     if await is_user_admin(chat_id, query.from_user.id) is False:
         await query.answer("Only admins can report errors!")

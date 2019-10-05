@@ -19,7 +19,6 @@ import asyncio
 import redis
 import ujson
 import sys
-import yaml
 
 from flask import Flask
 
@@ -29,6 +28,8 @@ from pymongo import MongoClient
 from telethon import TelegramClient
 from aiogram import Bot, Dispatcher, types
 
+from sophie_bot.config import get_config_key
+
 # enable logging
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s: %(message)s",
@@ -36,11 +37,6 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 coloredlogs.install(level='INFO', logger=logger)
-
-
-f = open('data/bot_conf.yaml', "r")
-
-CONFIG = yaml.load(f, Loader=yaml.CLoader)
 
 logger.info("----------------------")
 logger.info("|      SophieBot     |")
@@ -51,29 +47,28 @@ if not (platform := sys.platform == 'linux' or 'linux2'):
     logger.error("SophieBot support only Linux systems, your OS is " + platform)
     exit(1)
 
-DEBUG_MODE = CONFIG["Advanced"]["debug_mode"]
+DEBUG_MODE = get_config_key("debug_mode")
 if DEBUG_MODE is True:
     logger.setLevel(logging.DEBUG)
     coloredlogs.set_level('DEBUG')
     logger.warn("! Enabled debug mode, please don't use it on production to repect data privacy.")
 
 
-OWNER_ID = int(CONFIG["Basic"]["owner_id"])
+OWNER_ID = get_config_key("owner_id")
 
-SUDO = list(CONFIG["Advanced"]["sudo"])
+SUDO = list(get_config_key("sudo"))
 SUDO.append(OWNER_ID)
 
-WL = list(CONFIG["Advanced"]["whitelisted"])
-WHITELISTED = SUDO + WL + [OWNER_ID] + [483808054]
+WHITELISTED = SUDO + [OWNER_ID] + [483808054]
 
-API_ID = CONFIG["Basic"]["app_id"]
-API_HASH = CONFIG["Basic"]["app_hash"]
-MONGO_CONN = CONFIG["Basic"]["mongo_conn"]
-MONGO_PORT = CONFIG["Basic"]["mongo_port"]
-REDIS_COMM = CONFIG["Basic"]["redis_conn"]
-REDIS_PORT = CONFIG["Basic"]["redis_port"]
-TOKEN = CONFIG["Basic"]["token"]
-NAME = TOKEN.split(':')[0] + CONFIG["Advanced"]["bot_name_additional"]
+API_ID = get_config_key("app_id")
+API_HASH = get_config_key("app_hash")
+MONGO_CONN = get_config_key("mongo_conn")
+MONGO_PORT = get_config_key("mongo_port")
+REDIS_COMM = get_config_key("redis_conn")
+REDIS_PORT = get_config_key("redis_port")
+TOKEN = get_config_key("token")
+NAME = TOKEN.split(':')[0] + get_config_key("bot_name_additional")
 
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie

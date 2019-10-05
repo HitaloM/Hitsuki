@@ -1,9 +1,10 @@
 from os.path import dirname, basename, isfile
 import glob
 
-from sophie_bot import CONFIG, logger
+from sophie_bot import logger
+from sophie_bot.config import get_config_key
 
-NO_LOAD_COMPONENTS = CONFIG["Advanced"]["not_load_this_components"]
+NO_LOAD_COMPONENTS = get_config_key("not_load_this_components")
 
 
 def list_all_components():

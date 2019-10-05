@@ -20,12 +20,13 @@ import asyncio
 from time import gmtime, strftime
 
 from sophie_bot.modules.sudo_and_owner_stuff import do_backup
-from sophie_bot import CONFIG, bot, mongodb
+from sophie_bot import bot, mongodb
+from sophie_bot.config import get_config_key
 
 
 @aiocron.crontab('47 * * * *')
 async def import_cas_bans():
-    if CONFIG['advanced']['sync_cas_bans'] is False:
+    if get_config_key('sync_cas_bans') is False:
         return
     url = 'https://combot.org/api/cas/export.csv'
     ffile = requests.get(url, allow_redirects=True)
@@ -35,8 +36,8 @@ async def import_cas_bans():
         cas_banned.append(user_id[:-2])
 
     text = f"Start importing <code>{len(cas_banned)}</code> CAS bans"
-    if CONFIG['advanced']['gbans_channel_enabled'] is True:
-        await bot.send_message(CONFIG['advanced']['gbans_channel'], text)
+    if get_config_key('gbans_channel_enabled') is True:
+        await bot.send_message(get_config_key('gbans_channel'), text)
 
     s_num = 0
     for user_id in cas_banned:
@@ -58,13 +59,13 @@ async def import_cas_bans():
         mongodb.blacklisted_users.insert_one(new)
         s_num += 1
     text = f"Imported {s_num} CAS bans."
-    if CONFIG['advanced']['gbans_channel_enabled'] is True:
-        await bot.send_message(CONFIG['advanced']['gbans_channel'], text)
+    if get_config_key('gbans_channel_enabled') is True:
+        await bot.send_message(get_config_key('gbans_channel'), text)
 
 
 @aiocron.crontab('2 * * * *')
 async def backup():
-    if CONFIG['advanced']['auto_backups_enabled'] is False:
+    if get_config_key('auto_backups_enabled') is False:
         return
-    channel_id = CONFIG['advanced']['logs_channel_id']
+    channel_id = get_config_key('logs_channel_id')
     await do_backup(channel_id)

@@ -25,8 +25,9 @@ from aiogram import types
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 
-from sophie_bot import CONFIG, DEBUG_MODE, mongodb, dp, logger, bot
+from sophie_bot import DEBUG_MODE, mongodb, dp, logger, bot
 from sophie_bot.modules.helper_func.term import term
+from sophie_bot.config import get_config_key
 
 
 @dp.errors_handler()
@@ -104,7 +105,7 @@ async def report_error(event, telethon=False):
                              callback_data='get_delete_msg_{}_admin'.format(chat_id))
     )
 
-    if CONFIG['advanced']['errors_channel_enabled']:
+    if get_config_key("errors_channel_enabled"):
         buttons.insert(InlineKeyboardButton("Report error", callback_data='report_error'))
 
     await bot.send_document(

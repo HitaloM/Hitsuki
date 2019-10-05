@@ -17,8 +17,10 @@ import requests
 
 from nostril import nonsense
 
-from sophie_bot import CONFIG, decorator, tbot, mongodb
 from telethon.tl.functions.photos import GetUserPhotosRequest
+
+from sophie_bot import decorator, tbot, mongodb
+from sophie_bot.config import get_config_key
 from sophie_bot.modules.users import get_user_and_text, user_link_html
 
 
@@ -71,7 +73,7 @@ async def check_manually(message):
 
     api_url = "https://api.unifiedban.solutions/blacklist/check/" + str(user_id)
 
-    ubanned = requests.get(api_url, headers={'Authorization': CONFIG['advanced']['utoken']})
+    ubanned = requests.get(api_url, headers={'Authorization': get_config_key('utoken')})
 
     if ubanned.text == '{"Error": "No data"}':
         text += "\nUser not ubanned."

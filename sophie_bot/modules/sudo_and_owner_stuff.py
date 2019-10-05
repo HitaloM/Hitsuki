@@ -22,10 +22,11 @@ import requests
 
 from time import gmtime, strftime
 
-from sophie_bot import CONFIG, tbot, decorator, mongodb, redis, logger, bot
+from sophie_bot import tbot, decorator, mongodb, redis, logger, bot
 from sophie_bot.modules.main import chat_term, term, convert_size
 from sophie_bot.modules.notes import button_parser
 from sophie_bot.modules.users import get_user_and_text, user_link_html
+from sophie_bot.config import get_config_key
 
 
 @decorator.register(cmds='allcommands', is_sudo=True)
@@ -138,7 +139,7 @@ async def do_backup(chat_id, reply=False):
     file_name = f"Backups/dump_{date}.7z"
     if not os.path.exists("Backups/"):
         os.mkdir("Backups/")
-    await term(f"mongodump --uri \"{CONFIG['basic']['mongo_conn']}\" --out=Backups/tempbackup")
+    await term(f"mongodump --uri \"{get_config_key('mongo_conn')}\" --out=Backups/tempbackup")
 
     # Let's also save Redis cache
     with open('Backups/tempbackup/redis_keys.json', 'w+') as f:
@@ -156,7 +157,7 @@ async def do_backup(chat_id, reply=False):
     shutil.copyfile('data/bot_conf.json', 'Backups/tempbackup/bot_conf.json')
 
     await bot.send_message(chat_id, "Compressing and uploading to Telegram...", reply_to_message_id=reply)
-    password = CONFIG['advanced']['backups_password']
+    password = get_config_key("backups_password")
     await term(f"cd Backups/tempbackup/; 7z a -mx9 ../../{file_name} * -p{password} -mhe=on")
     shutil.rmtree('Backups/tempbackup')
 

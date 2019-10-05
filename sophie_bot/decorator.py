@@ -22,16 +22,17 @@ from telethon import events
 from aiogram.dispatcher.handler import SkipHandler
 from aiogram import types
 
-from sophie_bot import BOT_USERNAME, CONFIG, DEBUG_MODE, tbot, dp, logger
+from sophie_bot import BOT_USERNAME, DEBUG_MODE, tbot, dp, logger
 from sophie_bot.modules.helper_func.error import report_error
 from sophie_bot.modules.helper_func.flood import prevent_flooding
+from sophie_bot.config import get_config_key
 
 import_module("sophie_bot.modules.helper_func.bount_filter")
 
-ALLOW_F_COMMANDS = CONFIG["Advanced"]["allow_forwards_commands"]
-ALLOW_COMMANDS_FROM_EXC = CONFIG["Advanced"]["allow_commands_with_!"]
-BLOCK_GBANNED_USERS = CONFIG["Advanced"]["block_gbanned_users"]
-RATE_LIMIT = CONFIG["Advanced"]["rate_limit"]
+ALLOW_F_COMMANDS = get_config_key("allow_forwards_commands")
+ALLOW_COMMANDS_FROM_EXC = get_config_key("allow_commands_with_!")
+BLOCK_GBANNED_USERS = get_config_key("block_gbanned_users")
+RATE_LIMIT = get_config_key("rate_limit")
 
 REGISTRED_COMMANDS = []
 

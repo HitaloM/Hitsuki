@@ -25,7 +25,8 @@ from telethon.tl.types import ChatBannedRights
 
 from aiogram.utils.exceptions import BadRequest
 
-from sophie_bot import CONFIG, SUDO, WHITELISTED, decorator, logger, mongodb, bot, flask
+from sophie_bot import SUDO, WHITELISTED, decorator, logger, mongodb, bot, flask
+from sophie_bot.config import get_config_key
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import user_link, get_user_and_text, user_link_html, is_user_admin
 from sophie_bot.modules.helper_func.decorators import need_args_dec
@@ -66,8 +67,8 @@ async def blacklist_user(message):
         text += f"\nNew reason: <code>{reason}</code>"
 
         await message.reply(text)
-        if CONFIG['advanced']['gbans_channel_enabled'] is True:
-            await bot.send_message(CONFIG['advanced']['gbans_channel'], text)
+        if get_config_key("gbans_channel_enabled") is True:
+            await bot.send_message(get_config_key("gbans_channel"), text)
         return
 
     text += "\nBy: " + await user_link_html(sudo_admin) + f" ({sudo_admin})"
@@ -109,8 +110,8 @@ async def blacklist_user(message):
         ttext = text + "\nStatus: <b>User not banned in any chat, but added in blacklist</b>"
 
     await msg.edit_text(ttext)
-    if CONFIG['advanced']['gbans_channel_enabled'] is True:
-        await bot.send_message(CONFIG['advanced']['gbans_channel'], ttext)
+    if get_config_key("gbans_channel_enabled") is True:
+        await bot.send_message(get_config_key("gbans_channel"), ttext)
 
 
 @decorator.register(cmds="ungban")
@@ -149,8 +150,8 @@ async def un_blacklist_user(message):
 
     await message.reply(text)
 
-    if CONFIG['advanced']['gbans_channel_enabled'] is True:
-        await bot.send_message(CONFIG['advanced']['gbans_channel'], text)
+    if get_config_key("gbans_channel_enabled") is True:
+        await bot.send_message(get_config_key("gbans_channel"), text)
 
 
 @decorator.register(only_groups=True)

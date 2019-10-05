@@ -20,13 +20,14 @@ import threading
 
 from importlib import import_module
 
-from sophie_bot import CONFIG, tbot, redis, logger, dp, flask
+from sophie_bot import tbot, redis, logger, dp, flask
+from sophie_bot.config import get_config_key
 from sophie_bot.modules import ALL_MODULES
 
 from aiogram import executor
 
-LOAD_COMPONENTS = CONFIG["Advanced"]["load_components"]
-CATCH_UP = CONFIG["Advanced"]["skip_catch_up"]
+LOAD_COMPONENTS = get_config_key("load_components")
+CATCH_UP = get_config_key("skip_catch_up")
 
 LOADED_MODULES = []
 

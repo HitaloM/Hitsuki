@@ -29,7 +29,8 @@ from aiogram.utils.callback_data import CallbackData
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 from sophie_bot.modules.main import convert_size
-from sophie_bot import CONFIG, decorator, dp, tbot, bot, mongodb, logger
+from sophie_bot import decorator, dp, tbot, bot, mongodb, logger
+from sophie_bot.config import get_config_key
 
 
 # Constants
@@ -43,7 +44,7 @@ FOX_BETA_CHANNEL = -1001429093106
 
 SF_host = 'web.sourceforge.net'
 SF_user = 'mryacha'
-SF_pass = CONFIG['Advanced']['fox_sf_pass']
+SF_pass = get_config_key('fox_sf_pass')
 
 # FOX_FILES_LOCAL = '/home/yacha/ofoxtest/'
 FOX_FILES_LOCAL = '/var/www/fox_files/'
