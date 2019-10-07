@@ -1,17 +1,26 @@
-requests>=2.18.4
+# General
 https://github.com/LonamiWebs/Telethon/archive/master.zip
-ujson
+aiogram
+
+# DB's
 redis
+aioredis # Redis memery storage fom aiogram
 pymongo
 dnspython # needed to connect to cloud MongoDB instances
+
+# Optional deps to make telethon faster
 cryptg
-cryptography>=2.5 # needed for pysftp (fox module)
-pillow
-aiogram
-aioredis
+cryptography
+
+# Build uvloop from source, current pip version not compability with python3.8
+git+https://github.com/python/cpython
+git+https://github.com/MagicStack/uvloop
+
+# Other
 aiocron
+requests
 git+https://github.com/casics/nostril
 flask
-flask_bootstrap
-pysftp
+ujson
+PyYAML>5.0
 coloredlogs
