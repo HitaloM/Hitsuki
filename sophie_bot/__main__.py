@@ -17,7 +17,6 @@ import os
 import asyncio
 import signal
 import threading
-import uvloop
 
 from importlib import import_module
 
@@ -32,7 +31,7 @@ CATCH_UP = get_config_key("skip_catch_up")
 
 LOADED_MODULES = []
 
-loop = uvloop.new_event_loop()
+loop = asyncio.get_event_loop()
 
 # Import modules
 for module_name in ALL_MODULES:

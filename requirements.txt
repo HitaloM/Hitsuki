@@ -13,8 +13,8 @@ cryptg
 cryptography
 
 # Build uvloop from source, current pip version not compability with python3.8
-git+https://github.com/python/cpython
-git+https://github.com/MagicStack/uvloop
+#git+https://github.com/python/cpython
+#git+https://github.com/MagicStack/uvloop
 
 # Other
 aiocron
