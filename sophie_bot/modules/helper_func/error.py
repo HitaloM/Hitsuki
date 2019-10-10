@@ -18,6 +18,7 @@ import io
 import traceback
 import ujson
 import datetime
+import random
 
 from time import gmtime, strftime
 
@@ -28,6 +29,23 @@ from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardBu
 from sophie_bot import DEBUG_MODE, mongodb, dp, logger, bot
 from sophie_bot.modules.helper_func.term import term
 from sophie_bot.config import get_config_key
+
+
+RANDOM_ERROR_TITLES = [
+    "IT'S A CREEEPER!!!1",
+    "BOOM!",
+    "It was funny, I go away.",
+    "Don't look at me 😒",
+    "Someone again messed me",
+    ":( Your PC ran into a problem and needs to restart...",
+    "Hello Microsoft?",
+    "YEY NEW ERROR! Lets spam to developers.",
+    "It's hurt me",
+    "I'm crashed, but you still can use /cat command",
+    "PIX ME SOME1 PLOX",
+    "*Blue screen of death*",
+    "It's crash time!"
+]
 
 
 @dp.errors_handler()
@@ -77,12 +95,14 @@ async def report_error(event, telethon=False):
     }
     mongodb.errors.insert_one(new)
 
-    text = "<b>Sorry, I encountered a error!</b>\n"
-    text += f"If you wanna you can report it - just press the \"Report error\" button.\n"
-    text += "Till you press report button your data will be only here.\n"
-    text += "<a href=\"https://t.me/YanaBotGroup\">Sophie support chat</a>"
+    # text = "<b>Sorry, I encountered a error!</b>\n"
+    text = random.choice(RANDOM_ERROR_TITLES)
+    text += "\n<a href=\"https://t.me/SophieSupport\">Sophie support chat</a>"
 
     ftext = "Sophie error log file."
+    ftext += "\n______________________\n"
+    ftext += "\nIf you wanna you can report it - just press the \"Report error\" button."
+    ftext += "\nTill you press report button your data will be only here."
     ftext += "\n______________________\n"
     ftext += "\nDate: " + date
     ftext += "\nLib: " + lib
@@ -100,17 +120,17 @@ async def report_error(event, telethon=False):
     ftext += "\n\n\nLast 5 commits:\n"
     ftext += await term(command)
 
-    buttons = InlineKeyboardMarkup(row_width=1).add(
+    buttons = InlineKeyboardMarkup(row_width=2).add(
         InlineKeyboardButton("Delete message",
                              callback_data='get_delete_msg_{}_admin'.format(chat_id))
     )
 
     if get_config_key("errors_channel_enabled"):
-        buttons.insert(InlineKeyboardButton("Report error", callback_data='report_error'))
+        buttons.insert(InlineKeyboardButton("Report crash", callback_data='report_error'))
 
     await bot.send_document(
         chat_id,
-        types.InputFile(io.StringIO(ftext), filename="Error.txt"),
+        types.InputFile(io.StringIO(ftext), filename="CrashReport.txt"),
         caption=text,
         reply_to_message_id=msg.message_id if lib == "Aiogram" else msg.message.id,
         reply_markup=buttons

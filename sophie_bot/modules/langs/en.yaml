@@ -318,6 +318,8 @@ STRINGS:
         reports_turned_on: "Reports turned <b>on.</b>"
         reports_already_off: "<b>Reports are already turned off.</b>"
         wrong_argument: "<b> Wrong argument. </b>"
+    error_report:
+        btn_report: "Report error"
 HELPS:
     notes:
         btn: Notes
