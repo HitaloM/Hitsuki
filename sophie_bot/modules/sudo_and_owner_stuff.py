@@ -19,10 +19,11 @@ import asyncio
 import os
 import html
 import requests
+import datetime
 
 from time import gmtime, strftime
 
-from sophie_bot import tbot, decorator, mongodb, redis, logger, bot
+from sophie_bot import tbot, decorator, mongodb, redis, logger, bot, smotor
 from sophie_bot.modules.main import chat_term, term, convert_size
 from sophie_bot.modules.notes import button_parser
 from sophie_bot.modules.users import get_user_and_text, user_link_html
@@ -67,12 +68,12 @@ async def broadcast(message):
             num_succ = num_succ + 1
         except Exception as err:
             num_fail = num_fail + 1
-            await msg.edit_text("Error:\n`{}`.\nBroadcasting will continues.".format(err))
+            await msg.edit_text("Error:\n<code>{}</code>.\nBroadcasting will continues.".format(err))
             await asyncio.sleep(2)
             await msg.edit_text("Broadcasting to {} chats...".format(chats.count()))
     await msg.edit_text(
-        "**Broadcast completed!** Message sended to `{}` chats successfully, \
-`{}` didn't received message.".format(num_succ, num_fail))
+        "**Broadcast completed!** Message sended to <code>{}</code> chats successfully, \
+<code>{}</code> didn't received message.".format(num_succ, num_fail))
 
 
 @decorator.register(cmds="sbroadcast", is_owner=True)
@@ -90,7 +91,7 @@ async def sbroadcast(message):
         'recived_chats': 0
     })
     await message.reply(
-        "Smart broadcast planned for `{}` chats".format(chats.count()))
+        "Smart broadcast planned for <code>{}</code> chats".format(chats.count()))
 
 
 @decorator.register(cmds="stopsbroadcast", is_owner=True)
@@ -99,7 +100,7 @@ async def stop_sbroadcast(message):
     mongodb.sbroadcast_list.drop()
     mongodb.sbroadcast_settings.drop()
     await message.reply("Smart broadcast stopped."
-                        "It was sended to `{}` chats.".format(
+                        "It was sended to <code>{}</code> chats.".format(
                             old['recived_chats']))
 
 
@@ -246,3 +247,39 @@ async def demote_from_gold(message):
 
     mongodb.premium_users.delete_one({'user_id': user_id})
     await message.reply(f"{await user_link_html(user_id)} demoted from premium users!")
+
+
+@decorator.register(cmds="stats", is_sudo=True)
+async def stats(message):
+    text = "<b>Stats</b>\n"
+    usrs = mongodb.user_list.count()
+    chats = mongodb.chat_list.count()
+    text += "* <code>{}</code> total users, in <code>{}</code> chats\n".format(usrs, chats)
+
+    text += "* <code>{}</code> new users and <code>{}</code> new chats in the last 48 hours\n".format(
+        await smotor.user_list.count_documents({
+            'first_detected_date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=2)}
+        }),
+        await smotor.chat_list.count_documents({
+            'first_detected_date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=2)}
+        })
+    )
+    text += "* <code>{}</code> total notes\n".format(await smotor.notes.count_documents({}))
+    text += "* <code>{}</code> total warns\n".format(await smotor.warns.count_documents({}))
+    text += "* <code>{}</code> total gbanned users\n".format(await smotor.blacklisted_users.count_documents({}))
+    text += "* <code>{}</code> chats in <code>{}</code> total feds, <code>{}</code> fbanned users\n".format(
+        await smotor.fed_groups.count_documents({}),
+        await smotor.fed_list.count_documents({}),
+        await smotor.fbanned_users.count_documents({}))
+    text += "* <code>{}</code> total crash happened in this week\n".format(
+        await smotor.errors.count_documents({
+            'date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=7)}
+        }))
+    db = await smotor.command("dbstats")
+    if 'fsTotalSize' in db:
+        text += '* Database size is <code>{}</code>, free <code>{}</code>'.format(
+            convert_size(db['dataSize']), convert_size(db['fsTotalSize'] - db['fsUsedSize']))
+    else:
+        text += '* Database size is <code>{}</code>, free <code>{}</code>'.format(
+            convert_size(db['storageSize']), convert_size(536870912 - db['storageSize']))
+    await message.reply(text)

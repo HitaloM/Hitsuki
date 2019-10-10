@@ -16,14 +16,13 @@
 import math
 import io
 import subprocess
-import datetime
 import ujson
 import requests
 
 from aiogram import types
 from aiogram.utils.exceptions import PhotoDimensions
 
-from sophie_bot import mongodb, tbot, decorator
+from sophie_bot import tbot, decorator
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.term import term
 
@@ -52,46 +51,6 @@ async def botchanges(message):
     text += "<i>Showed last 30 commits</i>\n"
     text += await chat_term(message, command)
     await message.reply(text, parse_mode=types.ParseMode.HTML)
-
-
-@decorator.register(cmds="stats")
-@disablable_dec("stats")
-async def stats(message):
-    text = "*Stats*\n"
-    usrs = mongodb.user_list.count()
-    chats = mongodb.chat_list.count()
-    text += "\* `{}` total users, in `{}` chats\n".format(usrs, chats)
-
-    users_added = mongodb.user_list.find({
-        'first_detected_date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=2)}
-    }).count()
-
-    chats_added = mongodb.chat_list.find({
-        'first_detected_date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=2)}
-    }).count()
-
-    text += "\* `{}` new users and `{}` new chats in the last 48 hours\n".format(
-        users_added, chats_added
-    )
-    text += "\* `{}` total notes\n".format(mongodb.notes.count())
-    text += "\* `{}` total warns\n".format(mongodb.warns.count())
-    text += "\* `{}` total gbanned users\n".format(mongodb.blacklisted_users.count())
-    text += "\* `{}` chats in `{}` total feds, `{}` fbanned users\n".format(
-        mongodb.fed_groups.count(),
-        mongodb.fed_list.count(),
-        mongodb.fbanned_users.count())
-    text += "\* `{}` total crash happened in this week\n".format(
-        mongodb.errors.find({
-            'date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=7)}
-        }).count())
-    db = mongodb.command("dbstats")
-    if 'fsTotalSize' in db:
-        text += '\* Database size is `{}`, free `{}`'.format(
-            convert_size(db['dataSize']), convert_size(db['fsTotalSize'] - db['fsUsedSize']))
-    else:
-        text += '\* Database size is `{}`, free `{}`'.format(
-            convert_size(db['storageSize']), convert_size(536870912 - db['storageSize']))
-    await message.reply(text, parse_mode=types.ParseMode.MARKDOWN)
 
 
 @decorator.register(cmds="fox")

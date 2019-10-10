@@ -423,7 +423,6 @@ HELPS:
             
             <b>Available commands are:</b>
             - /id: Gives an ID of user and chat.
-            - /stats: Shows bot stats.
             - /botchanges: Shows bot changes (commits history)
             - /runs: Responds with a randomly generated 'run away' string.
             - /paste (text): Pastes text to the Dogbin.

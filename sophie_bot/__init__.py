@@ -74,6 +74,7 @@ NAME = TOKEN.split(':')[0] + get_config_key("bot_name_additional")
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie
 motor = motor_asyncio.AsyncIOMotorClient(MONGO_CONN, MONGO_PORT)
+smotor = motor.sophie
 
 # Init Redis
 redis = redis.StrictRedis(
