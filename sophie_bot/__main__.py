@@ -21,7 +21,7 @@ import hypercorn
 
 from importlib import import_module
 
-from sophie_bot import tbot, redis, logger, dp, quart
+from sophie_bot import bot, tbot, redis, logger, dp, quart
 from sophie_bot.config import get_config_key
 from sophie_bot.modules import ALL_MODULES
 
@@ -52,24 +52,26 @@ else:
     logger.info("Components disabled!")
 
 
-# New asyncio loop
+# Asyncio magic
+
 # asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 loop = asyncio.get_event_loop()
 
-# Catch up missed updates
-if CATCH_UP is False:
-    logger.info("Telethon: Catch up missed updates..")
 
-    try:
-        asyncio.ensure_future(tbot.catch_up())
-    except Exception as err:
-        logger.error(err)
+@quart.before_serving
+async def startup():
+    logger.info("Aiogram: Using polling method")
+    loop.create_task(dp.start_polling())
 
 
 def exit_gracefully(signum, frame):
     logger.info("Bye!")
+
     try:
-        redis.bgsave()
+        loop.create_task(bot.close())
+        loop.create_task(tbot.disconnect())
+        loop.create_task(dp.storage.close())
+        redis.save()
     except Exception:
         logger.info("Exiting immediately!")
     logger.info("----------------------")
@@ -80,14 +82,12 @@ def exit_gracefully(signum, frame):
 signal.signal(signal.SIGINT, exit_gracefully)
 
 
-@quart.before_serving
-async def startup():
-    logger.info("Aiogram: Using polling method")
-    loop.create_task(dp.start_polling())
-
-
 async def start():
     logger.info("Running webserver..")
-    await hypercorn.asyncio.serve(quart, hypercorn.Config())
+    config = hypercorn.Config()
+    config.bind = ["localhost:8083"]
+    await hypercorn.asyncio.serve(quart, config)
 
+
+logger.info("Starting loop..")
 loop.run_until_complete(start())

@@ -31,6 +31,8 @@ from aiogram import Bot, Dispatcher, types
 
 from sophie_bot.config import get_config_key
 
+SOPHIE_VERSION = "v2.0-alpha"
+
 # enable logging
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s: %(message)s",
@@ -39,21 +41,23 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 coloredlogs.install(level='INFO', logger=logger)
 
-logger.info("----------------------")
-logger.info("|      SophieBot     |")
-logger.info("----------------------")
-logger.info("Powered by Telethon and AIOGram and bleck megic")
-
 if not (platform := sys.platform == 'linux' or 'linux2'):
     logger.error("SophieBot support only Linux systems, your OS is " + platform)
     exit(1)
 
 DEBUG_MODE = get_config_key("debug_mode")
 if DEBUG_MODE is True:
+    SOPHIE_VERSION += "-debug"
     logger.setLevel(logging.DEBUG)
     coloredlogs.set_level('DEBUG')
     logger.warn("! Enabled debug mode, please don't use it on production to repect data privacy.")
 
+
+logger.info("----------------------")
+logger.info("|      SophieBot     |")
+logger.info("----------------------")
+logger.info("Version: " + SOPHIE_VERSION)
+logger.info("Powered by Telethon and AIOGram and bleck megic")
 
 OWNER_ID = get_config_key("owner_id")
 
@@ -78,7 +82,7 @@ smotor = motor.sophie
 
 # Init Redis
 redis = redis.StrictRedis(
-    host=REDIS_COMM, port=REDIS_PORT, db='1', decode_responses=True)
+    host=REDIS_COMM, port=REDIS_PORT, db=1, decode_responses=True)
 
 tbot = TelegramClient(NAME, API_ID, API_HASH)
 
@@ -87,7 +91,7 @@ tbot.start(bot_token=TOKEN)
 
 # AIOGram
 bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
-storage = RedisStorage()
+storage = RedisStorage(host=REDIS_COMM, port=REDIS_PORT, db=1)
 dp = Dispatcher(bot, storage=storage)
 
 # Quart
