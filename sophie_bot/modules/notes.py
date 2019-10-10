@@ -17,8 +17,6 @@ import re
 import difflib
 import base64
 import bz2
-import random
-import string
 
 from time import gmtime, strftime
 
@@ -28,7 +26,7 @@ from telethon.tl.custom import Button
 
 from aiogram import types
 
-from sophie_bot import BOT_ID, tbot, decorator, mongodb, logger, dp
+from sophie_bot import tbot, decorator, logger, dp, motor
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
@@ -80,7 +78,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
         note_text = prim_text
 
     status = strings["saved"]
-    old = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
+    old = await motor.sophie.notes.find_one({'chat_id': chat_id, "name": note_name})
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     created_date = date
     creator = None
@@ -121,11 +119,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
 
     buttons = None
 
-    if old:
-        mongodb.notes.update_one({'_id': old['_id']}, {"$set": new}, upsert=False)
-        new = None
-    else:
-        new = mongodb.notes.insert_one(new).inserted_id
+    await motor.sophie.notes.update_one({'_id': old['_id']}, {"$set": new}, upsert=True)
 
     text = strings["note_saved_or_updated"].format(
         note_name=note_name, status=status, chat_title=chat_title)
@@ -145,7 +139,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
 @get_strings_dec("notes")
 async def clear_note(event, strings, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
-    note = mongodb.notes.delete_one({'chat_id': chat_id, "name": note_name})
+    note = await motor.sophie.notes.delete_one({'chat_id': chat_id, "name": note_name})
 
     if not note_name:
         return await event.reply(strings["no_note"])
@@ -164,7 +158,7 @@ async def clear_note(event, strings, status, chat_id, chat_title):
 @get_strings_dec("notes")
 async def noteinfo(message, strings, status, chat_id, chat_title):
     note_name = message.get_args()
-    note = mongodb.notes.find_one({'chat_id': chat_id, "name": note_name})
+    note = await motor.sophie.notes.find_one({'chat_id': chat_id, "name": note_name})
     if not note:
         text = strings["cant_find_note"]
     else:
@@ -183,12 +177,12 @@ async def noteinfo(message, strings, status, chat_id, chat_title):
 @connection()
 @get_strings_dec("notes")
 async def list_notes(message, strings, status, chat_id, chat_title):
-    notes = mongodb.notes.find({'chat_id': chat_id}).sort("name", 1)
+    notes = motor.sophie.notes.find({'chat_id': chat_id}).sort("name", 1)
     text = strings["notelist_header"].format(chat_name=chat_title)
-    if notes.count() == 0:
+    if notes == 0:
         text = strings["notelist_no_notes"]
     else:
-        for note in notes:
+        for note in await notes.to_list(length=300):
             text += "- <code>#{}</code>\n".format(note['name'])
     await message.reply(text)
 
@@ -198,10 +192,10 @@ async def send_note(chat_id, group_id, msg_id, note_name,
                     from_id=""):
     file_id = None
     note_name = note_name.lower()
-    note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': note_name})
+    note = await motor.sophie.notes.find_one({'chat_id': int(group_id), 'name': note_name})
     if not note and show_none is True:
         text = get_string("notes", "note_not_found", chat_id)
-        all_notes = mongodb.notes.find({'chat_id': group_id})
+        all_notes = await motor.sophie.notes.find({'chat_id': group_id})
         if all_notes.count() > 0:
             check = difflib.get_close_matches(note_name, [d['name'] for d in all_notes])
             if len(check) > 0:
@@ -263,7 +257,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         buttons = None
 
     if from_id:
-        user = mongodb.user_list.find_one({"user_id": from_id})
+        user = await motor.sophie.user_list.find_one({"user_id": from_id})
         if not user:
             user = await add_user_to_db(await tbot(GetFullUserRequest(int(from_id))))
         if 'last_name' in user:
@@ -280,7 +274,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         else:
             username = None
 
-        chatname = mongodb.chat_list.find_one({'chat_id': group_id})
+        chatname = await motor.sophie.chat_list.find_one({'chat_id': group_id})
         if chatname:
             chatname = chatname['chat_title']
         else:
@@ -390,49 +384,6 @@ def button_parser(chat_id, texts):
     return text, buttons
 
 
-@decorator.register(cmds="migrateyana")
-@user_admin_dec
-@connection(admin=True)
-@get_strings_dec("notes")
-async def migrate_from_yana(message, strings, status, chat_id, chat_title):
-    migrated = 0
-    error_migrated = 0
-    all_notes = mongodb.yana_notes.find({'chat_id': chat_id})
-    rnotes = mongodb.notes.find({'chat_id': chat_id})
-    real_notes = []
-    for d in rnotes:
-        real_notes.append(d['name'].lower())
-
-    if all_notes.count() < 1:
-        await message.answer("Nothing to migrate!")
-        return
-
-    msg = await message.answer("Migrating...")
-
-    for note in all_notes:
-        if note['name'].lower() in real_notes:
-            error_migrated += 1
-            continue
-        new = ({
-            'chat_id': chat_id,
-            'name': note['name'].lower(),
-            'text': note['text'],
-            'date': note['created'],
-            'created': note['created'],
-            'updated_by': BOT_ID,
-            'creator': BOT_ID,
-            'file_id': note['file_id']
-        })
-        mongodb.notes.insert(new)
-        migrated += 1
-
-    text = "<b>Migration done!</b>"
-    text += f"\nMigrated <code>{migrated}</code> notes"
-    text += f"\nDidn't migrated <code>{error_migrated}</code> notes"
-
-    await msg.edit_text(text)
-
-
 @decorator.CallBackQuery(b'get_note_')
 async def get_note_callback(event):
     data = str(event.data)
@@ -454,7 +405,7 @@ async def get_alert_callback(event):
     event_data = re.search(r'get_alert_(.*)_(.*)', data)
     notename = event_data.group(2)[:-1]
     group_id = event_data.group(1)
-    note = mongodb.notes.find_one({'chat_id': int(group_id), 'name': notename})
+    note = await motor.sophie.notes.find_one({'chat_id': int(group_id), 'name': notename})
     if not note:
         await event.answer(get_string("notes", "cant_find_note", event.chat_id), alert=True)
         return
@@ -483,8 +434,3 @@ async def del_message_callback(event):
         return
 
     await event.delete()
-
-
-def randomString(stringLength):
-    letters = string.ascii_letters
-    return ''.join(random.choice(letters) for i in range(stringLength))
