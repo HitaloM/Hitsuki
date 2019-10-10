@@ -20,11 +20,12 @@ import redis
 import ujson
 import sys
 
-from flask import Flask
+from quart import Quart
 
 from aiogram.contrib.fsm_storage.redis import RedisStorage
 
 from pymongo import MongoClient
+from motor import motor_asyncio
 from telethon import TelegramClient
 from aiogram import Bot, Dispatcher, types
 
@@ -72,6 +73,7 @@ NAME = TOKEN.split(':')[0] + get_config_key("bot_name_additional")
 
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie
+motor = motor_asyncio.AsyncIOMotorClient(MONGO_CONN, MONGO_PORT)
 
 # Init Redis
 redis = redis.StrictRedis(
@@ -87,8 +89,8 @@ bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
 storage = RedisStorage()
 dp = Dispatcher(bot, storage=storage)
 
-# Flask
-flask = Flask(__name__)
+# Quart
+quart = Quart(__name__)
 
 bot_info = asyncio.get_event_loop().run_until_complete(bot.get_me())
 BOT_USERNAME = bot_info.username  # bot_info.username

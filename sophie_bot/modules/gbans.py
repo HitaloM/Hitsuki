@@ -18,14 +18,14 @@ import html
 from time import gmtime, strftime
 import asyncio
 
-from flask import jsonify, request
+from quart import jsonify, request
 
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
 from aiogram.utils.exceptions import BadRequest
 
-from sophie_bot import SUDO, WHITELISTED, decorator, logger, mongodb, bot, flask
+from sophie_bot import SUDO, WHITELISTED, decorator, logger, mongodb, bot, quart
 from sophie_bot.config import get_config_key
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import user_link, get_user_and_text, user_link_html, is_user_admin
@@ -213,8 +213,8 @@ async def gban_helper_welcome(message, strings, **kwargs):
         await user_link_html(user_id), gbanned['reason']))
 
 
-@flask.route('/api/is_user_gbanned/<user_id>')
-def is_gbanned(user_id: int):
+@quart.route('/api/is_user_gbanned/<user_id>')
+async def is_gbanned(user_id: int):
     print(request.headers)
     gbanned = mongodb.blacklisted_users.find_one({'user_id': int(user_id)})
     if not gbanned:
@@ -227,3 +227,8 @@ def is_gbanned(user_id: int):
     data.update(gbanned)
     del data['_id']
     return jsonify(data)
+
+
+@quart.route('/', methods=['GET', 'POST'])
+async def root():
+    return "Hello"

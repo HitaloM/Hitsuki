@@ -6,6 +6,7 @@ aiogram
 redis
 aioredis # Redis memery storage fom aiogram
 pymongo
+motor
 dnspython # needed to connect to cloud MongoDB instances
 
 # Optional deps to make telethon faster
@@ -20,7 +21,7 @@ cryptography
 aiocron
 requests
 git+https://github.com/casics/nostril
-flask
+quart
 ujson
 PyYAML>5.0
 coloredlogs

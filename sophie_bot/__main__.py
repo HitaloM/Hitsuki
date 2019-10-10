@@ -16,22 +16,20 @@
 import os
 import asyncio
 import signal
-import threading
+import hypercorn
+# import uvloop
 
 from importlib import import_module
 
-from sophie_bot import tbot, redis, logger, dp, flask
+from sophie_bot import tbot, redis, logger, dp, quart
 from sophie_bot.config import get_config_key
 from sophie_bot.modules import ALL_MODULES
 
-from aiogram import executor
 
 LOAD_COMPONENTS = get_config_key("load_components")
 CATCH_UP = get_config_key("skip_catch_up")
 
 LOADED_MODULES = []
-
-loop = asyncio.get_event_loop()
 
 # Import modules
 for module_name in ALL_MODULES:
@@ -54,6 +52,10 @@ else:
     logger.info("Components disabled!")
 
 
+# New asyncio loop
+# asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+loop = asyncio.get_event_loop()
+
 # Catch up missed updates
 if CATCH_UP is False:
     logger.info("Telethon: Catch up missed updates..")
@@ -69,7 +71,7 @@ def exit_gracefully(signum, frame):
     try:
         redis.bgsave()
     except Exception:
-        logger.info("Redis error, exiting immediately!")
+        logger.info("Exiting immediately!")
     logger.info("----------------------")
     os.kill(os.getpid(), signal.SIGUSR1)
 
@@ -78,16 +80,14 @@ def exit_gracefully(signum, frame):
 signal.signal(signal.SIGINT, exit_gracefully)
 
 
-# Start flask
-def start():
-    flask.run(debug=False, use_reloader=False, use_evalex=False)
+@quart.before_serving
+async def startup():
+    logger.info("Aiogram: Using polling method")
+    loop.create_task(dp.start_polling())
 
 
-logger.info("Running webserver..")
-fthread = threading.Thread(target=start)
-fthread.start()
+async def start():
+    logger.info("Running webserver..")
+    await hypercorn.asyncio.serve(quart, hypercorn.Config())
 
-# Start Aiogram
-logger.info("Aiogram: Using polling method")
-executor.start_polling(dp, skip_updates=CATCH_UP)
-# asyncio.get_event_loop().run_forever()
+loop.run_until_complete(start())
