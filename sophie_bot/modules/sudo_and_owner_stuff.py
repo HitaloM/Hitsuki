@@ -23,7 +23,7 @@ import datetime
 
 from time import gmtime, strftime
 
-from sophie_bot import tbot, decorator, mongodb, redis, logger, bot, smotor
+from sophie_bot import SOPHIE_VERSION, tbot, decorator, mongodb, redis, logger, bot, smotor
 from sophie_bot.modules.main import chat_term, term, convert_size
 from sophie_bot.modules.notes import button_parser
 from sophie_bot.modules.users import get_user_and_text, user_link_html
@@ -251,10 +251,11 @@ async def demote_from_gold(message):
 
 @decorator.register(cmds="stats", is_sudo=True)
 async def stats(message):
-    text = "<b>Stats</b>\n"
-    usrs = mongodb.user_list.count()
-    chats = mongodb.chat_list.count()
-    text += "* <code>{}</code> total users, in <code>{}</code> chats\n".format(usrs, chats)
+    text = f"<b>Sophie {SOPHIE_VERSION} stats</b>\n"
+    text += "* <code>{}</code> total users, in <code>{}</code> chats\n".format(
+        await smotor.user_list.count_documents({}),
+        await smotor.chat_list.count_documents({})
+    )
 
     text += "* <code>{}</code> new users and <code>{}</code> new chats in the last 48 hours\n".format(
         await smotor.user_list.count_documents({
