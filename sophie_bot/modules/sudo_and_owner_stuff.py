@@ -23,7 +23,7 @@ import datetime
 
 from time import gmtime, strftime
 
-from sophie_bot import SOPHIE_VERSION, tbot, decorator, mongodb, redis, logger, bot, smotor
+from sophie_bot import SOPHIE_VERSION, tbot, decorator, mongodb, redis, logger, bot, db
 from sophie_bot.modules.main import chat_term, term, convert_size
 from sophie_bot.modules.notes import button_parser
 from sophie_bot.modules.users import get_user_and_text, user_link_html
@@ -253,34 +253,34 @@ async def demote_from_gold(message):
 async def stats(message):
     text = f"<b>Sophie {SOPHIE_VERSION} stats</b>\n"
     text += "* <code>{}</code> total users, in <code>{}</code> chats\n".format(
-        await smotor.user_list.count_documents({}),
-        await smotor.chat_list.count_documents({})
+        await db.user_list.count_documents({}),
+        await db.chat_list.count_documents({})
     )
 
     text += "* <code>{}</code> new users and <code>{}</code> new chats in the last 48 hours\n".format(
-        await smotor.user_list.count_documents({
+        await db.user_list.count_documents({
             'first_detected_date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=2)}
         }),
-        await smotor.chat_list.count_documents({
+        await db.chat_list.count_documents({
             'first_detected_date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=2)}
         })
     )
-    text += "* <code>{}</code> total notes\n".format(await smotor.notes.count_documents({}))
-    text += "* <code>{}</code> total warns\n".format(await smotor.warns.count_documents({}))
-    text += "* <code>{}</code> total gbanned users\n".format(await smotor.blacklisted_users.count_documents({}))
+    text += "* <code>{}</code> total notes\n".format(await db.notes.count_documents({}))
+    text += "* <code>{}</code> total warns\n".format(await db.warns.count_documents({}))
+    text += "* <code>{}</code> total gbanned users\n".format(await db.blacklisted_users.count_documents({}))
     text += "* <code>{}</code> chats in <code>{}</code> total feds, <code>{}</code> fbanned users\n".format(
-        await smotor.fed_groups.count_documents({}),
-        await smotor.fed_list.count_documents({}),
-        await smotor.fbanned_users.count_documents({}))
+        await db.fed_groups.count_documents({}),
+        await db.fed_list.count_documents({}),
+        await db.fbanned_users.count_documents({}))
     text += "* <code>{}</code> total crash happened in this week\n".format(
-        await smotor.errors.count_documents({
+        await db.errors.count_documents({
             'date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=7)}
         }))
-    db = await smotor.command("dbstats")
-    if 'fsTotalSize' in db:
+    local_db = await db.command("dbstats")
+    if 'fsTotalSize' in local_db:
         text += '* Database size is <code>{}</code>, free <code>{}</code>'.format(
-            convert_size(db['dataSize']), convert_size(db['fsTotalSize'] - db['fsUsedSize']))
+            convert_size(local_db['dataSize']), convert_size(local_db['fsTotalSize'] - local_db['fsUsedSize']))
     else:
         text += '* Database size is <code>{}</code>, free <code>{}</code>'.format(
-            convert_size(db['storageSize']), convert_size(536870912 - db['storageSize']))
+            convert_size(local_db['storageSize']), convert_size(536870912 - local_db['storageSize']))
     await message.reply(text)

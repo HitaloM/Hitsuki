@@ -57,7 +57,7 @@ logger.info("----------------------")
 logger.info("|      SophieBot     |")
 logger.info("----------------------")
 logger.info("Version: " + SOPHIE_VERSION)
-logger.info("Powered by Telethon and AIOGram and bleck megic")
+logger.info("Powered by Telethon, Aiogram and black magic")
 
 OWNER_ID = get_config_key("owner_id")
 
@@ -78,7 +78,7 @@ NAME = TOKEN.split(':')[0] + get_config_key("bot_name_additional")
 # Init MongoDB
 mongodb = MongoClient(MONGO_CONN).sophie
 motor = motor_asyncio.AsyncIOMotorClient(MONGO_CONN, MONGO_PORT)
-smotor = motor.sophie
+db = motor.sophie
 
 # Init Redis
 redis = redis.StrictRedis(
