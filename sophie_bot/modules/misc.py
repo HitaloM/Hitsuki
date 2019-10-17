@@ -239,7 +239,7 @@ async def user_info(message, strings, **kwargs):
         text += strings["father"]
     elif user['user_id'] in SUDO:
         text += strings['sudo_crown']
-    elif is_user_premium(user['user_id']):
+    elif await is_user_premium(user['user_id']):
         text += strings['user_premium']
     else:
         text += "\n"

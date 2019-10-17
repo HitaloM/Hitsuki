@@ -82,7 +82,7 @@ async def warn_user(message, strings, status, chat_id, chat_title):
     else:
         warn_limit = 3
 
-    if is_user_premium(user_id):
+    if await is_user_premium(user_id):
         warn_limit += 1
 
     if h >= warn_limit:

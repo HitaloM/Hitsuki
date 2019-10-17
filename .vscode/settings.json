@@ -8,6 +8,6 @@
         "--verbose"
     ],
     "python.pythonPath": "/bin/python3.8",
-    "python.linting.pep8Enabled": false,
+    "python.linting.pycodestyleEnabled": false,
     "python.linting.prospectorEnabled": false
 }

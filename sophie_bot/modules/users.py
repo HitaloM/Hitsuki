@@ -20,18 +20,18 @@ import html
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import ChannelParticipantsAdmins
 
-from sophie_bot import OWNER_ID, SUDO, tbot, decorator, logger, mongodb, redis
+from sophie_bot import OWNER_ID, SUDO, tbot, decorator, logger, redis, db
 
 
 @decorator.register()
-async def update_users(message, **kwargs):
+async def msg_handler(message, **kwargs):
     chat_id = message.chat.id
 
     # Update chat
     new_chat = message.chat
     if not new_chat.type == 'private':
 
-        old_chat = mongodb.chat_list.find_one({'chat_id': chat_id})
+        old_chat = await db.chat_list.find_one({'chat_id': chat_id})
 
         if not hasattr(new_chat, 'username'):
             chatnick = None
@@ -51,24 +51,24 @@ async def update_users(message, **kwargs):
             "first_detected_date": first_detected_date
         }
 
-        mongodb.chat_list.update_one({'chat_id': chat_id}, {"$set": chat_new}, upsert=True)
+        await db.chat_list.update_one({'chat_id': chat_id}, {"$set": chat_new}, upsert=True)
 
         logger.debug(f"Users: Chat {chat_id} updated")
 
     # Update users
-    update_user(chat_id, message.from_user)
+    await update_user(chat_id, message.from_user)
 
     if "reply_to_message" in message and \
         hasattr(message.reply_to_message.from_user, 'chat_id') and \
             message.reply_to_message.from_user.chat_id:
-        update_user(chat_id, message.reply_to_message.from_user)
+        await update_user(chat_id, message.reply_to_message.from_user)
 
     if "forward_from" in message:
-        update_user(chat_id, message.forward_from)
+        await update_user(chat_id, message.forward_from)
 
 
-def update_user(chat_id, new_user):
-    old_user = mongodb.user_list.find_one({'user_id': new_user.id})
+async def update_user(chat_id, new_user):
+    old_user = await db.user_list.find_one({'user_id': new_user.id})
 
     new_chat = [chat_id]
 
@@ -104,7 +104,7 @@ def update_user(chat_id, new_user):
         'chats': new_chat,
         'first_detected_date': first_detected_date
     }
-    mongodb.user_list.update_one({'user_id': new_user.id}, {"$set": user_new}, upsert=True)
+    await db.user_list.update_one({'user_id': new_user.id}, {"$set": user_new}, upsert=True)
 
     logger.debug(f"Users: User {new_user.id} updated")
 
@@ -216,7 +216,7 @@ async def get_user_by_username(username):
         # Remove '@'
         username = username[1:]
 
-    user = mongodb.user_list.find_one(
+    user = await db.user_list.find_one(
         {'username': username.lower()}
     )
 
@@ -231,7 +231,7 @@ async def get_user_by_username(username):
 
 
 async def get_user_by_id(user_id: int):
-    user = mongodb.user_list.find_one(
+    user = await db.user_list.find_one(
         {'user_id': user_id}
     )
     # Ohnu, we don't have this user in DB
@@ -256,7 +256,7 @@ async def add_user_to_db(user):
         'username': user.username
     }
 
-    user = mongodb.user_list.find_one({'user_id': new_user['user_id']})
+    user = await db.user_list.find_one({'user_id': new_user['user_id']})
     if not user or user is None:
         user = new_user
 
@@ -267,7 +267,7 @@ async def add_user_to_db(user):
         if hasattr(user, 'user_lang'):
             new_user['user_lang'] = user.user_lang
 
-    mongodb.user_list.update_one(
+    await db.user_list.update_one(
         {'user_id': user['user_id']},
         {"$set": new_user}, upsert=True
     )
@@ -277,7 +277,7 @@ async def add_user_to_db(user):
 
 async def get_id_by_nick(data):
     # Check if data is user_id
-    user = mongodb.user_list.find_one({'username': data.replace('@', "")})
+    user = await db.user_list.find_one({'username': data.replace('@', "")})
     if user:
         return user['user_id']
 
@@ -296,7 +296,7 @@ async def user_link(user_id):
 
 
 async def user_link_html(user_id, custom_name=None):
-    user = mongodb.user_list.find_one({'user_id': user_id})
+    user = await db.user_list.find_one({'user_id': user_id})
     user_name = None
 
     if user:
@@ -344,8 +344,8 @@ def user_owner_dec(func):
     return wrapped
 
 
-def is_user_premium(user_id):
-    check = mongodb.premium_users.find_one({'user_id': user_id})
+async def is_user_premium(user_id):
+    check = await db.premium_users.find_one({'user_id': user_id})
     if check:
         return True
     return False
