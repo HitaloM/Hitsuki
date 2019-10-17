@@ -13,6 +13,9 @@ dnspython # needed to connect to cloud MongoDB instances
 cryptg
 cryptography
 
+# Optional deps to make aiohttp faster
+aiohttp[speedups]
+
 # Build uvloop from source, current pip version not compability with python3.8
 #git+https://github.com/python/cpython
 #git+https://github.com/MagicStack/uvloop
