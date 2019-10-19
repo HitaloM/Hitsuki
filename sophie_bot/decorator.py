@@ -103,10 +103,8 @@ def t_command(command, arg="", word_arg="", additional="", **kwargs):
         if 'forwards' not in kwargs:
             kwargs['forwards'] = ALLOW_F_COMMANDS
 
-        if ALLOW_COMMANDS_FROM_EXC is True:
-            P = '[/!]'
-        else:
-            P = '/'
+
+        P = '[/!]' if ALLOW_COMMANDS_FROM_EXC else '/'
 
         if arg is True:
             cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_USERNAME, additional,
@@ -144,14 +142,14 @@ def insurgent():
     return decorator
 
 
-def StrictCommand(cmd):
+def strict_command(cmd):
     def decorator(func):
         tbot.add_event_handler(func, events.NewMessage(incoming=True, pattern=cmd))
         tbot.add_event_handler(func, events.MessageEdited(incoming=True, pattern=cmd))
     return decorator
 
 
-def ChatAction():
+def chat_action():
     def decorator(func):
         tbot.add_event_handler(func, events.ChatAction)
     return decorator

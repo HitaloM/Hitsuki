@@ -89,7 +89,7 @@ async def doit(event, message, match):
         await message.reply('fuck me\n' + str(e))
 
 
-@decorator.StrictCommand(SED_PATTERN)
+@decorator.strict_command(SED_PATTERN)
 @disablable_dec("sed")
 async def sed(event):
     message = await doit(event, event.message, event.pattern_match)

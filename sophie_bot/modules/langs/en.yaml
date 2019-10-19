@@ -20,7 +20,7 @@ STRINGS:
         dont_have_rights_to_save: "You don't have rights to save notes here!"
         del_note: "🗑 Delete note"
         no_note: "Can't find that note."
-        note_removed: "Note `{note_name}` removed in **{chat_name}**!"
+        note_removed: "Note <code>{note_name}</code> removed in <b>{chat_name}</b>!"
         cant_find_note: "I can't find this note in **{chat_name}**!"
         note_info_title: "<b>Note info</b>\n"
         note_info_note: "Note: <code>{note_name}</code>\n"

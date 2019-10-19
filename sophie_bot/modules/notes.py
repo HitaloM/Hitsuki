@@ -111,8 +111,6 @@ async def save_note(event, strings, status, chat_id, chat_title):
         'encrypted': encrypted
     })
 
-    buttons = None
-
     await db.notes.update_one({'_id': old['_id']}, {"$set": new}, upsert=True)
 
     text = strings["note_saved_or_updated"].format(
@@ -124,26 +122,24 @@ async def save_note(event, strings, status, chat_id, chat_title):
     elif encrypted == "particle-v1":
         text += strings["you_can_get_note"].format(name=note_name)
 
-    await event.reply(text, buttons=buttons)
+    await event.reply(text)
 
 
-@decorator.t_command("clear", arg=True)
+@decorator.register(cmds="clear")
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("notes")
-async def clear_note(event, strings, status, chat_id, chat_title):
-    note_name = event.pattern_match.group(1)
-    note = await db.notes.delete_one({'chat_id': chat_id, "name": note_name})
-
+async def clear_note(message, strings, status, chat_id, chat_title):
+    note_name = message.get_args().split(" ")[0].lower()
     if not note_name:
-        return await event.reply(strings["no_note"])
+        return await message.reply(strings["no_note"])
 
-    if note:
+    if await db.notes.delete_one({'chat_id': chat_id, "name": note_name}):
         text = strings["note_removed"].format(
             note_name=note_name, chat_name=chat_title)
     else:
         text = strings["cant_find_note"].format(chat_name=chat_title)
-    await event.reply(text)
+    await message.reply(text)
 
 
 @decorator.register(cmds="noteinfo")

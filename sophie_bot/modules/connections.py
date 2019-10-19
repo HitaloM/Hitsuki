@@ -189,8 +189,7 @@ async def get_conn_chat(user_id, chat_id, admin=False, only_in_groups=False):
         'chat_id': int(group_id)})['chat_title']
 
     if admin is True:
-        K = await is_user_admin(group_id, user_id)
-        if K is False:
+        if not await is_user_admin(group_id, user_id):
             return False, get_string(
                 "connections", "u_should_be_admin", event.chat_id).format(chat_title), None
 
