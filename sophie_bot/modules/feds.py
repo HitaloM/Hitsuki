@@ -28,9 +28,15 @@ from sophie_bot.modules.users import is_user_admin, get_user_and_text, user_link
 
 def get_user_and_fed_and_text_dec(func):
     async def wrapped_1(message, *args, **kwargs):
-        user, text = await get_user_and_text(message)
-        if not user:
-            return
+        user, text = await get_user_and_text(message, send_text=False)
+        if not user and (args := message.get_args().split(None, 1))[0].isdigit():
+            user = {'user_id': args[0]}
+            if len(args) > 1:
+                text = args[1]
+            else:
+                text = None
+        elif not user:
+            await message.reply("I can't get this user.")
 
         status, chat_id, chat_title = await get_conn_chat(
             message.from_user.id, message.chat.id)
@@ -39,25 +45,21 @@ def get_user_and_fed_and_text_dec(func):
 
         if text:
             text_args = text.split(" ", 1)
-
             if len(text_args) >= 1:
                 if text_args[0].count('-') == 4:
                     if len(text_args) > 1:
                         text = text_args[1]
                     else:
                         text = ""
-                    fed = await db.feds.find_one({'fed_id': text_args[0]})
-                    if not fed:
+                    if not (fed := await db.feds.find_one({'fed_id': text_args[0]})):
                         await message.reply(get_string("feds", 'fed_id_invalid', message.chat.id))
                         return
                 else:
                     text = " ".join(text_args)
 
-        if not fed:
-            fed = await db.feds.find_one({'chats': {'$in': [chat_id]}})
-            if not fed:
-                await message.reply(get_string("feds", 'chat_not_in_fed', message.chat.id))
-                return
+        if not fed and not (fed := await db.feds.find_one({'chats': {'$in': [chat_id]}})):
+            await message.reply(get_string("feds", 'chat_not_in_fed', message.chat.id))
+            return
 
         return await func(message, user, fed, text, *args, **kwargs)
     return wrapped_1
@@ -73,14 +75,11 @@ def get_fed_dec(func):
         text_args = message.text.split(" ", 1)
         if not len(text_args) < 2:
             if text_args[1].count('-') == 4:
-                fed = await db.feds.find_one({'fed_id': text_args[1]})
-                if not fed:
+                if not (fed := await db.feds.find_one({'fed_id': text_args[1]})):
                     await message.reply(get_string("feds", 'fed_id_invalid', message.chat.id))
                     return
 
-        if not fed:
-            fed = await db.feds.find_one({'chats': {'$in': [chat_id]}})
-            if not fed:
+        if not (fed := await db.feds.find_one({'chats': {'$in': [chat_id]}})):
                 await message.reply(get_string("feds", 'chat_not_in_fed', message.chat.id))
                 return
 
@@ -99,8 +98,7 @@ def user_is_fed_admin(func):
         status, chat_id, chat_title = await get_conn_chat(
             user_id, real_chat_id, only_in_groups=True)
 
-        fed = await db.feds.find_one({'chats': {'$in': [chat_id]}})
-        if not fed:
+        if not (fed := await db.feds.find_one({'chats': {'$in': [chat_id]}})):
             await message.reply(get_string("feds", 'chat_not_in_fed', real_chat_id))
             return False
         if not user_id == fed['creator']:
@@ -342,10 +340,10 @@ async def fbanned_list(message, strings, fed, status, chat_id, chat_title, **kwa
 
 @decorator.register(cmds='fban')
 @connection(admin=True, only_in_groups=True)
-@get_user_and_fed_and_text_dec
 @user_is_fed_admin
+@get_user_and_fed_and_text_dec
 @get_strings_dec("feds")
-async def fban_user(message, strings, user, fed, reason, status, chat_id, chat_title, **kwargs):
+async def fed_ban_user(message, strings, user, fed, reason, chat_id, chat_title):
     if not reason:
         reason = None
     user_id = user['user_id']
@@ -411,10 +409,10 @@ async def fban_user(message, strings, user, fed, reason, status, chat_id, chat_t
 
 @decorator.register(cmds='unfban')
 @connection(admin=True, only_in_groups=True)
-@get_user_and_fed_and_text_dec
 @user_is_fed_admin
+@get_user_and_fed_and_text_dec
 @get_strings_dec("feds")
-async def un_fban_user(message, strings, user, fed, reason, status, chat_id, chat_title, **kwargs):
+async def un_fed_ban_user(message, strings, user, fed, reason, chat_id):
     from_id = message.from_user.id
     user_id = user['user_id']
     if user == BOT_ID:
