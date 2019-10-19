@@ -1,2 +1,0 @@
-# Delete all imported gbans
-db.blacklisted_users.deleteMany({'by': 'SophieBot import module'})
