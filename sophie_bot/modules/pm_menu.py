@@ -10,16 +10,15 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from telethon.tl.custom import Button
-
-from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher.filters.builtin import CommandStart
+from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.callback_data import CallbackData
+from telethon.tl.custom import Button
 
 from sophie_bot import BOT_USERNAME, decorator, logger, dp, bot
 from sophie_bot.modules.language import (LANGUAGES, get_chat_lang, get_string,
                                          lang_info, get_strings_dec, get_strings)
 
-from aiogram.utils.callback_data import CallbackData
 help_page_cp = CallbackData('help_page', 'module')
 help_btn_cp = CallbackData('help_btn', 'module', 'btn')
 
@@ -61,7 +60,7 @@ async def help(message):
     await message.reply(text, reply_markup=buttons)
 
 
-@decorator.CallBackQuery(b'get_start')
+@decorator.callback_query_deprecated(b'get_start')
 async def get_start_callback(event):
     text, buttons = get_start(event)
     await event.edit(text, reply_markup=buttons)
@@ -83,7 +82,7 @@ def get_start(chat_id):
     return text, buttons
 
 
-@decorator.CallBackQuery(b'set_lang')
+@decorator.callback_query_deprecated(b'set_lang')
 async def set_lang_callback(event):
     text, buttons = lang_info(event.chat_id, pm=True)
     buttons.append([

@@ -11,8 +11,8 @@
 # you may not use this file except in compliance with the License.
 
 import os
-import yaml
 
+import yaml
 
 if os.path.isfile('data/bot_conf.yaml'):
     CONFIG = yaml.load(open('data/bot_conf.yaml', "r"), Loader=yaml.CLoader)

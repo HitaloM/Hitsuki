@@ -12,8 +12,8 @@
 
 import os
 import re
-import yaml
 
+import yaml
 from telethon.tl.custom import Button
 
 from sophie_bot import decorator, logger, mongodb, redis
@@ -94,7 +94,7 @@ async def lang_with_arg(event):
     await event.reply(text)
 
 
-@decorator.CallBackQuery(b'select_lang_')
+@decorator.callback_query_deprecated(b'select_lang_')
 async def set_lang_callback(event):
     chat = event.chat_id
     K = await is_user_admin(chat, event.original_update.user_id)
@@ -187,6 +187,8 @@ def get_strings_dec(module="", mas_name="STRINGS"):
                 chat_id = event.chat.id
             elif hasattr(event, 'message'):
                 chat_id = event.message.chat.id
+            else:
+                chat_id = None
 
             str = get_strings(chat_id, module=module, mas_name=mas_name)
             return await func(event, str, *args, **kwargs)

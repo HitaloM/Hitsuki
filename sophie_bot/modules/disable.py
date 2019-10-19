@@ -15,7 +15,6 @@ from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.users import user_admin_dec
 
-global DISABLABLE_COMMANDS
 DISABLABLE_COMMANDS = []
 
 
@@ -25,12 +24,13 @@ def disablable_dec(command):
 
     def wrapped(func):
         async def wrapped_1(event, *args, **kwargs):
-
+            chat_id = None
             if hasattr(event, 'chat_id'):
                 chat_id = event.chat_id
             elif hasattr(event, 'chat'):
                 chat_id = event.chat.id
 
+            user_id = None
             if hasattr(event, 'from_id'):
                 user_id = event.from_id
             elif hasattr(event, 'from_user'):

@@ -10,23 +10,20 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import sys
-import io
-import traceback
-import ujson
 import datetime
+import io
 import random
-
+import sys
+import traceback
 from time import gmtime, strftime
 
+import ujson
 from aiogram import types
-
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 
 from sophie_bot import DEBUG_MODE, mongodb, dp, logger, bot
-from sophie_bot.modules.helper_func.term import term
 from sophie_bot.config import get_config_key
-
+from sophie_bot.modules.helper_func.term import term
 
 RANDOM_ERROR_TITLES = [
     "IT'S A CREEEPER!!!1",

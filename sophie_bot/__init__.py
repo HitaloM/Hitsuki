@@ -10,21 +10,18 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import logging
-import coloredlogs
 import asyncio
-import redis
-import ujson
+import logging
 import sys
 
-from quart import Quart
-
-from aiogram.contrib.fsm_storage.redis import RedisStorage
-
-from pymongo import MongoClient
-from motor import motor_asyncio
-from telethon import TelegramClient
+import coloredlogs
+import redis
 from aiogram import Bot, Dispatcher, types
+from aiogram.contrib.fsm_storage.redis import RedisStorage
+from motor import motor_asyncio
+from pymongo import MongoClient
+from quart import Quart
+from telethon import TelegramClient
 
 from sophie_bot.config import get_config_key
 
@@ -47,7 +44,7 @@ if DEBUG_MODE is True:
     SOPHIE_VERSION += "-debug"
     logger.setLevel(logging.DEBUG)
     coloredlogs.set_level('DEBUG')
-    logger.warn("! Enabled debug mode, please don't use it on production to repect data privacy.")
+    logger.warning("! Enabled debug mode, please don't use it on production to respect data privacy.")
 
 
 logger.info("----------------------")

@@ -13,20 +13,20 @@
 import re
 
 from aiogram import types
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
-from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.dispatcher import FSMContext
 
 from sophie_bot import WHITELISTED, decorator, mongodb, redis, dp, bot
+from sophie_bot.modules.bans import ban_user, kick_user, mute_user, convert_time, NotEnoughRights
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.disable import disablable_dec
+from sophie_bot.modules.helper_func.decorators import need_args_dec
 from sophie_bot.modules.language import get_string, get_strings_dec, get_strings
 from sophie_bot.modules.notes import send_note
-from sophie_bot.modules.bans import ban_user, kick_user, mute_user, convert_time, NotEnoughRights
 from sophie_bot.modules.users import user_admin_dec, user_link, get_chat_admins, user_link_html
 from sophie_bot.modules.warns import randomString
-from sophie_bot.modules.helper_func.decorators import need_args_dec
 
 
 # State
@@ -252,7 +252,7 @@ async def add_filter_action(query, strings, callback_data, state):
         data['action'] = action
 
     actions_with_timer = ('ban', 'mute')
-    actions_with_reason = ('warn')
+    actions_with_reason = 'warn'
 
     if action in actions_with_timer:
         await select_time(state, strings, action, chat_id, msg_id)
@@ -437,22 +437,22 @@ async def list_filters(message, strings, status, chat_id, chat_title):
 @get_strings_dec("filters")
 async def del_filter(message, strings, status, chat_id, chat_title):
     handler = message.get_args()
-    if handler.isdigit() and int(handler) < 100 and int(handler) > 0:
+    if handler.isdigit() and 100 > int(handler) > 0:
         filters = mongodb.filters_v2.find({'chat_id': chat_id})
         if filters.count() < int(handler) - 1:
             await message.reply("Bad integer!")
             return
-        filter = filters[int(handler) - 1]
+        filter_data = filters[int(handler) - 1]
     else:
-        filter = mongodb.filters_v2.find_one({'chat_id': chat_id,
-                                             "handler": {'$regex': str(handler)}})
-    if not filter:
+        filter_data = mongodb.filters_v2.find_one({'chat_id': chat_id,
+                                                   "handler": {'$regex': str(handler)}})
+    if not filter_data:
         await message.reply(strings["cant_find_filter"])
         return
-    mongodb.filters_v2.delete_one({'_id': filter['_id']})
+    mongodb.filters_v2.delete_one({'_id': filter_data['_id']})
     update_handlers_cache(chat_id)
     text = strings["filter_deleted"]
-    text = text.format(filter=filter['handler'], chat_name=chat_title)
+    text = text.format(filter=filter_data['handler'], chat_name=chat_title)
     await message.reply(text)
 
 

@@ -20,7 +20,7 @@ from sophie_bot import WHITELISTED, decorator, mongodb
 from sophie_bot.modules.bans import ban_user
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_string, get_strings_dec
-from sophie_bot.modules.users import (get_chat_admins, is_user_admin,
+from sophie_bot.modules.users import (is_user_admin,
                                       user_link, user_admin_dec,
                                       get_user_and_text, user_link_html, is_user_premium)
 
@@ -96,7 +96,7 @@ async def warn_user(message, strings, status, chat_id, chat_title):
     await message.reply(text, reply_markup=buttons, disable_web_page_preview=True)
 
 
-@decorator.CallBackQuery(b'remove_warn_')
+@decorator.callback_query_deprecated(b'remove_warn_')
 async def remove_warn(event):
     user_id = event.query.user_id
     K = await is_user_admin(event.chat_id, user_id)

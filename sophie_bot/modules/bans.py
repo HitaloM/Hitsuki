@@ -15,16 +15,14 @@ import time
 
 from aiogram.types.chat_permissions import ChatPermissions
 from aiogram.utils.exceptions import NotEnoughRightsToRestrict, BadRequest
-
+from telethon.errors.rpcerrorlist import ChatAdminRequiredError
 from telethon.tl.functions.channels import EditBannedRequest, GetParticipantRequest
 from telethon.tl.types import ChatBannedRights, ChannelParticipantBanned
-from telethon.errors.rpcerrorlist import ChatAdminRequiredError
 
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
-
-from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, mongodb, bot
-from sophie_bot.modules.helper_func.own_errors import NotEnoughRights
+from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, bot
 from sophie_bot.modules.connections import connection
+from sophie_bot.modules.helper_func.own_errors import NotEnoughRights
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (is_user_admin, user_admin_dec,
                                       get_user_and_text, user_link_html, update_admin_cache)
@@ -116,14 +114,6 @@ async def unban(message, strings, status, chat_id, chat_title):
         user_str = await user_link_html(user['user_id'])
         text = strings["user_unbanned"]
 
-        if gbanned := mongodb.blacklisted_users.find_one({'user_id': user['user_id']}):
-            text += strings["user_gbanned"].format(reason=gbanned['reason'])
-            mongodb.blacklisted_users.update_one(
-                {'_id': gbanned['_id']},
-                {"$addToSet": {'force_unbanned_chats': {'$each': [chat_id]}}},
-                upsert=False
-            )
-
         await message.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
@@ -155,7 +145,7 @@ async def unmute(message, strings, status, chat_id, chat_title):
     if await unmute_user(message, user['user_id'], chat_id):
         admin_str = await user_link_html(message.from_user.id)
         user_str = await user_link_html(user['user_id'])
-        text = strings["user_unmooted"]
+        text = strings["user_unmuted"]
         await message.reply(text.format(admin=admin_str, user=user_str, chat_name=chat_title))
 
 
@@ -166,7 +156,7 @@ async def kickme(message, strings):
     user = message.from_user.id
     chat = message.chat.id
 
-    if await kick_user(message, user, chat, None) is True:
+    if await kick_user(message, user, chat) is True:
         await message.reply(strings["kickme_success"])
 
 
@@ -325,6 +315,7 @@ async def unmute_user(message, user_id, chat_id):
 
 
 async def convert_time(event, time_val):
+    chat_id = None
     if hasattr(event, 'chat_id'):
         chat_id = event.chat_id
     elif hasattr(event, 'chat'):

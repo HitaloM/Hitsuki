@@ -10,35 +10,32 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import re
-import difflib
 import base64
 import bz2
-
+import difflib
+import re
 from time import gmtime, strftime
 
-from telethon.tl.functions.users import GetFullUserRequest
+from aiogram import types
 from telethon import custom, errors, utils
 from telethon.tl.custom import Button
+from telethon.tl.functions.users import GetFullUserRequest
 
-from aiogram import types
-
-from sophie_bot import tbot, decorator, logger, dp, motor
+from sophie_bot import tbot, decorator, logger, dp, db, bot
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
+from sophie_bot.modules.helper_func.decorators import need_args_dec
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (check_group_admin,
                                       user_admin_dec, user_link,
                                       add_user_to_db, user_link_html)
-from sophie_bot.modules.helper_func.decorators import need_args_dec
-
 
 RESTRICTED_SYMBOLS = ['**', '__', '`']
 
 
 @decorator.register(cmds="owo")
-async def test(message, **kwagrs):
-    await message.reply('owo')
+async def test(message, **kwargs):
+    print(await bot.get_chat_administrators(message.chat.id))
 
 
 @decorator.t_command("save", word_arg=True)
@@ -75,7 +72,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
         note_text = prim_text
 
     status = strings["saved"]
-    old = await motor.sophie.notes.find_one({'chat_id': chat_id, "name": note_name})
+    old = await db.notes.find_one({'chat_id': chat_id, "name": note_name})
     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     created_date = date
     creator = None
@@ -116,7 +113,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
 
     buttons = None
 
-    await motor.sophie.notes.update_one({'_id': old['_id']}, {"$set": new}, upsert=True)
+    await db.notes.update_one({'_id': old['_id']}, {"$set": new}, upsert=True)
 
     text = strings["note_saved_or_updated"].format(
         note_name=note_name, status=status, chat_title=chat_title)
@@ -136,7 +133,7 @@ async def save_note(event, strings, status, chat_id, chat_title):
 @get_strings_dec("notes")
 async def clear_note(event, strings, status, chat_id, chat_title):
     note_name = event.pattern_match.group(1)
-    note = await motor.sophie.notes.delete_one({'chat_id': chat_id, "name": note_name})
+    note = await db.notes.delete_one({'chat_id': chat_id, "name": note_name})
 
     if not note_name:
         return await event.reply(strings["no_note"])
@@ -153,9 +150,9 @@ async def clear_note(event, strings, status, chat_id, chat_title):
 @user_admin_dec
 @connection(admin=True)
 @get_strings_dec("notes")
-async def noteinfo(message, strings, status, chat_id, chat_title):
+async def note_info(message, strings, status, chat_id, chat_title):
     note_name = message.get_args()
-    note = await motor.sophie.notes.find_one({'chat_id': chat_id, "name": note_name})
+    note = await db.notes.find_one({'chat_id': chat_id, "name": note_name})
     if not note:
         text = strings["cant_find_note"]
     else:
@@ -174,7 +171,7 @@ async def noteinfo(message, strings, status, chat_id, chat_title):
 @connection()
 @get_strings_dec("notes")
 async def list_notes(message, strings, status, chat_id, chat_title):
-    notes = motor.sophie.notes.find({'chat_id': chat_id}).sort("name", 1)
+    notes = db.notes.find({'chat_id': chat_id}).sort("name", 1)
     text = strings["notelist_header"].format(chat_name=chat_title)
     if notes == 0:
         text = strings["notelist_no_notes"]
@@ -185,14 +182,14 @@ async def list_notes(message, strings, status, chat_id, chat_title):
 
 
 async def send_note(chat_id, group_id, msg_id, note_name,
-                    show_none=False, noformat=False, preview=False,
+                    show_none=False, no_format=False, preview=False,
                     from_id=""):
     file_id = None
     note_name = note_name.lower()
-    note = await motor.sophie.notes.find_one({'chat_id': int(group_id), 'name': note_name})
+    note = await db.notes.find_one({'chat_id': int(group_id), 'name': note_name})
     if not note and show_none is True:
         text = get_string("notes", "note_not_found", chat_id)
-        all_notes = await motor.sophie.notes.find({'chat_id': group_id})
+        all_notes = await db.notes.find({'chat_id': group_id})
         if all_notes.count() > 0:
             check = difflib.get_close_matches(note_name, [d['name'] for d in all_notes])
             if len(check) > 0:
@@ -216,8 +213,8 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         if note['encrypted'] == 'particle-v1':
             raw_note_text = bz2.decompress(base64.urlsafe_b64decode(note['text'])).decode()
 
-    if noformat is True:
-        format = None
+    if no_format is True:
+        parse_format = None
         string = raw_note_text
         buttons = ""
     else:
@@ -227,13 +224,13 @@ async def send_note(chat_id, group_id, msg_id, note_name,
             string = string.replace(h.group(1), "")
             format_raw = h.group(2).lower()
             if format_raw == 'markdown' or format_raw == 'md':
-                format = 'md'
+                parse_format = 'md'
             elif format_raw == 'html':
-                format = 'html'
+                parse_format = 'html'
             elif format_raw == 'none':
-                format = None
+                parse_format = None
         else:
-            format = 'md'
+            parse_format = 'md'
 
         r = re.search(r"(\[preview:(yes|no)\])", string)
         if r:
@@ -245,7 +242,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
                 preview = False
 
     if len(string.rstrip()) == 0:
-        if noformat is True:
+        if no_format is True:
             string = "Note {}\n\n".format(note_name)
         else:
             string = "**Note {}**\n\n".format(note_name)
@@ -254,9 +251,9 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         buttons = None
 
     if from_id:
-        user = await motor.sophie.user_list.find_one({"user_id": from_id})
+        user = await db.user_list.find_one({"user_id": from_id})
         if not user:
-            user = await add_user_to_db(await tbot(GetFullUserRequest(int(from_id))))
+            user = await add_user_to_db(await tbot(GetFullUserRequest(from_id)))
         if 'last_name' in user:
             last_name = user['last_name']
             if not last_name:
@@ -271,18 +268,18 @@ async def send_note(chat_id, group_id, msg_id, note_name,
         else:
             username = None
 
-        chatname = await motor.sophie.chat_list.find_one({'chat_id': group_id})
-        if chatname:
-            chatname = chatname['chat_title']
+        chat_name = await db.chat_list.find_one({'chat_id': group_id})
+        if chat_name:
+            chat_name = chat_name['chat_title']
         else:
-            chatname = "None"
+            chat_name = "None"
 
-        if noformat is False:
-            if format == "md":
+        if no_format is False:
+            if parse_format == "md":
                 mention_str = await user_link(from_id)
-            elif format == "html":
+            elif parse_format == "html":
                 mention_str = await user_link_html(from_id)
-            elif format == "none":
+            else:
                 mention_str = full_name
 
             try:
@@ -293,10 +290,11 @@ async def send_note(chat_id, group_id, msg_id, note_name,
                     username=username,
                     id=from_id,
                     mention=mention_str,
-                    chatname=chatname
+                    chatname=chat_name
                 )
             except KeyError as var:
-                await tbot.send_message(chat_id, f"variable `{var}` not supported! Please delete it from note.", reply_to=msg_id)
+                await tbot.send_message(chat_id, f"variable `{var}` not supported! Please delete it from note.",
+                                        reply_to=msg_id)
                 return
 
     try:
@@ -304,7 +302,7 @@ async def send_note(chat_id, group_id, msg_id, note_name,
             chat_id,
             string,
             buttons=buttons,
-            parse_mode=format,
+            parse_mode=parse_format,
             reply_to=msg_id,
             file=file_id,
             link_preview=preview
@@ -334,7 +332,7 @@ async def get_note(message, status, chat_id, chat_title):
     if len(note_name) >= 1:
         await send_note(
             message.chat.id, chat_id, message.message_id, note_name,
-            show_none=True, noformat=noformat, from_id=message.from_user.id)
+            show_none=True, no_format=noformat, from_id=message.from_user.id)
 
 
 @dp.message_handler(regexp="#(\w+)")
@@ -381,7 +379,7 @@ def button_parser(chat_id, texts):
     return text, buttons
 
 
-@decorator.CallBackQuery(b'get_note_')
+@decorator.callback_query_deprecated(b'get_note_')
 async def get_note_callback(event):
     data = str(event.data)
     event_data = re.search(r'get_note_(.*)_(.*)', data)
@@ -396,13 +394,13 @@ async def get_note_callback(event):
             get_string("notes", "user_blocked", event.chat_id), alert=True)
 
 
-@decorator.CallBackQuery(b'get_alert_')
+@decorator.callback_query_deprecated(b'get_alert_')
 async def get_alert_callback(event):
     data = str(event.data)
     event_data = re.search(r'get_alert_(.*)_(.*)', data)
     notename = event_data.group(2)[:-1]
     group_id = event_data.group(1)
-    note = await motor.sophie.notes.find_one({'chat_id': int(group_id), 'name': notename})
+    note = await db.notes.find_one({'chat_id': int(group_id), 'name': notename})
     if not note:
         await event.answer(get_string("notes", "cant_find_note", event.chat_id), alert=True)
         return
@@ -415,7 +413,7 @@ async def get_alert_callback(event):
     await event.answer(text, alert=True)
 
 
-@decorator.CallBackQuery(b'get_delete_msg_')
+@decorator.callback_query_deprecated(b'get_delete_msg_')
 async def del_message_callback(event):
     data = str(event.data)
     event_data = re.search(r'get_delete_msg_(.*)_(.*)', data)

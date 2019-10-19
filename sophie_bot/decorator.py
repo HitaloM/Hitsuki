@@ -12,17 +12,16 @@
 
 import re
 import time
-
 from importlib import import_module
 
-from telethon import events
-from aiogram.dispatcher.handler import SkipHandler
 from aiogram import types
+from aiogram.dispatcher.handler import SkipHandler
+from telethon import events
 
 from sophie_bot import BOT_USERNAME, DEBUG_MODE, tbot, dp, logger
+from sophie_bot.config import get_config_key
 from sophie_bot.modules.helper_func.error import report_error
 from sophie_bot.modules.helper_func.flood import prevent_flooding
-from sophie_bot.config import get_config_key
 
 import_module("sophie_bot.modules.helper_func.bount_filter")
 
@@ -129,9 +128,9 @@ def t_command(command, arg="", word_arg="", additional="", **kwargs):
     return decorator
 
 
-def CallBackQuery(data, compile=True):
+def callback_query_deprecated(data, do_compile=True):
     def decorator(func):
-        if compile is True:
+        if do_compile is True:
             tbot.add_event_handler(func, events.CallbackQuery(data=re.compile(data)))
         else:
             tbot.add_event_handler(func, events.CallbackQuery(data=data))

@@ -148,7 +148,7 @@ async def disconnect(event):
     await event.reply(get_string("connections", "disconnected", event.chat_id).format(chat_title))
 
 
-@decorator.CallBackQuery(b'connect_')
+@decorator.callback_query_deprecated(b'connect_')
 async def event(event):
     user_id = event.original_update.user_id
     chat_id = re.search(r'connect_(.*)', str(event.data)).group(1)[:-1]
@@ -200,11 +200,13 @@ async def get_conn_chat(user_id, chat_id, admin=False, only_in_groups=False):
 def connection(**dec_kwargs):
     def wrapped(func):
         async def wrapped_1(event, *args, **kwargs):
+            user_id = None
             if hasattr(event, 'from_id'):
                 user_id = event.from_id
             elif hasattr(event, 'from_user'):
                 user_id = event.from_user.id
 
+            chat_id = None
             if hasattr(event, 'chat_id'):
                 chat_id = event.chat_id
             elif hasattr(event, 'chat'):

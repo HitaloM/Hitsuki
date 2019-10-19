@@ -10,17 +10,18 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import os
 import asyncio
+import os
 import signal
-import hypercorn
-# import uvloop
-
 from importlib import import_module
+
+import hypercorn
 
 from sophie_bot import bot, tbot, redis, logger, dp, quart
 from sophie_bot.config import get_config_key
 from sophie_bot.modules import ALL_MODULES
+
+# import uvloop
 
 
 LOAD_COMPONENTS = get_config_key("load_components")

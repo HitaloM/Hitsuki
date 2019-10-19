@@ -10,12 +10,12 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import math
 import io
+import math
 import subprocess
-import ujson
-import requests
 
+import requests
+import ujson
 from aiogram import types
 from aiogram.utils.exceptions import PhotoDimensions
 

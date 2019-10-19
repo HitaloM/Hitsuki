@@ -10,10 +10,9 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
+from sophie_bot import decorator, mongodb, redis
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.users import is_user_admin
-from sophie_bot import decorator, mongodb, redis
-
 
 ALLOWED_LOCKS = (
     'all',

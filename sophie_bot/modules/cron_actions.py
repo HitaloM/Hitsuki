@@ -10,15 +10,16 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import aiocron
-import requests
-import io
 import asyncio
+import io
 from time import gmtime, strftime
 
-from sophie_bot.modules.sudo_and_owner_stuff import do_backup
+import aiocron
+import requests
+
 from sophie_bot import bot, mongodb
 from sophie_bot.config import get_config_key
+from sophie_bot.modules.sudo_and_owner_stuff import do_backup
 
 
 @aiocron.crontab('47 * * * *')

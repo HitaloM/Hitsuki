@@ -58,7 +58,5 @@ async def del_message(message, strings):
     if not message.reply_to_message:
         await message.reply(strings['reply_to_msg'])
         return
-    msgs = []
-    msgs.append(message.message_id)
-    msgs.append(message.reply_to_message.message_id)
+    msgs = [message.message_id, message.reply_to_message.message_id]
     await tbot.delete_messages(message.chat.id, msgs)

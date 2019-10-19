@@ -11,17 +11,19 @@
 # you may not use this file except in compliance with the License.
 
 import asyncio
-import uuid
-import io
 import datetime
-import ujson
+import io
+import uuid
 
+import ujson
 from aiogram import types
+from telethon.tl.functions.channels import GetParticipantRequest
+from telethon.tl.types import ChannelParticipantCreator
 
 from sophie_bot import SOPHIE_VERSION, OWNER_ID, BOT_ID, WHITELISTED, tbot, decorator, mongodb, bot, db
+from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import is_user_admin, get_user_and_text, user_link_html
-from sophie_bot.modules.connections import connection, get_conn_chat
 
 
 def get_user_and_fed_and_text_dec(func):
@@ -45,7 +47,7 @@ def get_user_and_fed_and_text_dec(func):
                     else:
                         text = ""
                     fed = await db.feds.find_one({'fed_id': text_args[0]})
-                    if not chat_fed:
+                    if not fed:
                         await message.reply(get_string("feds", 'fed_id_invalid', message.chat.id))
                         return
                 else:
@@ -72,7 +74,7 @@ def get_fed_dec(func):
         if not len(text_args) < 2:
             if text_args[1].count('-') == 4:
                 fed = await db.feds.find_one({'fed_id': text_args[1]})
-                if not chat_fed:
+                if not fed:
                     await message.reply(get_string("feds", 'fed_id_invalid', message.chat.id))
                     return
 
@@ -145,10 +147,10 @@ async def join_fed_comm(message, strings, status, chat_id, chat_title, **kwargs)
     fed_id = message.get_args().split(' ')[0]
     peep = await tbot(
         GetParticipantRequest(
-            channel=chat_id, user_id=user_id,
+            channel=chat_id, user_id=message.from_user.id,
         )
     )
-    if not peep.participant == ChannelParticipantCreator(user_id=user_id):
+    if not peep.participant == ChannelParticipantCreator(user_id=message.from_user.id):
         await message.reply(get_string('feds', 'only_creators', chat_id))
         return
 
@@ -470,11 +472,11 @@ async def fban_helper(message, strings):
     if str(user_id) not in fed['banned']:
         return
 
-    if await is_user_admin(chat_id, from_id) is True:
+    if await is_user_admin(chat_id, user_id) is True:
         return
 
     try:
-        await bot.kick_chat_member(chat_id, user['user_id'])
+        await bot.kick_chat_member(chat_id, user_id)
     except Exception:
         return  # TODO: warn chat admins
 
@@ -483,7 +485,7 @@ async def fban_helper(message, strings):
         {"$addToSet": {f'banned.{user_id}.banned_chats': {'$each': [chat_id]}}}
     )
 
-    await event.respond(strings['fban_usr_rmvd'].format(
+    await message.reply(strings['fban_usr_rmvd'].format(
         fed=fed['fed_name'],
         user=await user_link_html(user_id),
         rsn=fed['banned'][str(user_id)]['reason']

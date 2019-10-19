@@ -12,9 +12,9 @@
 
 from sophie_bot import WHITELISTED, decorator, dp
 from sophie_bot.modules.connections import connection
+from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.users import is_user_admin, user_link_html, get_chat_admins, get_user_and_text
-from sophie_bot.modules.disable import disablable_dec
 
 
 @dp.message_handler(regexp="^@admin")

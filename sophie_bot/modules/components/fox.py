@@ -13,25 +13,24 @@
 #
 # You should have received a copy of the GNU General Public License
 
+import datetime
 import hashlib
 import io
-import re
-import pysftp
-import subprocess
 import os
+import re
+import subprocess
 import time
-import datetime
-import ujson
 
+import pysftp
+import ujson
 from aiogram import types
+from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
-from aiogram.dispatcher.filters.state import State, StatesGroup
 
-from sophie_bot.modules.main import convert_size
 from sophie_bot import decorator, dp, tbot, bot, mongodb, logger
 from sophie_bot.config import get_config_key
-
+from sophie_bot.modules.main import convert_size
 
 # Constants
 FOX_CHATS = [483808054, -1001287179850, -1001280218923, -1001155400138, -1001362128194]
@@ -591,6 +590,8 @@ async def change_device_status_btn(query, callback_data, state):
         status = "Testing only"
     elif num == 4:
         status = "Unmaintained"
+    else:
+        status = None
 
     mongodb.ofox_devices.update_one({'codename': codename}, {'$set': {'status': status}})
     device = mongodb.ofox_devices.find_one({'codename': codename})

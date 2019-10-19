@@ -10,10 +10,10 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import ujson
 import datetime
 import html
 
+import ujson
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import ChannelParticipantsAdmins
 
@@ -56,7 +56,7 @@ async def msg_handler(message, **kwargs):
     await update_user(chat_id, message.from_user)
 
     if "reply_to_message" in message and \
-        hasattr(message.reply_to_message.from_user, 'chat_id') and \
+            hasattr(message.reply_to_message.from_user, 'chat_id') and \
             message.reply_to_message.from_user.chat_id:
         await update_user(chat_id, message.reply_to_message.from_user)
 
@@ -231,7 +231,6 @@ async def get_user_by_id(user_id: int):
     user = await db.user_list.find_one(
         {'user_id': user_id}
     )
-    # Ohnu, we don't have this user in DB
     if not user:
         try:
             user = await add_user_to_db(await tbot(GetFullUserRequest(user_id)))
@@ -242,7 +241,6 @@ async def get_user_by_id(user_id: int):
 
 
 async def add_user_to_db(user):
-
     if hasattr(user, 'user'):
         user = user.user
 
@@ -322,6 +320,7 @@ def user_admin_dec(func):
             await event.reply("You should be admin to do it!")
             return
         return await func(event, *args, **kwargs)
+
     return wrapped
 
 
@@ -330,6 +329,7 @@ def user_sudo_dec(func):
         if event.from_id not in SUDO:
             return
         return await func(event)
+
     return wrapped
 
 
@@ -338,6 +338,7 @@ def user_owner_dec(func):
         if not message['from']['id'] == OWNER_ID:
             return
         return await func(message)
+
     return wrapped
 
 

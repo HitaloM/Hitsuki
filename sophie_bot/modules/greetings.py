@@ -13,12 +13,11 @@
 import re
 import time
 
+from aiogram import types
+from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.exceptions import CantDemoteChatCreator
 from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
 
-from aiogram.utils.exceptions import CantDemoteChatCreator
-from aiogram import types
-
-from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from sophie_bot import BOT_ID, tbot, decorator, mongodb
 from sophie_bot.modules.bans import mute_user, unmute_user
 from sophie_bot.modules.connections import connection
@@ -63,6 +62,8 @@ async def do_cleanwelcome(message, chat_id, welc_msg):
             msg_id = welc_msg.id
         elif hasattr(welc_msg, 'message_id'):
             msg_id = welc_msg.message_id
+        else:
+            msg_id = None
 
         new = {
             'chat_id': chat_id,
@@ -70,8 +71,7 @@ async def do_cleanwelcome(message, chat_id, welc_msg):
             'last_msg': msg_id
         }
         if 'last_msg' in clean_welcome:
-            owo = []
-            owo.append(clean_welcome['last_msg'])
+            owo = [clean_welcome['last_msg']]
             try:
                 await tbot.delete_messages(chat_id, owo)
             except MessageDeleteForbiddenError:
@@ -265,7 +265,7 @@ async def clean_welcome(message, strings, status, chat_id, chat_title):
         await message.reply(strings['cln_wel_s_disabled'].format(chat_name=chat_title))
 
 
-@decorator.CallBackQuery('wlcm_')
+@decorator.callback_query_deprecated('wlcm_')
 @get_strings_dec("greetings")
 async def welcm_btn_callback(event, strings):
     data = str(event.data)

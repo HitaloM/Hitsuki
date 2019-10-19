@@ -13,8 +13,8 @@
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 
 from sophie_bot import dp, bot
-from sophie_bot.modules.users import is_user_admin
 from sophie_bot.config import get_config_key
+from sophie_bot.modules.users import is_user_admin
 
 
 @dp.callback_query_handler(regexp='report_error')

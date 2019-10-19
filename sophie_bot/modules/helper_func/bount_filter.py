@@ -10,10 +10,10 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from sophie_bot import OWNER_ID, SUDO, bot, dp, mongodb
-
-from aiogram.dispatcher.filters import BoundFilter
 from aiogram import types
+from aiogram.dispatcher.filters import BoundFilter
+
+from sophie_bot import OWNER_ID, SUDO, bot, dp, mongodb
 
 
 class IsAdmin(BoundFilter):

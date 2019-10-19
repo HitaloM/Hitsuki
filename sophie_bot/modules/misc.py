@@ -12,16 +12,15 @@
 
 import random
 
+import ujson
+from aiogram.utils.exceptions import BadRequest
 from requests import post
-
 from telethon.tl.functions.channels import GetParticipantRequest, EditAdminRequest
 
-from aiogram.utils.exceptions import BadRequest
-
 import sophie_bot.modules.helper_func.bot_rights as bot_rights
-from sophie_bot import OWNER_ID, SUDO, BOT_ID, tbot, decorator, mongodb, bot
-from sophie_bot.modules.disable import disablable_dec
+from sophie_bot import OWNER_ID, SUDO, BOT_ID, tbot, decorator, mongodb, bot, redis
 from sophie_bot.modules.connections import connection
+from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.users import (user_admin_dec, get_user_and_text, is_user_premium,
                                       user_link_html, is_user_admin, update_admin_cache)

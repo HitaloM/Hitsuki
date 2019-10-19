@@ -15,6 +15,7 @@ from telethon.tl.functions.channels import GetParticipantRequest
 from sophie_bot import BOT_ID, tbot
 from sophie_bot.modules.language import get_string
 
+
 # Help
 # change_info = rights.change_info
 # post_messages = rights.post_messages
@@ -37,11 +38,15 @@ async def get_bot_rights(chat_id):
 
 def change_info():
     def decorator(func, *dec_args, **dev_kwargs):
+        chat_id = None
+
         async def wrapped_1(event):
             if hasattr(event, 'chat_id'):
                 chat_id = event.chat_id
             elif hasattr(event, 'chat'):
                 chat_id = event.chat.id
+            else:
+                chat_id = None
 
             rights = await get_bot_rights(chat_id)
             if rights is not False and rights.change_info and rights.change_info:
@@ -49,12 +54,16 @@ def change_info():
             else:
                 await event.reply(get_string("bot_rights", "change_info", chat_id))
                 return
+
         return wrapped_1
+
     return decorator
 
 
 def post_messages():
     def decorator(func, *dec_args, **dev_kwargs):
+        chat_id = None
+
         async def wrapped_1(event):
             if hasattr(event, 'chat_id'):
                 chat_id = event.chat_id
@@ -67,13 +76,16 @@ def post_messages():
             else:
                 # No answer if don't have rights
                 return
+
         return wrapped_1
+
     return decorator
 
 
 def edit_messages():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
+            chat_id = None
             if hasattr(event, 'chat_id'):
                 chat_id = event.chat_id
             elif hasattr(event, 'chat'):
@@ -85,13 +97,16 @@ def edit_messages():
             else:
                 await event.reply(get_string("bot_rights", "edit_messages", chat_id))
                 return
+
         return wrapped_1
+
     return decorator
 
 
 def delete_messages():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
+            chat_id = None
             if hasattr(event, 'chat_id'):
                 chat_id = event.chat_id
             elif hasattr(event, 'chat'):
@@ -103,13 +118,16 @@ def delete_messages():
             else:
                 await event.reply(get_string("bot_rights", "delete_messages", chat_id))
                 return
+
         return wrapped_1
+
     return decorator
 
 
 def ban_users():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
+            chat_id = None
             if hasattr(event, 'chat_id'):
                 chat_id = event.chat_id
             elif hasattr(event, 'chat'):
@@ -121,13 +139,16 @@ def ban_users():
             else:
                 await event.reply(get_string("bot_rights", "ban_users", chat_id))
                 return
+
         return wrapped_1
+
     return decorator
 
 
 def pin_messages():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
+            chat_id = None
             if hasattr(event, 'chat_id'):
                 chat_id = event.chat_id
             elif hasattr(event, 'chat'):
@@ -139,13 +160,16 @@ def pin_messages():
             else:
                 await event.reply(get_string("bot_rights", "pin_messages", chat_id))
                 return
+
         return wrapped_1
+
     return decorator
 
 
 def add_admins():
     def decorator(func, *dec_args, **dev_kwargs):
         async def wrapped_1(event):
+            chat_id = None
             if hasattr(event, 'chat_id'):
                 chat_id = event.chat_id
             elif hasattr(event, 'chat'):
@@ -157,5 +181,7 @@ def add_admins():
             else:
                 await event.reply(get_string("bot_rights", "add_admins", chat_id))
                 return
+
         return wrapped_1
+
     return decorator

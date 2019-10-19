@@ -10,21 +10,21 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import ujson
-import shutil
 import asyncio
-import os
-import html
-import requests
 import datetime
-
+import html
+import os
+import shutil
 from time import gmtime, strftime
 
+import requests
+import ujson
+
 from sophie_bot import SOPHIE_VERSION, tbot, decorator, mongodb, redis, logger, bot, db
+from sophie_bot.config import get_config_key
 from sophie_bot.modules.main import chat_term, term, convert_size
 from sophie_bot.modules.notes import button_parser
 from sophie_bot.modules.users import get_user_and_text, user_link_html
-from sophie_bot.config import get_config_key
 
 
 @decorator.register(cmds='allcommands', is_sudo=True)
@@ -152,7 +152,7 @@ async def do_backup(chat_id, reply=False):
         f.write(ujson.dumps(new, indent=2))
 
     # Copy config file
-    shutil.copyfile('data/bot_conf.json', 'Backups/tempbackup/bot_conf.json')
+    shutil.copyfile('data/bot_conf.yaml', 'Backups/tempbackup/bot_conf.yaml')
 
     await bot.send_message(chat_id, "Compressing and uploading to Telegram...", reply_to_message_id=reply)
     password = get_config_key("backups_password")
