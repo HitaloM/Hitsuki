@@ -25,7 +25,7 @@ from telethon import TelegramClient
 
 from sophie_bot.config import get_config_key
 
-SOPHIE_VERSION = "v2.0-alpha"
+SOPHIE_VERSION = "v1.8"
 
 # enable logging
 logging.basicConfig(
