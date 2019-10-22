@@ -17,6 +17,8 @@ import uuid
 
 import ujson
 from aiogram import types
+
+from aiogram.dispatcher.filters.state import State, StatesGroup
 from telethon.tl.functions.channels import GetParticipantRequest
 from telethon.tl.types import ChannelParticipantCreator
 
@@ -24,6 +26,10 @@ from sophie_bot import SOPHIE_VERSION, OWNER_ID, BOT_ID, WHITELISTED, tbot, deco
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import is_user_admin, get_user_and_text, user_link_html
+
+# Waiting for import file state
+class WaitForFile(StatesGroup):
+    waiting = State()
 
 
 def get_user_and_fed_and_text_dec(func):
@@ -72,12 +78,13 @@ def get_fed_dec(func):
         status, chat_id, chat_title = await get_conn_chat(
             message.from_user.id, message.chat.id)
 
-        text_args = message.text.split(" ", 1)
-        if not len(text_args) < 2:
-            if text_args[1].count('-') == 4:
-                if not (fed := await db.feds.find_one({'fed_id': text_args[1]})):
-                    await message.reply(get_string("feds", 'fed_id_invalid', message.chat.id))
-                    return
+        if message.text:
+            text_args = message.text.split(" ", 1)
+            if not len(text_args) < 2:
+                if text_args[1].count('-') == 4:
+                    if not (fed := await db.feds.find_one({'fed_id': text_args[1]})):
+                        await message.reply(get_string("feds", 'fed_id_invalid', message.chat.id))
+                        return
 
         if not (fed := await db.feds.find_one({'chats': {'$in': [chat_id]}})):
                 await message.reply(get_string("feds", 'chat_not_in_fed', message.chat.id))
@@ -288,12 +295,27 @@ async def fed_info(message, strings, fed, status, chat_id, chat_title, **kwargs)
 @get_fed_dec
 @user_is_fed_admin
 @get_strings_dec("feds")
-async def fbanned_list(message, strings, fed, status, chat_id, chat_title, **kwargs):
+async def fbanned_list(message, strings, fed, status, chat_id, chat_title):
     if len(fed['banned']) < 1:
         await message.reply(strings['no_fbanned_in_fed'].format(fed_name=fed['fed_name']))
         return
 
-    if message.get_args().split(' ')[0].lower() == 'json':
+    if len(message.get_args()) > 1 and message.get_args().split(' ')[0].lower() == 'csv':
+        file_name = "fbanned_users_list.csv"
+        data = 'id,first_name,last_name,username,reason'
+        for user in fed['banned'].values():
+            data += '\n' + str(user['user_id'])
+
+            user_info = await db.user_list.find_one({'user_id': user['user_id']})
+            data += ',' + str(user_info['first_name']) if user_info and user_info['first_name'] else ','
+            data += ',' + str(user_info['last_name']) if user_info and user_info['last_name'] else ','
+            data += ',' + str(user_info['username']) if user_info and user_info['username'] else ','
+
+            if data and 'reason' in user and user['reason']:
+                data += ',' + user['reason']
+            else:
+                data += ','
+    else:
         file_name = "fbanned_users_list.json"
         fed['banned']['json_info'] = {
             'sophie_ver': SOPHIE_VERSION,
@@ -301,41 +323,95 @@ async def fbanned_list(message, strings, fed, status, chat_id, chat_title, **kwa
             'version': 1,
             'time': datetime.datetime.now()
         }
-        data = ujson.dumps(fed['banned'], indent=2)
 
-    elif message.get_args().split(' ')[0].lower() == 'csv':
-        file_name = "fbanned_users_list.csv"
-        data = 'id,reason'
-        for user_id in fed['banned']:
-            banned_user = fed['banned'][user_id]
-            data += '\n' + user_id
-            if data and 'reason' in banned_user and banned_user['reason']:
-                data += ',' + banned_user['reason']
+        data = ""
+        for item in fed['banned'].values():
+            if 'user_id' in item and (user_info := await db.user_list.find_one({'user_id': item['user_id']})):
+                item['first_name'] = user_info['first_name']
+                item['last_name'] = user_info['last_name']
+                item['username'] = user_info['username']
+            data += str(ujson.dumps(item))
+            data += "\n"
 
-    else:
-        file_name = "fbanned_users_list.txt"
-        data = strings['fbanned_list_header'].format(fed_name=fed['fed_name'], fed_id=fed['fed_id'])
-        for user_id in fed['banned']:
-            banned_user = fed['banned'][user_id]
-            if user := await db.user_list.find_one({'user_id': user_id}):
-                print(user)
-                data += f"\n {user['first_name']} "
-                if 'last_name' in user and user['last_name']:
-                    data += user['last_name']
-                data += f" ({user_id})"
-            else:
-                data += f'\n ({user_id})'
 
-            # Reason
-            if data and 'reason' in banned_user and banned_user['reason']:
-                data += ': ' + banned_user['reason']
-            else:
-                data += ': No reason'
     await message.answer_document(
         types.InputFile(io.StringIO(data), filename=file_name),
         strings['fbanned_list_msg'].format(fed_name=fed['fed_name'], fed_id=fed['fed_id']),
         reply=message.message_id
     )
+
+async def import_fbanned_list(message, fed):
+    # Download file
+    if message.document['file_size'] > 52428800:
+        await message.reply("Supported importing files only under 50 MB!")
+        return
+
+    file_name = message.document.file_name
+    raw_text = io.BytesIO(await tbot.download_media(message.document.file_id, file=bytes)).read().decode()
+
+    list = []
+
+    msg = await message.reply(f'Starting importing in <b>{fed["fed_name"]}</b> Federation..')
+
+    if file_name.endswith('.json'):
+        counter = 0
+        for line in raw_text.splitlines():
+            counter =+ 1
+            try:
+                data = ujson.loads(line)
+            except Exception as err:
+                await message.reply('Error: bad file: ' + str(err))
+                return
+            if 'version' in data:
+                continue
+            elif not 'user_id' in data:
+                await message.reply(f'Error: bad file: expected <code>user_id</code> on line <code>{counter}</code>')
+                return
+
+            del data['first_name']
+            del data['last_name']
+            del data['username']
+            list.append(data)
+    else:
+        await message.reply("This file extension is not supported! Allowed only json.")
+        return
+
+    for item in list:
+        await db.feds.update_one(
+            {'_id': fed['_id']},
+            {"$set": {f'banned.{item["user_id"]}': item}}
+        )
+
+    text = "<b>Import done!</b>"
+    text += "\nFederation: " + fed['fed_name']
+    text += f"\nImported <code>{len(list)}</code> bans successfully!"
+    await msg.edit_text(text)
+
+
+@decorator.register(cmds=['importfbanlist', 'importfbanned'])
+@connection(admin=True, only_in_groups=True)
+@get_fed_dec
+@user_is_fed_admin
+@get_strings_dec("feds")
+async def import_fbanned_list_cmd(message, strings, fed, status, chat_id, chat_title):
+    if 'reply_to_message' not in message:
+        await WaitForFile.waiting.set()
+        await message.reply("Please upload the file now, I'm waiting for it. Write /cancel if you changed their mind.")
+        return
+    if 'document' not in message.reply_to_message:
+        await message.reply("Reply on the file.")
+        return
+
+    await import_fbanned_list(message.reply_to_message, fed)
+
+
+@decorator.register(state=WaitForFile.waiting, content_types=types.ContentTypes.DOCUMENT, allow_kwargs=True)
+@connection(admin=True)
+@get_fed_dec
+@user_is_fed_admin
+async def import_fbanned_list_state(message, fed, status, chat_id, chat_title, state=None, **kwargs):
+    await state.finish()
+    await import_fbanned_list(message, fed)
 
 
 @decorator.register(cmds='fban')
@@ -343,7 +419,7 @@ async def fbanned_list(message, strings, fed, status, chat_id, chat_title, **kwa
 @user_is_fed_admin
 @get_user_and_fed_and_text_dec
 @get_strings_dec("feds")
-async def fed_ban_user(message, strings, user, fed, reason, chat_id, chat_title):
+async def fed_ban_user(message, strings, user, fed, reason, status, chat_id, chat_title):
     if not reason:
         reason = None
     user_id = user['user_id']
@@ -428,8 +504,6 @@ async def un_fed_ban_user(message, strings, user, fed, reason, chat_id):
     text += strings['fbanned_fadmin'].format(fadmin=await user_link_html(from_id))
     text += strings['fbanned_user'].format(
         user=await user_link_html(user['user_id']) + f" (<code>{user['user_id']}</code>)")
-
-    banned_chats = fed['banned'][str(user_id)]['banned_chats']
 
     msg = await message.reply(text + strings['un_fbanned_process'].format(num=len(banned_chats)))
 
