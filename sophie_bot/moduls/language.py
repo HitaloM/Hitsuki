@@ -1,0 +1,96 @@
+# Copyright (C) 2019 The Raphielscape Company LLC.
+# Copyright (C) 2018 - 2019 MrYacha
+#
+# This file is part of SophieBot.
+#
+# SophieBot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# Licensed under the Raphielscape Public License, Version 1.c (the "License");
+# you may not use this file except in compliance with the License.
+
+from .utils.language import LANGUAGES, get_strings_dec, change_chat_lang, get_chat_lang_info
+from .utils.message import get_arg
+
+from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.callback_data import CallbackData
+
+from sophie_bot.decorator import register
+
+
+select_lang_cb = CallbackData('select_lang_cb', 'lang')
+translators_lang_cb = CallbackData('translators_lang_cb', 'lang')
+
+
+@register(cmds='lang', no_args=True)
+@get_strings_dec('language')
+async def select_lang_keyboard(message, strings):
+    markup = InlineKeyboardMarkup(row_width=2)
+
+    lang_info = await get_chat_lang_info(message.chat.id)
+
+    if message.chat.type == 'private':
+        text = strings['your_lang'].format(
+            lang=lang_info['flag'] + " " + lang_info['babel'].display_name)
+        text += strings['select_pm_lang']
+
+        # TODO: Connected chat lang info
+
+    else:
+        text = strings['chat_lang'].format(
+            lang=lang_info['flag'] + " " + lang_info['babel'].display_name)
+        text += strings['select_chat_lang']
+
+    for lang in LANGUAGES.values():
+        lang_info = lang['language_info']
+        markup.insert(InlineKeyboardButton(
+            lang_info['flag'] + " " + lang_info['name'],
+            callback_data=select_lang_cb.new(lang=lang_info['code']))
+        )
+
+    markup.add(InlineKeyboardButton(strings['crowdin_btn'], url='https://crowdin.com/project/sophiebot'))
+
+    await message.reply(text, reply_markup=markup)
+
+
+@get_strings_dec('language')
+async def change_lang(message, lang, strings, e=False):
+    await change_chat_lang(message.chat.id, lang)
+
+    lang_info = LANGUAGES[lang]['language_info']
+
+    text = strings['lang_changed'].format(lang_name=lang_info['flag'] + " " + lang_info['name'])
+    text += strings['help_us_translate']
+
+    markup = InlineKeyboardMarkup()
+
+    if 'translators' in lang_info:
+        markup.add(InlineKeyboardButton(strings['see_translators'], callback_data=translators_lang_cb.new(lang=lang)))
+
+    if e:
+        await message.edit_text(text, reply_markup=markup, disable_web_page_preview=True)
+    else:
+        await message.reply(text, reply_markup=markup, disable_web_page_preview=True)
+
+
+@register(cmds='lang', has_args=True)
+@get_strings_dec('language')
+async def select_lang_msg(message, strings):
+    lang = get_arg(message).lower()
+
+    if lang not in LANGUAGES:
+        await message.reply(strings['not_supported_lang'])
+        return
+
+    await change_lang(message, lang)
+
+
+@register(select_lang_cb.filter(), f='cb', allow_kwargs=True,)
+async def select_lang_callback(query, callback_data=None, **kwargs):
+    lang = callback_data['lang']
+    await change_lang(query.message, lang, e=True)
+
+
+async def __stats__():
+    return f"* <code>{len(LANGUAGES)}</code> languages loaded.\n"

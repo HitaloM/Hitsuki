@@ -13,7 +13,11 @@
 from aiogram import types
 from aiogram.dispatcher.filters import BoundFilter
 
-from sophie_bot import OWNER_ID, SUDO, bot, dp, mongodb
+from sophie_bot import dp
+from sophie_bot.config import get_int_key, get_list_key
+from sophie_bot.services.mongo import mongodb
+from sophie_bot.moduls.utils.language import get_strings_dec
+from sophie_bot.moduls.utils.user_details import is_user_admin
 
 
 class IsAdmin(BoundFilter):
@@ -22,9 +26,12 @@ class IsAdmin(BoundFilter):
     def __init__(self, is_admin):
         self.is_admin = is_admin
 
-    async def check(self, message: types.Message):
-        member = await bot.get_chat_member(message.chat.id, message.from_user.id)
-        return member.is_admin()
+    @get_strings_dec('global')
+    async def check(self, message: types.Message, strings):
+        if not await is_user_admin(message.chat.id, message.from_user.id):
+            await message.reply(strings['u_not_admin'])
+            return False
+        return True
 
 
 class IsOwner(BoundFilter):
@@ -34,7 +41,7 @@ class IsOwner(BoundFilter):
         self.is_owner = is_owner
 
     async def check(self, message: types.Message):
-        if message.from_user.id == OWNER_ID:
+        if message.from_user.id == get_int_key("OWNER_ID"):
             return True
 
 
@@ -45,7 +52,7 @@ class IsSudo(BoundFilter):
         self.is_owner = is_sudo
 
     async def check(self, message: types.Message):
-        if message.from_user.id in SUDO:
+        if message.from_user.id in get_list_key("SUDO"):
             return True
 
 
@@ -61,43 +68,7 @@ class NotGbanned(BoundFilter):
             return True
 
 
-class NotForwarded(BoundFilter):
-    key = 'not_forwarded'
-
-    def __init__(self, not_forwarded):
-        self.not_forwarded = not_forwarded
-
-    async def check(self, message: types.Message):
-        if 'forward_from' not in message:
-            return True
-
-
-class Only_PM(BoundFilter):
-    key = 'only_pm'
-
-    def __init__(self, only_pm):
-        self.only_pm = only_pm
-
-    async def check(self, message: types.Message):
-        if message.from_user.id == message.chat.id:
-            return True
-
-
-class Only_In_Groups(BoundFilter):
-    key = 'only_groups'
-
-    def __init__(self, only_groups):
-        self.only_groups = only_groups
-
-    async def check(self, message: types.Message):
-        if not message.from_user.id == message.chat.id:
-            return True
-
-
 dp.filters_factory.bind(IsAdmin)
 dp.filters_factory.bind(IsOwner)
 dp.filters_factory.bind(NotGbanned)
-dp.filters_factory.bind(NotForwarded)
-dp.filters_factory.bind(Only_PM)
-dp.filters_factory.bind(Only_In_Groups)
 dp.filters_factory.bind(IsSudo)

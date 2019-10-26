@@ -2,7 +2,7 @@
 https://github.com/LonamiWebs/Telethon/archive/master.zip
 aiogram
 
-# DB's
+# DBs
 redis
 aioredis # Redis memery storage fom aiogram
 pymongo
@@ -19,8 +19,10 @@ cryptography
 #git+https://github.com/MagicStack/uvloop
 
 # Other
+envparse
 hypercorn
-aiocron
+#aiocron
+apscheduler
 requests
 #git+https://github.com/casics/nostril
 quart

@@ -10,20 +10,14 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from sophie_bot import SUDO, redis
+import redis
+from sophie_bot.config import get_str_key, get_int_key
 
 
-async def prevent_flooding(message, command):
-    user_id = message.from_user.id
-    if user_id in SUDO:
-        return True
-    key = 'antiflood_{}_{}'.format(user_id, command)
-    num = redis.incr(key, 1)
-    redis.incr(key, 10)
-
-    if num == 10:
-        redis.expire(key, 120)
-        await message.reply("Aniflood limit reached, please wait 2 minutes!")
-    elif num > 10:
-        return False
-    return True
+# Init Redis
+redis = redis.StrictRedis(
+    host=get_str_key("REDIS_HOST"),
+    port=get_str_key("REDIS_PORT"),
+    db=get_int_key("REDIS_DB_FSM"),
+    decode_responses=True
+)

@@ -17,8 +17,7 @@ import re
 from time import gmtime, strftime
 
 from aiogram import types
-from telethon import custom, errors, utils
-from telethon.tl.custom import Button
+from telethon import errors, utils
 from telethon.tl.functions.users import GetFullUserRequest
 
 from sophie_bot import tbot, decorator, logger, dp, db, bot
@@ -343,36 +342,6 @@ async def check_hashtag(message: types.Message):
         await send_note(
             message['chat']['id'], chat_id, message['message_id'], note_name,
             from_id=message['from']['id'])
-
-
-def button_parser(chat_id, texts):
-    buttons = []
-    raw_buttons = re.findall(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', texts)
-    text = re.sub(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', '', texts)
-    for raw_button in raw_buttons:
-        if raw_button[1] == 'url':
-            url = raw_button[2]
-            if url[0] == '/' and url[0] == '/':
-                url = url[2:]
-            t = [custom.Button.url(raw_button[0], url)]
-        elif raw_button[1] == 'note':
-            t = [Button.inline(raw_button[0], 'get_note_{}_{}'.format(
-                chat_id, raw_button[2]))]
-        elif raw_button[1] == 'alert':
-            t = [Button.inline(raw_button[0], 'get_alert_{}_{}'.format(
-                chat_id, raw_button[2]))]
-        elif raw_button[1] == 'deletemsg':
-            t = [Button.inline(raw_button[0], 'get_delete_msg_{}_{}'.format(
-                chat_id, raw_button[2]))]
-
-        if raw_button[3]:
-            new = buttons[-1] + t
-            buttons = buttons[:-1]
-            buttons.append(new)
-        else:
-            buttons.append(t)
-
-    return text, buttons
 
 
 @decorator.callback_query_deprecated(b'get_note_')

@@ -66,21 +66,6 @@ STRINGS:
         tmute_sucess: "Admin {admin} has muted {user} for {time} {unit} !"
         usernt_banned: "This user wasn't banned in the first place!"
         user_gbanned: "\n\n<b>Warning! This user is globally banned because:</b>\n<code>{reason}</code>"
-    connections:
-        cant_find_chat_use_id: "I am not able to find this chat, try using a Chat ID instead."
-        cant_find_chat: "I can't find this chat."
-        not_in_group: "You're not in the group you're trying to connect to, join and send a message."
-        connected: "Successfully connected to **{}**!"
-        connected_pm_to_me: "Your PM has been successfully connected to **{}**! Write to @rSophieBot to start using connection."
-        pm_connected: "Your PM has been successfully connected to **{}**!"
-        history_empty: "You're not connected to any chat for history, connect via `/connect (chat id)`"
-        connected_chat: "**Current connected chat:**\n`"
-        select_chat_to_connect: "`\n\n**Select a chat to connect:**"
-        u_wasnt_connected: "You was not connected to any chat before!"
-        disconnected: "You were disconnected from {}."
-        not_in_chat: "You're not in this chat anymore, I'll disconnect you."
-        u_should_be_admin: "You should be admin in {}!"
-        usage_only_in_groups: "Usage limited only in groups!"
     greetings:
         welcome_hay: "Welcome {mention}! Howdy?"
         cant_find_note: "I can't find that note."
@@ -184,12 +169,14 @@ STRINGS:
         no_rights_purge: "You don't have enough rights to purge in this group!"
         reply_to_msg: "Reply to a message to delete!"
         purge_error: "I can't continue purge, mostly because you started purge from a message that was sent older than 2 days."
-        purge_done: "Purge completed!\nThis message will be removed in 5 seconds."
-        no_rights_del: "You don't have rights to delete messages in this group!"
+        fast_purge_done: "<b>Fast purge completed!</b>\nThis message will be removed in 5 seconds."
+        purge_user_done: "All messages from {user} was successfully deleted!"
     misc:
-        your_id: "Your ID: <code>{}</code>\n"
-        chat_id: "Group ID: <code>{}</code>\n"
-        user_id: "{}'s ID: <code>{}</code>\n"
+        your_id: "Your ID: <code>{id}</code>\n"
+        chat_id: "Group ID: <code>{id}</code>\n"
+        user_id: "{user}'s ID: <code>{id}</code>\n"
+        conn_chat_id: "Current connected chat ID: <code>{id}</code>"
+
         pinned_success: "Successfully pinned!"
         no_reply_msg: "Reply to a message to pin!"
         unpin_success: "Successfully unpinned!"
@@ -237,6 +224,7 @@ STRINGS:
         disablable: "<b>Disable-able commands:</b>\n"
         disabled_list: "<b>Disabled commands in {chat_name}:</b>\n"
         wot_to_disable: "What do you want to disable?"
+        no_disabled_cmds: No disable commands in <b>{chat_name}</b>!
         already_disabled: "This command is already disabled!"
         disabled: "Command <code>{cmd}</code> was disabled in <b>{chat_name}</b>!"
         wot_to_enable: "What do you want to enable?"
@@ -318,6 +306,42 @@ STRINGS:
         wrong_argument: "<b> Wrong argument. </b>"
     error_report:
         btn_report: "Report error"
+    language:
+        your_lang: "Your current language: <b>{lang}</b>"
+        chat_lang: "Current chat language: <b>{lang}</b>"
+        select_pm_lang: "\n<b>Select your new language:</b>"
+        select_chat_lang: "\n<b>Select new chat language:</b>"
+        crowdin_btn: "🌎 Help us with translation"
+        help_us_translate: "\n\n<a href=\"https://crowdin.com/project/sophiebot\">🌎 Help us improve languages</a>"
+        not_supported_lang: This language not supported!
+        lang_changed: Language was changed to <b>{lang_name}</b>.
+        see_translators: 👥 See translators
+    connections:
+        pm_connected: "Your PM has been successfully connected to <b>{chat_name}</b>!"
+        connected_pm_to_me: "Your PM has been successfully connected to <b>{chat_name}</b>! Please pm me to start using connection."
+        chat_connection_tlt: "<b>Chat connection</b>\n"
+        connected_chat: "<b>Current connected chat:</b>\n{chat_name}\n"
+        u_wasnt_connected: "You was not connected to any chat before!"
+        select_chat_to_connect: "\n<b>Select a chat to connect:</b>"
+        disconnected: "You were disconnected from <b>{chat_name}</b>."
+        cant_find_chat: "I can't find this chat."
+        cant_find_chat_use_id: "I can't find this chat. Use chat ID."
+        bad_arg_bool: "Bad choice: suppored only <code>on</code>/<code>off</code> <code>enable</code>/<code>disable</code>"
+
+        enabled: enabled
+        disabled: disabled
+        chat_users_connections_info: "Connections for normal users currently is <b>{status}</b> for <b>{chat_name}</b>"
+        chat_users_connections_cng: "Connections for normal users changed to <b>{status}</b> for <b>{chat_name}</b>"
+        
+        not_in_group: "You're not in the group you're trying to connect to, join and send a message."
+        history_empty: "You're not connected to any chat for history, connect via `/connect (chat id)`"
+        not_in_chat: "You're not in this chat anymore, I'll disconnect you."
+        u_should_be_admin: "You should be admin in {}!"
+        usage_only_in_groups: "Usage limited only in groups!"
+    global:
+        u_not_admin: You should be a admin to do this!
+        bot_dont_hab_perm: "I can't do this action, check my rights, I expected: <code>{perm}</code>"
+        u_dont_hab_perm: "You don't have admin right to do this action, I expected: <code>{perm}</code>"
 HELPS:
     notes:
         btn: Notes

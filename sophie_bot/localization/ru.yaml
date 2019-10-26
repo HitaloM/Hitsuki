@@ -2,8 +2,9 @@
 language_info:
   name: Russian
   small_name: rus
-  flag: "🇺🇸"
+  flag: "🇷🇺"
   code: ru
+  translators: [777000]
 STRINGS:
   notes:
     notelist_no_notes: "There aren't any notes in this chat!"
@@ -318,6 +319,12 @@ STRINGS:
     reports_turned_on: "Репорты <b>включены.</b>"
     reports_already_off: "<b>Репорты уже выключены. Нафига их заново вырубать то?..</b>"
     wrong_argument: "<b> Не правильный аргумент. </b>"
+  language:
+    select_lang: "<b>Select new language:</b>"
+    crowdin_btn: "🌎 Help us with translation"
+    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/sophiebot\">🌎 Help us improve languages</a>"
+    lang_changed: Language was changed to <b>{lang_name}</b>.
+    see_translators: 👥 See translators
 HELPS:
   notes:
     btn: Заметки

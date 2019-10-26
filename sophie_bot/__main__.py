@@ -10,82 +10,58 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
+import sys
 import asyncio
-import os
-import signal
-from importlib import import_module
-
 import hypercorn
-
-from sophie_bot import bot, tbot, redis, logger, dp, quart
-from sophie_bot.config import get_config_key
-from sophie_bot.modules import ALL_MODULES
-
 # import uvloop
 
+from importlib import import_module
 
-LOAD_COMPONENTS = get_config_key("load_components")
-CATCH_UP = get_config_key("skip_catch_up")
+from sophie_bot import dp
+from sophie_bot.services.quart import quart
+from sophie_bot.utils.logger import log
+from sophie_bot.config import get_bool_key
+from sophie_bot.moduls import ALL_MODULES, LOADED_MODULES
+from sophie_bot.cli import cli
 
-LOADED_MODULES = []
 
-# Import modules
-for module_name in ALL_MODULES:
-    logger.debug("Importing " + module_name)
-    imported_module = import_module("sophie_bot.modules." + module_name)
-    LOADED_MODULES.append(imported_module)
-
-logger.info("Modules loaded!")
-
-if LOAD_COMPONENTS is True:
-    from sophie_bot.modules.components import ALL_COMPONENTS
-
-    for module_name in ALL_COMPONENTS:
-        logger.debug("Importing " + module_name)
-        imported_module = import_module("sophie_bot.modules.components." + module_name)
+if get_bool_key('LOAD_MODULES'):
+    # Import modules
+    log.info("Modules to load: %s", str(ALL_MODULES))
+    for module_name in ALL_MODULES:
+        log.debug("Importing " + module_name)
+        imported_module = import_module("sophie_bot.moduls." + module_name)
         LOADED_MODULES.append(imported_module)
+    log.info("Modules loaded!")
+log.warning("Not importing modules!")
 
-    logger.info("Components loaded!")
-else:
-    logger.info("Components disabled!")
-
-
-# Asyncio magic
 
 # asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 loop = asyncio.get_event_loop()
 
+# Import misc stuff
+import_module("sophie_bot.utils.exit_gracefully")
+if not get_bool_key('DEBUG_MODE'):
+    import_module("sophie_bot.utils.sentry")
+
 
 @quart.before_serving
 async def startup():
-    logger.info("Aiogram: Using polling method")
+    log.info("Aiogram: Using polling method")
     loop.create_task(dp.start_polling())
-
-
-def exit_gracefully(signum, frame):
-    logger.info("Bye!")
-
-    try:
-        loop.create_task(bot.close())
-        loop.create_task(tbot.disconnect())
-        loop.create_task(dp.storage.close())
-        redis.save()
-    except Exception:
-        logger.info("Exiting immediately!")
-    logger.info("----------------------")
-    os.kill(os.getpid(), signal.SIGUSR1)
-
-
-# Signal exit
-signal.signal(signal.SIGINT, exit_gracefully)
+    log.info("Bot is alive!")
 
 
 async def start():
-    logger.info("Running webserver..")
+    log.info("Running webserver..")
     config = hypercorn.Config()
-    config.bind = ["localhost:8083"]
+    config.bind = ["localhost:8085"]
     await hypercorn.asyncio.serve(quart, config)
 
 
-logger.info("Starting loop..")
+if len(sys.argv) > 1:
+    cli()
+
+
+log.info("Starting loop..")
 loop.run_until_complete(start())

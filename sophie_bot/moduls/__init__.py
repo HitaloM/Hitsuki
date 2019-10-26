@@ -10,7 +10,8 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from sophie_bot import logger
+
+LOADED_MODULES = []
 
 
 def list_all_modules():
@@ -27,5 +28,4 @@ def list_all_modules():
 
 
 ALL_MODULES = sorted(list_all_modules())
-logger.info("Modules to load: %s", str(ALL_MODULES))
 __all__ = ALL_MODULES + ["ALL_MODULES"]

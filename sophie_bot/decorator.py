@@ -10,37 +10,45 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import re
 import time
 from importlib import import_module
 
+from sentry_sdk import configure_scope
+
 from aiogram import types
 from aiogram.dispatcher.handler import SkipHandler
-from telethon import events
 
-from sophie_bot import BOT_USERNAME, DEBUG_MODE, tbot, dp, logger
-from sophie_bot.config import get_config_key
-from sophie_bot.modules.helper_func.error import report_error
-from sophie_bot.modules.helper_func.flood import prevent_flooding
+from sophie_bot import BOT_USERNAME, dp
+from sophie_bot.config import get_bool_key
+from sophie_bot.utils.flood import prevent_flooding
+from sophie_bot.utils.filters import ALL_FILTERS
+from sophie_bot.utils.logger import log
 
-import_module("sophie_bot.modules.helper_func.bount_filter")
 
-ALLOW_F_COMMANDS = get_config_key("allow_forwards_commands")
-ALLOW_COMMANDS_FROM_EXC = get_config_key("allow_commands_with_!")
-BLOCK_GBANNED_USERS = get_config_key("block_gbanned_users")
-RATE_LIMIT = get_config_key("rate_limit")
+DEBUG_MODE = get_bool_key('DEBUG_MODE')
+ALLOW_F_COMMANDS = get_bool_key("allow_forwards_commands")
+ALLOW_COMMANDS_FROM_EXC = get_bool_key("allow_commands_with_!")
+BLOCK_GBANNED_USERS = get_bool_key("block_gbanned_users")
+RATE_LIMIT = get_bool_key("rate_limit")
 
 REGISTRED_COMMANDS = []
 
 
-def register(cmds=None, f=None, allow_edited=True, allow_kwargs=False, *args, **kwargs):
+# Import filters
+log.info("Filters to load: %s", str(ALL_FILTERS))
+for module_name in ALL_FILTERS:
+    log.debug("Importing " + module_name)
+    imported_module = import_module("sophie_bot.utils.filters." + module_name)
+log.info("Filters loaded!")
 
+
+def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **kwargs):
     if cmds and type(cmds) == str:
         cmds = [cmds]
 
     register_kwargs = {}
 
-    if cmds:
+    if cmds and not f:
         if ALLOW_COMMANDS_FROM_EXC:
             regex = r'^[/!]'
         else:
@@ -72,84 +80,33 @@ def register(cmds=None, f=None, allow_edited=True, allow_kwargs=False, *args, **
     register_kwargs.update(kwargs)
 
     def decorator(func):
-        async def new_func(message, *args, **def_kwargs):
+        async def new_func(*def_args, **def_kwargs):
+            message = def_args[0]
 
             if RATE_LIMIT and await prevent_flooding(message, message.text) is False:
                 return
 
             if allow_kwargs is False:
                 def_kwargs = dict()
+
+            # Sentry
+            with configure_scope() as scope:
+                scope.set_extra("update", str(message))
+
             if DEBUG_MODE:
-                logger.debug('[*] Starting {}.'.format(func.__name__))
+                log.debug('[*] Starting {}.'.format(func.__name__))
                 start = time.time()
-                await func(message, *args, **def_kwargs)
-                logger.debug('[*] {} Time: {} sec.'.format(func.__name__, time.time() - start))
+                await func(*def_args, **def_kwargs)
+                log.debug('[*] {} Time: {} sec.'.format(func.__name__, time.time() - start))
             else:
-                await func(message, *args, **def_kwargs)
+                await func(*def_args, **def_kwargs)
             raise SkipHandler()
 
-        dp.register_message_handler(new_func, *args, **register_kwargs)
-        if allow_edited is True:
-            dp.register_edited_message_handler(new_func, *args, **register_kwargs)
-
-    return decorator
-
-
-def t_command(command, arg="", word_arg="", additional="", **kwargs):
-    REGISTRED_COMMANDS.append(command)
-
-    def decorator(func):
-
-        if 'forwards' not in kwargs:
-            kwargs['forwards'] = ALLOW_F_COMMANDS
-
-
-        P = '[/!]' if ALLOW_COMMANDS_FROM_EXC else '/'
-
-        if arg is True:
-            cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)(.*){2}".format(command, BOT_USERNAME, additional,
-                                                              P=P)
-        elif word_arg is True:
-            cmd = "^{P}(?i:{0}|{0}@{1})(?: |$)(\S*){2}".format(command, BOT_USERNAME, additional,
-                                                               P=P)
+        if f == 'cb':
+            dp.register_callback_query_handler(new_func, *args, **register_kwargs)
         else:
-            cmd = "^{P}(?i:{0}|{0}@{1})$".format(command, BOT_USERNAME, additional, P=P)
+            dp.register_message_handler(new_func, *args, **register_kwargs)
+            if allow_edited is True:
+                dp.register_edited_message_handler(new_func, *args, **register_kwargs)
 
-        async def new_func(event, *args, **def_kwargs):
-            try:
-                await func(event, *args, **def_kwargs)
-            except Exception:
-                await report_error(event, telethon=True)
-
-        tbot.add_event_handler(new_func, events.NewMessage(incoming=True, pattern=cmd, **kwargs))
-        tbot.add_event_handler(new_func, events.MessageEdited(incoming=True, pattern=cmd, **kwargs))
-    return decorator
-
-
-def callback_query_deprecated(data, do_compile=True):
-    def decorator(func):
-        if do_compile is True:
-            tbot.add_event_handler(func, events.CallbackQuery(data=re.compile(data)))
-        else:
-            tbot.add_event_handler(func, events.CallbackQuery(data=data))
-    return decorator
-
-
-def insurgent():
-    def decorator(func):
-        tbot.add_event_handler(func, events.NewMessage(incoming=True))
-        tbot.add_event_handler(func, events.MessageEdited(incoming=True))
-    return decorator
-
-
-def strict_command(cmd):
-    def decorator(func):
-        tbot.add_event_handler(func, events.NewMessage(incoming=True, pattern=cmd))
-        tbot.add_event_handler(func, events.MessageEdited(incoming=True, pattern=cmd))
-    return decorator
-
-
-def chat_action():
-    def decorator(func):
-        tbot.add_event_handler(func, events.ChatAction)
     return decorator
