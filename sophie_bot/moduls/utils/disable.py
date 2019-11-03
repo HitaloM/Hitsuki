@@ -28,10 +28,7 @@ def disablable_dec(command):
             chat_id = message.chat.id
             user_id = message.from_user.id
 
-            check = await db.disabled_cmds.find_one({
-                "chat_id": chat_id,
-                "command": command
-            })
+            check = await db.disabled_v2.find_one({'chat_id': chat_id, 'cmds': {'$in': [command]}})
             if check and user_id not in OPERATORS:
                 return
             return await func(*args, **kwargs)
