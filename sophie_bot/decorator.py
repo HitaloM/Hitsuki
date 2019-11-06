@@ -50,9 +50,9 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
 
     if cmds and not f:
         if ALLOW_COMMANDS_FROM_EXC:
-            regex = r'^[/!]'
+            regex = r'\A[/!]'
         else:
-            regex = r'^/'
+            regex = r'\A/'
 
         if 'not_gbanned' not in kwargs and BLOCK_GBANNED_USERS:
             kwargs['not_gbanned'] = True
