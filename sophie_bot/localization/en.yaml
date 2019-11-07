@@ -6,22 +6,23 @@ language_info:
 
 STRINGS:
     notes:
+        note_saved: "🗒 Note <code>{note_name}</code> saved in <b>{chat_title}</b>!"
+        note_updated: "🗒 Note <code>{note_name}</code> updated in <b>{chat_title}</b>!"
+        you_can_get_note: "\nYou can retrieve this note by using <code>/get {note_name}</code>, or <code>#{note_name}</code>"
+        blank_note: "Saving blank note is not allowed!"
+        cant_find_note: I can't find this note in <b>{chat_name}</b>!
+        no_note: "Can't find that note."
+        u_mean: "\nDid you mean <code>#{note_name}</code>?"
+        file_type_invalid: "Invalid file type <code>{file_type}</code>!"
+        cant_parse_html: |
+            Can't parse your HTML formatting, please keep in mind:
+            1. Every HTML tag should be closed, like: `<b>bold</b>`
+            2. Every `<` symbol which not used in HTML tags should be replaced on `&gt`
+            TIP: Get raw text by `/get {notename} noformat`
+
         notelist_no_notes: "There aren't any notes in this chat!"
         notelist_header: "<b>Notes in {chat_name}</b>:\n"
-        no_right_save_note: "You don't have rights to save notes here!"
-        saved: saved
-        updated: updated
-        note_saved_or_updated: "🗒 **Note {note_name} {status} in {chat_title}!**\n"
-        you_can_get_note: "You can retrieve this note by using `/get {name}`, or `#{name}`"
-        you_can_get_note_enc: "You can retrieve this note by using `/get {name} {password}`"
-        note_not_encrypted: "Note not encrypted! 🔓"
-        note_encrypted_fully: "Note encrypted fully 🔐\n"
-        password: "password: <code>{password}</code>\n"
-        dont_have_rights_to_save: "You don't have rights to save notes here!"
-        del_note: "🗑 Delete note"
-        no_note: "Can't find that note."
         note_removed: "Note <code>{note_name}</code> removed in <b>{chat_name}</b>!"
-        cant_find_note: "I can't find this note in **{chat_name}**!"
         note_info_title: "<b>Note info</b>\n"
         note_info_note: "Note: <code>{note_name}</code>\n"
         note_info_updated: "Last updated in: <code>{data}</code> by {user}\n"
@@ -65,7 +66,6 @@ STRINGS:
         kickme_success: "Okay.. No problem!"
         tmute_sucess: "Admin {admin} has muted {user} for {time} {unit} !"
         usernt_banned: "This user wasn't banned in the first place!"
-        user_gbanned: "\n\n<b>Warning! This user is globally banned because:</b>\n<code>{reason}</code>"
     greetings:
         welcome_hay: "Welcome {mention}! Howdy?"
         cant_find_note: "I can't find that note."
@@ -204,16 +204,7 @@ STRINGS:
         info_saw: "\nI saw they in <code>{num}</code> groups"
         info_fbanned: "\nBanned in current Federation: "
         info_admeme: "\nUser has admin rights in this chat."
-        father: "\nHe is my creator."
-        sudo_crown: "\nHey! Look, that user has a crown, let me see it.. Whaow, it has an engraving - <b>'sudo user'</b>!"
         user_premium: "\nThis user has Premium status!"
-        gbanned: "\nGlobally banned: "
-        no: "No"
-        gbanned_yes: "<b>Yes.</b>\n"
-        gbanned_date: "Data: <code>{data}</code>\n"
-        gbanned_reason: "Reason: <code>{reason}</code>\n"
-    gbans:
-        user_is_blacklisted: "User {user} is blacklisted, so has been removed.\nReason: <code>{rsn}</code>"
     pm_menu:
         start_hi: "Hey there! My name is Sophie, I help you manage your group in an efficient way!"
         btn_help: "❔ Help"
@@ -336,253 +327,15 @@ STRINGS:
         not_in_group: "You're not in the group you're trying to connect to, join and send a message."
         history_empty: "You're not connected to any chat for history, connect via `/connect (chat id)`"
         not_in_chat: "You're not in this chat anymore, I'll disconnect you."
-        u_should_be_admin: "You should be admin in {}!"
+        u_should_be_admin: "You should be an admin in {}!"
         usage_only_in_groups: "Usage limited only in groups!"
     global:
-        u_not_admin: You should be a admin to do this!
+        u_not_admin: You should be an admin to do this!
         bot_dont_hab_perm: "I can't do this action, check my rights, I expected: <code>{perm}</code>"
         u_dont_hab_perm: "You don't have admin right to do this action, I expected: <code>{perm}</code>"
-HELPS:
-    notes:
-        btn: Notes
-        text: |
-            Notes are great to save random tidbits of information; a phone number, a nice gif, a funny picture - anything!
-
-            <b>Available commands are:</b>
-            - /save (name) (data): Replying to a message will save that message. Even works with media!
-            - /get (name): Get the note registered to that word.
-            - /clear (name): Deletes a note
-            - /notes: Lists all notes
-            - /saved: Same as /notes
-            - /noteinfo (name): Shows detailed info about note, who updated and created note
-
-            An example of how to save a note would be via:
-            <code>/save data This is example note!</code>
-            Now, anyone using <code>/get data</code>, or <code>#data</code>, I'll reply to with <code>This is example note!</code>.
-            
-            If you want to save an image, gif, or sticker, or any other data, do the following:
-            <code>/save word</code> while replying to a sticker or whatever data you'd like. Now, the note at <code>#word</code> contains a sticker which will be sent as a reply.
-            
-            Tip: to retrieve a note without the formatting, use <code>/get (name) noformat</code>
-            This will retrieve the note and send it without formatting it; getting you the raw markdown, allowing you to make easy edits.
-        buttons:
-            btns: "Buttons"
-            md: "Markdown"
-            vars: "Special vars"
-            html: "HTML"
-            enc: "Encryption"
-        vars: |
-            You can use special variable in notes, here is a list of it:
-            <code>{first}</code> - First name, will something like 'Mike'
-            <code>{last}</code> - Last name, ex. 'Smith'
-            <code>{fullname}</code> - Full name, ex. 'Mike Smith'
-            <code>{username}</code> - Gives the username, ex. '@MikeSmith009'
-            <code>{mention}</code> - Gives the link to user, ex. <a href=\"https://t.me/rSophieBot/\">Sophie</a>
-            <code>{id}</code> - Gives the id of the user, ex. '885745757'
-            <code>{chatname}</code> - Gives the current chat name, ex. 'Sophie chat'
-        md: |
-            You can use markdown to make your messages more expressive. This is the markdown currently supported:
-
-            <code>`code words`</code>: backticks allow you to wrap your words in monospace fonts. Shows as: <code>code words</code>
-            <code>**bold words**</code>: asterixes are used for bold font. Shows as: <b>bold words</b>
-            <code>__italic words__</code>: underscores are used for italics. Shows as: <i>italic words</i>
-            <code>[hyperlink](example.com)</code>: this is used for hyperlinks, and will show as such: <a href=\"http://example.com/\">hyperlink</a>. Make sure not to add any extra spaces between the ] and the ( or it won't be valid markdown.
-        html: |
-            Markdown is easy, but when you will be making many notes, note by note, you will see obvious flaws, every extra '*' can broke your perfect note."
-            How about HTML? Let's try use it instead of markdown. Please read before the 'Markdown' guide."
-            
-            To use the HTML in the note add the `[format:html]` to the end of note, you can fully disable formatting note by `[format:none]`.
-    
-            HTML markdown:"
-            `<code>code words</code>`: will shows as '`blue text`'"
-            a6: "`<b>bold text</b>`: will shows as **bold text**"
-            a7: "`<i>italic text</i>`: will shows as __italic text__"
-            a8: "`<a href=\"http://example.com/\">hyperlink</a>`: Example of hyperlink, will shown as [hyperlink](example.com)"
-        btns: |
-            Making buttons isn't that hard as you expected. Unlike other bots, Sophie have many types of custom buttons, let's try to use it!
-            Lets start by default url buttons, url buttons have such syntax <code>[Button name](buttonurl:https://url.com)</code>.
-            
-            Okay, you added many buttons to your message, but it looks ugly? You wanna make few buttons per line? This will help you:
-            Add <code>:same</code> at the end of your link; it'll set it on the same line as the other one. For example:
-            <code>[Button 1](buttonurl:https://url.com)</code>\n[Button 2](buttonurl:https://url.com:same)
-            You can set more than 2 buttons per row, do not overdo it.
-            
-            Good job! You've created your note with many buttons, you will see that you do not have enough just url buttons, see other's:
-            - <code>[Button name](buttonnote:name_of_note)</code>: With such types of button you will get a note in your PM, this done to prevent spamming notes in pm.
-            - <code>[Button name](buttonalert:name_of_note)</code>: This one will show you popup with note data (Warning, only text supported by popups), for example this can be done for rules, you are limited only by the limit of 200 symbols for popups
-            - <code>[Button name](deletemsg:admin)</code>: Some notes used by warning, or notify, after reading it it leaving in chat, it spammy, right? This button will remove message, it have argument to control which one can be remove message `user` or `admin`.
-            \nCreate your beautiful and functional notes with Sophie.
-        enc: |
-            Sophie respects your privacy, you're allowed to encrypt your notes to save your data privacy.
-            By default all notes are encrypted with particle method.
-            Just add a <code>[encryption:fully]</code> in note text to encrypt it fully with password requesting.
-            Example:
-            <code>/save test_note This is a text of test_note [encryption:fully]</code>
-
-            You can also disable encryption fully by <code>[encryption:no]</code>
-    purges:
-        btn: "Purges"
-        text: |
-            Need to delete a lot of messages? That's what purges are for!
-
-            <b>Available commands are:</b>
-            - /purge: deletes all messages from the message you replied to, to the current message.
-            - /del: deletes the message you replied to.
-    warns:
-        btn: "Warnings"
-        text: |
-            Don't let your members break the rules; control them using this module!
-
-            <b>Available commands are:</b>
-            - /warn (reason): Warns a user for the specified reason.
-            - /warns: Returns the list of warns, with reasons, for that user.
-            - /resetwarns: Resets all of a user's warns.
-            - /warnlimit (number): Sets the number of warns before an action is taken upon the user.
-
-            If you're looking for a way to automatically warn users when they say certain things, go to the filters module.
-    misc:
-        btn: "Misc"
-        text: |
-            An 'odds and ends' module for small, simple commands which don't really fit anywhere
-            
-            <b>Available commands are:</b>
-            - /id: Gives an ID of user and chat.
-            - /botchanges: Shows bot changes (commits history)
-            - /runs: Responds with a randomly generated 'run away' string.
-            - /paste (text): Pastes text to the Dogbin.
-    connections:
-        btn: "Connections"
-        text: |
-            Sometimes, you just want to add some notes and filters to a group chat, but you don't want everyone to see; This is what connections made for.
-            This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users cannot!)
-
-            <b>Available commands are:</b>
-            - /connect (chat): Connects to the chat with chat username/ID, allowing you to view/edit contents.
-            - /connect: Shows last 3 chats to fast connect.
-
-            You can retrieve the chat ID by using the /id command in your chat. Don't be surprised if the id is negative, all super groups have negative ids.
-    greetings:
-        btn: "Greetings"
-        text: |
-            Give your members a warm welcome with the greetings module!
-            Welcomes are a note trigger, use /setwelcome to set welcome trigger to note.
-
-            <b>Available commands are:</b>
-            - /setwelcome (notename): Sets your new welcome note!
-            Note: Please keep in mind, Sophie uses notes for welcome, you must create note with welcome text and set note as welcome.
-            Steps:
-            1. Create note with your welcome
-            2. /setwelcome notename
-
-            - /setwelcome off: Disable welcome in chat."
-            - /cleanservice: Remove Telegram service messages about user joined or leaved chat.
-            - /cleanwelcome: Deletes old welcome messages; when a new person joins, the old message is deleted.
-            - /welcomesecurity [off/soft/hard]: Soft - restricts user's permission to send media files for 24 hours, Hard - restict user's permission to send messages until they click on the button 'I'm not a bot'.
-    filters:
-        btn: "Filters"
-        text: |
-            Make your chat more lively with filters
-            <b>Available commands are:</b>
-            - /addfilter: Add a new filter in your chat.
-            - /delfilter (keyword/key words): Will stop the given filter
-            - /filters: Will display all filters in that chat!
-    federations:
-        btn: "Federations"
-        text: |
-            Group management.. It's fun, until you start getting spammers in all your chats, and you need to ban them. Then you need to start banning more, and more, and it gets painful. How can you deal? Do you have to ban them manually, in all your groups?
-            No more! With federations, you can make a ban in one chat overlap to all your other chats. You can even appoint federation admins, so that your trustworthiest admins can ban across all the chats that you want to protect.
-
-            <b>Available commands are:</b>
-            - /newfed (fedname): Creates a new federation with the given name. Users are allowed to own one federation only. Using this method when you already have a fed will simply change the federation name.
-            - /joinfed (FedID): Joins the current chat to the federation. Each chat can only be in one federation. Only chat owners can do this.
-            - /finfo: Shows info about current chat Federation, you can <code>/finfo (Fed ID)</code> - to see info about other Federation.
-            
-            Federation admins, they can use a fban command and others, to control they use this commands:
-            - /fpromote (user): Promotes the user to fed admin in your fed.
-            - /fdemote (user): Demotes the user from fed admin to normal user, in your fed.
-
-            Only to Federation admins:
-            - /fban (user): Bans a user from the current chat's federation.
-            - /unfban (user): Unbans a user the current chat's federation.
-            - /fchats: Shows a list of all chats which connected to your Federation.
-    disabling:
-        btn: "Disabling"
-        text: |
-            You might not like all the Sophie's features and wanna disable something to reduce spam in your group? If yes!, then this module is for you!
-            <b>Available commands are:</b>
-            - /disable (command): Disables the command
-            - /enable (command): Enables the command
-            - /disablable: See command list which commands can be disabled.
-            - /disabled: List of disabled commands in current chat.
-    pin:
-        btn: "Pinning"
-        text: |
-            You wanna pin the message? Here you go.
-            <b>Available commands are:</b>
-            - /pin: pins the message you replied to; add <code>loud</code> to send a notification to group members.
-            - /unpin: Unpins the message.
-    lang:
-        btn: "Language"
-        text: |
-            Not everyone can speak with perfect English, Sophie have a translation system, check it out.
-            <b>Available commands are:</b>
-            /lang: Will show a buttons with all languages and it will show current chat language.
-            /lang (lang): Will change the language without selecting it with buttons.
-
-            Not all the languages are currently supported, help us with translation on <a href=\"https://crowdin.com/project/Sophie\">our crowdin page</a>
-    rules:
-        btn: "Rules"
-        text: |
-            Save your chat with your rules
-            <b>Available commands are:</b>
-            - /setrules (notename): Set the rules
-            - /rules: Get the rules
-            Note: Please keep in mind, Sophie uses notes for rules, you must create note with rules text and set it
-            Steps:
-            1. Create note with your rules
-            2. /setrules (notename)
-            \nRules button will appear in the warn message
-    privacy:
-        btn: "Data privacy and security"
-        text: |
-            Sophie respects your privacy.
-            Sophie team constantly improve privacy and security.
-            <b>Server which run Sophie:</b>
-            - We use a server provided by vultr in Amsterdam.
-            - None of the SUDO have access to it.
-            - Server is totally secured by ssh keys and have enabled ufw.
-        buttons:
-            collection: "Data which we collect"
-            removing: "Removing your data"
-        collection: |
-            Sophie team respects your privacy
-            - We don't collect your privacy data
-            - We don't save your messages or any info about your messages
-            - We collect only data which saved in Sophie (ex. notes)
-
-            <b>We are collecting users public data only:</b>
-            - We collect first and last names, User ID and User's tag."
-            - We need this data for fast finding the user by nickname (ex. if you typing /warn @someone)
-            - We never use this data to make user profiles, it's just a some info to make Sophie faster and independent from Telegram's requests
-
-            <b>We collect chat datas:</b>
-            - We save the chat name and chat id, we don't save chat admins and creators
-            - We don't use chats data in analytics
-            - We need this data to make Sophie support operations in multiple chats, for example broadcasts, connections, etc.
-            <b>Analytics:</b>
-            - We use ONLY Sophie general metrics as speed, count of data types in all chats
-            - We auto-log errors which generated by Sophie (They have very limited info, only a error string and date)
-            - We log a gbans which done by SUDO's (with gbanned user_id)"
-        removing: |
-            Right now there is no way to do it automatically, but it is in Sophie team To-Do list.
-            However you can ask @MrYacha to do it manually.
-    reports:
-        btn: "Reports"
-        text: |
-            Report an annoying user to admins.
-            <b>Available commands are:</b>
-            - /report (@user) (reason): Report a user to admins. Users only. Ex. /report @baduser bad user.
-            - @admin (reason): Same as upper command but doesn't support custom tags to report.
+    sudo_and_owner_stuff:
+        father: "\nHe is my creator."
+        sudo_crown: "\nHey! Look, that user has a crown, let me see it.. Wow, it has an engraving - <b>'sudo user'</b>!"
 
 RANDOM_STRINGS:
     RUNS:
@@ -604,7 +357,7 @@ RANDOM_STRINGS:
         - "SaNd NeW KrANUl LeNk"
         - "?_?"
         - "OwO"
-        - "ls there any race!?"
+        - "Is there any race!?"
         - "Access denied!!"
         - "Okay you run and lemme see how long you can.."
         - "It's Epuc"

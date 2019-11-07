@@ -16,12 +16,14 @@ import os
 
 import requests
 
-from sophie_bot import SOPHIE_VERSION
+from .utils.term import chat_term
+from .utils.covert import convert_size
+from .utils.language import get_strings_dec
+
+from sophie_bot import OWNER_ID, OPERATORS, SOPHIE_VERSION
 from sophie_bot.decorator import register, REGISTRED_COMMANDS
 from sophie_bot.utils.logger import log
 from sophie_bot.moduls import LOADED_MODULES
-from sophie_bot.moduls.utils.term import chat_term
-from sophie_bot.moduls.utils.covert import convert_size
 from sophie_bot.services.mongo import db, mongodb
 from sophie_bot.services.redis import redis
 from sophie_bot.services.telethon import tbot
@@ -202,3 +204,11 @@ async def is_gbanned():
         len(REGISTRED_COMMANDS), len(LOADED_MODULES))
 
     return html_white_text(text)
+
+
+@get_strings_dec('sudo_and_owner_stuff')
+async def __user_info__(message, user_id, strings):
+    if user_id == OWNER_ID:
+        return strings["father"]
+    elif user_id in OPERATORS:
+        return strings['sudo_crown']

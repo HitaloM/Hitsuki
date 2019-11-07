@@ -24,7 +24,8 @@ DEFAULTS = {
     'REDIS_PORT': 6379,
     'REDIS_DB_FSM': 1,
 
-    'MONGODB_URI': 'localhost'
+    'MONGODB_URI': 'localhost',
+    'MONGO_DB': 'sophie'
 }
 
 

@@ -17,8 +17,9 @@ from sophie_bot.config import get_str_key, get_int_key
 
 MONGO_URI = get_str_key("MONGO_URI")
 MONGO_PORT = get_int_key("MONGO_PORT")
+MONGO_DB = get_str_key("MONGO_DB")
 
 # Init MongoDB
-mongodb = MongoClient(MONGO_URI, MONGO_PORT).sophie
+mongodb = MongoClient(MONGO_URI, MONGO_PORT)[MONGO_DB]
 motor = motor_asyncio.AsyncIOMotorClient(MONGO_URI, MONGO_PORT)
-db = motor.sophie
+db = motor[MONGO_DB]

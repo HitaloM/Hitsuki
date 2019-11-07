@@ -13,7 +13,11 @@
 import datetime
 import html
 
+from .utils.user_details import get_user_dec, get_user_link, is_user_admin
+from .utils.language import get_strings_dec
+
 from sophie_bot.decorator import register
+from sophie_bot.moduls import LOADED_MODULES
 from sophie_bot.utils.logger import log
 from sophie_bot.services.mongo import db
 
@@ -104,6 +108,37 @@ async def update_user(chat_id, new_user):
     log.debug(f"Users: User {new_user.id} updated")
 
     return user_new
+
+
+@register(cmds="info")
+@get_user_dec(allow_self=True)
+@get_strings_dec("misc")
+async def user_info(message, user, strings):
+    chat_id = message.chat.id
+
+    text = strings["user_info"]
+    text += strings["info_id"].format(id=user['user_id'])
+    text += strings["info_first"].format(first_name=str(user['first_name']))
+
+    if user['last_name'] is not None:
+        text += strings["info_last"].format(last_name=str(user['last_name']))
+
+    if user['username'] is not None:
+        text += strings["info_username"].format(username="@" + str(user['username']))
+
+    text += strings['info_link'].format(user_link=str(await get_user_link(user['user_id'])))
+
+    text += '\n'
+
+    if await is_user_admin(chat_id, user['user_id']) is True:
+        text += strings['info_admeme']
+
+    for module in [m for m in LOADED_MODULES if hasattr(m, '__user_info__')]:
+        text += await module.__user_info__(message, user['user_id'])
+
+    text += strings['info_saw'].format(num=len(user['chats']))
+
+    await message.reply(text)
 
 
 async def __stats__():

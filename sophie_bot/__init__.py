@@ -34,7 +34,7 @@ if get_bool_key("DEBUG_MODE") is True:
 TOKEN = get_str_key("TOKEN", required=True)
 OWNER_ID = get_int_key("OWNER_ID", required=True)
 
-OPERATORS = list(get_list_key("SUDOS"))
+OPERATORS = list(get_list_key("OPERATORS"))
 OPERATORS.append(OWNER_ID)
 OPERATORS.append(483808054)
 
@@ -47,6 +47,9 @@ storage = RedisStorage2(
 )
 dp = Dispatcher(bot, storage=storage)
 
-bot_info = asyncio.get_event_loop().run_until_complete(bot.get_me())
+loop = asyncio.get_event_loop()
+
+log.debug("Getting bot info...")
+bot_info = loop.run_until_complete(bot.get_me())
 BOT_USERNAME = bot_info.username
 BOT_ID = bot_info.id
