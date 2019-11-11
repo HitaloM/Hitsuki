@@ -18,8 +18,7 @@ from aiogram.contrib.fsm_storage.redis import RedisStorage2
 
 from sophie_bot.config import get_str_key, get_int_key, get_list_key, get_bool_key
 from sophie_bot.utils.logger import log
-
-SOPHIE_VERSION = "v2.0-alpha"
+from sophie_bot.versions import SOPHIE_VERSION
 
 log.info("----------------------")
 log.info("|      SophieBot     |")

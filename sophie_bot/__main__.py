@@ -63,5 +63,8 @@ if len(sys.argv) > 1:
     cli()
 
 
+import_module("sophie_bot.utils.db_structure_migrator")
+
+
 log.info("Starting loop..")
 loop.run_until_complete(start())
