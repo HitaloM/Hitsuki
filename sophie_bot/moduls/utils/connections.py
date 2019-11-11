@@ -29,6 +29,7 @@ async def get_connected_chat(message, admin=False, only_groups=False):
     # Cached
     if cached := redis.hgetall(key):
         cached['status'] = True
+        cached['chat_id'] = int(cached['chat_id'])
         return cached
 
     # if pm and not connected
