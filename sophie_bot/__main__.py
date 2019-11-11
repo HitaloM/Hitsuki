@@ -20,6 +20,7 @@ from importlib import import_module
 from sophie_bot import dp
 from sophie_bot.services.quart import quart
 from sophie_bot.utils.logger import log
+from sophie_bot.utils.db_backup import backup_db
 from sophie_bot.config import get_bool_key
 from sophie_bot.moduls import ALL_MODULES, LOADED_MODULES
 from sophie_bot.cli import cli
@@ -33,7 +34,8 @@ if get_bool_key('LOAD_MODULES'):
         imported_module = import_module("sophie_bot.moduls." + module_name)
         LOADED_MODULES.append(imported_module)
     log.info("Modules loaded!")
-log.warning("Not importing modules!")
+else:
+    log.warning("Not importing modules!")
 
 
 # asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -61,6 +63,10 @@ async def start():
 
 if len(sys.argv) > 1:
     cli()
+
+
+if get_bool_key('BACKUP_DB_ON_STARTUP'):
+    backup_db()
 
 
 import_module("sophie_bot.utils.db_structure_migrator")

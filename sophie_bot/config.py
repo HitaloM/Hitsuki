@@ -25,7 +25,9 @@ DEFAULTS = {
     'REDIS_DB_FSM': 1,
 
     'MONGODB_URI': 'localhost',
-    'MONGO_DB': 'sophie'
+    'MONGO_DB': 'sophie',
+
+    'BACKUP_PASS': "DEFAULT_SOPHIE_BACKUP_PASS"
 }
 
 
