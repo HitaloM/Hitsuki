@@ -107,38 +107,6 @@ async def save_note(message, chat, strings):
     await message.reply(text)
 
 
-@register(cmds='get')
-@need_args_dec()
-@chat_connection()
-@get_strings_dec('notes')
-async def get_note(message, chat, strings):
-    note_name = get_arg(message).lower()
-    if note_name[0] == '#':
-        note_name = note_name[1:]
-
-    if not (note := await db.notes_v2.find_one({'name': note_name})):
-        text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
-        all_notes = mongodb.notes_v2.find({'chat_id': chat['chat_id']})
-        if all_notes.count() > 0:
-            check = difflib.get_close_matches(note_name, [d['name'] for d in all_notes])
-            if len(check) > 0:
-                text += strings['u_mean'].format(note_name=check[0])
-        await message.reply(text)
-        return
-
-    await get_note(message, db_item=note)
-
-
-@register(regexp='^#(\w+)', allow_kwargs=True)
-@chat_connection()
-@get_strings_dec('notes')
-async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
-    note_name = regexp.group(1).lower()
-    if not (note := await db.notes_v2.find_one({'name': note_name})):
-        return
-    await get_note(message, db_item=note)
-
-
 @get_strings_dec('notes')
 async def get_note(message, strings, note_name=None, db_item=None, chat_id=None, rpl_id=None):
     if not chat_id:
@@ -208,3 +176,50 @@ async def get_note(message, strings, note_name=None, db_item=None, chat_id=None,
                 parse_mode=ParseMode.MARKDOWN
             )
             return
+
+
+@register(cmds='get')
+@need_args_dec()
+@chat_connection()
+@get_strings_dec('notes')
+async def get_note(message, chat, strings):
+    note_name = get_arg(message).lower()
+    if note_name[0] == '#':
+        note_name = note_name[1:]
+
+    if not (note := await db.notes_v2.find_one({'name': note_name})):
+        text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
+        all_notes = mongodb.notes_v2.find({'chat_id': chat['chat_id']})
+        if all_notes.count() > 0:
+            check = difflib.get_close_matches(note_name, [d['name'] for d in all_notes])
+            if len(check) > 0:
+                text += strings['u_mean'].format(note_name=check[0])
+        await message.reply(text)
+        return
+
+    await get_note(message, db_item=note)
+
+
+@register(regexp='^#(\w+)', allow_kwargs=True)
+@chat_connection()
+@get_strings_dec('notes')
+async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
+    note_name = regexp.group(1).lower()
+    if not (note := await db.notes_v2.find_one({'name': note_name})):
+        return
+    await get_note(message, db_item=note)
+
+
+@register(cmds=['notes', 'saved'])
+@chat_connection()
+@get_strings_dec('notes')
+async def get_notes_list(message, chat, strings):
+    text = strings["notelist_header"].format(chat_name=chat['chat_title'])
+
+    notes = db.notes_v2.find({'chat_id': chat['chat_id']}).sort("name", 1)
+    for note in (check := await notes.to_list(length=300)):
+        text += f"- <code>#{note['name']}</code>\n"
+    if not check:
+        await message.reply(strings["notelist_no_notes"])
+        return
+    await message.reply(text)
