@@ -134,7 +134,8 @@ async def user_info(message, user, strings):
         text += strings['info_admeme']
 
     for module in [m for m in LOADED_MODULES if hasattr(m, '__user_info__')]:
-        text += await module.__user_info__(message, user['user_id'])
+        if txt := await module.__user_info__(message, user['user_id']):
+            text += txt
 
     text += strings['info_saw'].format(num=len(user['chats']))
 
