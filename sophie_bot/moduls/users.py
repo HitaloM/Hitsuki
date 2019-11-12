@@ -50,6 +50,15 @@ async def update_users_handler(message):
             "first_detected_date": first_detected_date
         }
 
+        # Check on old chat in DB with same username
+        find_old_chat = {
+            'chat_nick': chat_new['chat_nick'],
+            'chat_id': {'$ne': chat_new['chat_id']}
+        }
+        if chat_new['chat_nick'] and (check := await db.chat_list.find_one(find_old_chat)):
+            await db.chat_list.delete_one({'_id': check['_id']})
+            log.info(f"Found chat ({check['chat_id']}) with same username as ({chat_new['chat_id']}), old chat was deleted.")
+
         await db.chat_list.update_one({'chat_id': chat_id}, {"$set": chat_new}, upsert=True)
 
         log.debug(f"Users: Chat {chat_id} updated")
@@ -103,6 +112,16 @@ async def update_user(chat_id, new_user):
         'chats': new_chat,
         'first_detected_date': first_detected_date
     }
+
+    # Check on old user in DB with same username
+    find_old_user = {
+        'username': user_new['username'],
+        'user_id': {'$ne': user_new['user_id']}
+    }
+    if user_new['username'] and (check := await db.user_list.find_one(find_old_user)):
+        await db.user_list.delete_one({'_id': check['_id']})
+        log.info(f"Found user ({check['user_id']}) with same username as ({user_new['user_id']}), old user was deleted.")
+
     await db.user_list.update_one({'user_id': new_user.id}, {"$set": user_new}, upsert=True)
 
     log.debug(f"Users: User {new_user.id} updated")
