@@ -220,6 +220,28 @@ async def get_notes_list(message, chat, strings):
     for note in (check := await notes.to_list(length=300)):
         text += f"- <code>#{note['name']}</code>\n"
     if not check:
-        await message.reply(strings["notelist_no_notes"])
+        await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
         return
     await message.reply(text)
+
+
+@register(cmds=['clear', 'delnote'])
+@chat_connection(admin=True)
+@get_strings_dec('notes')
+async def clear_note(message, chat, strings):
+    note_name = get_arg(message).lower()
+    if note_name[0] == '#':
+        note_name = note_name[1:]
+
+    if not (note := await db.notes_v2.find_one({'name': note_name})):
+        text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
+        all_notes = mongodb.notes_v2.find({'chat_id': chat['chat_id']})
+        if all_notes.count() > 0:
+            check = difflib.get_close_matches(note_name, [d['name'] for d in all_notes])
+            if len(check) > 0:
+                text += strings['u_mean'].format(note_name=check[0])
+        await message.reply(text)
+        return
+
+    await db.notes_v2.delete_one({'_id': note['_id']})
+    await message.reply(strings['note_removed'].format(note_name=note_name, chat_name=chat['chat_title']))

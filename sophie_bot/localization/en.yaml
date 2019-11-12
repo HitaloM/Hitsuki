@@ -19,10 +19,10 @@ STRINGS:
             1. Every HTML tag should be closed, like: `<b>bold</b>`
             2. Every `<` symbol which not used in HTML tags should be replaced on `&gt`
             TIP: Get raw text by `/get {notename} noformat`
-
-        notelist_no_notes: "There aren't any notes in this chat!"
+        notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
         notelist_header: "<b>Notes in {chat_name}</b>:\n"
         note_removed: "Note <code>{note_name}</code> removed in <b>{chat_name}</b>!"
+
         note_info_title: "<b>Note info</b>\n"
         note_info_note: "Note: <code>{note_name}</code>\n"
         note_info_updated: "Last updated in: <code>{data}</code> by {user}\n"
