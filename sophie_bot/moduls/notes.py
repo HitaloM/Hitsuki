@@ -139,8 +139,6 @@ async def get_note(message, strings, note_name=None, db_item=None, chat_id=None,
     else:
         parse = ParseMode.MARKDOWN
 
-    print(parse)
-
     if 'file' in db_item:
         file_id = db_item['file']['id']
         file_type = db_item['file']['type']
@@ -153,6 +151,7 @@ async def get_note(message, strings, note_name=None, db_item=None, chat_id=None,
         elif file_type == 'photo':
             await bot.send_photo(*args, **kwargs)
         elif file_type == 'sticker':
+            del kwargs['caption']
             await bot.send_sticker(*args, **kwargs)
         else:
             with configure_scope() as scope:
@@ -182,7 +181,7 @@ async def get_note(message, strings, note_name=None, db_item=None, chat_id=None,
 @need_args_dec()
 @chat_connection()
 @get_strings_dec('notes')
-async def get_note(message, chat, strings):
+async def get_note_cmd(message, chat, strings):
     note_name = get_arg(message).lower()
     if note_name[0] == '#':
         note_name = note_name[1:]
@@ -245,3 +244,10 @@ async def clear_note(message, chat, strings):
 
     await db.notes_v2.delete_one({'_id': note['_id']})
     await message.reply(strings['note_removed'].format(note_name=note_name, chat_name=chat['chat_title']))
+
+
+async def __stats__():
+    text = "* <code>{}</code> total notes\n".format(
+        await db.notes_v2.count_documents({})
+    )
+    return text
