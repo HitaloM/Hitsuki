@@ -143,6 +143,20 @@ async def upload_file(message):
             )
 
 
+@register(cmds="logs", is_owner=True)
+async def upload_logs(message):
+    input_str = 'sophie.log'
+    myfile = open(input_str, 'rb')
+    await tbot.send_file(
+        message.chat.id,
+        myfile,
+        caption=os.path.basename(input_str),
+        force_document=False,
+        allow_cache=False,
+        reply_to=message.message_id
+    )
+
+
 @register(cmds="crash", is_owner=True)
 async def crash(message):
     test = 2 / 0
@@ -185,7 +199,8 @@ async def is_gbanned():
     text = f"<b>Sophie {SOPHIE_VERSION} stats</b>\n"
 
     for module in [m for m in LOADED_MODULES if hasattr(m, '__stats__')]:
-        text += await module.__stats__()
+        if txt := await module.__stats__():
+            text += txt
 
     text += "* <code>{}</code> total crash happened in this week\n".format(
         await db.errors.count_documents({

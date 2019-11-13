@@ -78,6 +78,8 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
     elif f == 'welcome':
         register_kwargs['content_types'] = types.ContentTypes.NEW_CHAT_MEMBERS
 
+    log.debug(f"Registred new handler: <d><n>{str(register_kwargs)}</></>")
+
     register_kwargs.update(kwargs)
 
     def decorator(func):

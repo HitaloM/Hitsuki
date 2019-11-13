@@ -30,7 +30,7 @@ if get_bool_key('LOAD_MODULES'):
     # Import modules
     log.info("Modules to load: %s", str(ALL_MODULES))
     for module_name in ALL_MODULES:
-        log.debug("Importing " + module_name)
+        log.debug(f"Importing <d><n>{module_name}</></>")
         imported_module = import_module("sophie_bot.moduls." + module_name)
         LOADED_MODULES.append(imported_module)
     log.info("Modules loaded!")
