@@ -28,11 +28,13 @@ from .utils.message import (
     get_msg_parse,
     get_reply_msg_btns_text,
     get_msg_file,
-    button_parser
+    tbutton_parser,
+    get_parsed_note_list
 )
 
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db, mongodb
+from sophie_bot.services.telethon import tbot
 from sophie_bot import bot
 
 
@@ -56,45 +58,18 @@ async def save_note(message, chat, strings):
     if note_name[0] == '#':
         note_name = note_name[1:]
 
-    note = {'name': note_name, 'chat_id': chat_id}
+    note = get_parsed_note_list(message)
 
-    if "reply_to_message" in message:
-        # Get parsed reply msg text
-        text, note['parse_mode'] = get_parsed_msg(message.reply_to_message)
-        # Get parsed origin msg text
-        text += ' '
-        text += get_parsed_msg(message)[0].partition(
-            message.get_command() + ' ' + get_arg(message)
-        )[2][1:]
-        # Set parse_mode if origin msg override it
-        if mode := get_msg_parse(message.text, default_md=False):
-            note['parse_mode'] = mode
+    note['name'] = note_name
+    note['chat_id'] = chat_id
 
-        # Get message keyboard
-        if 'reply_markup' in message.reply_to_message and 'inline_keyboard' in message.reply_to_message.reply_markup:
-            text += get_reply_msg_btns_text(message.reply_to_message)
-
-        # Check on attachment
-        if msg_file := get_msg_file(message.reply_to_message):
-            note['file'] = msg_file
-    else:
-        text, note['parse_mode'] = get_parsed_msg(message)
-        text = text.partition(note_name)[2][1:]
-
-        # Check on attachment
-        if msg_file := get_msg_file(message):
-            note['file'] = msg_file
-
-    # Notes settings
-    if '$PREVIEW' in text:
-        note['preview'] = True
-
-    if text.replace(' ', ''):
-        note['text'] = text
-
-    if not text and 'file' not in note:
+    if 'text' not in note and 'file' not in note:
         await message.reply(strings['blank_note'])
         return
+
+    # Notes settings
+    if 'text' in note and '$PREVIEW' in note['text']:
+        note['preview'] = True
 
     if (await db.notes_v2.replace_one({'name': note_name, 'chat_id': chat_id}, note, upsert=True)).modified_count == 0:
         text = strings['note_saved']
@@ -127,54 +102,29 @@ async def get_note(message, strings, note_name=None, db_item=None, chat_id=None,
 
     text = db_item['text'] if 'text' in db_item else ""
 
-    text, markup = button_parser(chat_id, text)
+    text, markup = tbutton_parser(chat_id, text)
 
-    if 'parse_mode' in db_item:
-        if db_item['parse_mode'] == 'html':
-            parse = ParseMode.HTML
-        elif db_item['parse_mode'] == 'none':
-            parse = None
-        elif db_item['parse_mode'] == 'md':
-            parse = ParseMode.MARKDOWN
-    else:
-        parse = ParseMode.MARKDOWN
-
+    file_id = None
     if 'file' in db_item:
         file_id = db_item['file']['id']
-        file_type = db_item['file']['type']
 
-        args = (chat_id, file_id)
-        kwargs = {'caption': text, 'reply_to_message_id': rpl_id, 'reply_markup': markup}
+    if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
+        db_item['parse_mode'] = None
 
-        if file_type == 'document':
-            await bot.send_document(*args, **kwargs)
-        elif file_type == 'photo':
-            await bot.send_photo(*args, **kwargs)
-        elif file_type == 'sticker':
-            del kwargs['caption']
-            await bot.send_sticker(*args, **kwargs)
-        else:
-            with configure_scope() as scope:
-                scope.set_extra("db_item", str(db_item))
-            raise InvalidFileType
+    if 'preview' in db_item and db_item['preview']:
+        preview = True
     else:
-        try:
-            await bot.send_message(
-                chat_id,
-                text,
-                parse_mode=parse,
-                disable_web_page_preview=parse,
-                reply_to_message_id=rpl_id,
-                reply_markup=markup
-            )
-        except CantParseEntities:
-            await bot.send_message(
-                chat_id,
-                strings['cant_parse_html'],
-                reply_to_message_id=rpl_id,
-                parse_mode=ParseMode.MARKDOWN
-            )
-            return
+        preview = False
+
+    await tbot.send_message(
+        chat_id,
+        text,
+        buttons=markup,
+        parse_mode=db_item['parse_mode'],
+        reply_to=rpl_id,
+        file=file_id,
+        link_preview=preview
+    )
 
 
 @register(cmds='get')
