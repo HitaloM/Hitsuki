@@ -143,7 +143,6 @@ def get_parsed_msg(message):
     else:
         as_html = False
 
-    quote_fn = markdown.quote_html if as_html else markdown.escape_md
     entities = message.entities or message.caption_entities
 
     if not entities:
@@ -160,32 +159,30 @@ def get_parsed_msg(message):
 
         if sys.maxunicode == 0xffff:
             part = text[offset:entity.offset]
-            result += quote_fn(part) + entity_text
+            result += part + entity_text
         else:
             part = text[offset * 2:entity.offset * 2].decode('utf-16-le')
-            result += quote_fn(part) + entity_text
+            result += part + entity_text
 
         offset = entity.offset + entity.length
 
     if sys.maxunicode == 0xffff:
-        part = text[offset:]
-        result += quote_fn(part)
+        result += text[offset:]
     else:
-        part = text[offset * 2:]
-        result += quote_fn(part.decode('utf-16-le'))
+        result += text[offset * 2:].decode('utf-16-le')
 
     result = re.sub(r'\[format:(\w+)\]', '', result)
-    result = re.sub(r'$FORMAT_(\w+)', '', result)
+    result = re.sub(r'%FORMAT_(\w+)', '', result)
 
     return result, mode
 
 
 def get_msg_parse(text, default_md=True):
-    if '[format:html]' in text or '$FORMAT_HTML' in text:
+    if '[format:html]' in text or '%FORMAT_HTML' in text:
         return 'html'
-    elif '[format:none]' in text or '$FORMAT_NONE' in text:
+    elif '[format:none]' in text or '%FORMAT_NONE' in text:
         return 'none'
-    elif '[format:md]' in text or '$FORMAT_MD' in text:
+    elif '[format:md]' in text or '%FORMAT_MD' in text:
         return 'md'
     else:
         if not default_md:
@@ -258,10 +255,11 @@ def get_parsed_note_list(message):
 
 def need_args_dec(num=1):
     def wrapped(func):
-        async def wrapped_1(event, *args, **kwargs):
-            if len(event.text.split(" ")) > num:
-                return await func(event, *args, **kwargs)
+        async def wrapped_1(*args, **kwargs):
+            message = args[0]
+            if len(message.text.split(" ")) > num:
+                return await func(*args, **kwargs)
             else:
-                await event.reply("No enoff args!")
+                await message.reply("No enoff args!")
         return wrapped_1
     return wrapped
