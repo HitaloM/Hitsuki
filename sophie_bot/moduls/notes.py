@@ -24,6 +24,7 @@ from .utils.disable import disablable_dec
 from .utils.message import (
     need_args_dec,
     get_arg,
+    get_args,
     get_parsed_msg,
     get_msg_parse,
     get_reply_msg_btns_text,
@@ -75,6 +76,8 @@ async def save_note(message, chat, strings):
         text = strings['note_saved']
     else:
         text = strings['note_updated']
+
+    # await db.notes_v2.create_index({'name': note_name, 'text': note['name'] or None})
 
     text += strings['you_can_get_note']
     text = text.format(note_name=note_name, chat_title=chat['chat_title'])
@@ -165,9 +168,39 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
 async def get_notes_list(message, chat, strings):
     text = strings["notelist_header"].format(chat_name=chat['chat_title'])
 
-    notes = db.notes_v2.find({'chat_id': chat['chat_id']}).sort("name", 1)
+    notes = await db.notes_v2.find({'chat_id': chat['chat_id']}).sort("name", 1).to_list(length=300)
+    if not notes:
+        await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
+        return
+
+    # Search
+    if len(request := message.get_args()) > 0:
+        text += strings['notelist_search'].format(request=request)
+        notes = difflib.get_close_matches(request, [d['name'] for d in notes], n=100)
+        if not len(notes) > 0:
+            await message.reply(strings['no_note'])  # TODO
+
+    for note in notes:
+        note_name = note['name'] if type(note) == dict else note
+        text += f"- <code>#{note_name}</code>\n"
+    text += strings['u_can_get_note']
+    await message.reply(text)
+
+
+@register(cmds='search')
+@chat_connection()
+@get_strings_dec('notes')
+async def search_in_note(message, chat, strings):
+    request = message.get_args()
+    text = strings["search_header"].format(chat_name=chat['chat_title'], request=request)
+
+    notes = db.notes_v2.find({
+        'chat_id': chat['chat_id'],
+        'text': {'$regex': request, '$options': 'i'}
+    }).sort("name", 1)
     for note in (check := await notes.to_list(length=300)):
         text += f"- <code>#{note['name']}</code>\n"
+    text += strings['u_can_get_note']
     if not check:
         await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
         return
