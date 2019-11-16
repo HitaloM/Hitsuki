@@ -17,10 +17,23 @@ import sys
 
 from .tmarkdown_converter import tbold, titalic, tpre, tcode, tlink
 
+from telethon.tl.custom import Button
+
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.message_entity import MessageEntityType
 from aiogram.types import fields
 from aiogram.utils import markdown
+
+
+BUTTONS = {}
+
+
+# elif raw_button[1] == 'note':
+# t = InlineKeyboardButton(raw_button[0], callback_data='get_note_{}_{}'.format(chat_id, raw_button[2]))
+# elif raw_button[1] == 'alert':
+# t = InlineKeyboardButton(raw_button[0], callback_data='get_alert_{}_{}'.format(chat_id, raw_button[2]))
+# elif raw_button[1] == 'deletemsg':
+# t = InlineKeyboardButton(raw_button[0], callback_data='get_delete_msg_{}_{}'.format(chat_id, raw_button[2]))
 
 
 def button_parser(chat_id, texts):
@@ -28,17 +41,14 @@ def button_parser(chat_id, texts):
     raw_buttons = re.findall(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', texts)
     text = re.sub(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', '', texts)
     for raw_button in raw_buttons:
-        if raw_button[1] == 'url':
+        btn = raw_button[1]
+        if btn == 'url':
             url = raw_button[2]
             if url[0] == '/' and url[1] == '/':
                 url = url[2:]
             t = InlineKeyboardButton(raw_button[0], url=url)
-        elif raw_button[1] == 'note':
-            t = InlineKeyboardButton(raw_button[0], callback_data='get_note_{}_{}'.format(chat_id, raw_button[2]))
-        elif raw_button[1] == 'alert':
-            t = InlineKeyboardButton(raw_button[0], callback_data='get_alert_{}_{}'.format(chat_id, raw_button[2]))
-        elif raw_button[1] == 'deletemsg':
-            t = InlineKeyboardButton(raw_button[0], callback_data='get_delete_msg_{}_{}'.format(chat_id, raw_button[2]))
+        elif btn in BUTTONS:
+            t = InlineKeyboardButton(raw_button[0], callback_data=BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')
 
         if raw_button[3]:
             buttons.insert(t)
@@ -53,20 +63,14 @@ def tbutton_parser(chat_id, texts):
     raw_buttons = re.findall(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', texts)
     text = re.sub(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', '', texts)
     for raw_button in raw_buttons:
-        if raw_button[1] == 'url':
+        btn = raw_button[1]
+        if btn == 'url':
             url = raw_button[2]
             if url[0] == '/' and url[0] == '/':
                 url = url[2:]
             t = [custom.Button.url(raw_button[0], url)]
-        elif raw_button[1] == 'note':
-            t = [Button.inline(raw_button[0], 'get_note_{}_{}'.format(
-                chat_id, raw_button[2]))]
-        elif raw_button[1] == 'alert':
-            t = [Button.inline(raw_button[0], 'get_alert_{}_{}'.format(
-                chat_id, raw_button[2]))]
-        elif raw_button[1] == 'deletemsg':
-            t = [Button.inline(raw_button[0], 'get_delete_msg_{}_{}'.format(
-                chat_id, raw_button[2]))]
+        elif btn in BUTTONS:
+            t = [Button.inline(btn, BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')]
 
         if raw_button[3]:
             new = buttons[-1] + t
@@ -146,7 +150,7 @@ def get_parsed_msg(message):
     entities = message.entities or message.caption_entities
 
     if not entities:
-        return quote_fn(text), mode
+        return text, mode
 
     if not sys.maxunicode == 0xffff:
         text = text.encode('utf-16-le')

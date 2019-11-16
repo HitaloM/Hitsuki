@@ -22,6 +22,7 @@ from .utils.language import get_strings_dec
 from .utils.connections import chat_connection
 from .utils.disable import disablable_dec
 from .utils.message import (
+    BUTTONS,
     need_args_dec,
     get_arg,
     get_args,
@@ -139,7 +140,7 @@ async def get_note_cmd(message, chat, strings):
     if note_name[0] == '#':
         note_name = note_name[1:]
 
-    if not (note := await db.notes_v2.find_one({'name': note_name})):
+    if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'name': note_name})):
         text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
         all_notes = mongodb.notes_v2.find({'chat_id': chat['chat_id']})
         if all_notes.count() > 0:
@@ -157,7 +158,7 @@ async def get_note_cmd(message, chat, strings):
 @get_strings_dec('notes')
 async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
     note_name = regexp.group(1).lower()
-    if not (note := await db.notes_v2.find_one({'name': note_name})):
+    if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'name': note_name})):
         return
     await get_note(message, db_item=note)
 
@@ -227,6 +228,25 @@ async def clear_note(message, chat, strings):
 
     await db.notes_v2.delete_one({'_id': note['_id']})
     await message.reply(strings['note_removed'].format(note_name=note_name, chat_name=chat['chat_title']))
+
+
+BUTTONS.update({'note': 'btn_note'})
+
+
+@register(regexp=r'btn_note:(\w+):(\w+)', f='cb', allow_kwargs=True)
+async def note_btn(event, regexp=None, **kwargs):
+    chat_id = int(regexp.group(1))
+    user_id = event.from_user.id
+    note_name = regexp.group(2).lower()
+
+    if not (note := await db.notes_v2.find_one({'chat_id': chat_id, 'name': note_name})):
+        await event.answer('Not found this note')
+        return
+
+    if chat_id == user_id:
+        await event.message.delete()
+
+    await get_note(event.message, db_item=note, chat_id=user_id, rpl_id=None)
 
 
 async def __stats__():

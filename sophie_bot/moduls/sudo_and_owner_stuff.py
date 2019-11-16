@@ -16,6 +16,7 @@ import os
 
 import requests
 
+from .utils.message import BUTTONS
 from .utils.term import chat_term
 from .utils.covert import convert_size
 from .utils.language import get_strings_dec
@@ -43,6 +44,14 @@ async def all_modules_list(message):
     text = ""
     for module in LOADED_MODULES:
         text += "* " + module.__name__ + "\n"
+    await message.reply(text)
+
+
+@register(cmds='avaiblebtns', is_sudo=True)
+async def all_btns_list(message):
+    text = "Avaible message inline btns:\n"
+    for module in BUTTONS:
+        text += "* " + module + "\n"
     await message.reply(text)
 
 
@@ -111,6 +120,11 @@ async def check_message_for_smartbroadcast(event):
                 'all_chats': old['all_chats'],
                 'recived_chats': num
             }, upsert=False)
+
+
+@register()
+async def check_message_for_smartbroadcast(message):
+    pass
 
 
 @register(cmds="purgecache", is_owner=True)
