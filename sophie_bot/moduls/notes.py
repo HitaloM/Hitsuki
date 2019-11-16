@@ -21,7 +21,7 @@ from babel.dates import format_datetime
 from aiogram.types import ParseMode
 from aiogram.utils.exceptions import CantParseEntities
 
-from telethon.errors.rpcerrorlist import UserIsBlockedError
+from telethon.errors.rpcerrorlist import UserIsBlockedError, PeerIdInvalidError
 
 from .utils.language import get_strings_dec
 from .utils.connections import chat_connection
@@ -106,7 +106,7 @@ async def save_note(message, chat, strings):
 
 
 @get_strings_dec('notes')
-async def get_note(message, strings, note_name=None, db_item=None, chat_id=None, send_id=None, rpl_id=None):
+async def get_note(message, strings, note_name=None, db_item=None, chat_id=None, send_id=None, rpl_id=None, noformat=False):
     if not chat_id:
         chat_id = message.chat.id
 
@@ -128,23 +128,36 @@ async def get_note(message, strings, note_name=None, db_item=None, chat_id=None,
 
     text = db_item['text'] if 'text' in db_item else ""
 
-    text, markup = tbutton_parser(chat_id, text)
-
     file_id = None
+    preview = None
+
     if 'file' in db_item:
         file_id = db_item['file']['id']
 
-    if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
-        db_item['parse_mode'] = None
-    elif db_item['parse_mode'] == 'md':
-        text = await vars_parser(text, message, chat_id, md=True)
-    elif db_item['parse_mode'] == 'html':
-        text = await vars_parser(text, message, chat_id, md=False)
+    if noformat:
+        markup = None
+        if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
+            text += '\n%PARSEMODE_NONE'
+        elif db_item['parse_mode'] == 'html':
+            text += '\n%PARSEMODE_HTML'
 
-    if 'preview' in db_item and db_item['preview']:
-        preview = True
+        if 'preview' in db_item and db_item['preview']:
+            text += '\n%PREVIEW'
+
+        db_item['parse_mode'] = None
+
     else:
-        preview = False
+        text, markup = tbutton_parser(chat_id, text)
+
+        if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
+            db_item['parse_mode'] = None
+        elif db_item['parse_mode'] == 'md':
+            text = await vars_parser(text, message, chat_id, md=True)
+        elif db_item['parse_mode'] == 'html':
+            text = await vars_parser(text, message, chat_id, md=False)
+
+        if 'preview' in db_item and db_item['preview']:
+            preview = True
 
     await tbot.send_message(
         send_id,
@@ -181,7 +194,10 @@ async def get_note_cmd(message, chat, strings):
         await message.reply(text)
         return
 
-    await get_note(message, db_item=note, rpl_id=rpl_id)
+    arg2 = message.text.split(note_name)[1][1:].lower()
+    noformat = True if 'noformat' == arg2 or 'raw' == arg2 else False
+
+    await get_note(message, db_item=note, rpl_id=rpl_id, noformat=noformat)
 
 
 @register(regexp='^#(\w+)', allow_kwargs=True)
@@ -334,7 +350,7 @@ async def note_btn(event, strings, regexp=None, **kwargs):
     try:
         await get_note(event.message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None)
         await event.answer(strings['pmed_note'])
-    except UserIsBlockedError:
+    except (UserIsBlockedError, PeerIdInvalidError):
         await event.answer(strings['user_blocked'], show_alert=True)
         key = 'btn_note_start_state:' + str(user_id)
         redis.hmset(key, {'chat_id': chat_id, 'notename': note_name})

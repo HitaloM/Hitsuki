@@ -203,7 +203,7 @@ def get_parsed_msg(message):
         result += text[offset * 2:].decode('utf-16-le')
 
     result = re.sub(r'\[format:(\w+)\]', '', result)
-    result = re.sub(r'%FORMAT_(\w+)', '', result)
+    result = re.sub(r'%PARSEMODE_(\w+)', '', result)
 
     if not result:
         result = ''
@@ -212,11 +212,11 @@ def get_parsed_msg(message):
 
 
 def get_msg_parse(text, default_md=True):
-    if '[format:html]' in text or '%FORMAT_HTML' in text:
+    if '[format:html]' in text or '%PARSEMODE_HTML' in text:
         return 'html'
-    elif '[format:none]' in text or '%FORMAT_NONE' in text:
+    elif '[format:none]' in text or '%PARSEMODE_NONE' in text:
         return 'none'
-    elif '[format:md]' in text or '%FORMAT_MD' in text:
+    elif '[format:md]' in text or '%PARSEMODE_MD' in text:
         return 'md'
     else:
         if not default_md:
