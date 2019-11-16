@@ -230,7 +230,12 @@ async def get_notes_list(message, chat, strings):
     # Search
     if len(request := message.get_args()) > 0:
         text += strings['notelist_search'].format(request=request)
-        notes = difflib.get_close_matches(request, [d['name'] for d in notes], n=100)
+        all_notes = notes
+        notes = []
+        for note in [d['name'] for d in all_notes]:
+            print(note)
+            if re.search(request, note):
+                notes.append(note)
         if not len(notes) > 0:
             await message.reply(strings['no_note'])  # TODO
 
