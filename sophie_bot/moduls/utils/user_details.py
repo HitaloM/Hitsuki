@@ -94,7 +94,7 @@ async def get_user_by_username(username):
     return user
 
 
-async def get_user_link(user_id, custom_name=None):
+async def get_user_link(user_id, custom_name=None, md=False):
     user = await db.user_list.find_one({'user_id': user_id})
     user_name = None
 
@@ -109,7 +109,10 @@ async def get_user_link(user_id, custom_name=None):
     if custom_name:
         user_name = custom_name
 
-    return "<a href=\"tg://user?id={id}\">{name}</a>".format(name=user_name, id=user_id)
+    if md:
+        return "[{name}](tg://user?id={id})".format(name=user_name, id=user_id)
+    else:
+        return "<a href=\"tg://user?id={id}\">{name}</a>".format(name=user_name, id=user_id)
 
 
 async def update_admin_cache(chat_id):

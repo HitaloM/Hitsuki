@@ -16,6 +16,7 @@ import asyncio
 from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
 
 from .utils.language import get_strings_dec
+from .utils.message import BUTTONS
 
 from sophie_bot.decorator import register
 from sophie_bot.services.telethon import tbot
@@ -58,3 +59,13 @@ async def fast_purge(message, strings):
     msg = await bot.send_message(chat_id, strings["fast_purge_done"])
     await asyncio.sleep(5)
     await msg.delete()
+
+
+BUTTONS.update({'deletemsg': 'btn_deletemsg'})
+
+
+@register(regexp=r'btn_deletemsg:(\w+):(\w+)', f='cb', allow_kwargs=True)
+async def delmsg_btn(event, regexp=None, **kwargs):
+    admin = regexp.group(2).lower()
+
+    await event.message.delete()

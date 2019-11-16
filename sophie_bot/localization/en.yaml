@@ -24,29 +24,26 @@ STRINGS:
         notelist_search: |
             <b>Pattern:</b> <code>{request}</code>
             <b>Matched notes:</b>
-
         note_removed: "Note <code>{note_name}</code> removed in <b>{chat_name}</b>!"
         u_can_get_note: "You can retrieve these notes by using <code>/get notename</code>, or <code>#notename</code>"
-
         search_header: |
             <b>Search request in {chat_name}</b>:
             <b>Pattern:</b> <code>{request}</code>
             <b>Matched notes:</b>
-
+        pmed_note: "I have PM'ed that note to you!"
         note_info_title: "<b>Note info</b>\n"
-        note_info_note: "Note: <code>{note_name}</code>\n"
-        note_info_updated: "Last updated in: <code>{data}</code> by {user}\n"
-        note_info_created: "Note created in: <code>{data}</code> by {user}\n"
-        note_info_crt_not_cached: "Creator wasn't cached, I can't find him.\n"
-        user_blocked: "Write /start in my PM and click on the button again!"
+        note_info_note: "Note name: <code>%s</code>\n"
+        note_info_content: "Note content: %s\n"
+        note_info_parsing: "Parse mode: <code>%s</code>\n"
+        note_info_created: "Was created in: <code>{date}</code> by {user}\n"
+        note_info_updated: "Last updated in: <code>{date}</code> by {user}\n"
+        user_blocked: "Write /start in my PM!"
+
         note_so_big: "This note is bigger than the Telegram's limit of 200 characters!"
         only_admins_can_rmw: "Only admins can remove this message."
         delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
         bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
-        pmed_note: "I have PM'ed that note to you!"
-        notename_cant_contain: "Note name can't contain `{}` !"
-        note_saved_or_updated_in_fed: "**Note {note_name} {status} in {fed_name} Federation!**\n"
-        note_already_in_chat: "Note `{note_name}` already exists in **{chat_name}** chat, remove it before trying to save."
+        notename_cant_contain: "Note name can't contain <code>{}</code> !"
     bans:
         user_banned: "User {user} has been banned by {admin} in {chat_name}!\n"
         reason: "Reason: {reason}"

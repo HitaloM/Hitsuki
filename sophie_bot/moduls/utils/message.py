@@ -15,6 +15,8 @@ import re
 import html
 import sys
 
+from .user_details import get_user_link
+
 from .tmarkdown_converter import tbold, titalic, tpre, tcode, tlink
 
 from telethon.tl.custom import Button
@@ -70,7 +72,8 @@ def tbutton_parser(chat_id, texts):
                 url = url[2:]
             t = [custom.Button.url(raw_button[0], url)]
         elif btn in BUTTONS:
-            t = [Button.inline(btn, BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')]
+            print(BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')
+            t = [Button.inline(raw_button[0], BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')]
 
         if raw_button[3]:
             new = buttons[-1] + t
@@ -83,6 +86,30 @@ def tbutton_parser(chat_id, texts):
         buttons = None
 
     return text, buttons
+
+
+async def vars_parser(text, message, chat_id, md=False):
+
+    print(message.from_user)
+
+    first_name = html.escape(message.from_user.first_name)
+    last_name = html.escape(message.from_user.last_name or "")
+    user_id = message.from_user.id
+    mention = await get_user_link(user_id, md=md)
+    username = '@' + message.from_user.username or mention
+
+    chat_id = message.chat.id
+    chat_name = html.escape(message.chat.title or 'Local')
+    chat_nick = message.chat.username or chat_name
+    return text.replace('{first}', first_name) \
+               .replace('{last}', last_name) \
+               .replace('{fullname}', first_name + " " + last_name) \
+               .replace('{id}', str(user_id).replace('{userid}', str(user_id))) \
+               .replace('{mention}', mention) \
+               .replace('{username}', username) \
+               .replace('{chatid}', str(chat_id)) \
+               .replace('{chatname}', str(chat_name)) \
+               .replace('{chatnick}', str(chat_nick))
 
 
 def get_arg(message):
@@ -137,7 +164,7 @@ def tparse_ent(ent, text, as_html=True):
 
 def get_parsed_msg(message):
     if not message.text:
-        return None, 'md'
+        return '', 'md'
 
     text = message.text or message.caption
 
@@ -177,6 +204,9 @@ def get_parsed_msg(message):
 
     result = re.sub(r'\[format:(\w+)\]', '', result)
     result = re.sub(r'%FORMAT_(\w+)', '', result)
+
+    if not result:
+        result = ''
 
     return result, mode
 

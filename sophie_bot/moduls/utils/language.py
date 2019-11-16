@@ -68,7 +68,9 @@ async def get_strings(chat_id, module, mas_name="STRINGS"):
     if chat_lang not in LANGUAGES:
         change_chat_lang(chat_id, 'en')
 
-    return LANGUAGES[chat_lang][mas_name][module]
+    data = LANGUAGES[chat_lang][mas_name][module]
+    data['language_info'] = LANGUAGES[chat_lang]['language_info']
+    return data
 
 
 def get_strings_dec(module, mas_name="STRINGS"):

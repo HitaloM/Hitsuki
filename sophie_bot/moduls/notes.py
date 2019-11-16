@@ -15,8 +15,13 @@ import difflib
 
 from sentry_sdk import configure_scope
 
+from datetime import datetime
+from babel.dates import format_datetime
+
 from aiogram.types import ParseMode
 from aiogram.utils.exceptions import CantParseEntities
+
+from telethon.errors.rpcerrorlist import UserIsBlockedError
 
 from .utils.language import get_strings_dec
 from .utils.connections import chat_connection
@@ -31,13 +36,19 @@ from .utils.message import (
     get_reply_msg_btns_text,
     get_msg_file,
     tbutton_parser,
-    get_parsed_note_list
+    get_parsed_note_list,
+    vars_parser
 )
+from .utils.user_details import get_user_link
 
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db, mongodb
 from sophie_bot.services.telethon import tbot
+from sophie_bot.services.redis import redis
 from sophie_bot import bot
+
+
+RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`']
 
 
 class InvalidFileType(Exception):
@@ -73,10 +84,18 @@ async def save_note(message, chat, strings):
     if 'text' in note and '$PREVIEW' in note['text']:
         note['preview'] = True
 
-    if (await db.notes_v2.replace_one({'name': note_name, 'chat_id': chat_id}, note, upsert=True)).modified_count == 0:
-        text = strings['note_saved']
-    else:
+    if (old_note := await db.notes_v2.find_one({'name': note_name, 'chat_id': chat_id})):
         text = strings['note_updated']
+        note['created_date'] = old_note['created_date']
+        note['created_user'] = old_note['created_user']
+        note['edited_date'] = datetime.now()
+        note['edited_user'] = message.from_user.id
+    else:
+        text = strings['note_saved']
+        note['created_date'] = datetime.now()
+        note['created_user'] = message.from_user.id
+
+    await db.notes_v2.replace_one({'_id': old_note['_id']} if old_note else note, note, upsert=True)
 
     # await db.notes_v2.create_index({'name': note_name, 'text': note['name'] or None})
 
@@ -87,9 +106,12 @@ async def save_note(message, chat, strings):
 
 
 @get_strings_dec('notes')
-async def get_note(message, strings, note_name=None, db_item=None, chat_id=None, rpl_id=None):
+async def get_note(message, strings, note_name=None, db_item=None, chat_id=None, send_id=None, rpl_id=None):
     if not chat_id:
         chat_id = message.chat.id
+
+    if not send_id:
+        send_id = chat_id
 
     if rpl_id is False:
         rpl_id = None
@@ -114,6 +136,10 @@ async def get_note(message, strings, note_name=None, db_item=None, chat_id=None,
 
     if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
         db_item['parse_mode'] = None
+    elif db_item['parse_mode'] == 'md':
+        text = await vars_parser(text, message, chat_id, md=True)
+    elif db_item['parse_mode'] == 'html':
+        text = await vars_parser(text, message, chat_id, md=False)
 
     if 'preview' in db_item and db_item['preview']:
         preview = True
@@ -121,7 +147,7 @@ async def get_note(message, strings, note_name=None, db_item=None, chat_id=None,
         preview = False
 
     await tbot.send_message(
-        chat_id,
+        send_id,
         text,
         buttons=markup,
         parse_mode=db_item['parse_mode'],
@@ -140,6 +166,11 @@ async def get_note_cmd(message, chat, strings):
     if note_name[0] == '#':
         note_name = note_name[1:]
 
+    if 'reply_to_message' in message:
+        rpl_id = message.reply_to_message.message_id
+    else:
+        rpl_id = message.message_id
+
     if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'name': note_name})):
         text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
         all_notes = mongodb.notes_v2.find({'chat_id': chat['chat_id']})
@@ -150,7 +181,7 @@ async def get_note_cmd(message, chat, strings):
         await message.reply(text)
         return
 
-    await get_note(message, db_item=note)
+    await get_note(message, db_item=note, rpl_id=rpl_id)
 
 
 @register(regexp='^#(\w+)', allow_kwargs=True)
@@ -160,7 +191,13 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
     note_name = regexp.group(1).lower()
     if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'name': note_name})):
         return
-    await get_note(message, db_item=note)
+
+    if 'reply_to_message' in message:
+        rpl_id = message.reply_to_message.message_id
+    else:
+        rpl_id = message.message_id
+
+    await get_note(message, db_item=note, rpl_id=rpl_id)
 
 
 @register(cmds=['notes', 'saved'])
@@ -230,23 +267,96 @@ async def clear_note(message, chat, strings):
     await message.reply(strings['note_removed'].format(note_name=note_name, chat_name=chat['chat_title']))
 
 
+@register(cmds='noteinfo')
+@chat_connection()
+@get_strings_dec('notes')
+async def note_info(message, chat, strings, is_admin=True):
+    note_name = get_arg(message).lower()
+    if note_name[0] == '#':
+        note_name = note_name[1:]
+
+    if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'name': note_name})):
+        text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
+        all_notes = mongodb.notes_v2.find({'chat_id': chat['chat_id']})
+        if all_notes.count() > 0:
+            check = difflib.get_close_matches(note_name, [d['name'] for d in all_notes])
+            if len(check) > 0:
+                text += strings['u_mean'].format(note_name=check[0])
+        await message.reply(text)
+        return
+
+    text = strings['note_info_title']
+    text += strings['note_info_note'] % note['name']
+    text += strings['note_info_content'] % ('text' if 'file' not in note else note['file']['type'])
+
+    if 'parse_mode' not in note or note['parse_mode'] == 'md':
+        parse_mode = 'Markdown'
+    elif note['parse_mode'] == 'html':
+        parse_mode = 'HTML'
+    elif note['parse_mode'] == 'none':
+        parse_mode = 'None'
+
+    text += strings['note_info_parsing'] % parse_mode
+
+    text += strings['note_info_created'].format(
+        date=format_datetime(note['created_date'], locale=strings['language_info']['babel']),
+        user=await get_user_link(note['created_user'])
+    )
+
+    if 'edited_date' in note:
+        text += strings['note_info_updated'].format(
+            date=format_datetime(note['edited_date'], locale=strings['language_info']['babel']),
+            user=await get_user_link(note['edited_user'])
+        )
+
+    await message.reply(text)
+
+
 BUTTONS.update({'note': 'btn_note'})
 
 
-@register(regexp=r'btn_note:(\w+):(\w+)', f='cb', allow_kwargs=True)
-async def note_btn(event, regexp=None, **kwargs):
+@register(regexp=r'btn_note:(.*):(\w+)', f='cb', allow_kwargs=True)
+@get_strings_dec('notes')
+async def note_btn(event, strings, regexp=None, **kwargs):
+    print(regexp)
+
     chat_id = int(regexp.group(1))
     user_id = event.from_user.id
     note_name = regexp.group(2).lower()
 
     if not (note := await db.notes_v2.find_one({'chat_id': chat_id, 'name': note_name})):
-        await event.answer('Not found this note')
+        await event.answer(strings['no_note'])
         return
 
-    if chat_id == user_id:
+    if user_id == event.message.chat.id:
         await event.message.delete()
 
-    await get_note(event.message, db_item=note, chat_id=user_id, rpl_id=None)
+    try:
+        await get_note(event.message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None)
+        await event.answer(strings['pmed_note'])
+    except UserIsBlockedError:
+        await event.answer(strings['user_blocked'], show_alert=True)
+        key = 'btn_note_start_state:' + str(user_id)
+        redis.hmset(key, {'chat_id': chat_id, 'notename': note_name})
+        redis.expire(key, 900)
+
+
+@register(cmds='start', only_pm=True)
+@get_strings_dec('connections')
+async def btn_note_start_state(message, strings):
+    print('dfifdhgifd')
+    key = 'btn_note_start_state:' + str(message.from_user.id)
+    if not (cached := redis.hgetall(key)):
+        return
+
+    chat_id = int(cached['chat_id'])
+    user_id = message.from_user.id
+    note_name = cached['notename']
+
+    note = await db.notes_v2.find_one({'chat_id': chat_id, 'name': note_name})
+    await get_note(message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None)
+
+    redis.delete(key)
 
 
 async def __stats__():
