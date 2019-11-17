@@ -10,16 +10,20 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
+import ujson
 import datetime
 import html
 
-from .utils.user_details import get_user_dec, get_user_link, is_user_admin
+from .utils.user_details import get_user_dec, get_user_link, is_user_admin, update_admin_cache
 from .utils.language import get_strings_dec
+from .utils.disable import disablable_dec
+from .utils.connections import chat_connection
 
 from sophie_bot.decorator import register
 from sophie_bot.moduls import LOADED_MODULES
 from sophie_bot.utils.logger import log
 from sophie_bot.services.mongo import db
+from sophie_bot.services.redis import redis
 
 
 @register()
@@ -130,8 +134,9 @@ async def update_user(chat_id, new_user):
 
 
 @register(cmds="info")
+@disablable_dec("info")
 @get_user_dec(allow_self=True)
-@get_strings_dec("misc")
+@get_strings_dec("users")
 async def user_info(message, user, strings):
     chat_id = message.chat.id
 
@@ -159,6 +164,23 @@ async def user_info(message, user, strings):
     text += strings['info_saw'].format(num=len(user['chats']))
 
     await message.reply(text)
+
+
+@register(cmds=["adminlist", "admins"])
+@disablable_dec("adminlist")
+@chat_connection(only_groups=True)
+@get_strings_dec("users")
+async def adminlist(message, chat, strings):
+    msg = await message.reply(strings['upd_cache'])
+    await update_admin_cache(chat['chat_id'])
+    dump = redis.get('admins_cache_{}'.format(chat['chat_id']))
+    admins = ujson.decode(dump)
+    text = strings['admins']
+    for admin in admins:
+        if user := await db.user_list.find_one({'user_id': admin}):
+            text += '- {} ({})\n'.format(await get_user_link(user['user_id']), user['user_id'])
+
+    await msg.edit_text(text)
 
 
 async def __stats__():

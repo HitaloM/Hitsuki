@@ -8,6 +8,7 @@ output.txt
 Backups/
 .stignore
 sophie.log
+sophie.*.log.tar.xz
 sophie.log.tar.xz
 *.zip
 XDG_CACHE_HOME

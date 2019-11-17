@@ -1,4 +1,5 @@
 import random
+import sys
 
 from sophie_bot import dp, bot
 
@@ -27,6 +28,8 @@ async def all_errors_handler(message, dp):
     else:
         msg = message.message
     chat_id = msg.chat.id
+    error = str(sys.exc_info()[1])
     text = "<b>Sorry, I encountered a error!</b>\n"
-    text += random.choice(RANDOM_ERROR_TITLES)
+    #text += random.choice(RANDOM_ERROR_TITLES)
+    text += '<code>%s</code>' % error
     await bot.send_message(chat_id, text, reply_to_message_id=msg.message_id)

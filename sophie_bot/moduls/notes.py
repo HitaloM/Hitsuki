@@ -58,7 +58,7 @@ class InvalidFileType(Exception):
 @register(cmds='owo', is_owner=True)
 async def test_cmds(message):
     print(message)
-    print(get_msg_file(message.reply_to_message))
+    #print(get_msg_file(message.reply_to_message))
 
 
 @register(cmds='save', is_admin=True)
@@ -237,7 +237,8 @@ async def get_notes_list(message, chat, strings):
             if re.search(request, note):
                 notes.append(note)
         if not len(notes) > 0:
-            await message.reply(strings['no_note'])  # TODO
+            await message.reply(strings['no_notes_pattern'] % request)
+            return
 
     for note in notes:
         note_name = note['name'] if type(note) == dict else note

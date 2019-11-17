@@ -12,6 +12,7 @@ STRINGS:
         blank_note: "Saving blank note is not allowed!"
         cant_find_note: I can't find this note in <b>{chat_name}</b>!
         no_note: "Can't find that note."
+        no_notes_pattern: "No notes found by pattern <code>%s</code>"
         u_mean: "\nDid you mean <code>#{note_name}</code>?"
         file_type_invalid: "Invalid file type <code>{file_type}</code>!"
         cant_parse_html: |
@@ -182,9 +183,6 @@ STRINGS:
         user_id: "{user}'s ID: <code>{id}</code>\n"
         conn_chat_id: "Current connected chat ID: <code>{id}</code>"
 
-        pinned_success: "Successfully pinned!"
-        no_reply_msg: "Reply to a message to pin!"
-        unpin_success: "Successfully unpinned!"
         promote_success: "{user} was successfully promoted in {chat_name}!"
         promote_title: "\nWith custom role <code>{role}</code>!"
         rank_to_loong: "Custom role text cannot be longer than 16 symbols."
@@ -192,24 +190,12 @@ STRINGS:
         demote_success: "{user} was successfully demoted in {chat_name}!"
         demote_not_admin: "That user isn't admin."
         demote_failed: "Demotion failed. Maybe I can't demote or the person is promoted by someone else"
-        chat_not_modified_pin: "That message is already pinned!"
-        chat_not_modified_unpin: "There isn't any pinned message to unpin!"
         help_btn: "Click me for help!"
         help_txt: "Click the button below for help!"
         paste_success_extra: "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}"
         paste_success: "<b>Pasted successfully!</b>\nDogbin URL: {}"
         paste_fail: "Failed to reach Dogbin!"
         paste_no_text: "You didn't supply text to paste!"
-        user_info: "<b>User info:</b>\n"
-        info_id: "ID: <code>{id}</code>"
-        info_first: "\nFirst name: {first_name}"
-        info_last: "\nLast name: {last_name}"
-        info_username: "\nUsername: {username}"
-        info_link: "\nUser link: {user_link}"
-        info_saw: "\nI saw they in <code>{num}</code> groups"
-        info_fbanned: "\nBanned in current Federation: "
-        info_admeme: "\nUser has admin rights in this chat."
-        user_premium: "\nThis user has Premium status!"
     pm_menu:
         start_hi: "Hey there! My name is Sophie, I help you manage your group in an efficient way!"
         btn_help: "❔ Help"
@@ -300,8 +286,6 @@ STRINGS:
         reports_turned_on: "Reports turned <b>on.</b>"
         reports_already_off: "<b>Reports are already turned off.</b>"
         wrong_argument: "<b> Wrong argument. </b>"
-    error_report:
-        btn_report: "Report error"
     language:
         your_lang: "Your current language: <b>{lang}</b>"
         chat_lang: "Current chat language: <b>{lang}</b>"
@@ -341,6 +325,30 @@ STRINGS:
     sudo_and_owner_stuff:
         father: "\nHe is my creator."
         sudo_crown: "\nHey! Look, that user has a crown, let me see it.. Wow, it has an engraving - <b>'sudo user'</b>!"
+    stickers:
+        rpl_to_sticker: "Reply to a sticker!"
+        ur_sticker: |
+            <b>Emoji:</b> <code>{emoji}</code>
+            <b>Sticker ID:</b> <code>{id}</code>
+    pins:
+        no_reply_msg: "Reply to a message to pin!"
+        chat_not_modified_pin: "That message is already pinned!"
+        chat_not_modified_unpin: "There isn't any pinned message to unpin!"
+        pinned_success: "Successfully pinned!"
+        unpin_success: "Successfully unpinned!"
+    users:
+        user_info: "<b>User info:</b>\n"
+        info_id: "ID: <code>{id}</code>"
+        info_first: "\nFirst name: {first_name}"
+        info_last: "\nLast name: {last_name}"
+        info_username: "\nUsername: {username}"
+        info_link: "\nUser link: {user_link}"
+        info_saw: "\nI saw they in <code>{num}</code> groups"
+        info_fbanned: "\nBanned in current Federation: "
+        info_admeme: "\nUser has admin rights in this chat."
+        upd_cache: "Updating cache now..."
+        admins: "<b>Admin in this group:</b>\n"
+
 
 RANDOM_STRINGS:
     RUNS:

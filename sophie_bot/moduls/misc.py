@@ -10,6 +10,8 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
+import random
+
 from .utils.user_details import get_user_dec, get_user_link
 from .utils.language import get_strings_dec
 from .utils.connections import chat_connection
@@ -47,3 +49,10 @@ async def get_id(message, user, strings, chat):
         )
 
     await message.reply(text)
+
+
+@register(cmds="runs")
+@get_strings_dec("RUNS", mas_name="RANDOM_STRINGS")
+@disablable_dec('runs')
+async def runs(message, strings):
+    await message.reply(random.choice(list(strings)))

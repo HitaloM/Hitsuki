@@ -102,7 +102,7 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
     last_name = html.escape(event.from_user.last_name or "")
     user_id = event.from_user.id
     mention = await get_user_link(user_id, md=md)
-    username = '@' + event.from_user.username or mention
+    username = '@' + (event.from_user.username or mention)
 
     chat_id = message.chat.id
     chat_name = html.escape(message.chat.title or 'Local')
