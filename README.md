@@ -13,7 +13,7 @@
 ## Docker Way  
   
 ### Cloning this repo  
-	 git clone https://github.com/MrYacha/SophieBot  
+	 git clone https://github.com/RaphielGang/SophieBot
 ### Setting config  
   
 + Go to SophieBot/data  
@@ -34,7 +34,7 @@
   
   
 ### Cloning this repo  
-	 git clone https://github.com/MrYacha/SophieBot  
+	 git clone https://github.com/RaphielGang/SophieBot
   
 ### Setting config  
   
