@@ -52,29 +52,28 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
         if ALLOW_COMMANDS_FROM_EXC:
             regex = r'\A[/!]'
         else:
-            regex = r'\/'
+            regex = r'\A/'
 
         if 'not_gbanned' not in kwargs and BLOCK_GBANNED_USERS:
             kwargs['not_gbanned'] = True
         if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
             kwargs['not_forwarded'] = True
 
-        regex += "(?:"
-
         for idx, cmd in enumerate(cmds):
             REGISTRED_COMMANDS.append(cmd)
-            regex += cmd
+            regex += r"(?i:{0}|{0}@{1})".format(cmd, BOT_USERNAME)
+
+            if 'disable_args' in kwargs:
+                del kwargs['disable_args']
+                regex += "$"
+            else:
+                regex += "(?: |$)"
 
             if not idx == len(cmds) - 1:
                 regex += "|"
 
-        regex += f")(?:@{BOT_USERNAME})?"
-
-        if 'disable_args' in kwargs:
-            del kwargs['disable_args']
-            regex += "$"
-
         register_kwargs['regexp'] = regex
+
     elif f == 'welcome':
         register_kwargs['content_types'] = types.ContentTypes.NEW_CHAT_MEMBERS
 
