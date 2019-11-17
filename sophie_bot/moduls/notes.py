@@ -106,7 +106,8 @@ async def save_note(message, chat, strings):
 
 
 @get_strings_dec('notes')
-async def get_note(message, strings, note_name=None, db_item=None, chat_id=None, send_id=None, rpl_id=None, noformat=False):
+async def get_note(message, strings, note_name=None, db_item=None,
+                   chat_id=None, send_id=None, rpl_id=None, noformat=False, event=None):
     if not chat_id:
         chat_id = message.chat.id
 
@@ -152,9 +153,9 @@ async def get_note(message, strings, note_name=None, db_item=None, chat_id=None,
         if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
             db_item['parse_mode'] = None
         elif db_item['parse_mode'] == 'md':
-            text = await vars_parser(text, message, chat_id, md=True)
+            text = await vars_parser(text, message, chat_id, md=True, event=event)
         elif db_item['parse_mode'] == 'html':
-            text = await vars_parser(text, message, chat_id, md=False)
+            text = await vars_parser(text, message, chat_id, md=False, event=event)
 
         if 'preview' in db_item and db_item['preview']:
             preview = True
@@ -233,7 +234,6 @@ async def get_notes_list(message, chat, strings):
         all_notes = notes
         notes = []
         for note in [d['name'] for d in all_notes]:
-            print(note)
             if re.search(request, note):
                 notes.append(note)
         if not len(notes) > 0:
@@ -339,8 +339,6 @@ BUTTONS.update({'note': 'btn_note'})
 @register(regexp=r'btn_note:(.*):(\w+)', f='cb', allow_kwargs=True)
 @get_strings_dec('notes')
 async def note_btn(event, strings, regexp=None, **kwargs):
-    print(regexp)
-
     chat_id = int(regexp.group(1))
     user_id = event.from_user.id
     note_name = regexp.group(2).lower()
@@ -353,7 +351,7 @@ async def note_btn(event, strings, regexp=None, **kwargs):
         await event.message.delete()
 
     try:
-        await get_note(event.message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None)
+        await get_note(event.message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None, event=event)
         await event.answer(strings['pmed_note'])
     except (UserIsBlockedError, PeerIdInvalidError):
         await event.answer(strings['user_blocked'], show_alert=True)
@@ -365,7 +363,6 @@ async def note_btn(event, strings, regexp=None, **kwargs):
 @register(cmds='start', only_pm=True)
 @get_strings_dec('connections')
 async def btn_note_start_state(message, strings):
-    print('dfifdhgifd')
     key = 'btn_note_start_state:' + str(message.from_user.id)
     if not (cached := redis.hgetall(key)):
         return

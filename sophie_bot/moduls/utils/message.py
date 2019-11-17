@@ -72,7 +72,6 @@ def tbutton_parser(chat_id, texts):
                 url = url[2:]
             t = [custom.Button.url(raw_button[0], url)]
         elif btn in BUTTONS:
-            print(BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')
             t = [Button.inline(raw_button[0], BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')]
 
         if raw_button[3]:
@@ -88,15 +87,16 @@ def tbutton_parser(chat_id, texts):
     return text, buttons
 
 
-async def vars_parser(text, message, chat_id, md=False):
+async def vars_parser(text, message, chat_id, md=False, event=None):
 
-    print(message.from_user)
+    if not event:
+        event = message
 
-    first_name = html.escape(message.from_user.first_name)
-    last_name = html.escape(message.from_user.last_name or "")
-    user_id = message.from_user.id
+    first_name = html.escape(event.from_user.first_name)
+    last_name = html.escape(event.from_user.last_name or "")
+    user_id = event.from_user.id
     mention = await get_user_link(user_id, md=md)
-    username = '@' + message.from_user.username or mention
+    username = '@' + event.from_user.username or mention
 
     chat_id = message.chat.id
     chat_name = html.escape(message.chat.title or 'Local')
