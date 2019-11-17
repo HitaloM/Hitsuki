@@ -44,18 +44,21 @@ def button_parser(chat_id, texts):
     text = re.sub(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', '', texts)
     for raw_button in raw_buttons:
         btn = raw_button[1]
-        if btn == 'url':
-            url = raw_button[2]
-            if url[0] == '/' and url[1] == '/':
-                url = url[2:]
-            t = InlineKeyboardButton(raw_button[0], url=url)
-        elif btn in BUTTONS:
-            t = InlineKeyboardButton(raw_button[0], callback_data=BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')
+        if btn in BUTTONS or btn == 'url':
+            if btn == 'url':
+                url = raw_button[2]
+                if url[0] == '/' and url[1] == '/':
+                    url = url[2:]
+                t = InlineKeyboardButton(raw_button[0], url=url)
+            else:
+                t = InlineKeyboardButton(raw_button[0], callback_data=BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')
 
-        if raw_button[3]:
-            buttons.insert(t)
+            if raw_button[3]:
+                buttons.insert(t)
+            else:
+                buttons.add(t)
         else:
-            buttons.add(t)
+            texts += f'\n[{raw_button[0]}]\(button{raw_button[2]})'
 
     return text, buttons
 
@@ -66,20 +69,23 @@ def tbutton_parser(chat_id, texts):
     text = re.sub(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', '', texts)
     for raw_button in raw_buttons:
         btn = raw_button[1]
-        if btn == 'url':
-            url = raw_button[2]
-            if url[0] == '/' and url[0] == '/':
-                url = url[2:]
-            t = [custom.Button.url(raw_button[0], url)]
-        elif btn in BUTTONS:
-            t = [Button.inline(raw_button[0], BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')]
+        if btn in BUTTONS or btn == 'url':
+            if btn == 'url':
+                url = raw_button[2]
+                if url[0] == '/' and url[0] == '/':
+                    url = url[2:]
+                t = [custom.Button.url(raw_button[0], url)]
+            else:
+                t = [Button.inline(raw_button[0], BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')]
 
-        if raw_button[3]:
-            new = buttons[-1] + t
-            buttons = buttons[:-1]
-            buttons.append(new)
+            if raw_button[3]:
+                new = buttons[-1] + t
+                buttons = buttons[:-1]
+                buttons.append(new)
+            else:
+                buttons.append(t)
         else:
-            buttons.append(t)
+            text += f'\n[{raw_button[0]}]\(button{raw_button[1]}:{raw_button[2]})'
 
     if len(buttons) == 0:
         buttons = None
