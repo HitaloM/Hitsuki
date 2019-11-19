@@ -7,10 +7,7 @@ bot_conf.*
 output.txt
 Backups/
 .stignore
-sophie.log
-sophie.*.log.tar.xz
-sophie.log.tar.xz
-*.zip
+logs/
 XDG_CACHE_HOME
 changelog.txt
 OrangeFox-temp-builds/
