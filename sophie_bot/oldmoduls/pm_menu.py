@@ -75,7 +75,7 @@ def get_start(chat_id):
     buttons.add(InlineKeyboardButton(strings["btn_lang"], callback_data='set_lang'))
 
     buttons.add(
-        InlineKeyboardButton(strings["btn_chat"], url='https://t.me/YanaBotGrou'),
+        InlineKeyboardButton(strings["btn_chat"], url='https://t.me/SophieSupport'),
         InlineKeyboardButton(strings["btn_channel"], url='https://t.me/SophieNEWS'),
     )
 
