@@ -43,6 +43,7 @@ RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`']
 class InvalidFileType(Exception):
     pass
 
+
 class InvalidParseMode(Exception):
     pass
 

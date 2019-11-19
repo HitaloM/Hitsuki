@@ -126,24 +126,25 @@ async def bot_stop(message):
 @register(cmds="upload", is_owner=True)
 async def upload_file(message):
     input_str = message.get_args()
-    if os.path.exists(input_str):
-        await message.reply("Processing ...")
-        if os.path.exists(input_str):
-            caption_rts = os.path.basename(input_str)
-            myfile = open(input_str, 'rb')
-            await tbot.send_file(
-                message.chat.id,
-                myfile,
-                caption=caption_rts,
-                force_document=False,
-                allow_cache=False,
-                reply_to=message.message_id
-            )
+    if not os.path.exists(input_str):
+        await message.reply("File not found!")
+        return
+    await message.reply("Processing ...")
+    caption_rts = os.path.basename(input_str)
+    myfile = open(input_str, 'rb')
+    await tbot.send_file(
+        message.chat.id,
+        myfile,
+        caption=caption_rts,
+        force_document=False,
+        allow_cache=False,
+        reply_to=message.message_id
+    )
 
 
 @register(cmds="logs", is_owner=True)
 async def upload_logs(message):
-    input_str = 'sophie.log'
+    input_str = 'logs/sophie.log'
     myfile = open(input_str, 'rb')
     await tbot.send_file(
         message.chat.id,
