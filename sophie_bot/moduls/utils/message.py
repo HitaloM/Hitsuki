@@ -258,16 +258,18 @@ def get_msg_file(message):
     return None
 
 
-def get_parsed_note_list(message):
+def get_parsed_note_list(message, split_args=1):
+
     note = {}
     if "reply_to_message" in message:
         # Get parsed reply msg text
         text, note['parse_mode'] = get_parsed_msg(message.reply_to_message)
         # Get parsed origin msg text
         text += ' '
-        text += get_parsed_msg(message)[0].partition(
-            message.get_command() + ' ' + get_arg(message)
-        )[2][1:]
+        to_split = ''.join([" " + q for q in get_args(message)[:split_args]])
+        if not to_split:
+            to_split = ' '
+        text += get_parsed_msg(message)[0].partition(message.get_command() + to_split)[2][1:]
         # Set parse_mode if origin msg override it
         if mode := get_msg_parse(message.text, default_md=False):
             note['parse_mode'] = mode
@@ -281,7 +283,10 @@ def get_parsed_note_list(message):
             note['file'] = msg_file
     else:
         text, note['parse_mode'] = get_parsed_msg(message)
-        text = text.partition(message.get_command() + ' ' + get_arg(message))[2]
+        to_split = ''.join([" " + q for q in get_args(message)[:split_args]])
+        if not to_split:
+            to_split = ' '
+        text = text.partition(message.get_command() + to_split)[2]
 
         # Check on attachment
         if msg_file := get_msg_file(message):
@@ -291,6 +296,48 @@ def get_parsed_note_list(message):
         note['text'] = text
 
     return note
+
+
+async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=None):
+    text = db_item['text'] if 'text' in db_item else ""
+
+    file_id = None
+    preview = None
+
+    if 'file' in db_item:
+        file_id = db_item['file']['id']
+
+    if noformat:
+        markup = None
+        if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
+            text += '\n%PARSEMODE_NONE'
+        elif db_item['parse_mode'] == 'html':
+            text += '\n%PARSEMODE_HTML'
+
+        if 'preview' in db_item and db_item['preview']:
+            text += '\n%PREVIEW'
+
+        db_item['parse_mode'] = None
+
+    else:
+        text, markup = tbutton_parser(chat_id, text)
+
+        if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
+            db_item['parse_mode'] = None
+        elif db_item['parse_mode'] == 'md':
+            text = await vars_parser(text, message, chat_id, md=True, event=event)
+        elif db_item['parse_mode'] == 'html':
+            text = await vars_parser(text, message, chat_id, md=False, event=event)
+
+        if 'preview' in db_item and db_item['preview']:
+            preview = True
+
+    return text, {
+        'buttons': markup,
+        'parse_mode': db_item['parse_mode'],
+        'file': file_id,
+        'link_preview': preview
+    }
 
 
 def need_args_dec(num=1):

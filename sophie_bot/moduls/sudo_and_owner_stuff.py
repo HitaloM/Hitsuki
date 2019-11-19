@@ -16,13 +16,14 @@ import os
 
 import requests
 
-from .utils.message import BUTTONS
+from .utils.message import BUTTONS, get_parsed_note_list, t_unparse_note_item, need_args_dec
 from .utils.term import chat_term
 from .utils.covert import convert_size
 from .utils.language import get_strings_dec
+from .utils.api import html_white_text
 
 from sophie_bot import OWNER_ID, OPERATORS, SOPHIE_VERSION
-from sophie_bot.decorator import register, REGISTRED_COMMANDS
+from sophie_bot.decorator import REGISTRED_COMMANDS, register
 from sophie_bot.utils.logger import log
 from sophie_bot.moduls import LOADED_MODULES
 from sophie_bot.services.mongo import db, mongodb
@@ -70,56 +71,45 @@ async def cmd_term(message):
 
 
 @register(cmds="sbroadcast", is_owner=True)
+@need_args_dec()
 async def sbroadcast(message):
-    text = message.get_args()
-    # Add chats to sbroadcast list
-    chats = mongodb.chat_list.find({})
-    mongodb.sbroadcast_list.drop()
-    mongodb.sbroadcast_settings.drop()
-    for chat in chats:
-        mongodb.sbroadcast_list.insert_one({'chat_id': chat['chat_id']})
-    mongodb.sbroadcast_settings.insert_one({
-        'text': text,
-        'all_chats': chats.count(),
-        'recived_chats': 0
-    })
-    await message.reply(
-        "Smart broadcast planned for <code>{}</code> chats".format(chats.count()))
+    data = get_parsed_note_list(message, split_args=0)
+
+    await db.sbroadcast.drop({})
+
+    chats = mongodb.chat_list.distinct('chat_id')
+
+    data['chats_num'] = len(chats)
+    data['recived_chats'] = 0
+    data['chats'] = chats
+
+    await db.sbroadcast.insert_one(data)
+    await message.reply("Smart broadcast planned for <code>{}</code> chats".format(len(chats)))
 
 
 @register(cmds="stopsbroadcast", is_owner=True)
 async def stop_sbroadcast(message):
-    old = mongodb.sbroadcast_settings.find_one({})
-    mongodb.sbroadcast_list.drop()
-    mongodb.sbroadcast_settings.drop()
-    await message.reply("Smart broadcast stopped."
-                        "It was sended to <code>{}</code> chats.".format(
-                            old['recived_chats']))
+    old = await db.sbroadcast.find_one({})
+    await db.sbroadcast.drop({})
+    await message.reply(
+        "Smart broadcast stopped."
+        "It was sended to <code>%d</code> chats." % old['recived_chats']
+    )
 
 
 # Check on smart broadcast
-# @decorator.insurgent()
-async def check_message_for_smartbroadcast(event):
-    chat_id = event.chat_id
-    match = mongodb.sbroadcast_list.find_one({'chat_id': chat_id})
-    if match:
-        try:
-            raw_text = mongodb.sbroadcast_settings.find_one({})['text']
-            text, buttons = button_parser(event.chat_id, raw_text)
-            if len(buttons) == 0:
-                buttons = None
-            await tbot.send_message(chat_id, text, buttons=buttons)
-        except Exception as err:
-            log.error(err)
-        mongodb.sbroadcast_list.delete_one({'chat_id': chat_id})
-        old = mongodb.sbroadcast_settings.find_one({})
-        num = old['recived_chats'] + 1
-        mongodb.sbroadcast_settings.update(
-            {'_id': old['_id']}, {
-                'text': old['text'],
-                'all_chats': old['all_chats'],
-                'recived_chats': num
-            }, upsert=False)
+@register()
+async def check_message_for_smartbroadcast(message):
+    chat_id = message.chat.id
+    if not (db_item := await db.sbroadcast.find_one({'chats': {'$in': [chat_id]}})):
+        return
+
+    text, kwargs = await t_unparse_note_item(message, db_item, chat_id)
+    kwargs['reply_to'] = message.message_id
+
+    await tbot.send_message(chat_id, text, **kwargs)
+
+    await db.sbroadcast.update_one({'_id': db_item['_id']}, {'$pull': {'chats': chat_id}, '$inc': {'recived_chats': 1}})
 
 
 @register()
@@ -184,7 +174,22 @@ async def stats(message):
     for module in [m for m in LOADED_MODULES if hasattr(m, '__stats__')]:
         text += await module.__stats__()
 
-    text += "* <code>{}</code> total crash happened in this week\n".format(
+    await message.reply(text)
+
+
+@quart.route('/stats')
+async def api_stats():
+    text = f"<b>Sophie {SOPHIE_VERSION} stats</b>\n"
+
+    for module in [m for m in LOADED_MODULES if hasattr(m, '__stats__')]:
+        if txt := await module.__stats__():
+            text += txt
+
+    return html_white_text(text)
+
+
+async def __stats__():
+    text = "* <code>%s</code> total crash happened in this week\n".format(
         await db.errors.count_documents({
             'date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=7)}
         }))
@@ -202,42 +207,8 @@ async def stats(message):
 
     text += "* <code>{}</code> total keys in Redis database\n".format(len(redis.keys()))
     text += "* <code>{}</code> total commands registred, in <code>{}</code> modules\n".format(
-        len(REGISTRED_COMMANDS), len(LOADED_MODULES)
-    )
-
-    await message.reply(text)
-
-
-def html_white_text(text):
-    text = f"<pre><font color=\"white\">{text}</font></pre>"
-    return text
-
-
-@quart.route('/stats')
-async def is_gbanned():
-    text = f"<b>Sophie {SOPHIE_VERSION} stats</b>\n"
-
-    for module in [m for m in LOADED_MODULES if hasattr(m, '__stats__')]:
-        if txt := await module.__stats__():
-            text += txt
-
-    text += "* <code>{}</code> total crash happened in this week\n".format(
-        await db.errors.count_documents({
-            'date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=7)}
-        }))
-    local_db = await db.command("dbstats")
-    if 'fsTotalSize' in local_db:
-        text += '* Database size is <code>{}</code>, free <code>{}</code>\n'.format(
-            convert_size(local_db['dataSize']), convert_size(local_db['fsTotalSize'] - local_db['fsUsedSize']))
-    else:
-        text += '* Database size is <code>{}</code>, free <code>{}</code>\n'.format(
-            convert_size(local_db['storageSize']), convert_size(536870912 - local_db['storageSize']))
-
-    text += "* <code>{}</code> total keys in Redis database\n".format(len(redis.keys()))
-    text += "* <code>{}</code> total commands registred, in <code>{}</code> modules\n".format(
         len(REGISTRED_COMMANDS), len(LOADED_MODULES))
-
-    return html_white_text(text)
+    return text
 
 
 @get_strings_dec('sudo_and_owner_stuff')

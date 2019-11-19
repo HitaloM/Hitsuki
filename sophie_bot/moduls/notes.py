@@ -37,7 +37,8 @@ from .utils.message import (
     get_msg_file,
     tbutton_parser,
     get_parsed_note_list,
-    vars_parser
+    vars_parser,
+    t_unparse_note_item
 )
 from .utils.user_details import get_user_link
 
@@ -127,48 +128,10 @@ async def get_note(message, strings, note_name=None, db_item=None,
         )
         return
 
-    text = db_item['text'] if 'text' in db_item else ""
+    text, kwargs = await t_unparse_note_item(message, db_item, chat_id, noformat=noformat, event=event)
+    kwargs['reply_to'] = rpl_id
 
-    file_id = None
-    preview = None
-
-    if 'file' in db_item:
-        file_id = db_item['file']['id']
-
-    if noformat:
-        markup = None
-        if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
-            text += '\n%PARSEMODE_NONE'
-        elif db_item['parse_mode'] == 'html':
-            text += '\n%PARSEMODE_HTML'
-
-        if 'preview' in db_item and db_item['preview']:
-            text += '\n%PREVIEW'
-
-        db_item['parse_mode'] = None
-
-    else:
-        text, markup = tbutton_parser(chat_id, text)
-
-        if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
-            db_item['parse_mode'] = None
-        elif db_item['parse_mode'] == 'md':
-            text = await vars_parser(text, message, chat_id, md=True, event=event)
-        elif db_item['parse_mode'] == 'html':
-            text = await vars_parser(text, message, chat_id, md=False, event=event)
-
-        if 'preview' in db_item and db_item['preview']:
-            preview = True
-
-    await tbot.send_message(
-        send_id,
-        text,
-        buttons=markup,
-        parse_mode=db_item['parse_mode'],
-        reply_to=rpl_id,
-        file=file_id,
-        link_preview=preview
-    )
+    await tbot.send_message(send_id, text, **kwargs)
 
 
 @register(cmds='get')
