@@ -14,7 +14,7 @@ from aiogram import types
 from aiogram.dispatcher.filters import BoundFilter
 
 from sophie_bot import OPERATORS, dp
-from sophie_bot.config import get_int_key, get_list_key
+from sophie_bot.config import get_int_key
 from sophie_bot.services.mongo import mongodb
 from sophie_bot.moduls.utils.language import get_strings_dec
 from sophie_bot.moduls.utils.user_details import is_user_admin

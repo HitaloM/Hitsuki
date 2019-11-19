@@ -22,8 +22,6 @@ from .tmarkdown_converter import tbold, titalic, tpre, tcode, tlink
 from telethon.tl.custom import Button
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.types.message_entity import MessageEntityType
-from aiogram.types import fields
 from aiogram.utils import markdown
 
 
@@ -74,7 +72,7 @@ def tbutton_parser(chat_id, texts):
                 url = raw_button[2]
                 if url[0] == '/' and url[0] == '/':
                     url = url[2:]
-                t = [custom.Button.url(raw_button[0], url)]
+                t = [Button.url(raw_button[0], url)]
             else:
                 t = [Button.inline(raw_button[0], BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')]
 
@@ -130,7 +128,7 @@ def tparse_ent(ent, text, as_html=True):
     if not text:
         return text
 
-    type = ent.type
+    etype = ent.type
     offset = ent.offset
     length = ent.length
 
@@ -144,25 +142,25 @@ def tparse_ent(ent, text, as_html=True):
 
     entity_text = entity_text[offset * 2:(offset + length) * 2].decode('utf-16-le')
 
-    if type == 'bold':
+    if etype == 'bold':
         method = markdown.hbold if as_html else tbold
         return method(entity_text)
-    if type == 'italic':
+    if etype == 'italic':
         method = markdown.hitalic if as_html else titalic
         return method(entity_text)
-    if type == 'pre':
+    if etype == 'pre':
         method = markdown.hpre if as_html else tpre
         return method(entity_text)
-    if type == 'code':
+    if etype == 'code':
         method = markdown.hcode if as_html else tcode
         return method(entity_text)
-    if type == 'url':
+    if etype == 'url':
         method = markdown.hlink if as_html else tlink
         return method(entity_text, entity_text)
-    if type == 'text_link':
+    if etype == 'text_link':
         method = markdown.hlink if as_html else tlink
         return method(entity_text, ent.url)
-    if type == 'text_mention' and ent.user:
+    if etype == 'text_mention' and ent.user:
         return ent.user.get_mention(entity_text, as_html=as_html)
 
     return entity_text

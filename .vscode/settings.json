@@ -4,7 +4,7 @@
     "python.linting.enabled": true,
     "python.linting.flake8Args": [
         "--max-line-length=150",
-        "--ignore=W605,I100,H301",
+        "--ignore=W605,I100,H301,E203,E231",
         "--verbose"
     ],
     "python.pythonPath": "/bin/python3.8",

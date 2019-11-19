@@ -24,7 +24,6 @@ from .utils.api import html_white_text
 
 from sophie_bot import OWNER_ID, OPERATORS, SOPHIE_VERSION
 from sophie_bot.decorator import REGISTRED_COMMANDS, register
-from sophie_bot.utils.logger import log
 from sophie_bot.moduls import LOADED_MODULES
 from sophie_bot.services.mongo import db, mongodb
 from sophie_bot.services.redis import redis
@@ -112,11 +111,6 @@ async def check_message_for_smartbroadcast(message):
     await db.sbroadcast.update_one({'_id': db_item['_id']}, {'$pull': {'chats': chat_id}, '$inc': {'recived_chats': 1}})
 
 
-@register()
-async def check_message_for_smartbroadcast(message):
-    pass
-
-
 @register(cmds="purgecache", is_owner=True)
 async def purge_caches(message):
     redis.flushdb()
@@ -189,7 +183,7 @@ async def api_stats():
 
 
 async def __stats__():
-    text = "* <code>%s</code> total crash happened in this week\n".format(
+    text = "* <code>{}</code> total crash happened in this week\n".format(
         await db.errors.count_documents({
             'date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=7)}
         }))

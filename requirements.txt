@@ -31,3 +31,5 @@ PyYAML>5.0
 coloredlogs
 loguru
 sentry_sdk
+click
+babel

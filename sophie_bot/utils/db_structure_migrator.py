@@ -12,7 +12,6 @@
 
 import asyncio
 import time
-import os
 from importlib import import_module
 
 from sophie_bot.utils.logger import log

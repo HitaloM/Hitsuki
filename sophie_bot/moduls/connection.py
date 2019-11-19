@@ -84,7 +84,7 @@ async def connect_chat_keyboard(message, strings, chat):
 
 # Callback for prev. function
 @register(connect_to_chat_cb.filter(), f='cb', allow_kwargs=True)
-async def connect_chat_keyboard(message, callback_data=False, **kwargs):
+async def connect_chat_keyboard_cb(message, callback_data=False, **kwargs):
     chat_id = int(callback_data['chat_id'])
     chat = await db.chat_list.find_one({'chat_id': chat_id})
     await def_connect_chat(message.message, message.from_user.id, chat_id, chat['chat_title'], edit=True)
@@ -117,7 +117,7 @@ async def connect_to_chat_from_arg(message, strings):
 @register(cmds='disconnect', only_pm=True)
 @get_strings_dec('connections')
 @chat_connection()
-async def connect_to_chat_direct(message, strings, chat):
+async def disconnect_from_chat_direct(message, strings, chat):
     if chat['status'] == 'private':
         await message.reply(strings['u_wasnt_connected'])
         return

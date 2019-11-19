@@ -66,7 +66,7 @@ async def change_chat_lang(chat_id, lang):
 async def get_strings(chat_id, module, mas_name="STRINGS"):
     chat_lang = await get_chat_lang(chat_id)
     if chat_lang not in LANGUAGES:
-        change_chat_lang(chat_id, 'en')
+        await change_chat_lang(chat_id, 'en')
 
     data = LANGUAGES[chat_lang][mas_name][module]
     if mas_name == 'STRINGS':
@@ -85,8 +85,8 @@ def get_strings_dec(module, mas_name="STRINGS"):
             else:
                 chat_id = None
 
-            str = await get_strings(chat_id, module, mas_name=mas_name)
-            return await func(*args, str, **kwargs)
+            strings = await get_strings(chat_id, module, mas_name=mas_name)
+            return await func(*args, strings, **kwargs)
         return wrapped_1
     return wrapped
 

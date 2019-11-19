@@ -43,11 +43,14 @@ RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`']
 class InvalidFileType(Exception):
     pass
 
+class InvalidParseMode(Exception):
+    pass
+
 
 @register(cmds='owo', is_owner=True)
 async def test_cmds(message):
     print(message)
-    #print(get_msg_file(message.reply_to_message))
+    # print(get_msg_file(message.reply_to_message))
 
 
 @register(cmds='save', is_admin=True)
@@ -73,7 +76,7 @@ async def save_note(message, chat, strings):
     if 'text' in note and '$PREVIEW' in note['text']:
         note['preview'] = True
 
-    if (old_note := await db.notes_v2.find_one({'name': note_name, 'chat_id': chat_id})):
+    if old_note := await db.notes_v2.find_one({'name': note_name, 'chat_id': chat_id}):
         text = strings['note_updated']
         note['created_date'] = old_note['created_date']
         note['created_user'] = old_note['created_user']
@@ -271,6 +274,8 @@ async def note_info(message, chat, strings, is_admin=True):
         parse_mode = 'HTML'
     elif note['parse_mode'] == 'none':
         parse_mode = 'None'
+    else:
+        raise InvalidParseMode()
 
     text += strings['note_info_parsing'] % parse_mode
 
