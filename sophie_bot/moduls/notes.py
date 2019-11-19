@@ -13,13 +13,8 @@
 import re
 import difflib
 
-from sentry_sdk import configure_scope
-
 from datetime import datetime
 from babel.dates import format_datetime
-
-from aiogram.types import ParseMode
-from aiogram.utils.exceptions import CantParseEntities
 
 from telethon.errors.rpcerrorlist import UserIsBlockedError, PeerIdInvalidError
 
@@ -30,14 +25,7 @@ from .utils.message import (
     BUTTONS,
     need_args_dec,
     get_arg,
-    get_args,
-    get_parsed_msg,
-    get_msg_parse,
-    get_reply_msg_btns_text,
-    get_msg_file,
-    tbutton_parser,
     get_parsed_note_list,
-    vars_parser,
     t_unparse_note_item
 )
 from .utils.user_details import get_user_link
@@ -135,6 +123,7 @@ async def get_note(message, strings, note_name=None, db_item=None,
 
 
 @register(cmds='get')
+@disablable_dec('get')
 @need_args_dec()
 @chat_connection()
 @get_strings_dec('notes')
@@ -165,6 +154,7 @@ async def get_note_cmd(message, chat, strings):
 
 
 @register(regexp='^#(\w+)', allow_kwargs=True)
+@disablable_dec('get')
 @chat_connection()
 @get_strings_dec('notes')
 async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
@@ -181,6 +171,7 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
 
 
 @register(cmds=['notes', 'saved'])
+@disablable_dec('notes')
 @chat_connection()
 @get_strings_dec('notes')
 async def get_notes_list(message, chat, strings):
