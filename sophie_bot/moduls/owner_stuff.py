@@ -32,7 +32,7 @@ from sophie_bot.services.telethon import tbot
 from sophie_bot.services.quart import quart
 
 
-@register(cmds='allcommands', is_sudo=True)
+@register(cmds='allcommands', is_op=True)
 async def all_commands_list(message):
     text = ""
     for cmd in REGISTRED_COMMANDS:
@@ -40,7 +40,7 @@ async def all_commands_list(message):
     await message.reply(text)
 
 
-@register(cmds='loadedmoduls', is_sudo=True)
+@register(cmds='loadedmoduls', is_op=True)
 async def all_modules_list(message):
     text = ""
     for module in LOADED_MODULES:
@@ -48,7 +48,7 @@ async def all_modules_list(message):
     await message.reply(text)
 
 
-@register(cmds='avaiblebtns', is_sudo=True)
+@register(cmds='avaiblebtns', is_op=True)
 async def all_btns_list(message):
     text = "Avaible message inline btns:\n"
     for module in BUTTONS:
@@ -167,7 +167,7 @@ async def crash(message):
     print(test)
 
 
-@register(cmds="stats", is_sudo=True)
+@register(cmds="stats", is_op=True)
 async def stats(message):
     text = f"<b>Sophie {SOPHIE_VERSION} stats</b>\n"
 
@@ -211,7 +211,7 @@ async def __stats__():
     return text
 
 
-@get_strings_dec('sudo_and_owner_stuff')
+@get_strings_dec('owner_stuff')
 async def __user_info__(message, user_id, strings):
     if user_id == OWNER_ID:
         return strings["father"]

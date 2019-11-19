@@ -10,7 +10,7 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from sophie_bot import SUDO, decorator, mongodb
+from sophie_bot import OPERATORS, decorator, mongodb
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.users import user_admin_dec
@@ -40,7 +40,7 @@ def disablable_dec(command):
                 "chat_id": chat_id,
                 "command": command
             })
-            if check and user_id not in SUDO:
+            if check and user_id not in OPERATORS:
                 return
             return await func(event, *args, **kwargs)
         return wrapped_1

@@ -322,7 +322,7 @@ STRINGS:
         u_not_admin: You should be an admin to do this!
         bot_dont_hab_perm: "I can't do this action, check my rights, I expected: <code>{perm}</code>"
         u_dont_hab_perm: "You don't have admin right to do this action, I expected: <code>{perm}</code>"
-    sudo_and_owner_stuff:
+    owner_stuff:
         father: "\nHe is my creator."
         sudo_crown: "\nHey! Look, that user has a crown, let me see it.. Wow, it has an engraving - <b>'sudo user'</b>!"
     stickers:

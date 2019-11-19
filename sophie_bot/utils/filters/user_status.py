@@ -13,7 +13,7 @@
 from aiogram import types
 from aiogram.dispatcher.filters import BoundFilter
 
-from sophie_bot import dp
+from sophie_bot import OPERATORS, dp
 from sophie_bot.config import get_int_key, get_list_key
 from sophie_bot.services.mongo import mongodb
 from sophie_bot.moduls.utils.language import get_strings_dec
@@ -45,14 +45,14 @@ class IsOwner(BoundFilter):
             return True
 
 
-class IsSudo(BoundFilter):
-    key = 'is_sudo'
+class IsOP(BoundFilter):
+    key = 'is_op'
 
-    def __init__(self, is_sudo):
-        self.is_owner = is_sudo
+    def __init__(self, is_op):
+        self.is_owner = is_op
 
     async def check(self, message: types.Message):
-        if message.from_user.id in get_list_key("SUDO"):
+        if message.from_user.id in OPERATORS:
             return True
 
 
@@ -71,4 +71,4 @@ class NotGbanned(BoundFilter):
 dp.filters_factory.bind(IsAdmin)
 dp.filters_factory.bind(IsOwner)
 dp.filters_factory.bind(NotGbanned)
-dp.filters_factory.bind(IsSudo)
+dp.filters_factory.bind(IsOP)
