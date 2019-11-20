@@ -94,3 +94,9 @@ async def select_lang_callback(query, callback_data=None, **kwargs):
 
 async def __stats__():
     return f"* <code>{len(LANGUAGES)}</code> languages loaded.\n"
+
+
+async def __export__(chat_id):
+    lang = await get_chat_lang_info(chat_id)
+
+    return {'language': lang['code']}

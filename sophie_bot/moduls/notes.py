@@ -343,3 +343,13 @@ async def __stats__():
         await db.notes_v2.count_documents({})
     )
     return text
+
+
+async def __export__(chat_id):
+    data = []
+    notes = await db.notes_v2.find({'chat_id': chat_id}).sort("name", 1).to_list(length=300)
+    for note in notes:
+        del note['_id']
+        data.append(note)
+
+    return {'notes': data}

@@ -348,6 +348,10 @@ STRINGS:
         info_admeme: "\nUser has admin rights in this chat."
         upd_cache: "Updating cache now..."
         admins: "<b>Admin in this group:</b>\n"
+    imports_exports:
+        started_exporting: Exporting started! Please wait...
+        export_done: Export from <b>%s</b> done!
+        exports_locked: Please wait %s till using exports again!
 
 
 RANDOM_STRINGS:
