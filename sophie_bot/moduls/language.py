@@ -17,6 +17,7 @@ from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardBu
 from aiogram.utils.callback_data import CallbackData
 
 from sophie_bot.decorator import register
+from sophie_bot.services.mongo import db
 
 
 select_lang_cb = CallbackData('select_lang_cb', 'lang')
@@ -100,3 +101,9 @@ async def __export__(chat_id):
     lang = await get_chat_lang_info(chat_id)
 
     return {'language': lang['code']}
+
+
+async def __import__(chat_id, data):
+    if data not in LANGUAGES:
+        return
+    await db.lang.update_one({'chat_id': chat_id}, {"$set": {'lang': data}}, upsert=True)

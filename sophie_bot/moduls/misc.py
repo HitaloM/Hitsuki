@@ -56,3 +56,9 @@ async def get_id(message, user, strings, chat):
 @disablable_dec('runs')
 async def runs(message, strings):
     await message.reply(random.choice(list(strings)))
+
+
+@register(cmds='cancel', state='*', allow_kwargs=True)
+async def cancel_handle(message, state, **kwargs):
+    await state.finish()
+    await message.reply('Cancelled.')

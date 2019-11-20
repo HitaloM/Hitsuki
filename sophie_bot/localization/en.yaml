@@ -352,6 +352,14 @@ STRINGS:
         started_exporting: Exporting started! Please wait...
         export_done: Export from <b>%s</b> done!
         exports_locked: Please wait %s till using exports again!
+    
+        send_import_file: Please send a import file!
+        rpl_to_file: Please reply to a file!
+        big_file: Supported importing files only under 50 MB!
+        started_importing: Importing started! Please wait...
+        bad_file: Bad file! Expected <code>'general'</code> column.
+        imports_locked: Please wait %s till using imports again!
+        import_done: Import done!
 
 
 RANDOM_STRINGS:

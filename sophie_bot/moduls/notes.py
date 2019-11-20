@@ -18,6 +18,8 @@ from babel.dates import format_datetime
 
 from telethon.errors.rpcerrorlist import UserIsBlockedError, PeerIdInvalidError
 
+from pymongo import ReplaceOne
+
 from .utils.language import get_strings_dec
 from .utils.connections import chat_connection
 from .utils.disable import disablable_dec
@@ -350,6 +352,22 @@ async def __export__(chat_id):
     notes = await db.notes_v2.find({'chat_id': chat_id}).sort("name", 1).to_list(length=300)
     for note in notes:
         del note['_id']
+        del note['chat_id']
         data.append(note)
 
     return {'notes': data}
+
+
+ALLOWED_COLUMNS = ['parse_mode', 'text', 'name', 'created_date', 'created_user', 'edited_date', 'edited_user', 'preview']
+
+
+async def __import__(chat_id, data):
+    new = []
+    for note in data:
+        for item in [i for i in note if i not in ALLOWED_COLUMNS]:
+            del note[item]
+
+        note['chat_id'] = chat_id
+        new.append(ReplaceOne({'chat_id': note['chat_id'], 'name': note['name']}, note, upsert=True))
+
+    await db.notes_v2.bulk_write(new)
