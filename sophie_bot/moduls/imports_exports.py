@@ -36,7 +36,7 @@ class ImportFileWait(StatesGroup):
     waiting = State()
 
 
-@register(cmds='export', is_admin=True)
+@register(cmds='export', user_admin=True)
 @chat_connection(admin=True, only_groups=True)
 @get_strings_dec('imports_exports')
 async def export_chat_data(message, chat, strings):
@@ -70,7 +70,7 @@ async def export_chat_data(message, chat, strings):
     await msg.delete()
 
 
-@register(cmds='import', is_admin=True)
+@register(cmds='import', user_admin=True)
 @get_strings_dec('imports_exports')
 async def import_reply(message, strings):
     if 'document' in message:

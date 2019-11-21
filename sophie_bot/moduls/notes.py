@@ -56,7 +56,7 @@ async def test_cmds(message):
     # print(get_msg_file(message.reply_to_message))
 
 
-@register(cmds='save', is_admin=True)
+@register(cmds='save', user_admin=True)
 @need_args_dec()
 @chat_connection(admin=True)
 @get_strings_dec('notes')
@@ -252,7 +252,7 @@ async def clear_note(message, chat, strings):
 @register(cmds='noteinfo')
 @chat_connection()
 @get_strings_dec('notes')
-async def note_info(message, chat, strings, is_admin=True):
+async def note_info(message, chat, strings, user_admin=True):
     note_name = get_arg(message).lower()
     if note_name[0] == '#':
         note_name = note_name[1:]

@@ -97,7 +97,7 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
 
             if DEBUG_MODE:
                 log.debug('[*] Starting {}.'.format(func.__name__))
-                log.debug('Event: \n' + str(message))
+                # log.debug('Event: \n' + str(message))
                 start = time.time()
                 await func(*def_args, **def_kwargs)
                 log.debug('[*] {} Time: {} sec.'.format(func.__name__, time.time() - start))

@@ -9,20 +9,45 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
-# you may not use this file except in compliance with the License.
+# you may not use this file except in compliance with the License
 
-import typing
 from dataclasses import dataclass
 
-from aiogram import types
 from aiogram.dispatcher.filters import Filter
 
-from sophie_bot import OPERATORS, BOT_ID, dp
 from sophie_bot.moduls.utils.language import get_strings
+
+from sophie_bot import BOT_ID, dp, bot
+from sophie_bot.services.redis import redis, rw
+
+
+async def get_admin_rights(chat_id):
+    key = '11admin_cache:' + str(chat_id)
+    if alist := rw[key]:
+        pass
+    else:
+        alist = {}
+        admins = await bot.get_chat_administrators(chat_id)
+        for admin in admins:
+            alist[admin['user']['id']] = {
+                'status': admin['status'],
+                'admin': True,
+                'can_change_info': admin['can_change_info'],
+                'can_delete_messages': admin['can_delete_messages'],
+                'can_invite_users': admin['can_invite_users'],
+                'can_restrict_members': admin['can_restrict_members'],
+                'can_pin_messages': admin['can_pin_messages'],
+                'can_promote_members': admin['can_promote_members']
+            }
+
+        rw[key] = alist
+        redis.expire(key, 900)
+    return alist
 
 
 @dataclass
-class HasPermissions(Filter):
+class UserRestricting(Filter):
+    admin: bool = False
     can_post_messages: bool = False
     can_edit_messages: bool = False
     can_delete_messages: bool = False
@@ -33,6 +58,7 @@ class HasPermissions(Filter):
     can_pin_messages: bool = False
 
     ARGUMENTS = {
+        "user_admin": "admin",
         "user_can_post_messages": "can_post_messages",
         "user_can_edit_messages": "can_edit_messages",
         "user_can_delete_messages": "can_delete_messages",
@@ -50,67 +76,46 @@ class HasPermissions(Filter):
         }
 
     @classmethod
-    def validate(
-        cls, full_config: typing.Dict[str, typing.Any]
-    ) -> typing.Optional[typing.Dict[str, typing.Any]]:
+    def validate(cls, full_config):
         config = {}
         for alias, argument in cls.ARGUMENTS.items():
             if alias in full_config:
                 config[argument] = full_config.pop(alias)
         return config
 
-    def _get_cached_value(self, message: types.Message):
-        try:
-            return message.conf[self.PAYLOAD_ARGUMENT_NAME]
-        except KeyError:
-            return None
-
-    def _set_cached_value(self, message: types.Message, member: types.ChatMember):
-        message.conf[self.PAYLOAD_ARGUMENT_NAME] = member
-
-    async def _get_chat_member(self, message: types.Message):
-        chat_member: types.ChatMember = self._get_cached_value(message)
-        if chat_member is None:
-            admins = await message.chat.get_administrators()
-            target_user_id = await self.get_target_id(message)
-            try:
-                chat_member = next(filter(lambda member: member.user.id == target_user_id, admins))
-            except StopIteration:
-                return False
-            self._set_cached_value(message, chat_member)
-        return chat_member
-
-    async def check(self, message: types.Message) -> typing.Union[bool, typing.Dict[str, typing.Any]]:
+    async def check(self, message):
+        # If pm skip checks
         if message.chat.type == 'private':
             return True
-        chat_member = await self._get_chat_member(message)
-        if not chat_member:
+
+        user_id = await self.get_target_id(message)
+        admin_rights = await get_admin_rights(message.chat.id)
+        if user_id not in admin_rights:
+            await self.no_rights_msg(message, 'not_admin')
             return False
-        if chat_member.status == types.ChatMemberStatus.CREATOR:
-            return chat_member
 
-        user_id = chat_member.user.id
-        chat_id = message.chat.id
-
-        if user_id in OPERATORS:
+        if admin_rights[user_id]['status'] == 'creator':
             return True
+
         for permission, value in self.required_permissions.items():
-            if not getattr(chat_member, permission):
-                strings = await get_strings(chat_id, 'global')
-                if user_id == BOT_ID:
-                    await message.reply(strings['bot_dont_hab_perm'].format(perm=str(permission)))
-                else:
-                    await message.reply(strings['u_dont_hab_perm'].format(perm=str(permission)))
+            print(admin_rights[user_id])
+            if not admin_rights[user_id][permission]:
+                await self.no_rights_msg(message, permission)
                 return False
 
-        return {self.PAYLOAD_ARGUMENT_NAME: chat_member}
+        return True
 
-    async def get_target_id(self, message: types.Message) -> int:
+    async def get_target_id(self, message):
         return message.from_user.id
 
+    async def no_rights_msg(self, message, required_permissions):
+        strings = await get_strings(message.chat.id, 'global')
+        await message.reply(strings['user_no_right:' + required_permissions])
 
-class BotHasPermissions(HasPermissions):
+
+class BotHasPermissions(UserRestricting):
     ARGUMENTS = {
+        "bot_admin": "admin",
         "bot_can_post_messages": "can_post_messages",
         "bot_can_edit_messages": "can_edit_messages",
         "bot_can_delete_messages": "can_delete_messages",
@@ -122,9 +127,13 @@ class BotHasPermissions(HasPermissions):
     }
     PAYLOAD_ARGUMENT_NAME = "bot_member"
 
-    async def get_target_id(self, message: types.Message) -> int:
-        return (await message.bot.me).id
+    async def get_target_id(self, message):
+        return BOT_ID
+
+    async def no_rights_msg(self, message, required_permissions):
+        strings = await get_strings(message.chat.id, 'global')
+        await message.reply(strings['bot_no_right:' + required_permissions])
 
 
-dp.filters_factory.bind(HasPermissions)
+dp.filters_factory.bind(UserRestricting)
 dp.filters_factory.bind(BotHasPermissions)

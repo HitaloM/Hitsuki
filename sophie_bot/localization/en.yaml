@@ -59,7 +59,6 @@ STRINGS:
         bot_cant_be_muted: "Are you crazy?! mute myself?!"
         bot_cant_be_unbanned: "Ehh! I wasn't banned before!!!"
         bot_cant_be_unmuted: "Uhh! I wasn't muted to unmute!?"
-        user_kicked: "{admin} has kicked {user} in {chat_name}"
         user_unbanned: "{admin} has successfully unbanned {user} in {chat_name}"
         user_admin_ban: "This is an admin, I can't ban them."
         user_admin_mute: "This is an admin, I can't mute them."
@@ -271,7 +270,7 @@ STRINGS:
         fbanned_list_header: "Banned in {fed_name} Federation ({fed_id}):"
         fbanned_list_msg: "Banned in <b>{fed_name}</b> Federation (<code>{fed_id}</code>)"
     reports:
-        user_is_admin: "You're an admin here, why'd you need to report someone?.."
+        user_user_admin: "You're an admin here, why'd you need to report someone?.."
         user_is_whitelisted: "You're a whitelisted user, why'd you need to report someone?.."
         reports_disabled: "Reports are currently <b>disabled</b> in this group."
         no_user_to_report: "Which user you want to report?"
@@ -320,8 +319,10 @@ STRINGS:
         usage_only_in_groups: "Usage limited only in groups!"
     global:
         u_not_admin: You should be an admin to do this!
-        bot_dont_hab_perm: "I can't do this action, check my rights, I expected: <code>{perm}</code>"
-        u_dont_hab_perm: "You don't have admin right to do this action, I expected: <code>{perm}</code>"
+
+        # Rights
+        bot_no_right:not_admin: I'm not a admin!
+        user_no_right:not_admin: You should be admin to-do it!
     owner_stuff:
         father: "\nHe is my creator."
         sudo_crown: "\nHey! Look, that user has a crown, let me see it.. Wow, it has an engraving - <b>'sudo user'</b>!"
@@ -360,7 +361,10 @@ STRINGS:
         bad_file: Bad file! Expected <code>'general'</code> column.
         imports_locked: Please wait %s till using imports again!
         import_done: Import done!
-
+    restrictions:
+        user_not_in_chat: User not in this chat!
+        user_kicked: "{user} was kicked by {admin} in {chat_name}."
+        reason: "\nReason: <code>%s</code>"
 
 RANDOM_STRINGS:
     RUNS:

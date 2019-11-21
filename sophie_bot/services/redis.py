@@ -11,6 +11,7 @@
 # you may not use this file except in compliance with the License.
 
 import redis
+from redisworks import Root
 from sophie_bot.config import get_str_key, get_int_key
 
 
@@ -21,3 +22,5 @@ redis = redis.StrictRedis(
     db=get_int_key("REDIS_DB_FSM"),
     decode_responses=True
 )
+
+rw = Root()

@@ -25,7 +25,7 @@ async def admin_handler(message, strings, *args, **kwargs):
     from_id = message.from_user.id
 
     if (await is_user_admin(message.chat.id, from_id)) is True:
-        return await message.reply(strings['user_is_admin'])
+        return await message.reply(strings['user_user_admin'])
 
     if from_id in WHITELISTED:
         return await message.reply(strings['user_is_whitelisted'])
@@ -65,7 +65,7 @@ async def admin_handler(message, strings, *args, **kwargs):
 async def report_user(message, strings, status, chat_id, chat_title):
     from_id = message.from_user.id
     if (await is_user_admin(message.chat.id, from_id)) is True:
-        return await message.reply(strings['user_is_admin'])
+        return await message.reply(strings['user_user_admin'])
 
     if from_id in WHITELISTED:
         return await message.reply(strings['user_is_whitelisted'])

@@ -50,12 +50,12 @@ async def get_connected_chat(message, admin=False, only_groups=False):
     chat_title = (await db.chat_list.find_one({'chat_id': chat_id}))['chat_title']
 
     # Admin rights check if admin=True
-    if admin is True and not (is_admin := (await is_user_admin(chat_id, user_id))):
+    if admin is True and not (user_admin := (await is_user_admin(chat_id, user_id))):
         return {'status': None, 'err_msg': 'u_should_be_admin'}
 
     # Check on /allowusersconnect enabled
     if settings := await db.chat_connection_settings.find_one({'chat_id': chat_id}):
-        if 'allow_users_connect' in settings and settings['allow_users_connect'] is False and not is_admin:
+        if 'allow_users_connect' in settings and settings['allow_users_connect'] is False and not user_admin:
             return {'status': None, 'err_msg': 'conn_not_allowed'}
 
     data = {

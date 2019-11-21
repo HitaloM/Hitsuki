@@ -45,7 +45,7 @@ async def list_disabled(message, chat, strings):
     await message.reply(text)
 
 
-@register(cmds="disable", is_admin=True)
+@register(cmds="disable", user_admin=True)
 @need_args_dec()
 @chat_connection(admin=True, only_groups=True)
 @get_strings_dec("disable")
