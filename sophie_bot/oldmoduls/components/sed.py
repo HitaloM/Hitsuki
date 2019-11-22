@@ -18,10 +18,10 @@
 import re
 from collections import defaultdict, deque
 
+from sophie_bot.modules.disable import disablable_dec
 from telethon import events
 
 from sophie_bot import tbot, decorator
-from sophie_bot.modules.disable import disablable_dec
 
 SED_PATTERN = r'^(?i)s/((?:\\/|[^/])+)/((?:\\/|[^/])*)(/.*)?'
 

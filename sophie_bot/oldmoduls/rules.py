@@ -10,11 +10,12 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from sophie_bot import decorator, mongodb
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_admin_dec
+
+from sophie_bot import decorator, mongodb
 
 
 @decorator.register(cmds="setrules")

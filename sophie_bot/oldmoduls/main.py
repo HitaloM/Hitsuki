@@ -18,10 +18,10 @@ import requests
 import ujson
 from aiogram import types
 from aiogram.utils.exceptions import PhotoDimensions
-
-from sophie_bot import tbot, decorator
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.term import term
+
+from sophie_bot import tbot, decorator
 
 
 async def chat_term(message, command):

@@ -14,10 +14,10 @@ import os
 import re
 
 import yaml
+from sophie_bot.modules.users import is_user_admin, user_link
 from telethon.tl.custom import Button
 
 from sophie_bot import decorator, logger, mongodb, redis
-from sophie_bot.modules.users import is_user_admin, user_link
 
 LANGUAGES = {}
 LANGS = []

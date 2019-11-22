@@ -350,10 +350,12 @@ STRINGS:
         upd_cache: "Updating cache now..."
         admins: "<b>Admin in this group:</b>\n"
     imports_exports:
+        # Exporting
         started_exporting: Exporting started! Please wait...
         export_done: Export from <b>%s</b> done!
         exports_locked: Please wait %s till using exports again!
     
+        # Importing
         send_import_file: Please send a import file!
         rpl_to_file: Please reply to a file!
         big_file: Supported importing files only under 50 MB!
@@ -363,8 +365,15 @@ STRINGS:
         import_done: Import done!
     restrictions:
         user_not_in_chat: User not in this chat!
-        user_kicked: "{user} was kicked by {admin} in {chat_name}."
         reason: "\nReason: <code>%s</code>"
+        
+        # Kicks
+        kick_sophie: Instead of trying kick me you could spend your time better. Thats just boring.
+        kick_admin: Kicking admin is not best idea thought.
+        kick_self: If you want to kick self - just leave this chat. I would rather not see you than look at these pathetic attempts at self-punishment.
+        user_kicked: "{user} was kicked by {admin} in {chat_name}."
+
+        purge: "\nIn 5 seconds messages will be purged!"
 
 RANDOM_STRINGS:
     RUNS:

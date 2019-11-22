@@ -12,12 +12,12 @@
 
 import re
 
+from sophie_bot.modules.language import get_string
+from sophie_bot.modules.users import is_user_admin
 from telethon import errors
 from telethon.tl.custom import Button
 
 from sophie_bot import tbot, decorator, mongodb, redis
-from sophie_bot.modules.language import get_string
-from sophie_bot.modules.users import is_user_admin
 
 
 @decorator.t_command("connect", arg=True)

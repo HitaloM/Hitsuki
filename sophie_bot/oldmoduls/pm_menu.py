@@ -13,11 +13,11 @@
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
+from sophie_bot.modules.language import (LANGUAGES, get_chat_lang, get_string,
+                                         lang_info, get_strings_dec, get_strings)
 from telethon.tl.custom import Button
 
 from sophie_bot import BOT_USERNAME, decorator, logger, dp, bot
-from sophie_bot.modules.language import (LANGUAGES, get_chat_lang, get_string,
-                                         lang_info, get_strings_dec, get_strings)
 
 help_page_cp = CallbackData('help_page', 'module')
 help_btn_cp = CallbackData('help_btn', 'module', 'btn')

@@ -13,19 +13,19 @@
 
 import time
 
+import sophie_bot.modules.helper_func.bot_rights as bot_rights
 from aiogram.types.chat_permissions import ChatPermissions
 from aiogram.utils.exceptions import NotEnoughRightsToRestrict, BadRequest
-from telethon.errors.rpcerrorlist import ChatAdminRequiredError
-from telethon.tl.functions.channels import EditBannedRequest, GetParticipantRequest
-from telethon.tl.types import ChatBannedRights, ChannelParticipantBanned
-
-import sophie_bot.modules.helper_func.bot_rights as bot_rights
-from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, bot
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.helper_func.own_errors import NotEnoughRights
 from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (is_user_admin, user_admin_dec,
                                       get_user_and_text, user_link_html, update_admin_cache)
+from telethon.errors.rpcerrorlist import ChatAdminRequiredError
+from telethon.tl.functions.channels import EditBannedRequest, GetParticipantRequest
+from telethon.tl.types import ChatBannedRights, ChannelParticipantBanned
+
+from sophie_bot import BOT_ID, WHITELISTED, tbot, decorator, bot
 
 
 @decorator.register(cmds="ban")

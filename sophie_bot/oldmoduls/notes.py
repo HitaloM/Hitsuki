@@ -17,10 +17,6 @@ import re
 from time import gmtime, strftime
 
 from aiogram import types
-from telethon import errors, utils
-from telethon.tl.functions.users import GetFullUserRequest
-
-from sophie_bot import tbot, decorator, logger, dp, db, bot
 from sophie_bot.modules.connections import connection, get_conn_chat
 from sophie_bot.modules.disable import disablable_dec
 from sophie_bot.modules.helper_func.decorators import need_args_dec
@@ -28,6 +24,10 @@ from sophie_bot.modules.language import get_string, get_strings_dec
 from sophie_bot.modules.users import (check_group_admin,
                                       user_admin_dec, user_link,
                                       add_user_to_db, user_link_html)
+from telethon import errors, utils
+from telethon.tl.functions.users import GetFullUserRequest
+
+from sophie_bot import tbot, decorator, logger, dp, db, bot
 
 RESTRICTED_SYMBOLS = ['**', '__', '`']
 

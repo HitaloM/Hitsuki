@@ -16,14 +16,14 @@ import time
 from aiogram import types
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.exceptions import CantDemoteChatCreator
-from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
-
-from sophie_bot import BOT_ID, tbot, decorator, mongodb
 from sophie_bot.modules.bans import mute_user, unmute_user
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.language import get_strings_dec
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_admin_dec, user_link_html, add_user_to_db
+from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
+
+from sophie_bot import BOT_ID, tbot, decorator, mongodb
 
 
 async def do_welcomesecurity(message, strings, from_id, chat_id):

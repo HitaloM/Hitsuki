@@ -10,15 +10,13 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from .utils.language import LANGUAGES, get_strings_dec, change_chat_lang, get_chat_lang_info
-from .utils.message import get_arg
-
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
-
+from .utils.language import LANGUAGES, get_strings_dec, change_chat_lang, get_chat_lang_info
+from .utils.message import get_arg
 
 select_lang_cb = CallbackData('select_lang_cb', 'lang')
 translators_lang_cb = CallbackData('translators_lang_cb', 'lang')

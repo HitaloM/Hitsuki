@@ -17,8 +17,6 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
-
-from sophie_bot import WHITELISTED, decorator, mongodb, redis, dp, bot
 from sophie_bot.modules.bans import ban_user, kick_user, mute_user, convert_time, NotEnoughRights
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.disable import disablable_dec
@@ -27,6 +25,8 @@ from sophie_bot.modules.language import get_string, get_strings_dec, get_strings
 from sophie_bot.modules.notes import send_note
 from sophie_bot.modules.users import user_admin_dec, user_link, get_chat_admins, user_link_html
 from sophie_bot.modules.warns import randomString
+
+from sophie_bot import WHITELISTED, decorator, mongodb, redis, dp, bot
 
 
 # State

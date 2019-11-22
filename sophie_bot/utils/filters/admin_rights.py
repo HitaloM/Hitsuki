@@ -15,9 +15,8 @@ from dataclasses import dataclass
 
 from aiogram.dispatcher.filters import Filter
 
-from sophie_bot.moduls.utils.language import get_strings
-
 from sophie_bot import BOT_ID, dp, bot
+from sophie_bot.moduls.utils.language import get_strings
 from sophie_bot.services.redis import redis, rw
 
 

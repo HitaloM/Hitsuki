@@ -12,12 +12,11 @@
 
 import random
 
-from .utils.user_details import get_user_dec, get_user_link
-from .utils.language import get_strings_dec
+from sophie_bot.decorator import register
 from .utils.connections import chat_connection
 from .utils.disable import disablable_dec
-
-from sophie_bot.decorator import register
+from .utils.language import get_strings_dec
+from .utils.user_details import get_user_dec, get_user_link
 
 
 @register(cmds=["id", "chatid", "userid"])

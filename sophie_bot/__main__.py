@@ -10,20 +10,21 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import sys
 import asyncio
-import hypercorn
-# import uvloop
-
+import sys
 from importlib import import_module
 
+import hypercorn
+
 from sophie_bot import dp
-from sophie_bot.services.quart import quart
-from sophie_bot.utils.logger import log
-from sophie_bot.utils.db_backup import backup_db
+from sophie_bot.cli import cli
 from sophie_bot.config import get_bool_key
 from sophie_bot.moduls import ALL_MODULES, LOADED_MODULES
-from sophie_bot.cli import cli
+from sophie_bot.services.quart import quart
+from sophie_bot.utils.db_backup import backup_db
+from sophie_bot.utils.logger import log
+
+# import uvloop
 
 
 if get_bool_key('LOAD_MODULES'):

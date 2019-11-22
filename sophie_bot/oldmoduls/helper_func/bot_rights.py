@@ -10,10 +10,10 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
+from sophie_bot.modules.language import get_string
 from telethon.tl.functions.channels import GetParticipantRequest
 
 from sophie_bot import BOT_ID, tbot
-from sophie_bot.modules.language import get_string
 
 
 # Help

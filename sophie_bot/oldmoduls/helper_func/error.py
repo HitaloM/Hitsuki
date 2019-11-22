@@ -20,10 +20,10 @@ from time import gmtime, strftime
 import ujson
 from aiogram import types
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
+from sophie_bot.modules.helper_func.term import term
 
 from sophie_bot import DEBUG_MODE, mongodb, dp, logger, bot
 from sophie_bot.config import get_config_key
-from sophie_bot.modules.helper_func.term import term
 
 RANDOM_ERROR_TITLES = [
     "IT'S A CREEEPER!!!1",

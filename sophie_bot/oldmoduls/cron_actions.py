@@ -16,10 +16,10 @@ from time import gmtime, strftime
 
 import aiocron
 import requests
+from sophie_bot.modules.sudo_and_owner_stuff import do_backup
 
 from sophie_bot import bot, mongodb
 from sophie_bot.config import get_config_key
-from sophie_bot.modules.sudo_and_owner_stuff import do_backup
 
 
 @aiocron.crontab('47 * * * *')

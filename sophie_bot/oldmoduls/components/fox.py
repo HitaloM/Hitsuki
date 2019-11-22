@@ -27,10 +27,10 @@ from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
+from sophie_bot.modules.main import convert_size
 
 from sophie_bot import decorator, dp, tbot, bot, mongodb, logger
 from sophie_bot.config import get_config_key
-from sophie_bot.modules.main import convert_size
 
 # Constants
 FOX_CHATS = [483808054, -1001287179850, -1001280218923, -1001155400138, -1001362128194]

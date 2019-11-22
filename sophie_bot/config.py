@@ -11,10 +11,12 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from envparse import env
-from sophie_bot.utils.logger import log
-import yaml
 import os
+
+import yaml
+from envparse import env
+
+from sophie_bot.utils.logger import log
 
 DEFAULTS = {
     'LOAD_MODULES': True,

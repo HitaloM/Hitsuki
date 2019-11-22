@@ -11,24 +11,21 @@
 # you may not use this file except in compliance with the License.
 
 import asyncio
-import ujson
 import io
-
 from datetime import datetime, timedelta
-from babel.dates import format_timedelta
 
+import ujson
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types.input_file import InputFile
-
-from .utils.connections import chat_connection
-from .utils.language import get_strings_dec
-
-from . import LOADED_MODULES
+from babel.dates import format_timedelta
 
 from sophie_bot import OPERATORS, bot
 from sophie_bot.decorator import register
 from sophie_bot.services.redis import redis
+from . import LOADED_MODULES
+from .utils.connections import chat_connection
+from .utils.language import get_strings_dec
 
 
 # Waiting for import file state

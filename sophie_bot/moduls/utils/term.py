@@ -1,5 +1,5 @@
-import subprocess
 import asyncio
+import subprocess
 
 from sophie_bot.services.telethon import tbot
 

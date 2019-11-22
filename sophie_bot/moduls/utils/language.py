@@ -11,14 +11,13 @@
 # you may not use this file except in compliance with the License.
 
 import os
-import yaml
 
+import yaml
 from babel.core import Locale
 
-from sophie_bot.utils.logger import log
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
-
+from sophie_bot.utils.logger import log
 
 LANGUAGES = {}
 

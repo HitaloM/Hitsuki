@@ -10,13 +10,12 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from .utils.disable import DISABLABLE_COMMANDS, disablable_dec
-from .utils.language import get_strings_dec
-from .utils.connections import chat_connection
-from .utils.message import get_arg, need_args_dec
-
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
+from .utils.connections import chat_connection
+from .utils.disable import DISABLABLE_COMMANDS, disablable_dec
+from .utils.language import get_strings_dec
+from .utils.message import get_arg, need_args_dec
 
 
 @register(cmds="disableable")

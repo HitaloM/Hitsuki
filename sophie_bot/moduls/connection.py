@@ -14,15 +14,13 @@ from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardBu
 from aiogram.utils.callback_data import CallbackData
 from aiogram.utils.exceptions import BotBlocked
 
-from .utils.language import get_strings_dec
-from .utils.connections import chat_connection, set_connected_chat
-from .utils.message import get_arg
-
 from sophie_bot import bot
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
-
+from .utils.connections import chat_connection, set_connected_chat
+from .utils.language import get_strings_dec
+from .utils.message import get_arg
 
 connect_to_chat_cb = CallbackData('connect_to_chat_cb', 'chat_id')
 

@@ -11,19 +11,16 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import re
 import html
+import re
 import sys
-
-from .user_details import get_user_link
-
-from .tmarkdown_converter import tbold, titalic, tpre, tcode, tlink
-
-from telethon.tl.custom import Button
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
+from telethon.tl.custom import Button
 
+from .tmarkdown_converter import tbold, titalic, tpre, tcode, tlink
+from .user_details import get_user_link
 
 BUTTONS = {}
 
@@ -336,6 +333,11 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
         'file': file_id,
         'link_preview': preview
     }
+
+
+def get_cmd(message):
+    cmd = message.get_command()[1:].split('@')[0]
+    return cmd
 
 
 def need_args_dec(num=1):

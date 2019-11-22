@@ -13,17 +13,15 @@
 import time
 from importlib import import_module
 
-from sentry_sdk import configure_scope
-
 from aiogram import types
 from aiogram.dispatcher.handler import SkipHandler
+from sentry_sdk import configure_scope
 
 from sophie_bot import BOT_USERNAME, dp
 from sophie_bot.config import get_bool_key
-from sophie_bot.utils.flood import prevent_flooding
 from sophie_bot.utils.filters import ALL_FILTERS
+from sophie_bot.utils.flood import prevent_flooding
 from sophie_bot.utils.logger import log
-
 
 DEBUG_MODE = get_bool_key('DEBUG_MODE')
 ALLOW_F_COMMANDS = get_bool_key("allow_forwards_commands")

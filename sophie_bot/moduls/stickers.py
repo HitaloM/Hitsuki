@@ -14,11 +14,10 @@ import io
 
 from aiogram.types.input_file import InputFile
 
+from sophie_bot import bot
+from sophie_bot.decorator import register
 from .utils.disable import disablable_dec
 from .utils.language import get_strings_dec
-
-from sophie_bot.decorator import register
-from sophie_bot import bot
 
 
 @register(cmds='getsticker')

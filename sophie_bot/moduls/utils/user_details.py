@@ -11,14 +11,13 @@
 # you may not use this file except in compliance with the License.
 
 import ujson
-from telethon.tl.types import ChannelParticipantsAdmins
 from telethon.tl.functions.users import GetFullUserRequest
+from telethon.tl.types import ChannelParticipantsAdmins
 
 from sophie_bot import OPERATORS
-
 from sophie_bot.services.mongo import db
-from sophie_bot.services.telethon import tbot
 from sophie_bot.services.redis import redis
+from sophie_bot.services.telethon import tbot
 
 
 async def add_user_to_db(user):

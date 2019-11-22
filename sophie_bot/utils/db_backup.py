@@ -12,11 +12,10 @@
 
 from datetime import datetime
 
-from sophie_bot.utils.term import term
-from sophie_bot.utils.logger import log
 from sophie_bot.config import get_str_key
 from sophie_bot.services.mongo import MONGO_URI
-
+from sophie_bot.utils.logger import log
+from sophie_bot.utils.term import term
 
 BACKUP_DIR = 'Backups'
 

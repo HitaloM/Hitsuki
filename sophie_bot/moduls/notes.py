@@ -10,19 +10,22 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import re
 import difflib
-
+import re
 from datetime import datetime
-from babel.dates import format_datetime
 
+from babel.dates import format_datetime
+from pymongo import ReplaceOne
 from telethon.errors.rpcerrorlist import UserIsBlockedError, PeerIdInvalidError
 
-from pymongo import ReplaceOne
-
-from .utils.language import get_strings_dec
+from sophie_bot import bot
+from sophie_bot.decorator import register
+from sophie_bot.services.mongo import db, mongodb
+from sophie_bot.services.redis import redis
+from sophie_bot.services.telethon import tbot
 from .utils.connections import chat_connection
 from .utils.disable import disablable_dec
+from .utils.language import get_strings_dec
 from .utils.message import (
     BUTTONS,
     need_args_dec,
@@ -31,13 +34,6 @@ from .utils.message import (
     t_unparse_note_item
 )
 from .utils.user_details import get_user_link
-
-from sophie_bot.decorator import register
-from sophie_bot.services.mongo import db, mongodb
-from sophie_bot.services.telethon import tbot
-from sophie_bot.services.redis import redis
-from sophie_bot import bot
-
 
 RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`']
 

@@ -10,9 +10,8 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from sophie_bot.services.mongo import db
 from sophie_bot import OPERATORS
-
+from sophie_bot.services.mongo import db
 
 DISABLABLE_COMMANDS = []
 

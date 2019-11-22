@@ -1,4 +1,3 @@
-from aiogram import Dispatcher
 from apscheduler.executors.asyncio import AsyncIOExecutor
 from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -6,7 +5,6 @@ from pytz import utc
 
 from sophie_bot.config import get_str_key, get_int_key
 from sophie_bot.utils.logger import log
-from sophie_bot import dp
 
 DEFAULT = "default"
 

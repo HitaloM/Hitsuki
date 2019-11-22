@@ -10,17 +10,10 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import redis
-from redisworks import Root
+from sophie_bot import bot
 
-from sophie_bot.config import get_str_key, get_int_key
 
-# Init Redis
-redis = redis.StrictRedis(
-    host=get_str_key("REDIS_HOST"),
-    port=get_str_key("REDIS_PORT"),
-    db=get_int_key("REDIS_DB_FSM"),
-    decode_responses=True
-)
-
-rw = Root()
+async def kick_user(chat_id, user_id):
+    await bot.kick_chat_member(chat_id, user_id)
+    await bot.unban_chat_member(chat_id, user_id)
+    return True
