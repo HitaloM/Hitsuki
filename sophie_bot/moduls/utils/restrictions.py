@@ -29,3 +29,8 @@ async def mute_user(chat_id, user_id, until_date=None):
         until_date=until_date
     )
     return True
+
+
+async def ban_user(chat_id, user_id, until_date=None):
+    await bot.kick_chat_member(chat_id, user_id, until_date=until_date)
+    return True
