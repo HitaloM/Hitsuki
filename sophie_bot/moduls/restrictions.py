@@ -21,7 +21,7 @@ from sophie_bot.services.redis import redis
 from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 from .utils.message import InvalidTimeUnit, get_cmd, convert_time
-from .utils.restrictions import kick_user, mute_user, ban_user
+from .utils.restrictions import kick_user, mute_user, unmute_user, ban_user, unban_user
 from .utils.user_details import get_user_dec, get_user_link, is_user_admin
 
 
@@ -150,6 +150,37 @@ async def mute_user_cmd(message, chat, user, strings):
         await tbot.delete_messages(chat_id, to_del)
 
 
+@register(cmds='unmute', bot_can_restrict_members=True, user_can_restrict_members=True)
+@chat_connection(admin=True, only_groups=True)
+@get_user_dec()
+@get_strings_dec('restrictions')
+async def unmute_user_cmd(message, chat, user, strings):
+    chat_id = chat['chat_id']
+    user_id = user['user_id']
+
+    if user_id == BOT_ID:
+        await message.reply(strings['unmute_sophie'])
+        return
+
+    elif user_id == message.from_user.id:
+        await message.reply(strings['unmute_self'])
+        return
+
+    elif await is_user_admin(chat_id, user_id):
+        await message.reply(strings['unmute_admin'])
+        return
+
+    await unmute_user(chat_id, user_id)
+
+    text = strings['user_unmuted'].format(
+        user=await get_user_link(user_id),
+        admin=await get_user_link(message.from_user.id),
+        chat_name=chat['chat_title']
+    )
+
+    await message.reply(text)
+
+
 @register(cmds=['ban', 'sban', 'tban', 'stban'], bot_can_restrict_members=True, user_can_restrict_members=True)
 @chat_connection(admin=True, only_groups=True)
 @get_user_dec()
@@ -221,6 +252,37 @@ async def ban_user_cmd(message, chat, user, strings):
             to_del.append(message.reply_to_message.message_id)
         await asyncio.sleep(5)
         await tbot.delete_messages(chat_id, to_del)
+
+
+@register(cmds='unban', bot_can_restrict_members=True, user_can_restrict_members=True)
+@chat_connection(admin=True, only_groups=True)
+@get_user_dec()
+@get_strings_dec('restrictions')
+async def unban_user_cmd(message, chat, user, strings):
+    chat_id = chat['chat_id']
+    user_id = user['user_id']
+
+    if user_id == BOT_ID:
+        await message.reply(strings['unban_sophie'])
+        return
+
+    elif user_id == message.from_user.id:
+        await message.reply(strings['unban_self'])
+        return
+
+    elif await is_user_admin(chat_id, user_id):
+        await message.reply(strings['unban_admin'])
+        return
+
+    await unban_user(chat_id, user_id)
+
+    text = strings['user_unband'].format(
+        user=await get_user_link(user_id),
+        admin=await get_user_link(message.from_user.id),
+        chat_name=chat['chat_title']
+    )
+
+    await message.reply(text)
 
 
 @register(f='leave')

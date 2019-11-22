@@ -377,12 +377,20 @@ STRINGS:
         mute_admin: If you think you can shut up admin, you are wrong!
         mute_self: If you want to kick self - just leave this chat. I would rather not see you than look at these pathetic attempts at self-punishment.
         user_muted: "{user} was muted by {admin} in {chat_name}."
+        unmute_sophie: Actually, I'm not muted.
+        unmute_admin: Haha no, try mute him for first!
+        unmute_self: Should I mute you for first?
+        user_unmuted: "{user} was unmuted by {admin} in {chat_name}."
 
         # Bans
         ban_sophie: No, I won't do it! Ask chat creator to-do it!
         ban_admin: Haha, let's <code>/demote</code> him for first.
         ban_self: Why are you tring to ban self?
         user_banned: "{user} was banned by {admin} in {chat_name}."
+        unban_sophie: Actually, I'm not banned.
+        unban_admin: Haha no, try ban him for first!
+        unban_self: Should I ban you for first?
+        user_unband: "{user} was unbanned by {admin} in {chat_name}."
 
         invalid_time: Invalid time!
         enter_time: Please add time!
