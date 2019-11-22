@@ -365,7 +365,6 @@ STRINGS:
         import_done: Import done!
     restrictions:
         user_not_in_chat: User not in this chat!
-        reason: "\nReason: <code>%s</code>"
         
         # Kicks
         kick_sophie: Instead of trying kick me you could spend your time better. Thats just boring.
@@ -373,6 +372,16 @@ STRINGS:
         kick_self: If you want to kick self - just leave this chat. I would rather not see you than look at these pathetic attempts at self-punishment.
         user_kicked: "{user} was kicked by {admin} in {chat_name}."
 
+        # Mutes
+        mute_sophie: Instead of trying kick me you could spend your time better. Thats just boring.
+        mute_admin: Kicking admin is not best idea thought.
+        mute_self: If you want to kick self - just leave this chat. I would rather not see you than look at these pathetic attempts at self-punishment.
+        user_muted: "{user} was muted by {admin} in {chat_name}."
+
+        invalid_time: Invalid time!
+        enter_time: Please add time!
+        on_time: "\nTill <code>%s</code>"
+        reason: "\nReason: <code>%s</code>"
         purge: "\nIn 5 seconds messages will be purged!"
 
 RANDOM_STRINGS:

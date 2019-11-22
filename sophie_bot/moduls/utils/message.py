@@ -14,6 +14,8 @@
 import html
 import re
 import sys
+import time
+from datetime import datetime, timedelta
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
@@ -31,6 +33,10 @@ BUTTONS = {}
 # t = InlineKeyboardButton(raw_button[0], callback_data='get_alert_{}_{}'.format(chat_id, raw_button[2]))
 # elif raw_button[1] == 'deletemsg':
 # t = InlineKeyboardButton(raw_button[0], callback_data='get_delete_msg_{}_{}'.format(chat_id, raw_button[2]))
+
+
+class InvalidTimeUnit(Exception):
+    pass
 
 
 def button_parser(chat_id, texts):
@@ -338,6 +344,31 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
 def get_cmd(message):
     cmd = message.get_command()[1:].split('@')[0]
     return cmd
+
+
+def convert_time(time_val):
+    if not any(time_val.endswith(unit) for unit in ('m', 'h', 'd')):
+        raise TypeError
+
+    time_num = int(time_val[:-1])
+    unit = time_val[-1]
+    kwargs = {}
+
+    if unit == 'm':
+        kwargs['minutes'] = time_num
+        unit_str = 'minutes'
+    elif unit == 'h':
+        kwargs['hours'] = time_num
+        unit_str = 'hours'
+    elif unit == 'd':
+        kwargs['days'] = time_num
+        unit_str = 'days'
+    else:
+        raise InvalidTimeUnit()
+
+    val = int((datetime.now() + timedelta(**kwargs)).strftime('%s'))
+
+    return val, unit_str
 
 
 def need_args_dec(num=1):

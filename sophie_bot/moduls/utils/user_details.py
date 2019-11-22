@@ -220,7 +220,7 @@ def get_user_and_text_dec(**dec_kwargs):
             if hasattr(message, 'message'):
                 message = message.message
 
-            user, text = await get_user_and_text(message, **dec_kwargs)
+            user, text = await get_user_and_text(message, **dec_kwargs, send_text=False)
             if not user:
                 await message.reply('cant_find_the_user')
                 return
