@@ -26,7 +26,8 @@ from sophie_bot.services.telethon import tbot
 from .utils.api import html_white_text
 from .utils.covert import convert_size
 from .utils.language import get_strings_dec
-from .utils.message import BUTTONS, get_parsed_note_list, t_unparse_note_item, need_args_dec
+from .utils.notes import BUTTONS, get_parsed_note_list, t_unparse_note_item
+from .utils.message import need_args_dec
 from .utils.term import chat_term
 
 

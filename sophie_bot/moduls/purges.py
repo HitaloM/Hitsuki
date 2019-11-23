@@ -19,7 +19,7 @@ from sophie_bot import bot
 from sophie_bot.decorator import register
 from sophie_bot.services.telethon import tbot
 from .utils.language import get_strings_dec
-from .utils.message import BUTTONS
+from .utils.notes import BUTTONS
 
 
 @register(cmds="del", bot_can_delete_messages=True, user_can_delete_messages=True)

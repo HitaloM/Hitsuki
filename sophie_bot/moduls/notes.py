@@ -26,13 +26,8 @@ from sophie_bot.services.telethon import tbot
 from .utils.connections import chat_connection
 from .utils.disable import disablable_dec
 from .utils.language import get_strings_dec
-from .utils.message import (
-    BUTTONS,
-    need_args_dec,
-    get_arg,
-    get_parsed_note_list,
-    t_unparse_note_item
-)
+from .utils.notes import BUTTONS, get_parsed_note_list, t_unparse_note_item
+from .utils.message import get_arg, need_args_dec
 from .utils.user_details import get_user_link
 
 RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`']
