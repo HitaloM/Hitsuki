@@ -66,10 +66,6 @@ async def save_note(message, chat, strings):
         await message.reply(strings['blank_note'])
         return
 
-    # Notes settings
-    if 'text' in note and '$PREVIEW' in note['text']:
-        note['preview'] = True
-
     if old_note := await db.notes_v2.find_one({'name': note_name, 'chat_id': chat_id}):
         text = strings['note_updated']
         note['created_date'] = old_note['created_date']

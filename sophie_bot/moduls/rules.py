@@ -32,10 +32,6 @@ async def set_rules(message, chat, strings):
     note = get_parsed_note_list(message, split_args=0)
     note['chat_id'] = chat_id
 
-    # Notes settings
-    if 'text' in note and '$PREVIEW' in note['text']:
-        note['preview'] = True
-
     if (await db.rules_v2.replace_one({'chat_id': chat_id}, note, upsert=True)).modified_count > 0:
         text = strings['updated']
     else:

@@ -201,6 +201,11 @@ def get_parsed_note_list(message, split_args=1):
         if msg_file := get_msg_file(message):
             note['file'] = msg_file
 
+    # Preview
+    if 'text' in note and '$PREVIEW' in note['text']:
+        note['preview'] = True
+    text = re.sub(r'%PREVIEW', '', text)
+
     if text.replace(' ', ''):
         note['text'] = text
 
