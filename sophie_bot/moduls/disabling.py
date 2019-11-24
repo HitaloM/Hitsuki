@@ -101,4 +101,4 @@ async def enable_command(message, chat, strings):
 async def __export__(chat_id):
     disabled = await db.disabled_v2.find_one({'chat_id': chat_id})
 
-    return {'disabled': disabled['cmds']}
+    return {'disabled': disabled['cmds'] if disabled else []}

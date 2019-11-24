@@ -26,7 +26,7 @@ from sophie_bot.services.telethon import tbot
 from .utils.connections import chat_connection
 from .utils.disable import disablable_dec
 from .utils.language import get_strings_dec
-from .utils.notes import BUTTONS, get_parsed_note_list, t_unparse_note_item
+from .utils.notes import BUTTONS, ALLOWED_COLUMNS, get_parsed_note_list, t_unparse_note_item
 from .utils.message import get_arg, need_args_dec
 from .utils.user_details import get_user_link
 
@@ -349,13 +349,19 @@ async def __export__(chat_id):
     return {'notes': data}
 
 
-ALLOWED_COLUMNS = ['parse_mode', 'text', 'name', 'created_date', 'created_user', 'edited_date', 'edited_user', 'preview']
+ALLOWED_COLUMNS_NOTES = ALLOWED_COLUMNS + [
+    'name',
+    'created_date',
+    'created_user',
+    'edited_date',
+    'edited_user'
+]
 
 
 async def __import__(chat_id, data):
     new = []
     for note in data:
-        for item in [i for i in note if i not in ALLOWED_COLUMNS]:
+        for item in [i for i in note if i not in ALLOWED_COLUMNS_NOTES]:
             del note[item]
 
         note['chat_id'] = chat_id

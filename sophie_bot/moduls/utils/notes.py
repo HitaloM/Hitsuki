@@ -27,6 +27,13 @@ from .message import get_args
 
 BUTTONS = {}
 
+ALLOWED_COLUMNS = [
+    'parse_mode',
+    'file',
+    'text',
+    'preview'
+]
+
 
 def tparse_ent(ent, text, as_html=True):
     if not text:
