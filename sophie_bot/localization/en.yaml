@@ -66,13 +66,6 @@ STRINGS:
         cln_wel_enabled: "Cleaning welcomes is <code>enabled</code> for <b>{chat_name}</b>."
         cln_wel_s_enabled: "Cleaning welcomes enabled for <b>{chat_name}</b>."
         cln_wel_s_disabled: "Cleaning welcomes disabled for <b>{chat_name}</b>."
-    rules:
-        cannot_find_note: "I can't find the note <code>{}</code>"
-        set_note: "Successfully set the rules note to <code>{}</code>"
-        didnt_set_note: "This group doesn't have rules note set."
-        cannot_find_set_note: "I can't find the rules note."
-        havent_set_rules_note: "You haven't set the rules note yet."
-        success_remove_rules_note: "Successfully removed rules note in <b>{}</b>."
     filters:
         filters_in: "Filters in <b>{chat_name}</b>:\n"
         no_filters_in: "No filters was found in <b>{}</b>!"
@@ -369,6 +362,26 @@ STRINGS:
         on_time: "\nTill <code>%s</code>"
         reason: "\nReason: <code>%s</code>"
         purge: "\nIn 5 seconds messages will be purged!"
+    rules:
+        # Set
+        saved: Rules was saved in <b>%s</b>
+        updated: Rules was updated in <b>%s</b>
+
+        # Reset
+        deleted: Rules was deleted!
+
+        not_found: Rules was not found!
+
+        # Callback
+        user_blocked: "Write /start in my PM!"
+        rules_was_pmed: Rules was sended to your PM!
+
+        cannot_find_note: "I can't find the note <code>{}</code>"
+        set_note: "Successfully set the rules note to <code>{}</code>"
+        didnt_set_note: "This group doesn't have rules note set."
+        cannot_find_set_note: "I can't find the rules note."
+        havent_set_rules_note: "You haven't set the rules note yet."
+        success_remove_rules_note: "Successfully removed rules note in <b>{}</b>."
 
 RANDOM_STRINGS:
     RUNS:
