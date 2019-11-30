@@ -43,29 +43,6 @@ STRINGS:
         #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
         #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
         #notename_cant_contain: "Note name can't contain <code>{}</code> !"
-    greetings:
-        welcome_hay: "Welcome {mention}! Howdy?"
-        cant_find_note: "I can't find that note."
-        welcome_set_to_note: "Welcome message was set to note: <code>{}</code>"
-        welcome_is_default: "Welcome message is set to default."
-        no_args_serv: "Please give me yes/no to Enable/Disable Clean Service"
-        serv_yes: "Clean Service is successfully enabled in <b>{chat_name}</b>!"
-        serv_no: "Clean Service is successfully disabled in <b>{chat_name}</b>!"
-        noArgs: "Please give any option."
-        wlcm_sec_hard: "Welcome Security is set to <b>Hard</b> in <b>{chat_name}</b>!"
-        wlcm_sec_soft: "Welcome Security is set to <b>Soft</b> in <b>{chat_name}</b>!"
-        wlcm_sec_off: "Welcome Security is disabled in <b>{chat_name}</b>!"
-        clik2tlk_btn: "Click here to get unmuted."
-        wlcm_sec: "Hey {mention}, Please click the button below to prove that you aren't a bot!"
-        not_trgt_usr: "You're not supposed to click this button!"
-        trgt_success: "Great! You have been unmuted!"
-        not_trgt: "You are not supposed to click this button!"
-        cln_wel_alr_enabled: "Cleaning welcomes is already enabled for <b>{chat_name}</b>!"
-        cln_wel_alr_disabled: "Cleaning welcomes was not enabled for <b>{chat_name}</b>."
-        cln_wel_disabled: "Cleaning welcomes is <code>disabled</code> for <b>{chat_name}</b>."
-        cln_wel_enabled: "Cleaning welcomes is <code>enabled</code> for <b>{chat_name}</b>."
-        cln_wel_s_enabled: "Cleaning welcomes enabled for <b>{chat_name}</b>."
-        cln_wel_s_disabled: "Cleaning welcomes disabled for <b>{chat_name}</b>."
     filters:
         filters_in: "Filters in <b>{chat_name}</b>:\n"
         no_filters_in: "No filters was found in <b>{}</b>!"
@@ -359,7 +336,7 @@ STRINGS:
 
         invalid_time: Invalid time!
         enter_time: Please add time!
-        on_time: "\nTill <code>%s</code>"
+        on_time: "\nOn <code>%s</code>"
         reason: "\nReason: <code>%s</code>"
         purge: "\nIn 5 seconds messages will be purged!"
     rules:
@@ -376,12 +353,90 @@ STRINGS:
         user_blocked: "Write /start in my PM!"
         rules_was_pmed: Rules was sended to your PM!
 
-        cannot_find_note: "I can't find the note <code>{}</code>"
-        set_note: "Successfully set the rules note to <code>{}</code>"
-        didnt_set_note: "This group doesn't have rules note set."
-        cannot_find_set_note: "I can't find the rules note."
-        havent_set_rules_note: "You haven't set the rules note yet."
-        success_remove_rules_note: "Successfully removed rules note in <b>{}</b>."
+        # cannot_find_note: "I can't find the note <code>{}</code>"
+        # set_note: "Successfully set the rules note to <code>{}</code>"
+        # didnt_set_note: "This group doesn't have rules note set."
+        # cannot_find_set_note: "I can't find the rules note."
+        # havent_set_rules_note: "You haven't set the rules note yet."
+        # success_remove_rules_note: "Successfully removed rules note in <b>{}</b>."
+    greetings:
+        default_welcome: "Welcome {mention}! Howdy?"
+        default_security_note: "Welcome {mention}! Please press button below to verify themself as human!"
+
+        bool_invalid_arg: Invalid argument, expected <code>on</code>/<code>off</code>.
+
+        # /setwelcome
+        saved: Welcome message was saved in <b>%s</b>
+        updated: Welcome message was updated in <b>%s</b>
+
+        # /turnwelcome
+        turnwelcome_status: Welcomes is <code>{status}</code> in <b>{chat_name}</b>
+        turnwelcome_enabled: Welcomes enabled in <b>%s</b>
+        turnwelcome_disabled: Welcomes disabled in <b>%s</b>
+
+        # /welcome
+        enabled: enabled
+        disabled: disabled
+        wlcm_security_enabled: "enabled, set to {level}"
+        wlcm_mutes_enabled: "enabled, set to {time}"
+        welcome_info: |
+            <b>Welcome settings in {chat_name}:</b>
+            Welcomes are <code>{welcomes_status}</code>
+            Welcome security is <code>{wlcm_security}</code>
+            Welcome mutes is <code>{wlcm_mutes}</code>
+            Deleting old welcomes is <code>{clean_welcomes}</code>
+            Deleting service messages is <code>{clean_service}</code>
+        wlcm_note: "\n\nWelcome note is:"
+        raw_wlcm_note: "Raw welcome note is:"
+        security_note: "Welcome security text is:"
+
+        # /setsecuritynote
+        security_note_saved: "Custom security text was saved <b>%s</b>"
+        security_note_updated: "Custom security text was updated <b>%s</b>"
+
+        # /delsecuritynote
+        security_note_not_found: Security text in <b>%s</b> has not been installed before
+        del_security_note_ok: Security text was reseted to default in <b>%s</b>
+
+        # /cleanwelcome
+        cleanwelcome_enabled: Cleaning welcomes enabled in <b>%s</b>
+        cleanwelcome_disabled: Cleaning welcomes disabled in <b>%s</b>
+        cleanwelcome_status: Cleaning welcomes is <code>{status}</code> in <b>{chat_name}</b>
+
+        # /cleanservice
+        cleanservice_enabled: Cleaning service messages enabled in <b>%s</b>
+        cleanservice_disabled: Cleaning service messages disabled in <b>%s</b>
+        cleanservice_status: Cleaning service messages is <code>{status}</code> in <b>{chat_name}</b>
+
+        # /welcomemute
+        welcomemute_invalid_arg: Invalid argument, expected time.
+        welcomemute_enabled: Welcome mute enabled in <b>%s</b>
+        welcomemute_disabled: Welcome mute disabled in <b>%s</b>
+        welcomemute_status: Welcome mute is <code>{status}</code> in <b>{chat_name}</b>
+
+        # /welcomesecurity
+        welcomesecurity_enabled: Welcome security enabled in <b>{chat_name}</b> to <code>{level}</code> level.
+        welcomesecurity_enabled_word: enabled, set to level {level}
+        welcomesecurity_disabled: Welcome security disabled in <b>%s</b>.
+        welcomesecurity_invalid_arg: Invalid argument, expected <code>button</code>/<code>captcha</code>.
+        welcomesecurity_status: Welcome security is <code>{status}</code> in <b>{chat_name}</b>
+
+        # Welcomesecurity handler
+        click_here: Click here!
+        not_allowed: You are not allowed to use this!
+        ws_captcha_text: Hi {user}, please enter the captcha's number to be unmuted in the chat.
+        regen_captcha_btn: 🔄 Change captcha
+        num_is_not_digit: Please enter only numbers!
+        bad_num: Wrong number! Please try again.
+        passed: Verification passed, you was unmuted in <b>%s</b>!
+        passed_no_frm: Verification passed, you was unmuted in %s!
+        last_chance: You have a last chance to enter captcha!
+        btn_wc_text: |
+            Please press right buttom matched on this expression:
+            %s
+        btn_wc_rtr_text: "You have last chance! Be careful.\n"
+        btn_wc_wrong: Wrong, please try again!
+        btn_wc_sry: Sorry you used the last attempt. Ask chat administrators.
 
 RANDOM_STRINGS:
     RUNS:

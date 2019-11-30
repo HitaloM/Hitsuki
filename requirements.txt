@@ -34,3 +34,4 @@ loguru
 sentry_sdk
 click
 babel
+captcha

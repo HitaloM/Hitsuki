@@ -29,7 +29,9 @@ DEFAULTS = {
     'MONGODB_URI': 'localhost',
     'MONGO_DB': 'sophie',
 
-    'BACKUP_PASS': "DEFAULT_SOPHIE_BACKUP_PASS"
+    'BACKUP_PASS': "DEFAULT_SOPHIE_BACKUP_PASS",
+
+    'JOIN_CONFIRM_DURATION': '30m',
 }
 
 

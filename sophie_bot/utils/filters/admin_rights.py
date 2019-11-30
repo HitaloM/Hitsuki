@@ -21,7 +21,7 @@ from sophie_bot.services.redis import redis, rw
 
 
 async def get_admin_rights(chat_id):
-    key = '11admin_cache:' + str(chat_id)
+    key = '1admin_cache:' + str(chat_id)
     if alist := rw[key]:
         pass
     else:

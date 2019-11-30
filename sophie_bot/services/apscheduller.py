@@ -20,8 +20,7 @@ job_defaults = {"coalesce": False, "max_instances": 3}
 
 scheduler = AsyncIOScheduler(
     jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc
-)   
-
+)
 
 log.info("Starting apscheduller...")
 scheduler.start()

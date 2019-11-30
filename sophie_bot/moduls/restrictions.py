@@ -12,7 +12,7 @@
 
 import asyncio
 
-from babel.dates import format_datetime
+from babel.dates import format_datetime, format_timedelta
 
 from sophie_bot import BOT_ID
 from sophie_bot.decorator import register
@@ -110,12 +110,12 @@ async def mute_user_cmd(message, chat, user, strings):
     if curr_cmd == 'tmute' or curr_cmd == 'stmute':
         if len(args := message.get_args().split(' ', 2)) > 1:
             try:
-                until_date, unit = convert_time(args[1])
+                until_date = convert_time(args[1])
             except InvalidTimeUnit:
                 await message.reply(strings['invalid_time'])
                 return
 
-            text += strings['on_time'] % format_datetime(until_date, locale=strings['language_info']['babel'])
+            text += strings['on_time'] % format_timedelta(until_date, locale=strings['language_info']['babel'])
 
             # Add reason
             if len(args) > 2:

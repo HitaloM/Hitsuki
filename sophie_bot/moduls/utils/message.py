@@ -59,9 +59,9 @@ def convert_time(time_val):
     else:
         raise InvalidTimeUnit()
 
-    val = int((datetime.now() + timedelta(**kwargs)).strftime('%s'))
+    val = timedelta(**kwargs)
 
-    return val, unit_str
+    return val
 
 
 def need_args_dec(num=1):
