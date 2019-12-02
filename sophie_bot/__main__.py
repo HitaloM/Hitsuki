@@ -48,15 +48,27 @@ if not get_bool_key('DEBUG_MODE'):
     import_module("sophie_bot.utils.sentry")
 
 
+async def before_srv_task(loop):
+    for module in [m for m in LOADED_MODULES if hasattr(m, '__before_serving__')]:
+        log.debug('Before serving: ' + module.__name__)
+        loop.create_task(module.__before_serving__(loop))
+
+
 @quart.before_serving
 async def startup():
+    log.debug("Starting before serving task for all modules...")
+    loop.create_task(before_srv_task(loop))
+
+    log.debug("Waiting 2 seconds...")
+    await asyncio.sleep(2)
+
     log.info("Aiogram: Using polling method")
     loop.create_task(dp.start_polling())
     log.info("Bot is alive!")
 
 
 async def start():
-    log.info("Running webserver..")
+    log.debug("Running webserver..")
     config = hypercorn.Config()
     config.bind = ["localhost:8085"]
     await hypercorn.asyncio.serve(quart, config)
