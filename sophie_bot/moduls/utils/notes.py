@@ -17,12 +17,15 @@ import sys
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
+
 from telethon.tl.custom import Button
 
 from .tmarkdown_converter import tbold, titalic, tpre, tcode, tlink
 from .user_details import get_user_link
 
 from .message import get_args
+
+from sophie_bot import BOT_USERNAME
 
 
 BUTTONS = {}
@@ -167,7 +170,6 @@ def get_msg_file(message):
 
 
 def get_parsed_note_list(message, split_args=1):
-
     note = {}
     if "reply_to_message" in message:
         # Get parsed reply msg text
@@ -233,7 +235,10 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
         db_item['parse_mode'] = None
 
     else:
-        text, markup = tbutton_parser(chat_id, text)
+        pm = True if message.chat.type == 'private' else False
+        text, markup = button_parser(chat_id, text, pm=pm)
+        if not text and not file_id:
+            text = '#' + db_item['name']
 
         if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
             db_item['parse_mode'] = None
@@ -253,57 +258,63 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
     }
 
 
-def button_parser(chat_id, texts):
-    buttons = InlineKeyboardMarkup()
-    raw_buttons = re.findall(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', texts)
-    text = re.sub(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', '', texts)
+def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
+    buttons = InlineKeyboardMarkup(row_width=row_width) if aio else []
+
+    raw_buttons = re.findall(r'\[(.+?)\]\(button(.+?)(:.+?|)(:same|)\)', texts)
+    text = re.sub(r'\[(.+?)\]\(button(.+?)(:.+?|)(:same|)\)(\n|)', '', texts)[1:]
     for raw_button in raw_buttons:
-        btn = raw_button[1]
-        if btn in BUTTONS or btn == 'url':
-            if btn == 'url':
-                url = raw_button[2]
-                if url[0] == '/' and url[1] == '/':
-                    url = url[2:]
-                t = InlineKeyboardButton(raw_button[0], url=url)
-            else:
-                t = InlineKeyboardButton(raw_button[0], callback_data=BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')
+        name = raw_button[0]
+        action = raw_button[1]
+        argument = ''
+        if raw_button[2]:
+            argument = raw_button[2][1:].lower()
 
-            if raw_button[3]:
-                buttons.insert(t)
+        if action in BUTTONS:
+            cb = BUTTONS[action]
+            string = f'{cb}_{argument}_{chat_id}' if argument else f'{cb}_{chat_id}'
+            if aio:
+                start_btn = InlineKeyboardButton(name, url=f'https://t.me/{BOT_USERNAME}?start=' + string)
+                cb_btn = InlineKeyboardButton(name, callback_data=string)
             else:
-                buttons.add(t)
+                start_btn = [Button.url(name, f'https://t.me/{BOT_USERNAME}?start=' + string)]
+                cb_btn = [Button.inline(name, string)]
+
+            if cb.endswith('sm'):
+                btn = cb_btn if pm else start_btn
+            elif cb.endswith('cb'):
+                btn = cb_btn
+            elif cb.endswith('start'):
+                btn = start_btn
+            elif cb.startswith('url'):
+                btn = [Button.url(name, argument)]
+        elif action == 'url':
+            if argument[0] == '/' and argument[1] == '/':
+                argument = argument[2:]
+            btn = InlineKeyboardButton(name, url=argument) if aio else [Button.url(name, argument)]
         else:
-            texts += f'\n[{raw_button[0]}]\(button{raw_button[2]})'
-
-    return text, buttons
-
-
-def tbutton_parser(chat_id, texts):
-    buttons = []
-    raw_buttons = re.findall(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', texts)
-    text = re.sub(r'\[(.+?)\]\(button(.+?):(.+?)(:same|)\)', '', texts)
-    for raw_button in raw_buttons:
-        btn = raw_button[1]
-        if btn in BUTTONS or btn == 'url':
-            if btn == 'url':
-                url = raw_button[2]
-                if url[0] == '/' and url[0] == '/':
-                    url = url[2:]
-                t = [Button.url(raw_button[0], url)]
+            btn = None
+            if argument:
+                text += f'\n[{name}].(button{action}:{argument})'
             else:
-                t = [Button.inline(raw_button[0], BUTTONS[btn] + f':{chat_id}:{raw_button[2]}')]
+                text += f'\n[{name}].(button{action})'
 
-            if raw_button[3]:
-                new = buttons[-1] + t
-                buttons = buttons[:-1]
-                buttons.append(new)
+        if btn:
+            if aio:
+                buttons.insert(btn) if raw_button[3] else buttons.add(btn)
             else:
-                buttons.append(t)
-        else:
-            text += f'\n[{raw_button[0]}]\(button{raw_button[1]}:{raw_button[2]})'
+                if raw_button[3]:
+                    new = buttons[-1] + btn
+                    buttons = buttons[:-1]
+                    buttons.append(new)
+                else:
+                    buttons.append(btn)
 
-    if len(buttons) == 0:
+    if not aio and len(buttons) == 0:
         buttons = None
+
+    if not text or text == ' ':
+        text = None
 
     return text, buttons
 
@@ -322,7 +333,7 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
     chat_id = message.chat.id
     chat_name = html.escape(message.chat.title or 'Local')
     chat_nick = message.chat.username or chat_name
-    return text.replace('{first}', first_name) \
+    text = text.replace('{first}', first_name) \
                .replace('{last}', last_name) \
                .replace('{fullname}', first_name + " " + last_name) \
                .replace('{id}', str(user_id).replace('{userid}', str(user_id))) \
@@ -331,3 +342,4 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
                .replace('{chatid}', str(chat_id)) \
                .replace('{chatname}', str(chat_name)) \
                .replace('{chatnick}', str(chat_nick))
+    return text

@@ -60,11 +60,9 @@ async def fast_purge(message, strings):
     await msg.delete()
 
 
-BUTTONS.update({'deletemsg': 'btn_deletemsg'})
+BUTTONS.update({'delmsg': 'btn_deletemsg_cb'})
 
 
-@register(regexp=r'btn_deletemsg:(\w+):(\w+)', f='cb', allow_kwargs=True)
+@register(regexp=r'btn_deletemsg:(\w+)', f='cb', allow_kwargs=True)
 async def delmsg_btn(event, regexp=None, **kwargs):
-    admin = regexp.group(2).lower()
-
     await event.message.delete()

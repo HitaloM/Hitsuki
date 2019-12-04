@@ -18,6 +18,8 @@ from babel.dates import format_datetime
 from pymongo import ReplaceOne
 from telethon.errors.rpcerrorlist import UserIsBlockedError, PeerIdInvalidError
 
+from aiogram.dispatcher.filters.builtin import CommandStart
+
 from sophie_bot import bot
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db, mongodb
@@ -283,31 +285,37 @@ async def note_info(message, chat, strings, user_admin=True):
     await message.reply(text)
 
 
-BUTTONS.update({'note': 'btn_note'})
+BUTTONS.update({'note': 'btnnotesm'})
 
 
-@register(regexp=r'btn_note:(.*):(\w+)', f='cb', allow_kwargs=True)
+@register(regexp=r'btnnotesm_(\w+)_(.*)', f='cb', allow_kwargs=True)
 @get_strings_dec('notes')
 async def note_btn(event, strings, regexp=None, **kwargs):
-    chat_id = int(regexp.group(1))
+    chat_id = int(regexp.group(2))
     user_id = event.from_user.id
-    note_name = regexp.group(2).lower()
+    note_name = regexp.group(1).lower()
 
     if not (note := await db.notes_v2.find_one({'chat_id': chat_id, 'name': note_name})):
         await event.answer(strings['no_note'])
         return
 
-    if user_id == event.message.chat.id:
-        await event.message.delete()
+    await event.message.delete()
+    await get_note(event.message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None, event=event)
 
-    try:
-        await get_note(event.message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None, event=event)
-        await event.answer(strings['pmed_note'])
-    except (UserIsBlockedError, PeerIdInvalidError):
-        await event.answer(strings['user_blocked'], show_alert=True)
-        key = 'btn_note_start_state:' + str(user_id)
-        redis.hmset(key, {'chat_id': chat_id, 'notename': note_name})
-        redis.expire(key, 900)
+
+@register(CommandStart(re.compile(r'btnnotesm')), allow_kwargs=True)
+@get_strings_dec('notes')
+async def note_start(message, strings, regexp=None, **kwargs):
+    args = message.get_args().split('_')
+    chat_id = int(args[2])
+    user_id = message.from_user.id
+    note_name = args[1].lower()
+
+    if not (note := await db.notes_v2.find_one({'chat_id': chat_id, 'name': note_name})):
+        await message.reply(strings['no_note'])
+        return
+
+    await get_note(message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None)
 
 
 @register(cmds='start', only_pm=True)
