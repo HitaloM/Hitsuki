@@ -66,8 +66,7 @@ def tparse_ent(ent, text, as_html=True):
         method = markdown.hcode if as_html else tcode
         return method(entity_text)
     if etype == 'url':
-        method = markdown.hlink if as_html else tlink
-        return method(entity_text, entity_text)
+        return entity_text
     if etype == 'text_link':
         method = markdown.hlink if as_html else tlink
         return method(entity_text, ent.url)
