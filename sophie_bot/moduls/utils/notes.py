@@ -260,15 +260,12 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
 
 def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     buttons = InlineKeyboardMarkup(row_width=row_width) if aio else []
-
-    raw_buttons = re.findall(r'\[(.+?)\]\(button(.+?)(:.+?|)(:same|)\)', texts)
-    text = re.sub(r'\[(.+?)\]\(button(.+?)(:.+?|)(:same|)\)(\n|)', '', texts)[1:]
+    raw_buttons = re.findall(r'\[(.+?)\]\((button|btn)(.+?)(:.+?|)(:same|)\)', texts)
+    text = re.sub(r'\[(.+?)\]\((button|btn)(.+?)(:.+?|)(:same|)\)(\n|)', '', texts)[1:]
     for raw_button in raw_buttons:
         name = raw_button[0]
-        action = raw_button[1]
-        argument = ''
-        if raw_button[2]:
-            argument = raw_button[2][1:].lower()
+        action = raw_button[2]
+        argument = raw_button[3][1:].lower() if raw_button[3] else ''
 
         if action in BUTTONS:
             cb = BUTTONS[action]
@@ -301,12 +298,11 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
 
         if btn:
             if aio:
-                buttons.insert(btn) if raw_button[3] else buttons.add(btn)
+                buttons.insert(btn) if raw_button[4] else buttons.add(btn)
             else:
-                if raw_button[3]:
-                    new = buttons[-1] + btn
+                if raw_button[4]:
                     buttons = buttons[:-1]
-                    buttons.append(new)
+                    buttons.append(buttons[-1] + btn)
                 else:
                     buttons.append(btn)
 
