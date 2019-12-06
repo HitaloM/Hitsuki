@@ -11,13 +11,11 @@
 # you may not use this file except in compliance with the License.
 
 import asyncio
-import sys
 from importlib import import_module
 
 import hypercorn
 
 from sophie_bot import dp
-from sophie_bot.cli import cli
 from sophie_bot.config import get_bool_key
 from sophie_bot.moduls import ALL_MODULES, LOADED_MODULES
 from sophie_bot.services.quart import quart
@@ -72,10 +70,6 @@ async def start():
     config = hypercorn.Config()
     config.bind = ["localhost:8085"]
     await hypercorn.asyncio.serve(quart, config)
-
-
-if len(sys.argv) > 1:
-    cli()
 
 
 if get_bool_key('BACKUP_DB_ON_STARTUP'):

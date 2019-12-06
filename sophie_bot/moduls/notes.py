@@ -16,7 +16,6 @@ from datetime import datetime
 
 from babel.dates import format_datetime
 from pymongo import ReplaceOne
-from telethon.errors.rpcerrorlist import UserIsBlockedError, PeerIdInvalidError
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 

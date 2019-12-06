@@ -287,7 +287,7 @@ async def unban_user_cmd(message, chat, user, strings):
 
 @register(f='leave')
 async def leave_silent(message):
-    if not (user_id := message.from_user.id) == BOT_ID:
+    if not message.from_user.id == BOT_ID:
         return
 
     if int(redis.get('leave_silent:' + str(message.chat.id))) == message.left_chat_member.id:
