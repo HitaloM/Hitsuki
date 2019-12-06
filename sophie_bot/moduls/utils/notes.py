@@ -260,8 +260,9 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
 
 def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     buttons = InlineKeyboardMarkup(row_width=row_width) if aio else []
-    raw_buttons = re.findall(r'\[(.+?)\]\((button|btn)(.+?)(:.+?|)(:same|)\)', texts)
-    text = re.sub(r'\[(.+?)\]\((button|btn)(.+?)(:.+?|)(:same|)\)(\n|)', '', texts)[1:]
+    pattern = r'\[(.+?)\]\((button|btn)(.+?)(:.+?|)(:same|)\)(\n|)'
+    raw_buttons = re.findall(pattern, texts)
+    text = re.sub(pattern, '', texts)[1:]
     for raw_button in raw_buttons:
         name = raw_button[0]
         action = raw_button[2]
@@ -274,8 +275,8 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
                 start_btn = InlineKeyboardButton(name, url=f'https://t.me/{BOT_USERNAME}?start=' + string)
                 cb_btn = InlineKeyboardButton(name, callback_data=string)
             else:
-                start_btn = [Button.url(name, f'https://t.me/{BOT_USERNAME}?start=' + string)]
-                cb_btn = [Button.inline(name, string)]
+                start_btn = Button.url(name, f'https://t.me/{BOT_USERNAME}?start=' + string)
+                cb_btn = Button.inline(name, string)
 
             if cb.endswith('sm'):
                 btn = cb_btn if pm else start_btn
@@ -284,27 +285,24 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
             elif cb.endswith('start'):
                 btn = start_btn
             elif cb.startswith('url'):
-                btn = [Button.url(name, argument)]
+                btn = Button.url(name, argument)
         elif action == 'url':
             if argument[0] == '/' and argument[1] == '/':
                 argument = argument[2:]
-            btn = InlineKeyboardButton(name, url=argument) if aio else [Button.url(name, argument)]
+            btn = InlineKeyboardButton(name, url=argument) if aio else Button.url(name, argument)
         else:
+            # If btn not registred
             btn = None
             if argument:
-                text += f'\n[{name}].(button{action}:{argument})'
+                text += f'\n[{name}].(btn{action}:{argument})'
             else:
-                text += f'\n[{name}].(button{action})'
+                text += f'\n[{name}].(btn{action})'
+                continue
 
-        if btn:
-            if aio:
-                buttons.insert(btn) if raw_button[4] else buttons.add(btn)
-            else:
-                if raw_button[4]:
-                    buttons = buttons[:-1]
-                    buttons.append(buttons[-1] + btn)
-                else:
-                    buttons.append(btn)
+        if aio:
+            buttons.insert(btn) if raw_button[4] else buttons.add(btn)
+        else:
+            buttons[-1].append(btn) if raw_button[4] else buttons.append([btn])
 
     if not aio and len(buttons) == 0:
         buttons = None
