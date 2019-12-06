@@ -12,18 +12,24 @@
 
 import datetime
 import html
-
 import ujson
+import asyncio
 
+from aiocron import crontab
+from aiogram.utils.exceptions import Unauthorized
+
+from .utils.connections import chat_connection
+from .utils.disable import disablable_dec
+from .utils.language import get_strings_dec
+from .utils.user_details import get_user_dec, get_user_link, is_user_admin, update_admin_cache
+
+from sophie_bot import bot
 from sophie_bot.decorator import register
 from sophie_bot.moduls import LOADED_MODULES
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from sophie_bot.utils.logger import log
-from .utils.connections import chat_connection
-from .utils.disable import disablable_dec
-from .utils.language import get_strings_dec
-from .utils.user_details import get_user_dec, get_user_link, is_user_admin, update_admin_cache
+from sophie_bot.utils.channel_logs import channel_log
 
 
 @register()
@@ -181,6 +187,41 @@ async def adminlist(message, chat, strings):
             text += '- {} ({})\n'.format(await get_user_link(user['user_id']), user['user_id'])
 
     await msg.edit_text(text)
+
+
+@crontab('14 * * * *')
+async def cleanup_chats_and_users():
+    await channel_log('Starting cleanup process...', info_log=True)
+    log.info("Cleaning old chats...")
+    deleted_chats = 0
+    async for item in db.chat_list.find():
+        await asyncio.sleep(0.1)
+        chat_id = item['chat_id']
+        try:
+            await bot.get_chat(chat_id)
+        except Unauthorized:
+            # Cleanup
+            for collection in await db.list_collection_names():
+                async for item in db[collection].find({'chat_id': chat_id}):
+                    await db[collection].delete_many({'_id': item['_id']})
+            deleted_chats += 1
+
+    log.info("Cleaning old users...")
+    deleted_users = 0
+    async for item in db.user_list.find():
+        await asyncio.sleep(0.1)
+        user_id = item['user_id']
+        try:
+            await bot.get_chat(user_id)
+        except Unauthorized:
+            # Cleanup
+            for collection in await db.list_collection_names():
+                async for item in db[collection].find({'$or': [{'user_id': user_id}, {'chat_id': user_id}]}):
+                    await db[collection].delete_many({'_id': item['_id']})
+            deleted_users += 1
+
+    await channel_log(f'Cleanup done! Cleared {deleted_chats} chats and {deleted_users} users!', info_log=True)
+    await channel_log('<b>Current stats:</b>\n' + await __stats__())
 
 
 async def __stats__():

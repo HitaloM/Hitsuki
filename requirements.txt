@@ -22,7 +22,7 @@ cryptography
 # Other
 envparse
 hypercorn
-#aiocron
+aiocron
 apscheduler
 requests
 #git+https://github.com/casics/nostril
