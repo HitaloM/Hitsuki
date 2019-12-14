@@ -434,9 +434,9 @@ STRINGS:
         btn_wc_text: |
             Please press right buttom matched on this expression:
             %s
-        btn_wc_rtr_text: "You have last chance! Be careful.\n"
-        btn_wc_wrong: Wrong, please try again!
-        btn_wc_sry: Sorry you used the last attempt. Ask chat administrators.
+        math_wc_rtr_text: "You have last chance! Be careful.\n"
+        math_wc_wrong: Wrong, please try again!
+        math_wc_sry: Sorry you used the last attempt. Ask chat administrators.
 
 RANDOM_STRINGS:
     RUNS:

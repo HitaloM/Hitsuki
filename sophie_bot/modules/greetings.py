@@ -44,7 +44,7 @@ from sophie_bot.config import get_str_key
 
 class WelcomeSecurityState(StatesGroup):
     captcha = State()
-    btn = State()
+    math = State()
 
 
 @register(cmds=['setwelcome', 'savewelcome'], user_admin=True)
@@ -284,7 +284,7 @@ async def welcome_security(message, chat, strings):
 
     no = ['no', 'off', '0', 'false']
 
-    if args[0].lower() in ['button', 'captcha']:
+    if args[0].lower() in ['math', 'captcha']:
         level = args[0].lower()
     elif args[0] in no:
         await db.welcomes_v2.update_one({'chat_id': chat_id}, {'$unset': {'welcome_security': 1}}, upsert=True)
@@ -441,9 +441,9 @@ async def welcome_security_handler_pm(message, strings, regexp=None, state=None,
         await WelcomeSecurityState.captcha.set()
         await send_captcha(message, state)
 
-    elif level == 'button':
-        await WelcomeSecurityState.btn.set()
-        await send_btn_wc(message, state)
+    elif level == 'math':
+        await WelcomeSecurityState.math.set()
+        await send_btn_math(message, state)
 
 
 def generate_captcha(number=None):
@@ -553,7 +553,7 @@ def gen_int_btns(ansrw):
 
 
 @get_strings_dec('greetings')
-async def send_btn_wc(message, state, strings, msg_id=False):
+async def send_btn_math(message, state, strings, msg_id=False):
     chat_id = message.chat.id
     expr, answr = gen_expression()
 
@@ -565,7 +565,7 @@ async def send_btn_wc(message, state, strings, msg_id=False):
     if msg_id:
         async with state.proxy() as data:
             data['last'] = True
-        text = strings['btn_wc_rtr_text'] + strings['btn_wc_text'] % expr
+        text = strings['math_wc_rtr_text'] + strings['btn_wc_text'] % expr
     else:
         text = strings['btn_wc_text'] % expr
         msg_id = (await message.reply(text)).message_id
@@ -576,22 +576,22 @@ async def send_btn_wc(message, state, strings, msg_id=False):
     await tbot.edit_message(chat_id, msg_id, text, buttons=btns)
 
 
-@register(regexp='wc_int_btn:', f='cb', state=WelcomeSecurityState.btn, allow_kwargs=True)
+@register(regexp='wc_int_btn:', f='cb', state=WelcomeSecurityState.math, allow_kwargs=True)
 @get_strings_dec('greetings')
-async def wc_btn_check_cb(event, strings, state=None, **kwargs):
+async def wc_math_check_cb(event, strings, state=None, **kwargs):
     num = int(event.data.split(':')[1])
 
     async with state.proxy() as data:
         answr = data['num']
         if 'last' in data:
             await state.finish()
-            await event.answer(strings['btn_wc_sry'], show_alert=True)
+            await event.answer(strings['math_wc_sry'], show_alert=True)
             await event.message.delete()
             return
 
     if not num == answr:
-        await send_btn_wc(event.message, state, msg_id=event.message.message_id)
-        await event.answer(strings['btn_wc_wrong'], show_alert=True)
+        await send_btn_math(event.message, state, msg_id=event.message.message_id)
+        await event.answer(strings['math_wc_wrong'], show_alert=True)
         return
 
     await welcome_security_passed(event, state)
