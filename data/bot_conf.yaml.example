@@ -3,13 +3,12 @@
 Basic:
     token: "YOUR_TOKEN"
 
-    # Get they in https://my.telegram.org/
+    # Get them from https://my.telegram.org/
     app_id: 12345
     app_hash: "API_HASH"
 
     owner_id: 483808054
-    mongo_port: 27017
-    mongo_conn: "localhost"
+    mongodb_uri: "localhost"
 
     redis_conn: "localhost"
     redis_port: 6379
@@ -17,7 +16,7 @@ Basic:
     logs_channel_id: -1111111111
 
 Advanced:
-    # Here advanced settings, you can just leave it by default.
+    # This is advanced settings, you can leave them by default.
     bot_name_additional: ""
 
     debug_mode: true
@@ -44,7 +43,7 @@ Advanced:
     skip_catch_up: true
     rate_limit: false
     block_gbanned_users: true
-    
+
     sudo: [483808054, 782229305, 654839744]
     whitelisted: [123456789, 928173281]
 
@@ -52,4 +51,4 @@ Advanced:
     allow_commands_with_!: false
 
     load_components: false
-    not_load_this_components: ["afk", "fox"]
+    disabled_components: ["afk", "fox"]

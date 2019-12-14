@@ -10,7 +10,7 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from sophie_bot.moduls.utils.user_details import is_user_admin
+from sophie_bot.modules.utils.user_details import is_user_admin
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 

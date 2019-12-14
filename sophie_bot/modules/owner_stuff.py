@@ -18,7 +18,7 @@ import requests
 
 from sophie_bot import OWNER_ID, OPERATORS, SOPHIE_VERSION
 from sophie_bot.decorator import REGISTRED_COMMANDS, register
-from sophie_bot.moduls import LOADED_MODULES
+from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db, mongodb
 from sophie_bot.services.quart import quart
 from sophie_bot.services.redis import redis
@@ -39,7 +39,7 @@ async def all_commands_list(message):
     await message.reply(text)
 
 
-@register(cmds='loadedmoduls', is_op=True)
+@register(cmds='loadedmodules', is_op=True)
 async def all_modules_list(message):
     text = ""
     for module in LOADED_MODULES:

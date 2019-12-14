@@ -4,7 +4,7 @@ import os.path
 from sophie_bot import logger
 from sophie_bot.config import get_config_key
 
-NO_LOAD_COMPONENTS = get_config_key("not_load_this_components")
+NO_LOAD_COMPONENTS = get_config_key("disabled_components")
 
 
 def list_all_components():
@@ -16,7 +16,7 @@ def list_all_components():
         if os.path.isfile(f) and f.endswith(".py") and not f.endswith("__init__.py")
     ]
     for component in all_components:
-        if component not in NO_LOAD_COMPONENTS:
+        if component not in DISABLED_COMPONENTS:
             components.append(component)
 
     return components

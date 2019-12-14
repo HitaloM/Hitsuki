@@ -26,7 +26,7 @@ log.info("Loading localizations...")
 
 for filename in os.listdir('sophie_bot/localization'):
     log.debug('Loading language file ' + filename)
-    f = open('sophie_bot/localization/' + filename, "r")
+    f = open('sophie_bot/localization/' + filename, "r", encoding='utf8')
     lang = yaml.load(f, Loader=yaml.CLoader)
 
     lang_code = lang['language_info']['code']

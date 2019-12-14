@@ -25,7 +25,7 @@ from .utils.user_details import get_user_dec, get_user_link, is_user_admin, upda
 
 from sophie_bot import bot
 from sophie_bot.decorator import register
-from sophie_bot.moduls import LOADED_MODULES
+from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from sophie_bot.utils.logger import log

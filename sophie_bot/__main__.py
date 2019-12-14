@@ -17,7 +17,7 @@ import hypercorn
 
 from sophie_bot import dp
 from sophie_bot.config import get_bool_key
-from sophie_bot.moduls import ALL_MODULES, LOADED_MODULES
+from sophie_bot.modules import ALL_MODULES, LOADED_MODULES
 from sophie_bot.services.quart import quart
 from sophie_bot.utils.db_backup import backup_db
 from sophie_bot.utils.logger import log
@@ -30,7 +30,7 @@ if get_bool_key('LOAD_MODULES'):
     log.info("Modules to load: %s", str(ALL_MODULES))
     for module_name in ALL_MODULES:
         log.debug(f"Importing <d><n>{module_name}</></>")
-        imported_module = import_module("sophie_bot.moduls." + module_name)
+        imported_module = import_module("sophie_bot.modules." + module_name)
         LOADED_MODULES.append(imported_module)
     log.info("Modules loaded!")
 else:

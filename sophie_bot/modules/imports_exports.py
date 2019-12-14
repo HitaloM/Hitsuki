@@ -118,7 +118,7 @@ async def import_fun(message, document, chat, strings):
 
     imported = []
     for module in [m for m in LOADED_MODULES if hasattr(m, '__import__')]:
-        module_name = module.__name__.replace('sophie_bot.moduls.', '')
+        module_name = module.__name__.replace('sophie_bot.modules.', '')
         print(module_name)
         if module_name in data:
             imported.append(module_name)
