@@ -302,19 +302,21 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
         if aio:
             buttons.insert(btn) if raw_button[4] else buttons.add(btn)
         else:
-            buttons[-1].append(btn) if raw_button[4] else buttons.append([btn])
+            if len(buttons) < 1 and raw_button[4]:
+                buttons.add(btn) if aio else buttons.append([btn])
+            else:
+                buttons[-1].append(btn) if raw_button[4] else buttons.append([btn])
 
     if not aio and len(buttons) == 0:
         buttons = None
 
-    if not text or text == ' ':
+    if not text or text == ' ':  # TODO: Sometimes we can return text == ' '
         text = None
 
     return text, buttons
 
 
 async def vars_parser(text, message, chat_id, md=False, event=None):
-
     if not event:
         event = message
 
