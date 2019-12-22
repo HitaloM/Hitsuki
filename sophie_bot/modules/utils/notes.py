@@ -147,14 +147,32 @@ def get_reply_msg_btns_text(message):
         btn_num = 0
         for btn in column:
             btn_num += 1
+
+            if 'url' in btn:
+                text += f"\n[{btn['text']}](btnurl:{btn['url']}*!repl!*)"
+            elif 'callback_data' in btn:
+                raw_button = btn['callback_data'].split('_')
+                name = btn['text']
+                raw_btn_type = raw_button[0]
+
+                pattern = re.match(r'btn(.+)(sm|cb|start)', raw_btn_type)
+
+                action = pattern.group(1)
+                args = raw_button[1]
+
+                if action in BUTTONS:
+                    text += f"\n[{name}](btn{action}:{args}*!repl!*)"
+                else:
+                    if args:
+                        text += f'\n[{name}].(btn{action}:{args})'
+                    else:
+                        text += f'\n[{name}].(btn{action})'
+                    continue
+
             if btn_num > 1:
-                text += "\n[{}](buttonurl:{}:same)".format(
-                    btn['text'], btn['url']
-                )
+                text = text.replace('*!repl!*', ':same')
             else:
-                text += "\n[{}](buttonurl:{})".format(
-                    btn['text'], btn['url']
-                )
+                text = text.replace('*!repl!*', '')
     return text
 
 
@@ -262,7 +280,7 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     buttons = InlineKeyboardMarkup(row_width=row_width) if aio else []
     pattern = r'\[(.+?)\]\((button|btn)(.+?)(:.+?|)(:same|)\)(\n|)'
     raw_buttons = re.findall(pattern, texts)
-    text = re.sub(pattern, '', texts)[1:]
+    text = re.sub(pattern, '', texts)
     for raw_button in raw_buttons:
         name = raw_button[0]
         action = raw_button[2]

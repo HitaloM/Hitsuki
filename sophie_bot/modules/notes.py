@@ -19,11 +19,6 @@ from pymongo import ReplaceOne
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 
-from sophie_bot import bot
-from sophie_bot.decorator import register
-from sophie_bot.services.mongo import db, mongodb
-from sophie_bot.services.redis import redis
-from sophie_bot.services.telethon import tbot
 from .utils.connections import chat_connection
 from .utils.disable import disablable_dec
 from .utils.language import get_strings_dec
@@ -31,7 +26,13 @@ from .utils.notes import BUTTONS, ALLOWED_COLUMNS, get_parsed_note_list, t_unpar
 from .utils.message import get_arg, need_args_dec
 from .utils.user_details import get_user_link
 
-RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`']
+from sophie_bot import bot
+from sophie_bot.decorator import register
+from sophie_bot.services.mongo import db, mongodb
+from sophie_bot.services.redis import redis
+from sophie_bot.services.telethon import tbot
+
+RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`', '#', '"']
 
 
 class InvalidFileType(Exception):
@@ -58,6 +59,10 @@ async def save_note(message, chat, strings):
     if note_name[0] == '#':
         note_name = note_name[1:]
 
+    if any((sym := s) in note_name for s in RESTRICTED_SYMBOLS_IN_NOTENAMES):
+        await message.reply(strings['notename_cant_contain'].format(symbol=sym))
+        return
+
     note = get_parsed_note_list(message)
 
     note['name'] = note_name
@@ -79,8 +84,6 @@ async def save_note(message, chat, strings):
         note['created_user'] = message.from_user.id
 
     await db.notes_v2.replace_one({'_id': old_note['_id']} if old_note else note, note, upsert=True)
-
-    # await db.notes_v2.create_index({'name': note_name, 'text': note['name'] or None})
 
     text += strings['you_can_get_note']
     text = text.format(note_name=note_name, chat_title=chat['chat_title'])
