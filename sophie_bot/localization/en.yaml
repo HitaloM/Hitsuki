@@ -438,6 +438,8 @@ STRINGS:
         math_wc_wrong: Wrong, please try again!
         math_wc_sry: Sorry you used the last attempt. Ask chat administrators.
 
+        not_admin_wm: I can't restrict peoples here, so I won't use welcome mute!
+        not_admin_ws: I can't restrict peoples here, so I won't use welcome security!
 RANDOM_STRINGS:
     RUNS:
         - "Noooooooo!.."

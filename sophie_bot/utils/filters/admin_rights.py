@@ -15,33 +15,9 @@ from dataclasses import dataclass
 
 from aiogram.dispatcher.filters import Filter
 
-from sophie_bot import BOT_ID, dp, bot
+from sophie_bot import BOT_ID, dp
 from sophie_bot.modules.utils.language import get_strings
-from sophie_bot.services.redis import redis, rw
-
-
-async def get_admin_rights(chat_id):
-    key = '1admin_cache:' + str(chat_id)
-    if alist := rw[key]:
-        pass
-    else:
-        alist = {}
-        admins = await bot.get_chat_administrators(chat_id)
-        for admin in admins:
-            alist[admin['user']['id']] = {
-                'status': admin['status'],
-                'admin': True,
-                'can_change_info': admin['can_change_info'],
-                'can_delete_messages': admin['can_delete_messages'],
-                'can_invite_users': admin['can_invite_users'],
-                'can_restrict_members': admin['can_restrict_members'],
-                'can_pin_messages': admin['can_pin_messages'],
-                'can_promote_members': admin['can_promote_members']
-            }
-
-        rw[key] = alist
-        redis.expire(key, 900)
-    return alist
+from sophie_bot.modules.utils.user_details import check_admin_rights
 
 
 @dataclass
@@ -88,19 +64,9 @@ class UserRestricting(Filter):
             return True
 
         user_id = await self.get_target_id(message)
-        admin_rights = await get_admin_rights(message.chat.id)
-        if user_id not in admin_rights:
-            await self.no_rights_msg(message, 'not_admin')
-            return False
 
-        if admin_rights[user_id]['status'] == 'creator':
-            return True
-
-        for permission, value in self.required_permissions.items():
-            print(admin_rights[user_id])
-            if not admin_rights[user_id][permission]:
-                await self.no_rights_msg(message, permission)
-                return False
+        if not (p := await check_admin_rights(message.chat.id, user_id, self.required_permissions.keys())) is True:
+            await self.no_rights_msg(message, p)
 
         return True
 

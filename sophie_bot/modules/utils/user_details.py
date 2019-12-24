@@ -10,13 +10,11 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-import ujson
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import ChannelParticipantsAdmins
 
-from sophie_bot import OPERATORS
+from sophie_bot import OPERATORS, bot
 from sophie_bot.services.mongo import db
-from sophie_bot.services.redis import redis
+from sophie_bot.services.redis import redis, rw
 from sophie_bot.services.telethon import tbot
 
 
@@ -114,30 +112,65 @@ async def get_user_link(user_id, custom_name=None, md=False):
         return "<a href=\"tg://user?id={id}\">{name}</a>".format(name=user_name, id=user_id)
 
 
-async def update_admin_cache(chat_id):
-    admin_list = await tbot.get_participants(
-        int(chat_id), filter=ChannelParticipantsAdmins())
-    admins = []
-    for admin in admin_list:
-        admins.append(admin.id)
-    dump = ujson.dumps(admins)
-    redis.set('admins_cache_{}'.format(chat_id), dump)
-    redis.expire('admins_cache_{}'.format(chat_id), 3600)
+async def get_admins_rights(chat_id, force_update=True):
+    key = 'admin_cache:' + str(chat_id)
+    if alist := rw[key] and not force_update:
+        pass
+    else:
+        alist = {}
+        admins = await bot.get_chat_administrators(chat_id)
+        for admin in admins:
+            alist[admin['user']['id']] = {
+                'status': admin['status'],
+                'admin': True,
+                'can_change_info': admin['can_change_info'],
+                'can_delete_messages': admin['can_delete_messages'],
+                'can_invite_users': admin['can_invite_users'],
+                'can_restrict_members': admin['can_restrict_members'],
+                'can_pin_messages': admin['can_pin_messages'],
+                'can_promote_members': admin['can_promote_members']
+            }
+
+        rw[key] = alist
+        redis.expire(key, 900)
+    return alist
 
 
 async def is_user_admin(chat_id, user_id):
     # User's pm should have admin rights
-    if user_id in OPERATORS:
-        return True
-
     if chat_id == user_id:
         return True
 
-    admins = await get_chat_admins(chat_id)
+    if user_id in OPERATORS:
+        return True
+
+    admins = await get_admins_rights(chat_id)
     if user_id in admins:
         return True
     else:
         return False
+
+
+async def check_admin_rights(chat_id, user_id, rights):
+    # User's pm should have admin rights
+    if chat_id == user_id:
+        return True
+
+    if user_id in OPERATORS:
+        return True
+
+    admin_rights = await get_admins_rights(chat_id)
+    if user_id not in admin_rights:
+        return False
+
+    if admin_rights[user_id]['status'] == 'creator':
+        return True
+
+    for permission in rights:
+        if not admin_rights[user_id][permission]:
+            return permission
+
+    return True
 
 
 async def check_group_admin(event, user_id, no_msg=False):
@@ -151,16 +184,6 @@ async def check_group_admin(event, user_id, no_msg=False):
         if no_msg is False:
             await event.reply("You should be a admin to do it!")
         return False
-
-
-async def get_chat_admins(chat_id):
-    dump = redis.get('admins_cache_{}'.format(chat_id))
-    if not dump:
-        await update_admin_cache(chat_id)
-        dump = redis.get('admins_cache_{}'.format(chat_id))
-
-    admins = ujson.decode(dump)
-    return admins
 
 
 async def get_user_and_text(message, send_text=True, allow_self=False):

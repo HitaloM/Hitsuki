@@ -12,7 +12,6 @@
 
 import datetime
 import html
-import ujson
 import asyncio
 
 from aiocron import crontab
@@ -21,13 +20,12 @@ from aiogram.utils.exceptions import Unauthorized
 from .utils.connections import chat_connection
 from .utils.disable import disablable_dec
 from .utils.language import get_strings_dec
-from .utils.user_details import get_user_dec, get_user_link, is_user_admin, update_admin_cache
+from .utils.user_details import get_user_dec, get_user_link, is_user_admin, get_admins_rights
 
 from sophie_bot import bot
 from sophie_bot.decorator import register
 from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db
-from sophie_bot.services.redis import redis
 from sophie_bot.utils.logger import log
 from sophie_bot.utils.channel_logs import channel_log
 
@@ -178,9 +176,7 @@ async def user_info(message, user, strings):
 @get_strings_dec("users")
 async def adminlist(message, chat, strings):
     msg = await message.reply(strings['upd_cache'])
-    await update_admin_cache(chat['chat_id'])
-    dump = redis.get('admins_cache_{}'.format(chat['chat_id']))
-    admins = ujson.decode(dump)
+    admins = await get_admins_rights(chat['chat_id'], force_update=True)
     text = strings['admins']
     for admin in admins:
         if user := await db.user_list.find_one({'user_id': admin}):

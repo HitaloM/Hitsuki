@@ -29,7 +29,7 @@ from .utils.language import get_strings_dec
 from .utils.connections import chat_connection
 from .utils.notes import get_parsed_note_list, t_unparse_note_item
 from .utils.message import need_args_dec, convert_time
-from .utils.user_details import is_user_admin, get_user_link
+from .utils.user_details import is_user_admin, get_user_link, check_admin_rights
 from .utils.restrictions import mute_user, restrict_user, unmute_user, kick_user
 
 from sophie_bot import BOT_USERNAME, BOT_ID, bot
@@ -45,53 +45,6 @@ from sophie_bot.config import get_str_key
 class WelcomeSecurityState(StatesGroup):
     captcha = State()
     math = State()
-
-
-@register(cmds=['setwelcome', 'savewelcome'], user_admin=True)
-@need_args_dec()
-@chat_connection(admin=True, only_groups=True)
-@get_strings_dec('greetings')
-async def set_welcome(message, chat, strings):
-    chat_id = chat['chat_id']
-
-    note = get_parsed_note_list(message, split_args=0)
-
-    if (await db.greetings.update_one({'chat_id': chat_id}, {'$set': {'chat_id': chat_id, 'note': note}}, upsert=True)).modified_count > 0:
-        text = strings['updated']
-    else:
-        text = strings['saved']
-
-    await message.reply(text % chat['chat_title'])
-
-
-@register(cmds='turnwelcome', user_admin=True)
-@chat_connection(admin=True, only_groups=True)
-@get_strings_dec('greetings')
-async def turn_welcome(message, chat, strings):
-    chat_id = chat['chat_id']
-
-    if len(args := message.get_args().lower().split()) < 1:
-        db_item = await db.greetings.find_one({'chat_id': chat_id})
-
-        if db_item and 'note' in db_item and db_item['note']['disabled'] is True:
-            status = strings['disabled']
-        else:
-            status = strings['enabled']
-
-        await message.reply(strings['turnwelcome_status'].format(status=status, chat_name=chat['chat_title']))
-        return
-
-    yes = ['yes', 'on', '1', 'true']
-    no = ['no', 'off', '0', 'false']
-
-    if args[0] in yes:
-        await db.greetings.update_one({'chat_id': chat_id}, {'$unset': {'welcome_disabled': 1}}, upsert=True)
-        await message.reply(strings['turnwelcome_enabled'] % chat['chat_title'])
-    elif args[0] in no:
-        await db.greetings.update_one({'chat_id': chat_id}, {'$set': {'chat_id': chat_id, 'welcome_disabled': True}}, upsert=True)
-        await message.reply(strings['turnwelcome_disabled'] % chat['chat_title'])
-    else:
-        await message.reply(strings['bool_invalid_arg'])
 
 
 @register(cmds='welcome')
@@ -148,6 +101,40 @@ async def welcome(message, chat, strings):
         await tbot.send_message(send_id, text, **kwargs)
 
 
+@register(cmds=['setwelcome', 'savewelcome'], user_admin=True)
+@chat_connection(admin=True, only_groups=True)
+@get_strings_dec('greetings')
+async def set_welcome(message, chat, strings):
+    chat_id = chat['chat_id']
+
+    if len(args := message.get_args().lower().split()) < 1:
+        db_item = await db.greetings.find_one({'chat_id': chat_id})
+
+        if db_item and 'note' in db_item and db_item['note']['disabled'] is True:
+            status = strings['disabled']
+        else:
+            status = strings['enabled']
+
+        await message.reply(strings['turnwelcome_status'].format(status=status, chat_name=chat['chat_title']))
+        return
+
+    no = ['no', 'off', '0', 'false', 'disable']
+
+    if args[0] in no:
+        await db.greetings.update_one({'chat_id': chat_id}, {'$set': {'chat_id': chat_id, 'welcome_disabled': True}}, upsert=True)
+        await message.reply(strings['turnwelcome_disabled'] % chat['chat_title'])
+        return
+    else:
+        note = get_parsed_note_list(message, split_args=0)
+
+        if (await db.greetings.update_one({'chat_id': chat_id}, {'$set': {'chat_id': chat_id, 'note': note}}, upsert=True)).modified_count > 0:
+            text = strings['updated']
+        else:
+            text = strings['saved']
+
+        await message.reply(text % chat['chat_title'])
+
+
 @register(cmds='resetwelcome', user_admin=True)
 @chat_connection(admin=True, only_groups=True)
 @get_strings_dec('greetings')
@@ -178,8 +165,8 @@ async def clean_welcome(message, chat, strings):
         await message.reply(strings['cleanwelcome_status'].format(status=status, chat_name=chat['chat_title']))
         return
 
-    yes = ['yes', 'on', '1', 'true']
-    no = ['no', 'off', '0', 'false']
+    yes = ['yes', 'on', '1', 'true', 'enable']
+    no = ['no', 'off', '0', 'false', 'disable']
 
     if args[0] in yes:
         await db.greetings.update_one(
@@ -212,8 +199,8 @@ async def clean_service(message, chat, strings):
         await message.reply(strings['cleanservice_status'].format(status=status, chat_name=chat['chat_title']))
         return
 
-    yes = ['yes', 'on', '1', 'true']
-    no = ['no', 'off', '0', 'false']
+    yes = ['yes', 'on', '1', 'true', 'enable']
+    no = ['no', 'off', '0', 'false', 'disable']
 
     if args[0] in yes:
         await db.greetings.update_one(
@@ -246,7 +233,7 @@ async def welcome_mute(message, chat, strings):
         await message.reply(strings['welcomemute_status'].format(status=status, chat_name=chat['chat_title']))
         return
 
-    no = ['no', 'off', '0', 'false']
+    no = ['no', 'off', '0', 'false', 'disable']
 
     if args[0].endswith(('m', 'h', 'd')):
         await db.greetings.update_one(
@@ -282,7 +269,7 @@ async def welcome_security(message, chat, strings):
         await message.reply(strings['welcomesecurity_status'].format(status=status, chat_name=chat['chat_title']))
         return
 
-    no = ['no', 'off', '0', 'false']
+    no = ['no', 'off', '0', 'false', 'disable']
 
     if args[0].lower() in ['math', 'captcha']:
         level = args[0].lower()
@@ -346,10 +333,15 @@ async def reset_security_note(message, chat, strings):
     await message.reply(text % chat['chat_title'])
 
 
-@register(only_groups=True, f='welcome', bot_can_restrict_members=True)
+@register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
 async def welcome_security_handler(message, strings):
     chat_id = message.chat.id
+
+    if not check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+        await message.reply(strings['not_admin_ws'])
+        return
+
     user_id = message.from_user.id
     db_item = await db.greetings.find_one({'chat_id': chat_id})
 
@@ -639,7 +631,7 @@ async def welcome_security_passed(message, state, strings):
 # End Welcome Security
 
 # Welcomes
-@register(only_groups=True, f='welcome', bot_can_restrict_members=True)
+@register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
 async def welcome_trigger(message, strings):
     chat_id = message.chat.id
@@ -669,6 +661,10 @@ async def welcome_trigger(message, strings):
     if 'welcome_mute' in db_item and db_item['welcome_mute']['enabled'] is not False:
         user = await bot.get_chat_member(chat_id, user_id)
         if 'can_send_messages' not in user or user['can_send_messages'] is True:
+            if not check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+                await message.reply(strings['not_admin_wm'])
+                return
+
             await restrict_user(chat_id, user_id, until_date=convert_time(db_item['welcome_mute']['time']))
 
 
@@ -676,7 +672,6 @@ async def welcome_trigger(message, strings):
 @register(only_groups=True, f='service', bot_can_delete_messages=True)
 @get_strings_dec('greetings')
 async def cleanservice_trigger(message, strings):
-    print('dsf')
     chat_id = message.chat.id
     if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
         return

@@ -25,7 +25,10 @@ async def mute_user(chat_id, user_id, until_date=None):
     await bot.restrict_chat_member(
         chat_id,
         user_id,
-        permissions=ChatPermissions(can_send_messages=False, until_date=until_date),
+        permissions=ChatPermissions(
+            can_send_messages=False,
+            until_date=until_date
+        ),
         until_date=until_date
     )
     return True
