@@ -20,7 +20,6 @@ from sentry_sdk import configure_scope
 from sophie_bot import BOT_USERNAME, dp
 from sophie_bot.config import get_bool_key
 from sophie_bot.utils.filters import ALL_FILTERS
-from sophie_bot.utils.flood import prevent_flooding
 from sophie_bot.utils.logger import log
 
 DEBUG_MODE = get_bool_key('DEBUG_MODE')
@@ -91,9 +90,6 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
     def decorator(func):
         async def new_func(*def_args, **def_kwargs):
             message = def_args[0]
-
-            if RATE_LIMIT and await prevent_flooding(message, message.text) is False:
-                return
 
             if allow_kwargs is False:
                 def_kwargs = dict()
