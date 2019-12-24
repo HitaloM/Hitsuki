@@ -25,7 +25,7 @@ from sophie_bot.utils.logger import log
 
 # import uvloop
 
-if get_bool_key("DEBUG_MODE") is True:
+if get_bool_key("DEBUG_MODE"):
     log.debug("Enabling logging middleware.")
     dp.middleware.setup(LoggingMiddleware())
 
@@ -62,8 +62,9 @@ async def startup():
     log.debug("Starting before serving task for all modules...")
     loop.create_task(before_srv_task(loop))
 
-    log.debug("Waiting 2 seconds...")
-    await asyncio.sleep(2)
+    if not get_bool_key("DEBUG_MODE"):
+        log.debug("Waiting 2 seconds...")
+        await asyncio.sleep(2)
 
     log.info("Aiogram: Using polling method")
     loop.create_task(dp.start_polling())
