@@ -12,6 +12,7 @@
 
 import asyncio
 from importlib import import_module
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
 
 import hypercorn
 
@@ -23,6 +24,10 @@ from sophie_bot.utils.db_backup import backup_db
 from sophie_bot.utils.logger import log
 
 # import uvloop
+
+if get_bool_key("DEBUG_MODE") is True:
+    log.debug("Enabling logging middleware.")
+    dp.middleware.setup(LoggingMiddleware())
 
 
 if get_bool_key('LOAD_MODULES'):

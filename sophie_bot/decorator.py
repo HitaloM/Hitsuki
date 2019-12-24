@@ -103,7 +103,7 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
                 scope.set_extra("update", str(message))
 
             if DEBUG_MODE:
-                log.debug('[*] Starting {}.'.format(func.__name__))
+                # log.debug('[*] Starting {}.'.format(func.__name__))
                 # log.debug('Event: \n' + str(message))
                 start = time.time()
                 await func(*def_args, **def_kwargs)
