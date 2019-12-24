@@ -410,7 +410,7 @@ async def join_expired(chat_id, user_id, message_id, wlkm_msg_id):
 
 
 @register(CommandStart(re.compile(r'welcome_security')), allow_kwargs=True)
-@get_strings_dec('greetings')
+@get_strings_dec('greetings') 
 async def welcome_security_handler_pm(message, strings, regexp=None, state=None, **kwargs):
     args = message.get_args().split('_')
     chat_id = int(args[2])

@@ -10,6 +10,8 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
+import html
+
 from sophie_bot import bot
 from sophie_bot.config import get_int_key
 from sophie_bot.utils.logger import log
@@ -20,4 +22,4 @@ async def channel_log(msg, info_log=True):
     if info_log:
         log.info(msg)
 
-    await bot.send_message(chat_id, msg)
+    await bot.send_message(chat_id, html.escape(msg))
