@@ -10,17 +10,22 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
+import re
+
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 from aiogram.utils.exceptions import BotBlocked
+from aiogram.dispatcher.filters.builtin import CommandStart
 
 from sophie_bot import bot
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
+
 from .utils.connections import chat_connection, set_connected_chat
 from .utils.language import get_strings_dec
 from .utils.message import get_arg
+from .utils.notes import BUTTONS
 
 connect_to_chat_cb = CallbackData('connect_to_chat_cb', 'chat_id')
 
@@ -172,3 +177,25 @@ async def connected_start_state(message, strings, chat):
     if redis.get(key):
         await message.reply(strings['pm_connected'].format(chat_name=chat['chat_title']))
         redis.delete(key)
+
+
+BUTTONS.update({'connect': 'btn_connect_start'})
+
+
+@register(CommandStart(re.compile(r'btn_connect_start')), allow_kwargs=True)
+@get_strings_dec('connections')
+async def connect_start(message, strings, regexp=None, **kwargs):
+    args = message.get_args().split('_')
+
+    # In case if button have arg it will be used. # TODO: Check chat_id, parse chat nickname.
+    arg = args[3]
+
+    if arg.startswith('-') or arg.isdigit():
+        chat = await db.chat_list.find_one({'chat_id': int(arg)})
+    elif arg.startswith('@'):
+        chat = await db.chat_list.find_one({'chat_nick': arg.lower()})
+    else:
+        await message.reply(strings['cant_find_chat_use_id'])
+        return
+
+    await def_connect_chat(message, message.from_user.id, chat['chat_id'], chat['chat_title'])
