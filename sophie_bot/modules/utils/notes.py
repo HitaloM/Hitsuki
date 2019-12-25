@@ -141,33 +141,45 @@ def get_msg_parse(text, default_md=True):
         return 'md'
 
 
+def parse_button(data, name):
+    raw_button = data.split('_')
+    raw_btn_type = raw_button[0]
+
+    pattern = re.match(r'btn(.+)(sm|cb|start)', raw_btn_type)
+    if not pattern:
+        return ''
+
+    action = pattern.group(1)
+    args = raw_button[1]
+
+    if action in BUTTONS:
+        text = f"\n[{name}](btn{action}:{args}*!repl!*)"
+    else:
+        if args:
+            text = f'\n[{name}].(btn{action}:{args})'
+        else:
+            text = f'\n[{name}].(btn{action})'
+
+    return text
+
+
 def get_reply_msg_btns_text(message):
     text = ''
     for column in message.reply_markup.inline_keyboard:
         btn_num = 0
         for btn in column:
             btn_num += 1
+            name = btn['text']
 
             if 'url' in btn:
-                text += f"\n[{btn['text']}](btnurl:{btn['url']}*!repl!*)"
-            elif 'callback_data' in btn:
-                raw_button = btn['callback_data'].split('_')
-                name = btn['text']
-                raw_btn_type = raw_button[0]
-
-                pattern = re.match(r'btn(.+)(sm|cb|start)', raw_btn_type)
-
-                action = pattern.group(1)
-                args = raw_button[1]
-
-                if action in BUTTONS:
-                    text += f"\n[{name}](btn{action}:{args}*!repl!*)"
+                url = btn['url']
+                if '?start=' in url:
+                    raw_btn = url.split('?start=')[1]
+                    text += parse_button(raw_btn, name)
                 else:
-                    if args:
-                        text += f'\n[{name}].(btn{action}:{args})'
-                    else:
-                        text += f'\n[{name}].(btn{action})'
-                    continue
+                    text += f"\n[{btn['text']}](btnurl:{btn['url']}*!repl!*)"
+            elif 'callback_data' in btn:
+                text += parse_button(btn['callback_data'], name)
 
             if btn_num > 1:
                 text = text.replace('*!repl!*', ':same')
