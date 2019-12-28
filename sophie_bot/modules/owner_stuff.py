@@ -10,6 +10,7 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
+import ujson
 import datetime
 import html
 import os
@@ -153,6 +154,13 @@ async def upload_logs(message):
 async def crash(message):
     test = 2 / 0
     print(test)
+
+
+@register(cmds="event", is_op=True)
+async def get_event(message):
+    print(message)
+    event = str(ujson.dumps(message, indent=2))
+    await message.reply(event)
 
 
 @register(cmds="stats", is_op=True)

@@ -43,12 +43,6 @@ class InvalidParseMode(Exception):
     pass
 
 
-@register(cmds='owo', is_owner=True)
-async def test_cmds(message):
-    print(message)
-    # print(get_msg_file(message.reply_to_message))
-
-
 @register(cmds='save', user_admin=True)
 @need_args_dec()
 @chat_connection(admin=True)
