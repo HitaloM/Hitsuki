@@ -338,7 +338,7 @@ async def reset_security_note(message, chat, strings):
 async def welcome_security_handler(message, strings):
     chat_id = message.chat.id
 
-    if not check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+    if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
         await message.reply(strings['not_admin_ws'])
         return
 
