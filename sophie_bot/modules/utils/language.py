@@ -73,6 +73,11 @@ async def get_strings(chat_id, module, mas_name="STRINGS"):
     return data
 
 
+async def get_string(chat_id, module, name, mas_name="STRINGS"):
+    strings = await get_strings(chat_id, module, mas_name=mas_name)
+    return strings[name]
+
+
 def get_strings_dec(module, mas_name="STRINGS"):
     def wrapped(func):
         async def wrapped_1(*args, **kwargs):

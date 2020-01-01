@@ -186,6 +186,17 @@ async def check_group_admin(event, user_id, no_msg=False):
         return False
 
 
+async def is_chat_creator(chat_id, user_id):
+    admin_rights = await get_admins_rights(chat_id)
+    if user_id not in admin_rights:
+        return False
+
+    if admin_rights[user_id]['status'] == 'creator':
+        return True
+
+    return False
+
+
 async def get_user_and_text(message, send_text=True, allow_self=False):
     args = message.text.split(None, 2)
     user = None

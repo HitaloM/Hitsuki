@@ -161,48 +161,78 @@ STRINGS:
         pin_messages: "I don't have rights to pin messages, please make me admin with that right."
         add_admins: "I don't have rights to add admin, please make me admin with that right."
     feds:
-        no_args: "Please give me Federation name to create Federation!"
+        # decorators
+        need_fed_admin: "You are not a admin in <b>{name}</b> Federation"
+        need_fed_owner: "You are not a owner of <b>{name}</b> Federation"
+
+        # /newfed
         fed_name_long: "Federation name can't be longer than 60 symbols!"
         can_only_1_fed: "1 user can create only 1 Federation, please remove one."
-        only_creators: "Only group creators can join/leave Federation!"
-        created_fed: "Congrats! You have successfully created Federation \n\n Name: {name} \n ID: <code>{id}</code> \n Creator: {creator} \n"
-        fed_id_invalid: "The given Federation ID is invalid! Please give me a Valid ID. "
+        name_not_avaible: "Federation with name <code>{name}</code> already exits! Please use another name."
+        created_fed: |
+            Congrats, you have successfully created Federation.
+            <b>Name:</b> {name}
+            <b>ID:</b> <code>{id}</code>
+            <b>Creator:</b> {creator}
+            Use <code>/joinfed {id}</code> to connect to chat
+
+        # /joinfed
+        only_creators: "You should be a chat creator to be able to connect chat to federation."
+        fed_id_invalid: "The given Federation ID is invalid! Please give me a Valid ID."
         joined_fed_already: "This chat has already joined a Federation! Please use /leavefed to leave that federation"
-        join_fed_success: "Great! This chat is now a part of <b>{name}</b> Federation!"
+        join_fed_success: "Great! Chat <b>{chat}</b> is now a part of <b>{fed}</b> Federation!"
+
+        # /leavefed
         chat_not_in_fed: "This chat is not in any federation yet."
-        leave_fed_success: "Chat left the federation."
-        only_creator_promote: "Only Federation creator can fpromote users."
-        admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
+        leave_fed_success: "Chat <b>{chat}</b> left the <b>{fed}</b> federation."
+
+        # /fpromote
+        #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
         admin_added_to_fed: "User {user} added to <b>{name}</b> Federation admins."
-        admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
+
+        # /fdemote
+        #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
         admin_demoted_from_fed: "User {user} demoted from <b>{name}</b> Federation admins."
+
+        # /fchatlist
         chats_in_fed: "<b>Chats connected to {name} Federation:</b>\n"
-        fed_info: "<b>Federation info</b>\n"
-        fed_name: "Name: {name}\n"
-        fed_id: "ID: <code>{id}</code>\n"
-        fed_creator: "Creator: {user}\n"
-        chats_in_fed_info: "Chats in the fed: {num}\n"
-        banned_in_fed_info: "Banned users in the fed: {num}\n"
-        no_fbanned_in_fed: "There isn't any banned user in {fed_name} Federation!"
+        too_large: "Output too large, sending as file"
+
+        # /finfo
+        finfo_text: |
+            <b>Federation info</b>
+            <b>Name:</b> {name}
+            <b>ID:</b> <code>{fed_id}</code>
+            <b>Creator:</b> {creator}
+            <b>Chats in the fed:</b> {chats}
+            <b>Banned users in the fed:</b> {fbanned}
+    
+        # no_fbanned_in_fed: "There isn't any banned user in {fed_name} Federation!"
+
+        # /fban
+        user_wl: "This user is whitelisted from banning."
         fban_self: "That's a nice show!"
         fban_creator: "How can I ban Federation creator?! I don't think it's gonna be funny."
         fban_fed_admin: "I'm not going to ban a fed admin from their own fed!"
-        need_admin_to_fban: "You are not a admin in {name} Federation"
         already_fbanned: "{user} already banned in this federation."
-        fbanned_header: "<b>Federation ban</b>"
-        un_fbanned_header: "<b>Federation unban</b>"
+        fbanned_header: "<b>New FedBan</b>"
         fbanned_fed: "\nFederation: {fed}"
         fbanned_fadmin: "\nFed admin: {fadmin}"
-        fbanned_user: "\nUser: {user}"
+        fbanned_user: "\nUser: {user} (<code>{user_id}</code>)"
         fbanned_reason: "\nReason: <code>{reason}</code>"
         fbanned_process: "\nStatus: Banning in <code>{num}</code> chats..."
-        un_fbanned_process: "\nStatus: Unbanning in <code>{num}</code> chats..."
         fbanned_done: "\nStatus: <b>Done!</b> banned in <code>{num}</code> Federation chats!"
-        un_fbanned_done: "\nStatus: <b>Done!</b> Unbanned in <code>{num}</code> chats!"
-        user_wl: "This user is whitelisted from banning."
-        fban_usr_rmvd: "User {user} is banned in current federation <b>{fed}</b>.So has been removed! \nReason: <code>{rsn}</code>"
+        fban_usr_rmvd: |
+            User {user} is banned in current federation <b>{fed}</b>.So has been removed!
+            Reason: <code>{rsn}</code>
+        
+        # /unfban
         unfban_self: "Think of something else to have fun instead of this."
         user_not_fbanned: "{user} wasn't banned in this federation."
+        un_fbanned_header: "<b>Federation unban</b>"
+        un_fbanned_process: "\nStatus: Unbanning in <code>{num}</code> chats..."
+        un_fbanned_done: "\nStatus: <b>Done!</b> Unbanned in <code>{num}</code> chats!"
+
         unfban_started: "Unban of {user} in <b>{fed_name}</b> Federation by {admin} started.."
         unfban_completed: "{user} unbanned in {fed_name} Federation by {admin}"
         no_fed_2: "This chat is not in any federation to subscribe to any federation."
