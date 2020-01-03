@@ -18,7 +18,7 @@ import os
 import requests
 
 from sophie_bot import OWNER_ID, OPERATORS, SOPHIE_VERSION
-from sophie_bot.decorator import REGISTRED_COMMANDS, register
+from sophie_bot.decorator import REGISTRED_COMMANDS, COMMANDS_ALIASES, register
 from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db, mongodb
 from sophie_bot.services.quart import quart
@@ -37,6 +37,13 @@ async def all_commands_list(message):
     text = ""
     for cmd in REGISTRED_COMMANDS:
         text += "* /" + cmd + "\n"
+    await message.reply(text)
+
+
+@register(cmds='allcmdsaliases', is_op=True)
+async def all_cmds_aliases_list(message):
+    text = ""
+    text = str(COMMANDS_ALIASES)
     await message.reply(text)
 
 
