@@ -29,6 +29,7 @@ BLOCK_GBANNED_USERS = get_bool_key("block_gbanned_users")
 RATE_LIMIT = get_bool_key("rate_limit")
 
 REGISTRED_COMMANDS = []
+COMMANDS_ALIASES = {}
 
 
 # Import filters
@@ -47,27 +48,31 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
 
     if cmds and not f:
         if ALLOW_COMMANDS_FROM_EXC:
-            regex = r'\A[/!]'
+            regex = r'\A^[!/]('
         else:
-            regex = r'\A/'
+            regex = r'\A^/('
 
-        if 'not_gbanned' not in kwargs and BLOCK_GBANNED_USERS:
-            kwargs['not_gbanned'] = True
         if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
             kwargs['not_forwarded'] = True
 
         for idx, cmd in enumerate(cmds):
+            if cmd in REGISTRED_COMMANDS:
+                log.warn(f'Duplication of /{cmd} command')
             REGISTRED_COMMANDS.append(cmd)
-            regex += r"(?i:{0}|{0}@{1})".format(cmd, BOT_USERNAME)
-
-            if 'disable_args' in kwargs:
-                del kwargs['disable_args']
-                regex += "$"
-            else:
-                regex += "(?: |$)"
+            regex += cmd
 
             if not idx == len(cmds) - 1:
+                if not cmds[0] in COMMANDS_ALIASES:
+                    COMMANDS_ALIASES[cmds[0]] = [cmds[idx + 1]]
+                else:
+                    COMMANDS_ALIASES[cmds[0]].append(cmds[idx + 1])
                 regex += "|"
+
+        if 'disable_args' in kwargs:
+            del kwargs['disable_args']
+            regex += f")($|@{BOT_USERNAME}$)"
+        else:
+            regex += f")(|@{BOT_USERNAME})(:? |$)"
 
         register_kwargs['regexp'] = regex
 
