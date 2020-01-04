@@ -15,7 +15,7 @@ import html
 import asyncio
 
 from aiocron import crontab
-from aiogram.utils.exceptions import Unauthorized
+from aiogram.utils.exceptions import Unauthorized, ChatNotFound
 
 from .utils.connections import chat_connection
 from .utils.disable import disablable_dec
@@ -209,7 +209,7 @@ async def cleanup_chats_and_users():
         user_id = item['user_id']
         try:
             await bot.get_chat(user_id)
-        except Unauthorized:
+        except (Unauthorized, ChatNotFound):
             # Cleanup
             for collection in await db.list_collection_names():
                 async for item in db[collection].find({'$or': [{'user_id': user_id}, {'chat_id': user_id}]}):

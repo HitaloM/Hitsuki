@@ -20,7 +20,7 @@ async def get_connected_chat(message, admin=False, only_groups=False):
     # only_in_groups - disable command when bot's pm not connected to any chat
     real_chat_id = message.chat.id
     user_id = message.from_user.id
-    key = 'connection2_' + str(user_id)
+    key = 'connection9_' + str(user_id)
 
     if not message.chat.type == 'private':
         chat_title = (await db.chat_list.find_one({'chat_id': real_chat_id}))['chat_title']

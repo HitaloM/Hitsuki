@@ -186,6 +186,10 @@ STRINGS:
         chat_not_in_fed: "This chat is not in any federation yet."
         leave_fed_success: "Chat <b>{chat}</b> left the <b>{fed}</b> federation."
 
+        # /jsub
+        already_subsed: "Federation <b>{name}</b> already subscribed to <b>{name2}</b>"
+        subsed_success: "Federation <b>{name}</b> subscribed to <b>{name2}</b>!"
+
         # /fpromote
         #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
         admin_added_to_fed: "User {user} added to <b>{name}</b> Federation admins."
@@ -206,6 +210,11 @@ STRINGS:
             <b>Creator:</b> {creator}
             <b>Chats in the fed:</b> {chats}
             <b>Banned users in the fed:</b> {fbanned}
+
+        finfo_subs_title: "<b>Federation is subscribed to this feds:</b>\n"
+
+        # /fadminlist
+        fadmins_header: "Admins in <b>{fed_name}</b> Fed:\n"
     
         # no_fbanned_in_fed: "There isn't any banned user in {fed_name} Federation!"
 
@@ -215,13 +224,17 @@ STRINGS:
         fban_creator: "How can I ban Federation creator?! I don't think it's gonna be funny."
         fban_fed_admin: "I'm not going to ban a fed admin from their own fed!"
         already_fbanned: "{user} already banned in this federation."
-        fbanned_header: "<b>New FedBan</b>"
-        fbanned_fed: "\nFederation: {fed}"
-        fbanned_fadmin: "\nFed admin: {fadmin}"
-        fbanned_user: "\nUser: {user} (<code>{user_id}</code>)"
-        fbanned_reason: "\nReason: <code>{reason}</code>"
-        fbanned_process: "\nStatus: Banning in <code>{num}</code> chats..."
-        fbanned_done: "\nStatus: <b>Done!</b> banned in <code>{num}</code> Federation chats!"
+        fbanned_header: "<b>New FedBan</b>\n"
+        fban_info: |
+            <b>Federation:</b> {fed}
+            <b>Fed admin:</b> {fadmin}
+            <b>User:</b> {user} (<code>{user_id}</code>)
+        fbanned_reason: "<b>Reason:</b> <code>{reason}</code>"
+        fbanned_process: "\n<b>Status:</b> Banning in <code>{num}</code> fed chats..."
+        fbanned_done: "\n<b>Status:</b> Done! banned in <code>{num}</code> chats!"
+
+        fbanned_subs_process: "\n<b>Status:</b> Banning in <code>{feds}</code> subscribed feds..."
+        fbanned_subs_done: "\n<b>Status:</b> Done! banned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
         fban_usr_rmvd: |
             User {user} is banned in current federation <b>{fed}</b>.So has been removed!
             Reason: <code>{rsn}</code>
@@ -229,18 +242,10 @@ STRINGS:
         # /unfban
         unfban_self: "Think of something else to have fun instead of this."
         user_not_fbanned: "{user} wasn't banned in this federation."
-        un_fbanned_header: "<b>Federation unban</b>"
-        un_fbanned_process: "\nStatus: Unbanning in <code>{num}</code> chats..."
-        un_fbanned_done: "\nStatus: <b>Done!</b> Unbanned in <code>{num}</code> chats!"
+        un_fbanned_header: "<b>New Un-FedBan</b>\n"
+        un_fbanned_process: "\n<b>Status:</b> Unbanning in <code>{num}</code> chats..."
+        un_fbanned_done: "\n<b>Status:</b> Done! Unbanned in <code>{num}</code> chats!"
 
-        unfban_started: "Unban of {user} in <b>{fed_name}</b> Federation by {admin} started.."
-        unfban_completed: "{user} unbanned in {fed_name} Federation by {admin}"
-        no_fed_2: "This chat is not in any federation to subscribe to any federation."
-        no_arg_given: "I cannot subscribe to a Fed without its ID!"
-        only_creator: "Only fed creator can subscribe to any federation."
-        invalid_fedid: "The given Fed ID is invalid!"
-        fbanned_list_header: "Banned in {fed_name} Federation ({fed_id}):"
-        fbanned_list_msg: "Banned in <b>{fed_name}</b> Federation (<code>{fed_id}</code>)"
     reports:
         user_user_admin: "You're an admin here, why'd you need to report someone?.."
         user_is_whitelisted: "You're a whitelisted user, why'd you need to report someone?.."
