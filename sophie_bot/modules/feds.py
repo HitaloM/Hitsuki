@@ -331,13 +331,12 @@ async def fed_info(message, fed, strings):
     await message.reply(text)
 
 
-async def get_all_subs_feds_r(feds, new):
-    for fed_id in feds:
-        new.append(fed_id)
+async def get_all_subs_feds_r(fed_id, new):
+    new.append(fed_id)
 
-        fed = await db.feds.find_one({'fed_id': fed_id})
-        async for item in db.feds.find({'subscribed': {'$in': [fed['fed_id']]}}):
-            new = await get_all_subs_feds_r([item['fed_id']], new)
+    fed = await db.feds.find_one({'fed_id': fed_id})
+    async for item in db.feds.find({'subscribed': {'$in': [fed['fed_id']]}}):
+        new = await get_all_subs_feds_r(item['fed_id'], new)
 
     return new
 
@@ -398,7 +397,8 @@ async def fed_ban_user(message, fed, user, reason, strings):
 
     new = {
         'banned_chats': banned_chats,
-        'time': datetime.datetime.now()
+        'time': datetime.datetime.now(),
+        'by': message.from_user.id
     }
 
     if text:
@@ -409,7 +409,7 @@ async def fed_ban_user(message, fed, user, reason, strings):
         {"$set": {f'banned.{user_id}': new}}
     )
 
-    if len(sfeds_list := await get_all_subs_feds_r([fed['fed_id']], [])) > 1:
+    if len(sfeds_list := await get_all_subs_feds_r(fed['fed_id'], [])) > 1:
         sfeds_list.remove(fed['fed_id'])
         this_fed_banned_count = len(banned_chats)
 
@@ -421,18 +421,23 @@ async def fed_ban_user(message, fed, user, reason, strings):
 
             banned_chats = []
             for chat_id in sfed['chats']:
-                if chat_id in user['chats']:
-                    await asyncio.sleep(0.2)  # Do not slow down other updates
-                    if await ban_user(chat_id, user_id):
-                        banned_chats.append(chat_id)
-                        all_banned_chats_count += 1
+                if chat_id not in user['chats']:
+                    continue
 
-            new = {
-                'banned_chats': banned_chats,
-                'time': datetime.datetime.now()
-            }
+                await asyncio.sleep(0.2)  # Do not slow down other updates
 
-            await db.feds.update_one({'_id': sfed['_id']}, {'$set': {f'banned.{user_id}': new}})
+                if await ban_user(chat_id, user_id):
+                    banned_chats.append(chat_id)
+                    all_banned_chats_count += 1
+
+                    new = {
+                        'banned_chats': banned_chats,
+                        'time': datetime.datetime.now(),
+                        'origin_fed': fed['fed_id'],
+                        'by': message.from_user.id
+                    }
+
+                    await db.feds.update_one({'_id': sfed['_id']}, {'$set': {f'banned.{user_id}': new}})
 
         await msg.edit_text(text + strings['fbanned_subs_done'].format(
             chats=this_fed_banned_count,
@@ -474,7 +479,7 @@ async def unfed_ban_user(message, fed, user, text, strings):
 
     counter = 0
     for chat_id in banned_chats:
-        await asyncio.sleep(0)  # Do not slow down other updates
+        await asyncio.sleep(0.2)  # Do not slow down other updates
         if await unban_user(chat_id, user_id):
             counter += 1
 
@@ -483,5 +488,36 @@ async def unfed_ban_user(message, fed, user, text, strings):
         {"$unset": {f'banned.{user_id}': 1}}
     )
 
-    # unfban done msg
-    await msg.edit_text(text + strings['un_fbanned_done'].format(num=counter))
+    if len(sfeds_list := await get_all_subs_feds_r(fed['fed_id'], [])) > 1:
+        sfeds_list.remove(fed['fed_id'])
+        this_fed_unbanned_count = counter
+
+        await msg.edit_text(text + strings['un_fbanned_subs_process'].format(feds=len(sfeds_list)))
+
+        all_unbanned_chats_count = 0
+        for sfed in sfeds_list:
+            sfed = await db.feds.find_one({'fed_id': sfed})
+
+            banned_chats = []
+            for chat_id in sfed['chats']:
+                if chat_id not in user['chats']:
+                    continue
+
+                await asyncio.sleep(0.2)  # Do not slow down other updates
+
+                if await unban_user(chat_id, user_id):
+                    banned_chats.append(chat_id)
+                    all_unbanned_chats_count += 1
+
+                    await db.feds.update_one(
+                        {'_id': sfed['_id']},
+                        {"$unset": {f'banned.{user_id}': 1}}
+                    )
+
+        await msg.edit_text(text + strings['un_fbanned_subs_done'].format(
+            chats=this_fed_unbanned_count,
+            subs_chats=all_unbanned_chats_count,
+            feds=len(sfeds_list)
+        ))
+    else:
+        await msg.edit_text(text + strings['un_fbanned_done'].format(num=counter))

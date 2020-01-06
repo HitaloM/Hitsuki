@@ -186,7 +186,7 @@ STRINGS:
         chat_not_in_fed: "This chat is not in any federation yet."
         leave_fed_success: "Chat <b>{chat}</b> left the <b>{fed}</b> federation."
 
-        # /jsub
+        # /fsub
         already_subsed: "Federation <b>{name}</b> already subscribed to <b>{name2}</b>"
         subsed_success: "Federation <b>{name}</b> subscribed to <b>{name2}</b>!"
 
@@ -216,7 +216,7 @@ STRINGS:
         # /fadminlist
         fadmins_header: "Admins in <b>{fed_name}</b> Fed:\n"
     
-        # no_fbanned_in_fed: "There isn't any banned user in {fed_name} Federation!"
+        # no_fbanned_in_fed: "There isn't any banned users in {fed_name} Federation!"
 
         # /fban
         user_wl: "This user is whitelisted from banning."
@@ -245,6 +245,8 @@ STRINGS:
         un_fbanned_header: "<b>New Un-FedBan</b>\n"
         un_fbanned_process: "\n<b>Status:</b> Unbanning in <code>{num}</code> chats..."
         un_fbanned_done: "\n<b>Status:</b> Done! Unbanned in <code>{num}</code> chats!"
+        un_fbanned_subs_process: "\n<b>Status:</b> Unbanning in <code>{feds}</code> subscribed feds..."
+        un_fbanned_subs_done: "\n<b>Status:</b> Done! Unbanned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
 
     reports:
         user_user_admin: "You're an admin here, why'd you need to report someone?.."

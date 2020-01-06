@@ -11,8 +11,17 @@
 # you may not use this file except in compliance with the License.
 
 from aiogram.types.chat_permissions import ChatPermissions
+from aiogram.utils.exceptions import BadRequest
 
 from sophie_bot import bot
+
+
+async def ban_user(chat_id, user_id, until_date=None):
+    try:
+        await bot.kick_chat_member(chat_id, user_id, until_date=until_date)
+    except BadRequest:
+        return False
+    return True
 
 
 async def kick_user(chat_id, user_id):
@@ -63,10 +72,8 @@ async def unmute_user(chat_id, user_id):
 
 
 async def unban_user(chat_id, user_id):
-    await bot.unban_chat_member(chat_id, user_id)
-    return True
-
-
-async def ban_user(chat_id, user_id, until_date=None):
-    await bot.kick_chat_member(chat_id, user_id, until_date=until_date)
+    try:
+        await bot.unban_chat_member(chat_id, user_id)
+    except BadRequest:
+        return False
     return True
