@@ -498,13 +498,9 @@ async def unfed_ban_user(message, fed, user, text, strings):
         for sfed in sfeds_list:
             sfed = await db.feds.find_one({'fed_id': sfed})
 
-            banned_chats = []
-            for chat_id in sfed['chats']:
-                if chat_id not in user['chats']:
-                    continue
-
+            banned_chats = fed['banned'][str(user_id)]['banned_chats']
+            for chat_id in banned_chats:
                 await asyncio.sleep(0.2)  # Do not slow down other updates
-
                 if await unban_user(chat_id, user_id):
                     banned_chats.append(chat_id)
                     all_unbanned_chats_count += 1
