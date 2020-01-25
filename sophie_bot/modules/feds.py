@@ -25,7 +25,7 @@ from .utils.restrictions import ban_user, unban_user
 
 from sophie_bot.services.mongo import db
 
-from sophie_bot import OWNER_ID, BOT_ID, OPERATORS, decorator
+from sophie_bot import OWNER_ID, BOT_ID, OPERATORS, decorator, bot
 
 
 # functions
@@ -36,6 +36,13 @@ async def get_fed_f(message, chat_id):
     if not fed:
         return False
     return fed
+
+
+async def fed_post_log(fed, text):
+    if 'log_chat_id' not in fed:
+        return
+    chat_id = fed['log_chat_id']
+    await bot.send_message(chat_id, text)
 
 
 # decorators
@@ -101,7 +108,7 @@ def get_fed_dec(func):
                     return
 
         if not (fed := await get_fed_f(message, message.chat.id)):
-            await message.reply(get_string(real_chat_id, "feds", 'chat_not_in_fed'))
+            await message.reply(await get_string(real_chat_id, "feds", 'chat_not_in_fed'))
             return
 
         return await func(*args, fed, **kwargs)
@@ -198,6 +205,12 @@ async def join_fed(message, chat, strings):
     )
 
     await message.reply(strings['join_fed_success'].format(chat=chat['chat_title'], fed=fed['fed_name']))
+    await fed_post_log(fed, strings['join_chat_fed_log'].format(
+        fed_name=fed['fed_name'],
+        fed_id=fed['fed_id'],
+        chat_name=chat['chat_title'],
+        chat_id=chat_id
+    ))
 
 
 @decorator.register(cmds=['leavefed', 'fleave'])
@@ -214,6 +227,13 @@ async def leave_fed_comm(message, chat, fed, strings):
         {'$pull': {'chats': chat['chat_id']}}
     )
     await message.reply(strings['leave_fed_success'].format(chat=chat['chat_title'], fed=fed['fed_name']))
+
+    await fed_post_log(fed, strings['leave_chat_fed_log'].format(
+        fed_name=fed['fed_name'],
+        fed_id=fed['fed_id'],
+        chat_name=chat['chat_title'],
+        chat_id=chat_id
+    ))
 
 
 @decorator.register(cmds='fsub')
@@ -261,6 +281,13 @@ async def promote_to_fed(message, fed, user, text, strings):
         user=await get_user_link(user['user_id']), name=fed['fed_name'])
     )
 
+    await fed_post_log(fed, strings['promote_user_fed_log'].format(
+        fed_name=fed['fed_name'],
+        fed_id=fed['fed_id'],
+        user=await get_user_link(user['user_id']),
+        user_id=user['user_id']
+    ))
+
 
 @decorator.register(cmds='fdemote')
 @get_fed_user_text
@@ -275,6 +302,13 @@ async def demote_from_fed(message, fed, user, text, strings):
     await message.reply(strings["admin_demoted_from_fed"].format(
         user=await get_user_link(user['user_id']), name=fed['fed_name'])
     )
+
+    await fed_post_log(fed, strings['demote_user_fed_log'].format(
+        fed_name=fed['fed_name'],
+        fed_id=fed['fed_id'],
+        user=await get_user_link(user['user_id']),
+        user_id=user['user_id']
+    ))
 
 
 @decorator.register(cmds=['fsetlog', 'setfedlog'], only_groups=True)
@@ -294,6 +328,11 @@ async def set_fed_log_chat(message, fed, strings):
     text = strings['set_chat_log'].format(name=fed['fed_name'])
     await message.reply(text)
 
+    await fed_post_log(fed.update({'log_chat_id': message.chat.id}), strings['set_log_fed_log'].format(
+        fed_name=fed['fed_name'],
+        fed_id=fed['fed_id']
+    ))
+
 
 @decorator.register(cmds=['funsetlog', 'unsetfedlog'], only_groups=True)
 @get_fed_dec
@@ -311,6 +350,11 @@ async def unset_fed_log_chat(message, fed, strings):
 
     text = strings['logging_removed'].format(name=fed['fed_name'])
     await message.reply(text)
+
+    await fed_post_log(fed, strings['unset_log_fed_log'].format(
+        fed_name=fed['fed_name'],
+        fed_id=fed['fed_id']
+    ))
 
 
 @decorator.register(cmds=['fchatlist', 'fchats'])
@@ -444,6 +488,19 @@ async def fed_ban_user(message, fed, user, reason, strings):
         {"$set": {f'banned.{user_id}': new}}
     )
 
+    channel_text = strings['fban_log_fed_log'].format(
+        fed_name=fed['fed_name'],
+        fed_id=fed['fed_id'],
+        user=await get_user_link(user['user_id']),
+        user_id=user['user_id'],
+        chat_count=len(banned_chats),
+        all_chats=len(fed['chats'])
+    )
+
+    if reason:
+        channel_text += strings['fban_reason_fed_log'].format(reason=reason)
+
+    # SubsFeds process
     if len(sfeds_list := await get_all_subs_feds_r(fed['fed_id'], [])) > 1:
         sfeds_list.remove(fed['fed_id'])
         this_fed_banned_count = len(banned_chats)
@@ -479,8 +536,15 @@ async def fed_ban_user(message, fed, user, reason, strings):
             feds=len(sfeds_list)
         ))
 
+        channel_text += strings['fban_subs_fed_log'].format(
+            subs_chats=all_banned_chats_count,
+            feds=len(sfeds_list)
+        )
+
     else:
         await msg.edit_text(text + strings['fbanned_done'].format(num=len(banned_chats)))
+
+    await fed_post_log(fed, channel_text)
 
 
 @decorator.register(cmds=['unfban', 'funban'])
@@ -522,6 +586,16 @@ async def unfed_ban_user(message, fed, user, text, strings):
         {"$unset": {f'banned.{user_id}': 1}}
     )
 
+    channel_text = strings['un_fban_log_fed_log'].format(
+        fed_name=fed['fed_name'],
+        fed_id=fed['fed_id'],
+        user=await get_user_link(user['user_id']),
+        user_id=user['user_id'],
+        chat_count=len(banned_chats),
+        all_chats=len(fed['chats'])
+    )
+
+    # Subs feds
     if len(sfeds_list := await get_all_subs_feds_r(fed['fed_id'], [])) > 1:
         sfeds_list.remove(fed['fed_id'])
         this_fed_unbanned_count = counter
@@ -549,5 +623,12 @@ async def unfed_ban_user(message, fed, user, text, strings):
             subs_chats=all_unbanned_chats_count,
             feds=len(sfeds_list)
         ))
+
+        channel_text += strings['fban_subs_fed_log'].format(
+            subs_chats=all_banned_chats_count,
+            feds=len(sfeds_list)
+        )
     else:
         await msg.edit_text(text + strings['un_fbanned_done'].format(num=counter))
+
+    await fed_post_log(fed, channel_text)

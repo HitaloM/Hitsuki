@@ -181,10 +181,18 @@ STRINGS:
         fed_id_invalid: "The given Federation ID is invalid! Please give me a Valid ID."
         joined_fed_already: "This chat has already joined a Federation! Please use /leavefed to leave that federation"
         join_fed_success: "Great! Chat <b>{chat}</b> is now a part of <b>{fed}</b> Federation!"
+        join_chat_fed_log: |
+            <b>New chat joined to the Fed</b> #ChatJoined
+            <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+            <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
 
         # /leavefed
         chat_not_in_fed: "This chat is not in any federation yet."
         leave_fed_success: "Chat <b>{chat}</b> left the <b>{fed}</b> federation."
+        leave_chat_fed_log: |
+            <b>Chat leaved from the Fed</b> #ChatLeaved
+            <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+            <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
 
         # /fsub
         already_subsed: "Federation <b>{name}</b> already subscribed to <b>{name2}</b>"
@@ -193,18 +201,32 @@ STRINGS:
         # /fpromote
         #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
         admin_added_to_fed: "User {user} added to <b>{name}</b> Federation admins."
+        promote_user_fed_log: |
+            <b>User promoted to the fed admins</b> #UserPromoted
+            <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+            <b>User:</b> {user} (<code>{user_id}</code>)
 
         # /fdemote
         #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
         admin_demoted_from_fed: "User {user} demoted from <b>{name}</b> Federation admins."
+        demote_user_fed_log: |
+            <b>User demoted from the fed admins</b> #UserDemoted
+            <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+            <b>User:</b> {user} (<code>{user_id}</code>)
 
         # /fsetlog
         already_have_chatlog: "<b>{name}</b> Federation already have enabled logging in other chat/channel!"
         set_chat_log: "This chat now logging all actions in <b>{name}</b> Federation"
+        set_log_fed_log: |
+            <b>Enabled logging</b> #LoggingEnabled
+            <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
 
         # /funsetlog
         not_logging: "<b>{name}</b> Federation isn't logging to any chat/channel!"
         logging_removed: "Successfully removed logging from <b>{name}</b> Federation."
+        unset_log_fed_log: |
+            <b>Disabled logging</b> #LoggingDisabled
+            <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
 
         # /fchatlist
         chats_in_fed: "<b>Chats connected to {name} Federation:</b>\n"
@@ -246,6 +268,12 @@ STRINGS:
         fban_usr_rmvd: |
             User {user} is banned in current federation <b>{fed}</b>.So has been removed!
             Reason: <code>{rsn}</code>
+        fban_log_fed_log: |
+            <b>Ban user in the fed</b> #FedBan
+            <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+            <b>Chats:</b> user banned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
+        fban_reason_fed_log: "<b>Reason:</b> <code>{reason}</code>\n"
+        fban_subs_fed_log: "\n<b>Subscribed feds:</b> banned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
         
         # /unfban
         unfban_self: "Think of something else to have fun instead of this."
@@ -255,6 +283,12 @@ STRINGS:
         un_fbanned_done: "\n<b>Status:</b> Done! Unbanned in <code>{num}</code> chats!"
         un_fbanned_subs_process: "\n<b>Status:</b> Unbanning in <code>{feds}</code> subscribed feds..."
         un_fbanned_subs_done: "\n<b>Status:</b> Done! Unbanned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
+
+        un_fban_log_fed_log: |
+            <b>Unban user in the fed</b> #FedUnBan
+            <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+            <b>Chats:</b> user unbanned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
+        un_fban_subs_fed_log: "\n<b>Subscribed feds:</b> unbanned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
 
     reports:
         user_user_admin: "You're an admin here, why'd you need to report someone?.."
