@@ -139,7 +139,7 @@ def is_fed_admin(func):
 # cmds
 
 
-@decorator.register(cmds='newfed')
+@decorator.register(cmds=['newfed', 'fnew'])
 @get_strings_dec("feds")
 async def new_fed(message, strings):
     fed_name = message.get_args()
@@ -170,7 +170,7 @@ async def new_fed(message, strings):
     ))
 
 
-@decorator.register(cmds='joinfed')
+@decorator.register(cmds=['joinfed', 'fjoin'])
 @need_args_dec()
 @chat_connection(admin=True, only_groups=True)
 @get_strings_dec("feds")
@@ -200,7 +200,7 @@ async def join_fed(message, chat, strings):
     await message.reply(strings['join_fed_success'].format(chat=chat['chat_title'], fed=fed['fed_name']))
 
 
-@decorator.register(cmds='leavefed')
+@decorator.register(cmds=['leavefed', 'fleave'])
 @chat_connection(admin=True, only_groups=True)
 @get_current_chat_fed
 @get_strings_dec("feds")
@@ -277,6 +277,42 @@ async def demote_from_fed(message, fed, user, text, strings):
     )
 
 
+@decorator.register(cmds=['fsetlog', 'setfedlog'], only_groups=True)
+@get_fed_dec
+@is_fed_owner
+@get_strings_dec("feds")
+async def set_fed_log_chat(message, fed, strings):
+    if 'log_chat_id' in fed and fed['log_chat_id']:
+        await message.reply(strings['already_have_chatlog'].format(name=fed['fed_name']))
+        return
+
+    await db.feds.update_one(
+        {'_id': fed['_id']},
+        {'$set': {'log_chat_id': message.chat.id}}
+    )
+
+    text = strings['set_chat_log'].format(name=fed['fed_name'])
+    await message.reply(text)
+
+
+@decorator.register(cmds=['funsetlog', 'unsetfedlog'], only_groups=True)
+@get_fed_dec
+@is_fed_owner
+@get_strings_dec("feds")
+async def unset_fed_log_chat(message, fed, strings):
+    if 'log_chat_id' not in fed or not fed['log_chat_id']:
+        await message.reply(strings['already_have_chatlog'].format(name=fed['fed_name']))
+        return
+
+    await db.feds.update_one(
+        {'_id': fed['_id']},
+        {'$unset': {'log_chat_id': 1}}
+    )
+
+    text = strings['logging_removed'].format(name=fed['fed_name'])
+    await message.reply(text)
+
+
 @decorator.register(cmds=['fchatlist', 'fchats'])
 @get_fed_dec
 @is_fed_admin
@@ -310,7 +346,6 @@ async def fed_admins_list(message, fed, strings):
 
 @decorator.register(cmds='finfo')
 @get_fed_dec
-@is_fed_admin
 @get_strings_dec("feds")
 async def fed_info(message, fed, strings):
     text = strings['finfo_text']

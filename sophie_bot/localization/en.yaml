@@ -198,6 +198,14 @@ STRINGS:
         #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
         admin_demoted_from_fed: "User {user} demoted from <b>{name}</b> Federation admins."
 
+        # /fsetlog
+        already_have_chatlog: "<b>{name}</b> Federation already have enabled logging in other chat/channel!"
+        set_chat_log: "This chat now logging all actions in <b>{name}</b> Federation"
+
+        # /funsetlog
+        not_logging: "<b>{name}</b> Federation isn't logging to any chat/channel!"
+        logging_removed: "Successfully removed logging from <b>{name}</b> Federation."
+
         # /fchatlist
         chats_in_fed: "<b>Chats connected to {name} Federation:</b>\n"
         too_large: "Output too large, sending as file"
