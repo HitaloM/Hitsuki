@@ -12,7 +12,7 @@
 
 from sophie_bot.modules.utils.user_details import is_user_admin
 from sophie_bot.services.mongo import db
-from sophie_bot.services.redis import redis, rw
+from sophie_bot.services.redis import redis
 
 
 async def get_connected_chat(message, admin=False, only_groups=False):
@@ -20,15 +20,18 @@ async def get_connected_chat(message, admin=False, only_groups=False):
     # only_in_groups - disable command when bot's pm not connected to any chat
     real_chat_id = message.chat.id
     user_id = message.from_user.id
-    key = 'connection9_' + str(user_id)
+    key = 'connection_cache_' + str(user_id)
 
     if not message.chat.type == 'private':
         chat_title = (await db.chat_list.find_one({'chat_id': real_chat_id}))['chat_title']
         return {'status': 'chat', 'chat_id': real_chat_id, 'chat_title': chat_title}
 
     # Cached
-    if cached := rw[key]:
+    if cached := redis.hgetall(key):
+        cached['status'] = True
+        cached['chat_id'] = int(cached['chat_id'])
         return cached
+
 
     # if pm and not connected
     if not (connected := await db.connections_v2.find_one({'user_id': user_id})) or 'chat_id' not in connected:
@@ -63,7 +66,9 @@ async def get_connected_chat(message, admin=False, only_groups=False):
     }
 
     # Cache connection status for 15 minutes
-    rw[key] = data
+    cached = data
+    cached['status'] = 1
+    redis.hmset(key, cached)
     redis.expire(key, 900)
 
     return data
@@ -89,7 +94,7 @@ def chat_connection(**dec_kwargs):
 async def set_connected_chat(user_id, chat_id):
     if not chat_id:
         await db.connections_v2.update_one({'user_id': user_id}, {"$unset": {'chat_id': 1}}, upsert=True)
-        key = 'connection2_' + str(user_id)
+        key = 'connection_cache_' + str(user_id)
         redis.delete(key)
         return
 
