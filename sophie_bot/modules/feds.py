@@ -346,6 +346,18 @@ async def fed_admins_list(message, fed, strings):
 
 @decorator.register(cmds='finfo')
 @get_fed_dec
+@is_fed_admin
+@get_strings_dec("feds")
+async def fed_admins_list(message, fed, strings):
+    text = strings['fadmins_header'].format(fed_name=fed['fed_name'])
+    text += '* {} (<code>{}</code>)\n'.format(await get_user_link(fed['creator']), fed['creator'])
+    for user_id in fed['admins']:
+        text += '* {} (<code>{}</code>)\n'.format(await get_user_link(user_id), user_id)
+    await message.reply(text)
+
+
+@decorator.register(cmds='finfo')
+@get_fed_dec
 @get_strings_dec("feds")
 async def fed_info(message, fed, strings):
     text = strings['finfo_text']
@@ -453,7 +465,6 @@ async def fed_ban_user(message, fed, user, reason, strings):
         all_banned_chats_count = 0
         for sfed in sfeds_list:
             sfed = await db.feds.find_one({'fed_id': sfed})
-
             banned_chats = []
             for chat_id in sfed['chats']:
                 if chat_id not in user['chats']:

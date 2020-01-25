@@ -17,7 +17,7 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 import hypercorn
 
 from sophie_bot import dp
-from sophie_bot.config import get_bool_key
+from sophie_bot.config import get_bool_key, get_list_key
 from sophie_bot.modules import ALL_MODULES, LOADED_MODULES
 from sophie_bot.services.quart import quart
 from sophie_bot.utils.db_backup import backup_db
@@ -30,8 +30,15 @@ if get_bool_key("DEBUG_MODE"):
     dp.middleware.setup(LoggingMiddleware())
 
 
+LOAD = get_list_key("LOAD")
+DONT_LOAD = get_list_key("DONT_LOAD")
+
 if get_bool_key('LOAD_MODULES'):
-    # Import modules
+    if len(LOAD) < 1:
+        ALL_MODULES = LOAD
+
+    ALL_MODULES = [x for x in ALL_MODULES if x not in DONT_LOAD]
+
     log.info("Modules to load: %s", str(ALL_MODULES))
     for module_name in ALL_MODULES:
         log.debug(f"Importing <d><n>{module_name}</></>")

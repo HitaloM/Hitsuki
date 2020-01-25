@@ -31,7 +31,6 @@ RATE_LIMIT = get_bool_key("rate_limit")
 REGISTRED_COMMANDS = []
 COMMANDS_ALIASES = {}
 
-
 # Import filters
 log.info("Filters to load: %s", str(ALL_FILTERS))
 for module_name in ALL_FILTERS:
@@ -47,10 +46,7 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
     register_kwargs = {}
 
     if cmds and not f:
-        if ALLOW_COMMANDS_FROM_EXC:
-            regex = r'\A^[!/]('
-        else:
-            regex = r'\A^/('
+        regex = r'\A^{}('.format('[!/]' if ALLOW_COMMANDS_FROM_EXC else '/')
 
         if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
             kwargs['not_forwarded'] = True
