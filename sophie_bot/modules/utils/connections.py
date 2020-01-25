@@ -32,7 +32,6 @@ async def get_connected_chat(message, admin=False, only_groups=False):
         cached['chat_id'] = int(cached['chat_id'])
         return cached
 
-
     # if pm and not connected
     if not (connected := await db.connections_v2.find_one({'user_id': user_id})) or 'chat_id' not in connected:
         if only_groups:
