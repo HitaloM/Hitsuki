@@ -12,6 +12,8 @@
 
 from telethon.tl.functions.users import GetFullUserRequest
 
+from .message import get_arg
+
 from sophie_bot import OPERATORS, bot
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis, rw
@@ -279,3 +281,26 @@ def get_user_dec(**dec_kwargs):
                 return await func(*args, user, **kwargs)
         return wrapped_1
     return wrapped
+
+
+def get_chat_dec(func):
+    async def wrapped_1(*args, **kwargs):
+        message = args[0]
+        if hasattr(message, 'message'):
+            message = message.message
+        arg = get_arg(message)
+
+        if arg.startswith('-') or arg.isdigit():
+            chat = await db.chat_list.find_one({'chat_id': int(arg)})
+        elif arg.startswith('@'):
+            chat = await db.chat_list.find_one({'chat_nick': arg.lower()})
+        else:
+            await message.reply('cant_find_chat_use_id')
+            return
+
+        if not chat:
+            await message.reply('cant_find_chat')
+            return
+
+        return await func(*args, chat, **kwargs)
+    return wrapped_1

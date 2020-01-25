@@ -26,6 +26,7 @@ from .utils.connections import chat_connection, set_connected_chat
 from .utils.language import get_strings_dec
 from .utils.message import get_arg
 from .utils.notes import BUTTONS
+from .utils.user_details import get_chat_dec
 
 connect_to_chat_cb = CallbackData('connect_to_chat_cb', 'chat_id')
 
@@ -95,24 +96,11 @@ async def connect_chat_keyboard_cb(message, callback_data=False, **kwargs):
 
 # In pm with args - connect to chat by arg
 @register(cmds='connect', has_args=True, only_pm=True)
+@get_chat_dec
 @get_strings_dec('connections')
-async def connect_to_chat_from_arg(message, strings):
+async def connect_to_chat_from_arg(message, chat, strings):
     user_id = message.from_user.id
     chat_id = message.chat.id
-
-    arg = get_arg(message)
-
-    if arg.startswith('-') or arg.isdigit():
-        chat = await db.chat_list.find_one({'chat_id': int(arg)})
-    elif arg.startswith('@'):
-        chat = await db.chat_list.find_one({'chat_nick': arg.lower()})
-    else:
-        await message.reply(strings['cant_find_chat_use_id'])
-        return
-
-    if not chat:
-        await message.reply(strings['cant_find_chat'])
-        return
 
     await def_connect_chat(message, user_id, chat_id, chat['chat_title'])
 
