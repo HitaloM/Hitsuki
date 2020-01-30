@@ -34,7 +34,7 @@ LOAD = get_list_key("LOAD")
 DONT_LOAD = get_list_key("DONT_LOAD")
 
 if get_bool_key('LOAD_MODULES'):
-    if len(LOAD) < 1:
+    if len(LOAD) > 1:
         ALL_MODULES = LOAD
 
     ALL_MODULES = [x for x in ALL_MODULES if x not in DONT_LOAD]
@@ -81,7 +81,7 @@ async def startup():
 async def start():
     log.debug("Running webserver..")
     config = hypercorn.Config()
-    config.bind = ["localhost:8085"]
+    config.bind = ["localhost:8087"]
     await hypercorn.asyncio.serve(quart, config)
 
 

@@ -13,7 +13,7 @@
 FROM python:3.8-alpine
 
 # install system-wide deps for python and node --no-cache --virtual .build-deps
-RUN apk add gcc musl-dev libffi-dev openssl openssl-dev build-base
+RUN apk add gcc musl-dev libffi-dev openssl openssl-dev build-base zlib-dev jpeg-dev yaml-dev
 RUN pip install cython
 
 # copy our application code
@@ -26,6 +26,8 @@ RUN rm -rf /data
 # fetch app specific deps
 RUN ls ./
 RUN pip install -r requirements.txt
+
+RUN apk del gcc build-base zlib
 
 # start app
 CMD [ "python", "-m", "sophie_bot" ]
