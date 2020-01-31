@@ -57,7 +57,7 @@ async def save_note(message, chat, strings):
         await message.reply(strings['notename_cant_contain'].format(symbol=sym))
         return
 
-    note = get_parsed_note_list(message)
+    note = await get_parsed_note_list(message)
 
     note['name'] = note_name
     note['chat_id'] = chat_id
@@ -109,6 +109,8 @@ async def get_note(message, strings, note_name=None, db_item=None,
 
     text, kwargs = await t_unparse_note_item(message, db_item, chat_id, noformat=noformat, event=event)
     kwargs['reply_to'] = rpl_id
+
+    print(kwargs)
 
     await tbot.send_message(send_id, text, **kwargs)
 

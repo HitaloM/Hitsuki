@@ -125,7 +125,7 @@ async def set_welcome(message, chat, strings):
         await message.reply(strings['turnwelcome_disabled'] % chat['chat_title'])
         return
     else:
-        note = get_parsed_note_list(message, split_args=0)
+        note = await get_parsed_note_list(message, split_args=0)
 
         if (await db.greetings.update_one({'chat_id': chat_id}, {'$set': {'chat_id': chat_id, 'note': note}}, upsert=True)).modified_count > 0:
             text = strings['updated']
@@ -309,7 +309,7 @@ async def set_security_note(message, chat, strings):
         await tbot.send_message(chat_id, text, **kwargs)
         return
 
-    note = get_parsed_note_list(message, split_args=0)
+    note = await get_parsed_note_list(message, split_args=0)
 
     if (await db.greetings.update_one({'chat_id': chat_id}, {'$set': {'chat_id': chat_id, 'security_note': note}}, upsert=True)).modified_count > 0:
         text = strings['security_note_updated']

@@ -26,6 +26,7 @@ from .user_details import get_user_link
 from .message import get_args
 
 from sophie_bot import BOT_USERNAME
+from sophie_bot.services.telethon import tbot
 
 
 BUTTONS = {}
@@ -188,18 +189,24 @@ def get_reply_msg_btns_text(message):
     return text
 
 
-def get_msg_file(message):
+async def get_msg_file(message):
+
+    message_id = message.message_id
+
+    tmsg = await tbot.get_messages(message.chat.id, ids=message_id)
+    msg_id = tmsg.file.id
+
     if 'sticker' in message:
-        return {'id': message.sticker.file_id, 'type': 'sticker'}
+        return {'id': msg_id, 'type': 'sticker'}
     elif 'photo' in message:
-        return {'id': message.photo[1].file_id, 'type': 'photo'}
+        return {'id': msg_id, 'type': 'photo'}
     elif 'document' in message:
-        return {'id': message.document.file_id, 'type': 'document'}
+        return {'id': msg_id, 'type': 'document'}
 
     return None
 
 
-def get_parsed_note_list(message, split_args=1):
+async def get_parsed_note_list(message, split_args=1):
     note = {}
     if "reply_to_message" in message:
         # Get parsed reply msg text
@@ -219,7 +226,7 @@ def get_parsed_note_list(message, split_args=1):
             text += get_reply_msg_btns_text(message.reply_to_message)
 
         # Check on attachment
-        if msg_file := get_msg_file(message.reply_to_message):
+        if msg_file := await get_msg_file(message.reply_to_message):
             note['file'] = msg_file
     else:
         text, note['parse_mode'] = get_parsed_msg(message)
@@ -229,7 +236,7 @@ def get_parsed_note_list(message, split_args=1):
         text = text.partition(message.get_command() + to_split)[2]
 
         # Check on attachment
-        if msg_file := get_msg_file(message):
+        if msg_file := await get_msg_file(message):
             note['file'] = msg_file
 
     # Preview
@@ -349,6 +356,9 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
 async def vars_parser(text, message, chat_id, md=False, event=None):
     if not event:
         event = message
+
+    if not text:
+        return text
 
     first_name = html.escape(event.from_user.first_name)
     last_name = html.escape(event.from_user.last_name or "")

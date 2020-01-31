@@ -29,7 +29,7 @@ from sophie_bot.services.telethon import tbot
 async def set_rules(message, chat, strings):
     chat_id = chat['chat_id']
 
-    note = get_parsed_note_list(message, split_args=0)
+    note = await get_parsed_note_list(message, split_args=0)
     note['chat_id'] = chat_id
 
     if (await db.rules_v2.replace_one({'chat_id': chat_id}, note, upsert=True)).modified_count > 0:

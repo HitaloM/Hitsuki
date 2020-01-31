@@ -80,7 +80,7 @@ async def cmd_term(message):
 @register(cmds="sbroadcast", is_owner=True)
 @need_args_dec()
 async def sbroadcast(message):
-    data = get_parsed_note_list(message, split_args=0)
+    data = await get_parsed_note_list(message, split_args=0)
 
     await db.sbroadcast.drop({})
 
