@@ -16,7 +16,6 @@ from importlib import import_module
 
 from sophie_bot import bot, OWNER_ID
 from sophie_bot.services.mongo import mongodb
-from sophie_bot.utils.db_backup import backup_db
 from sophie_bot.utils.logger import log
 from sophie_bot.versions import DB_STRUCTURE_VER
 
@@ -42,8 +41,6 @@ else:
         log.error("Your database is old! Waiting 20 seconds till update...")
         log.info("Press CTRL + C to cancel!")
         time.sleep(20)
-        log.debug("Let's backup DB for first.")
-        backup_db(postfix='_pre-update-structure')
         log.debug("Trying to update database structure...")
         log.info("--------------------------------")
         log.info("Your current database structure version: " + str(curr_ver))

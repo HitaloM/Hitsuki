@@ -20,7 +20,6 @@ from sophie_bot import dp
 from sophie_bot.config import get_bool_key, get_list_key
 from sophie_bot.modules import ALL_MODULES, LOADED_MODULES
 from sophie_bot.services.quart import quart
-from sophie_bot.utils.db_backup import backup_db
 from sophie_bot.utils.logger import log
 
 # import uvloop
@@ -83,10 +82,6 @@ async def start():
     config = hypercorn.Config()
     config.bind = ["localhost:8087"]
     await hypercorn.asyncio.serve(quart, config)
-
-
-if get_bool_key('BACKUP_DB_ON_STARTUP'):
-    backup_db()
 
 
 import_module("sophie_bot.utils.db_structure_migrator")
