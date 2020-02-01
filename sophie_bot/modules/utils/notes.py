@@ -77,6 +77,8 @@ def tparse_ent(ent, text, as_html=True):
     if etype == 'text_mention' and ent.user:
         return ent.user.get_mention(entity_text, as_html=as_html)
 
+    print(etype)
+
     return entity_text
 
 
@@ -194,14 +196,13 @@ async def get_msg_file(message):
     message_id = message.message_id
 
     tmsg = await tbot.get_messages(message.chat.id, ids=message_id)
-    msg_id = tmsg.file.id
 
     if 'sticker' in message:
-        return {'id': msg_id, 'type': 'sticker'}
+        return {'id': tmsg.file.id, 'type': 'sticker'}
     elif 'photo' in message:
-        return {'id': msg_id, 'type': 'photo'}
+        return {'id': tmsg.file.id, 'type': 'photo'}
     elif 'document' in message:
-        return {'id': msg_id, 'type': 'document'}
+        return {'id': tmsg.file.id, 'type': 'document'}
 
     return None
 
