@@ -20,7 +20,7 @@ from aiogram.utils import markdown
 
 from telethon.tl.custom import Button
 
-from .tmarkdown_converter import tbold, titalic, tpre, tcode, tlink
+from .tmarkdown_converter import tbold, titalic, tpre, tcode, tlink, tstrikethrough, tunderline
 from .user_details import get_user_link
 
 from .message import get_args
@@ -69,6 +69,12 @@ def tparse_ent(ent, text, as_html=True):
     if etype == 'code':
         method = markdown.hcode if as_html else tcode
         return method(entity_text)
+    if etype == 'strikethrough':
+        method = markdown.hstrikethrough if as_html else tstrikethrough
+        return method(entity_text)
+    if etype == 'underline':
+        method = markdown.hunderline if as_html else tunderline
+        return method(entity_text)
     if etype == 'url':
         return entity_text
     if etype == 'text_link':
@@ -89,6 +95,7 @@ def get_parsed_msg(message):
     text = message.caption or message.text
 
     mode = get_msg_parse(text)
+    print(mode)
     if mode == 'html':
         as_html = True
     else:

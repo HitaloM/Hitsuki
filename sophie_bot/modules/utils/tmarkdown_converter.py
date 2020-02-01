@@ -29,5 +29,14 @@ def tpre(text, sep=' '):
     return f'[{text}['
 
 
+def tstrikethrough(text, sep=' '):
+    return f'~~{text}~~'
+
+
+def tunderline(text, sep=' '):
+    # Telethon's markdown parser not supporting underline currently
+    return f'{text}'
+
+
 def tlink(title, url):
     return "[{0}]({1})".format(title, url)
