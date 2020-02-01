@@ -81,10 +81,10 @@ def tparse_ent(ent, text, as_html=True):
 
 
 def get_parsed_msg(message):
-    if not message.text:
+    if not message.text and not message.caption:
         return '', 'md'
 
-    text = message.text or message.caption
+    text = message.caption or message.text
 
     mode = get_msg_parse(text)
     if mode == 'html':
@@ -92,7 +92,7 @@ def get_parsed_msg(message):
     else:
         as_html = False
 
-    entities = message.entities or message.caption_entities
+    entities = message.caption_entities or message.entities
 
     if not entities:
         return text, mode
