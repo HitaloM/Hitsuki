@@ -28,19 +28,11 @@ from .utils.user_details import get_user_link
 
 from sophie_bot import bot
 from sophie_bot.decorator import register
-from sophie_bot.services.mongo import db, mongodb
+from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from sophie_bot.services.telethon import tbot
 
 RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`', '#', '"', '[', ']', "'", '$']
-
-
-class InvalidFileType(Exception):
-    pass
-
-
-class InvalidParseMode(Exception):
-    pass
 
 
 @register(cmds='save', user_admin=True)
@@ -289,7 +281,7 @@ async def note_info(message, chat, strings, user_admin=True):
     elif note['parse_mode'] == 'none':
         parse_mode = 'None'
     else:
-        raise InvalidParseMode()
+        raise TypeError()
 
     text += strings['note_info_parsing'] % parse_mode
 
