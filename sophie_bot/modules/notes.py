@@ -32,7 +32,7 @@ from sophie_bot.services.mongo import db, mongodb
 from sophie_bot.services.redis import redis
 from sophie_bot.services.telethon import tbot
 
-RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`', '#', '"']
+RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`', '#', '"', '[', ']', "'", '$']
 
 
 class InvalidFileType(Exception):
@@ -49,24 +49,26 @@ class InvalidParseMode(Exception):
 @get_strings_dec('notes')
 async def save_note(message, chat, strings):
     chat_id = chat['chat_id']
-    note_name = get_arg(message).lower()
-    if note_name[0] == '#':
-        note_name = note_name[1:]
+    arg = get_arg(message).lower()
+    if arg[0] == '#':
+        arg = arg[1:]
 
-    if any((sym := s) in note_name for s in RESTRICTED_SYMBOLS_IN_NOTENAMES):
+    note_names = arg.split('|')
+
+    if any((sym := s) in note_names for s in RESTRICTED_SYMBOLS_IN_NOTENAMES):
         await message.reply(strings['notename_cant_contain'].format(symbol=sym))
         return
 
     note = await get_parsed_note_list(message)
 
-    note['name'] = note_name
+    note['names'] = note_names
     note['chat_id'] = chat_id
 
     if 'text' not in note and 'file' not in note:
         await message.reply(strings['blank_note'])
         return
 
-    if old_note := await db.notes_v2.find_one({'name': note_name, 'chat_id': chat_id}):
+    if old_note := await db.notes_v2.find_one({'chat_id': chat_id, 'names': {'$in': note_names}}):
         text = strings['note_updated']
         note['created_date'] = old_note['created_date']
         note['created_user'] = old_note['created_user']
@@ -80,7 +82,11 @@ async def save_note(message, chat, strings):
     await db.notes_v2.replace_one({'_id': old_note['_id']} if old_note else note, note, upsert=True)
 
     text += strings['you_can_get_note']
-    text = text.format(note_name=note_name, chat_title=chat['chat_title'])
+    text = text.format(note_name=note_names[0], chat_title=chat['chat_title'])
+    if len(note_names) > 1:
+        text += strings['note_aliases']
+        for notename in note_names:
+            text += f' <code>#{notename}</code>'
 
     await message.reply(text)
 
@@ -99,7 +105,7 @@ async def get_note(message, strings, note_name=None, db_item=None,
     elif not rpl_id:
         rpl_id = message.message_id
 
-    if not db_item and not (db_item := await db.notes_v2.find_one({'name': note_name})):
+    if not db_item and not (db_item := await db.notes_v2.find_one({'chat_id': chat_id, 'names': {'$in': [note_name]}})):
         await bot.send_message(
             chat_id,
             strings['no_note'],
@@ -130,11 +136,14 @@ async def get_note_cmd(message, chat, strings):
     else:
         rpl_id = message.message_id
 
-    if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'name': note_name})):
+    if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
         text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
-        all_notes = mongodb.notes_v2.find({'chat_id': chat['chat_id']})
-        if all_notes.count() > 0:
-            check = difflib.get_close_matches(note_name, [d['name'] for d in all_notes])
+        all_notes = []
+        async for note in db.notes_v2.find({'chat_id': chat['chat_id']}):
+            for note_name in note['names']:
+                all_notes.append(note_name)
+        if len(all_notes) > 0:
+            check = difflib.get_close_matches(note_name, all_notes)
             if len(check) > 0:
                 text += strings['u_mean'].format(note_name=check[0])
         await message.reply(text)
@@ -152,7 +161,7 @@ async def get_note_cmd(message, chat, strings):
 @get_strings_dec('notes')
 async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
     note_name = regexp.group(1).lower()
-    if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'name': note_name})):
+    if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
         return
 
     if 'reply_to_message' in message:
@@ -170,7 +179,7 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
 async def get_notes_list(message, chat, strings):
     text = strings["notelist_header"].format(chat_name=chat['chat_title'])
 
-    notes = await db.notes_v2.find({'chat_id': chat['chat_id']}).sort("name", 1).to_list(length=300)
+    notes = await db.notes_v2.find({'chat_id': chat['chat_id']}).sort("names", 1).to_list(length=300)
     if not notes:
         await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
         return
@@ -180,16 +189,18 @@ async def get_notes_list(message, chat, strings):
         text += strings['notelist_search'].format(request=request)
         all_notes = notes
         notes = []
-        for note in [d['name'] for d in all_notes]:
-            if re.search(request, note):
-                notes.append(note)
+        for note in all_notes:
+            for note_name in note['names']:
+                if re.search(request, note_name):
+                    notes.append(note)
         if not len(notes) > 0:
             await message.reply(strings['no_notes_pattern'] % request)
             return
 
     for note in notes:
-        note_name = note['name'] if type(note) == dict else note
-        text += f"- <code>#{note_name}</code>\n"
+        text += '\n-'
+        for note_name in note['names']:
+            text += f" <code>#{note_name}</code>"
     text += strings['u_can_get_note']
     await message.reply(text)
 
@@ -204,9 +215,11 @@ async def search_in_note(message, chat, strings):
     notes = db.notes_v2.find({
         'chat_id': chat['chat_id'],
         'text': {'$regex': request, '$options': 'i'}
-    }).sort("name", 1)
+    }).sort("names", 1)
     for note in (check := await notes.to_list(length=300)):
-        text += f"- <code>#{note['name']}</code>\n"
+        text += '\n-'
+        for note_name in note['names']:
+            text += f" <code>#{note_name}</code>"
     text += strings['u_can_get_note']
     if not check:
         await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
@@ -222,11 +235,14 @@ async def clear_note(message, chat, strings):
     if note_name[0] == '#':
         note_name = note_name[1:]
 
-    if not (note := await db.notes_v2.find_one({'name': note_name})):
+    if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
         text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
-        all_notes = mongodb.notes_v2.find({'chat_id': chat['chat_id']})
-        if all_notes.count() > 0:
-            check = difflib.get_close_matches(note_name, [d['name'] for d in all_notes])
+        all_notes = []
+        async for note in db.notes_v2.find({'chat_id': chat['chat_id']}):
+            for note_name in note['names']:
+                all_notes.append(note_name)
+        if len(all_notes) > 0:
+            check = difflib.get_close_matches(note_name, all_notes)
             if len(check) > 0:
                 text += strings['u_mean'].format(note_name=check[0])
         await message.reply(text)
@@ -244,18 +260,26 @@ async def note_info(message, chat, strings, user_admin=True):
     if note_name[0] == '#':
         note_name = note_name[1:]
 
-    if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'name': note_name})):
+    if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
         text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
-        all_notes = mongodb.notes_v2.find({'chat_id': chat['chat_id']})
-        if all_notes.count() > 0:
-            check = difflib.get_close_matches(note_name, [d['name'] for d in all_notes])
+        all_notes = []
+        async for note in db.notes_v2.find({'chat_id': chat['chat_id']}):
+            for note_name in note['names']:
+                all_notes.append(note_name)
+        if len(all_notes) > 0:
+            check = difflib.get_close_matches(note_name, all_notes)
             if len(check) > 0:
                 text += strings['u_mean'].format(note_name=check[0])
         await message.reply(text)
         return
 
     text = strings['note_info_title']
-    text += strings['note_info_note'] % note['name']
+
+    note_names = ''
+    for note_name in note['names']:
+        note_names += f" <code>#{note_name}</code>"
+
+    text += strings['note_info_note'] % note_names
     text += strings['note_info_content'] % ('text' if 'file' not in note else note['file']['type'])
 
     if 'parse_mode' not in note or note['parse_mode'] == 'md':
@@ -293,7 +317,7 @@ async def note_btn(event, strings, regexp=None, **kwargs):
     user_id = event.from_user.id
     note_name = regexp.group(1).lower()
 
-    if not (note := await db.notes_v2.find_one({'chat_id': chat_id, 'name': note_name})):
+    if not (note := await db.notes_v2.find_one({'chat_id': chat_id, 'names': {'$in': [note_name]}})):
         await event.answer(strings['no_note'])
         return
 
@@ -309,7 +333,7 @@ async def note_start(message, strings, regexp=None, **kwargs):
     user_id = message.from_user.id
     note_name = args[1].lower()
 
-    if not (note := await db.notes_v2.find_one({'chat_id': chat_id, 'name': note_name})):
+    if not (note := await db.notes_v2.find_one({'chat_id': chat_id, 'names': {'$in': [note_name]}})):
         await message.reply(strings['no_note'])
         return
 
@@ -327,7 +351,7 @@ async def btn_note_start_state(message, strings):
     user_id = message.from_user.id
     note_name = cached['notename']
 
-    note = await db.notes_v2.find_one({'chat_id': chat_id, 'name': note_name})
+    note = await db.notes_v2.find_one({'chat_id': chat_id, 'names': {'$in': [note_name]}})
     await get_note(message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None)
 
     redis.delete(key)
@@ -342,7 +366,7 @@ async def __stats__():
 
 async def __export__(chat_id):
     data = []
-    notes = await db.notes_v2.find({'chat_id': chat_id}).sort("name", 1).to_list(length=300)
+    notes = await db.notes_v2.find({'chat_id': chat_id}).sort("names", 1).to_list(length=300)
     for note in notes:
         del note['_id']
         del note['chat_id']
@@ -352,7 +376,7 @@ async def __export__(chat_id):
 
 
 ALLOWED_COLUMNS_NOTES = ALLOWED_COLUMNS + [
-    'name',
+    'names',
     'created_date',
     'created_user',
     'edited_date',
@@ -367,6 +391,7 @@ async def __import__(chat_id, data):
             del note[item]
 
         note['chat_id'] = chat_id
-        new.append(ReplaceOne({'chat_id': note['chat_id'], 'name': note['name']}, note, upsert=True))
+        # TODO
+        new.append(ReplaceOne({'chat_id': note['chat_id'], 'names': {'$in': [note['names'][0]]}}, note, upsert=True))
 
     await db.notes_v2.bulk_write(new)

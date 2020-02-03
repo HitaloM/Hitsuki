@@ -9,6 +9,8 @@ STRINGS:
         note_saved: "🗒 Note <code>{note_name}</code> saved in <b>{chat_title}</b>!"
         note_updated: "🗒 Note <code>{note_name}</code> updated in <b>{chat_title}</b>!"
         you_can_get_note: "\nYou can retrieve this note by using <code>/get {note_name}</code>, or <code>#{note_name}</code>"
+        # Translator note: please keep sure that you don't have space in the end of string
+        note_aliases: "\nNote aliases:"
         blank_note: "Saving blank note is not allowed!"
         cant_find_note: I can't find this note in <b>{chat_name}</b>!
         no_note: "Can't find that note."
@@ -21,19 +23,19 @@ STRINGS:
             2. Every `<` symbol which not used in HTML tags should be replaced on `&gt`
             TIP: Get raw text by `/get {notename} noformat`
         notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
-        notelist_header: "<b>Notes in {chat_name}</b>:\n"
+        notelist_header: "<b>Notes in {chat_name}</b>:"
         notelist_search: |
             <b>Pattern:</b> <code>{request}</code>
             <b>Matched notes:</b>
         note_removed: "Note <code>{note_name}</code> removed in <b>{chat_name}</b>!"
-        u_can_get_note: "You can retrieve these notes by using <code>/get notename</code>, or <code>#notename</code>"
+        u_can_get_note: "\nYou can retrieve these notes by using <code>/get notename</code>, or <code>#notename</code>"
         search_header: |
             <b>Search request in {chat_name}</b>:
             <b>Pattern:</b> <code>{request}</code>
             <b>Matched notes:</b>
         pmed_note: "I have PM'ed that note to you!"
         note_info_title: "<b>Note info</b>\n"
-        note_info_note: "Note name: <code>%s</code>\n"
+        note_info_note: "Note names: %s\n"
         note_info_content: "Note content: %s\n"
         note_info_parsing: "Parse mode: <code>%s</code>\n"
         note_info_created: "Was created in: <code>{date}</code> by {user}\n"
