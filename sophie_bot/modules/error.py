@@ -22,7 +22,12 @@ async def all_errors_handler(message, dp):
     else:
         msg = message.message
     chat_id = msg.chat.id
-    error = str(sys.exc_info()[1])
+    err_tlt = sys.exc_info()[0].__name__
+    err_msg = str(sys.exc_info()[1])
+
+    if err_tlt == 'BadRequest' and err_msg == 'Have no rights to send a message':
+        return True
+
     text = "<b>Sorry, I encountered a error!</b>\n"
-    text += '<code>%s</code>' % error
+    text += f'<code>{err_tlt}: {err_msg}</code>'
     await bot.send_message(chat_id, text, reply_to_message_id=msg.message_id)
