@@ -6,12 +6,16 @@ language_info:
 
 STRINGS:
     notes:
+        # /save
         note_saved: "🗒 Note <code>{note_name}</code> saved in <b>{chat_title}</b>!"
         note_updated: "🗒 Note <code>{note_name}</code> updated in <b>{chat_title}</b>!"
         you_can_get_note: "\nYou can retrieve this note by using <code>/get {note_name}</code>, or <code>#{note_name}</code>"
         # Translator note: please keep sure that you don't have space in the end of string
         note_aliases: "\nNote aliases:"
         blank_note: "Saving blank note is not allowed!"
+        notename_cant_contain: "Note name can't contain \"<code>{symbol}</code>\"!"
+
+        # /get
         cant_find_note: I can't find this note in <b>{chat_name}</b>!
         no_note: "Can't find that note."
         no_notes_pattern: "No notes found by pattern <code>%s</code>"
@@ -22,18 +26,32 @@ STRINGS:
             1. Every HTML tag should be closed, like: `<b>bold</b>`
             2. Every `<` symbol which not used in HTML tags should be replaced on `&gt`
             TIP: Get raw text by `/get {notename} noformat`
+        
+        #/notes
         notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
         notelist_header: "<b>Notes in {chat_name}</b>:"
         notelist_search: |
             <b>Pattern:</b> <code>{request}</code>
             <b>Matched notes:</b>
+        
+        # /clear
         note_removed: "Note <code>{note_name}</code> removed in <b>{chat_name}</b>!"
-        u_can_get_note: "\nYou can retrieve these notes by using <code>/get notename</code>, or <code>#notename</code>"
+
+        # /clearall
+        clear_all_text: "This will remove all notes from {chat_name}. Are you sure?"
+        clearall_btn_yes: "Yes. Remove all my notes!"
+        clearall_btn_no: "No!"
+        clearall_done: "All (<code>{num}</code>) notes in {chat_name} was removed!"
+
+        # /search
         search_header: |
             <b>Search request in {chat_name}</b>:
             <b>Pattern:</b> <code>{request}</code>
             <b>Matched notes:</b>
+
         pmed_note: "I have PM'ed that note to you!"
+
+        # /noteinfo
         note_info_title: "<b>Note info</b>\n"
         note_info_note: "Note names: %s\n"
         note_info_content: "Note content: %s\n"
@@ -41,7 +59,6 @@ STRINGS:
         note_info_created: "Was created in: <code>{date}</code> by {user}\n"
         note_info_updated: "Last updated in: <code>{date}</code> by {user}\n"
         user_blocked: "Write /start in my PM!"
-        notename_cant_contain: "Note name can't contain \"<code>{symbol}</code>\"!"
 
         #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
         #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."

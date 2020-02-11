@@ -18,6 +18,7 @@ from babel.dates import format_datetime
 from pymongo import ReplaceOne
 
 from aiogram.dispatcher.filters.builtin import CommandStart
+from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 
 from .utils.connections import chat_connection
 from .utils.disable import disablable_dec
@@ -193,7 +194,7 @@ async def get_notes_list(message, chat, strings):
         text += '\n-'
         for note_name in note['names']:
             text += f" <code>#{note_name}</code>"
-    text += strings['u_can_get_note']
+    text += strings['you_can_get_note']
     await message.reply(text)
 
 
@@ -212,7 +213,7 @@ async def search_in_note(message, chat, strings):
         text += '\n-'
         for note_name in note['names']:
             text += f" <code>#{note_name}</code>"
-    text += strings['u_can_get_note']
+    text += strings['you_get_note']
     if not check:
         await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
         return
@@ -244,10 +245,36 @@ async def clear_note(message, chat, strings):
     await message.reply(strings['note_removed'].format(note_name=note_name, chat_name=chat['chat_title']))
 
 
-@register(cmds='noteinfo')
+@register(cmds='clearall')
+@chat_connection(admin=True)
+@get_strings_dec('notes')
+async def clear_all_notes(message, chat, strings):
+    # Ensure notes count
+    if not await db.notes_v2.find_one({'chat_id': chat['chat_id']}):
+        await message.reply(strings['notelist_no_notes'].format(chat_title=chat['chat_title']))
+        return
+
+    text = strings['clear_all_text'].format(chat_name=chat['chat_title'])
+    buttons = InlineKeyboardMarkup()
+    buttons.add(InlineKeyboardButton(strings['clearall_btn_yes'], callback_data='clean_all_notes_cb'))
+    buttons.add(InlineKeyboardButton(strings['clearall_btn_no'], callback_data='cancel'))
+    await message.reply(text, reply_markup=buttons)
+
+
+@register(regexp='clean_all_notes_cb', f='cb')
+@chat_connection(admin=True)
+@get_strings_dec('notes')
+async def clear_all_notes_cb(event, chat, strings):
+    num = (await db.notes_v2.delete_many({'chat_id': chat['chat_id']})).deleted_count
+
+    text = strings['clearall_done'].format(num=num, chat_name=chat['chat_title'])
+    await event.message.edit_text(text)
+
+
+@register(cmds='noteinfo', user_admin=True)
 @chat_connection()
 @get_strings_dec('notes')
-async def note_info(message, chat, strings, user_admin=True):
+async def note_info(message, chat, strings):
     note_name = get_arg(message).lower()
     if note_name[0] == '#':
         note_name = note_name[1:]
