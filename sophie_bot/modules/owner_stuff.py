@@ -192,10 +192,10 @@ async def api_stats():
 
 
 async def __stats__():
-    text = "* <code>{}</code> total crash happened in this week\n".format(
-        await db.errors.count_documents({
-            'date': {'$gte': datetime.datetime.now() - datetime.timedelta(days=7)}
-        }))
+    text = ""
+    text += "* Database structure version <code>{}</code>\n".format(
+        (await db.db_structure.find_one({}))['db_ver']
+    )
     local_db = await db.command("dbstats")
     if 'fsTotalSize' in local_db:
         text += '* Database size is <code>{}</code>, free <code>{}</code>\n'.format(
