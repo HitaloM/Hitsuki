@@ -11,4 +11,4 @@
 # you may not use this file except in compliance with the License.
 
 SOPHIE_VERSION = "v2.0-beta"
-DB_STRUCTURE_VER = 2
+DB_STRUCTURE_VER = 3
