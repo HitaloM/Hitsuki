@@ -15,11 +15,11 @@ from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 
 
-async def get_connected_chat(message, admin=False, only_groups=False):
+async def get_connected_chat(message, admin=False, only_groups=False, from_id=None):
     # admin - Require admin rights in connected chat
     # only_in_groups - disable command when bot's pm not connected to any chat
     real_chat_id = message.chat.id
-    user_id = message.from_user.id
+    user_id = from_id or message.from_user.id
     key = 'connection_cache_' + str(user_id)
 
     if not message.chat.type == 'private':
@@ -27,10 +27,10 @@ async def get_connected_chat(message, admin=False, only_groups=False):
         return {'status': 'chat', 'chat_id': real_chat_id, 'chat_title': chat_title}
 
     # Cached
-    if cached := redis.hgetall(key):
-        cached['status'] = True
-        cached['chat_id'] = int(cached['chat_id'])
-        return cached
+    #if cached := redis.hgetall(key):
+    #    cached['status'] = True
+    #    cached['chat_id'] = int(cached['chat_id'])
+    #    return cached
 
     # if pm and not connected
     if not (connected := await db.connections_v2.find_one({'user_id': user_id})) or 'chat_id' not in connected:
@@ -78,10 +78,12 @@ def chat_connection(**dec_kwargs):
         async def wrapped_1(*args, **kwargs):
 
             message = args[0]
+            from_id = None
             if hasattr(message, 'message'):
+                from_id = message.from_user.id
                 message = message.message
 
-            if (check := await get_connected_chat(message, **dec_kwargs))['status'] is None:
+            if (check := await get_connected_chat(message, from_id=from_id, **dec_kwargs))['status'] is None:
                 await message.reply(check['err_msg'])
                 return
             else:
