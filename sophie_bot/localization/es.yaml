@@ -1,0 +1,531 @@
+---
+    language_info:
+      name: Spain
+      small_name: spa
+      flag: "🇪🇸"
+      code: es
+      translators: [714500683]
+    STRINGS:
+      notes:
+        #/save
+        note_saved: "🗒 Nota <code>{note_name}</code> guardada en <b>{chat_title}</b>!"
+        note_updated: "🗒 Nota <code>{note_name}</code> actualizada en <b>{chat_title}</b>!"
+        you_can_get_note: "Puedes recuperar esta nota usando <code>/get {note_name}</code>, ó <code>#{note_name}</code>"
+        #Translator note: please keep sure that you don't have space in the end of string
+        note_aliases: "\nNote aliases:"
+        blank_note: "¡No se permite guardar notas en blanco!"
+        notename_cant_contain: "El nombre de la nota no puede contener \"<code>{symbol}</code>\"!"
+        #/get
+        cant_find_note: '¡No puedo encontrar esta nota en <b>{chat_name}</b>!'
+        no_note: "No se puede encontrar esa nota."
+        no_notes_pattern: "No se han encontrado notas por patrón <code>%s</code>"
+        u_mean: "\n¿Quisiste decir <code>#{note_name}</code>?"
+        file_type_invalid: "Tipo de archivo no válido <code>{file_type}</code>!"
+        cant_parse_html: |
+          No se puede analizar el formato HTML, por favor tenga en cuenta:
+          1. Cada etiqueta HTML debe ser cerrada, como: `<b>negrita</b>`
+          2. Cada símbolo `<` que no se utiliza en etiquetas HTML debe ser reemplazado en `&gt`
+          TIP: Obtener texto raw por `/get {notename} noformat`
+        #/notes
+        notelist_no_notes: "¡No hay notas en <b>{chat_title}</b>!"
+        notelist_header: "<b>Notes in {chat_name}</b>:"
+        notelist_search: |
+          <b>Patrón:</b> <code>{request}</code>
+          <b>Notas coincidentes:</b>
+        #/clear
+        note_removed: "Nota <code>{note_name}</code> eliminada en <b>{chat_name}</b>!"
+        #/clearall
+        clear_all_text: "This will remove all notes from {chat_name}. Are you sure?"
+        clearall_btn_yes: "Yes. Remove all my notes!"
+        clearall_btn_no: "No!"
+        clearall_done: "All (<code>{num}</code>) notes in {chat_name} was removed!"
+        #/search
+        search_header: |
+          <b>Solicitud de búsqueda en {chat_name}</b>:
+          <b>Patrón:</b> <code>{request}</code>
+          <b>Notas coincidentes:</b>
+        pmed_note: "¡Te he enviado por mensaje privado esa nota!"
+        #/noteinfo
+        note_info_title: "<b>Info de nota</b>\n"
+        note_info_note: "Note names: %s\n"
+        note_info_content: "Contenido de la nota: %s"
+        note_info_parsing: "Modo de análisis: <code>%s</code>\n"
+        note_info_created: "Fue creado en: <code>{date}</code> por {user}\n"
+        note_info_updated: "Última actualización en: <code>{date}</code> por {user}\n"
+        user_blocked: "¡Escríbeme /start por mensaje privado!"
+      #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
+      #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
+      filters:
+        filters_in: "Filtros en <b>{chat_name}</b>:\n"
+        no_filters_in: "¡No se encontraron filtros en <b>{}</b>!"
+        filtes_in: "<b>Filtros en {}:</b>\n"
+        cant_find_filter: "¡No puedo encontrar ese filtro!"
+        filter_deleted: "¡Filtro <code>{filter}</code> en <b>{chat_name}</b> eliminado!"
+        filter_ban_success: "El usuario {user} ha sido baneado debido a la acción automatizada en el filtro <code>{filter}</code>."
+        filter_mute_success: "El usuario {user} ha sido silenciado debido a la acción automatizada en el filtro <code>{filter}</code>."
+        filter_tban_success: "El usuario {user} fue baneado temporalmente en <code>{time}</code> {unit} debido a la acción automatizada en el filtro <code>{filter}</code>."
+        filter_tmute_success: "El usuario {user} ha sido silenciado temporalmente en <code>{time}</code> {unit} debido a la acción automatizada en el filtro <code>{filter}</code>."
+        filter_kick_success: "Usuario {user} expulsado debido a la acción automatizada en el filtro <code>{filter}</code>."
+        filter_warn_ban: "Eso es {warns}/{warns} avisos. {user} fue baneado debido a\n<code>{reason}</code>."
+        filter_warn_warned: "{user} fue avisado en {chat} \nEncargado: <code>{handler}</code>\nAvisos: {current_warns}/{max_warns}\nRazón:\n<code>{reason}</code> "
+        not_enoff_rights: "¡No tengo suficientes permisos para hacer la acción de filtro aquí!"
+        write_keyword: "Por favor, escriba palabras clave(s)."
+        handler_added: "¡Vale! Responderé en '<code>{handler}</code>'."
+        select_action: "\nAhora seleccione una acción para este filtro:"
+        action_note: "Enviar nota"
+        action_answer: "Responder en mensaje"
+        action_delmsg: "Borrar mensaje"
+        action_warn: "Advertir usuario"
+        action_ban: "Banear usuario"
+        action_mute: "Silenciar usuario"
+        action_kick: "Expulsar usuario"
+        del_origin_off: "❌ Borrar mensaje de origen: APAGADO"
+        del_origin_on: "❌ Borrar mensaje de origen: ACTIVADO"
+        exit: "❗ Salir"
+        back: "◀ Volver"
+        write_reason: "¡Vale! Por favor, escribe el motivo con el que haremos esta acción."
+        write_notename: "¡Vale! Por favor, escriba un nombre de nota."
+        write_text: "¡Vale! Por favor, escriba texto para respuesta."
+        select_time: "<b>¡Bien! Ahora selecciona la hora para esta acción.</b>"
+        select_time_tip: "\nTambién puedes escribir el tiempo manualmente, por ejemplo escribe '2d'"
+        select_time_btns: "\nO seleccione la hora por los botones de abajo:"
+        time_f: "Para siempre"
+        time_2h: "2 horas"
+        time_5h: "5 horas"
+        time_24h: "24 horas"
+        time_2d: "2 días"
+        time_1w: "1 Semana"
+        time_not_valid: "¡El valor de tiempo no es válido!"
+        cant_find_note: "Lo siento, no puedo encontrar esa nota."
+        filter_added: "<b>¡Filtro añadido con éxito!</b>"
+        filter_updated: "<b>Filtro actualizado con éxito!</b>"
+        new_filter_chat: "\nChat: <b>{chat_title}</b>"
+        new_filter_handler: "\nEncargado: <code>{handler}</code>"
+        new_filter_action: "\nAcción: <code>{action}</code>"
+        new_filter_also_del_msg: "\nTambién borrar el mensaje de origen."
+        new_filter_time: "\nHora: en <code>{time}</code>"
+        new_filter_note: "\nNota: <code>{note}</code>"
+        new_filter_reason: "\nMotivo:\n"
+      warns:
+        user_no_admeme: "No eres administrador."
+        purged_warns: "{admin} restablecer <code>{number}</code> advertencias {user} en <b>{chat_name}</b>!"
+        usr_no_wrn: "¡{user} aún no tiene ninguna advertencia!"
+        usr_whitelist: "¡Este es un usuario en la lista blanca!"
+        Admin_no_wrn: "¡No puedo advertir a los administradores!"
+        warn: "{admin} ha advertido a {user} en {chat_name}\n"
+        warn_rsn: "Razón: <code>{reason}</code>\n"
+        warn_bun: "¡Las advertencias se han excedido! {user} ha sido baneado!"
+        warn_num: "Avisos: {curr_warns}/{max_warns}\n"
+        rmv_warn_admin: "No eres un administrador, ¡Sólo los administradores pueden eliminar una advertencia!"
+        rmv_sfl: "Advertencia eliminada por {admin}"
+        warn_list_head: "{user} <b>advertencias en {chat_name}:</b>\n"
+        user_hasnt_warned: "{user} no ha sido advertido en <b>{chat_name}</b> antes!"
+        warn_limit: "El límite de advertencia en <b>{chat_name}</b> es actualmente: <code>{num}</code>"
+        warn_limit_upd: "¡El límite de advertencia ha sido actualizado a <code>{}</code>!"
+        no_user_warns: "¡{user} aún no tiene ninguna advertencia!"
+        warnlimit_too_small: "El límite de advertencia especificado es demasiado pequeño. Mínimo - 2."
+      msg_deleting:
+        no_rights_purge: "¡No tienes permisos suficientes para purgar en este grupo!"
+        reply_to_msg: "Responder a un mensaje para eliminar!"
+        purge_error: "No puedo continuar purgando, principalmente porque comenzaste a purgar de un mensaje que fue enviado más de 2 días."
+        fast_purge_done: "<b>¡Purga rápida completada!</b>\nEste mensaje se eliminará en 5 segundos."
+        purge_user_done: "Todos los mensajes de {user} fueron eliminados con éxito!"
+      misc:
+        your_id: "Tu ID: <code>{id}</code>\n"
+        chat_id: "ID del grupo: <code>{id}</code>\n"
+        user_id: "{user}'s ID: <code>{id}</code>\n"
+        conn_chat_id: "ID de chat conectado actualmente: <code>{id}</code>"
+        promote_success: "¡{user} fue promovido con éxito en {chat_name}!"
+        promote_title: "\nCon un rol personalizado <code>{role}</code>"
+        rank_to_loong: "El texto de rol personalizado no puede tener más de 16 símbolos."
+        promote_failed: "¡Ascenso fallido! Compruebe si tengo permisos."
+        demote_success: "¡{user} fue degradado con éxito en {chat_name}!"
+        demote_not_admin: "Ese usuario no es administrador."
+        demote_failed: "Demostración fallida. Tal vez no pueda demorar o la persona es promovida por otra persona"
+        help_btn: "¡Haz clic para ayuda!"
+        help_txt: "¡Haz clic en el botón de abajo para obtener ayuda!"
+        paste_success_extra: "<b>¡Pegado con éxito!</b>\nURL acortada: {}\nURL original de Dogbin: {}"
+        paste_success: "<b>¡Pegado con éxito!</b>\nURL de Dogbin: {}"
+        paste_fail: "¡No se pudo llegar al Dogbin!"
+        paste_no_text: "¡No proporcionaste texto para pegar!"
+      pm_menu:
+        start_hi: "¡Hola! ¡Mi nombre es Sophie, te ayudo a gestionar tu grupo de una manera eficiente!"
+        btn_help: "Ayuda"
+        btn_lang: "🇷🇺 Lenguaje"
+        btn_chat: "👥 Grupo Sophie"
+        btn_channel: "📡 Noticias de Sophie"
+      disable:
+        disablable: "<b>Comandos habilitables y deshabilitables:</b>\n"
+        disabled_list: "<b>Comandos deshabilitados en {chat_name}:</b>\n"
+        wot_to_disable: "¿Qué quieres desactivar?"
+        no_disabled_cmds: '¡No hay comandos deshabilitados en <b>{chat_name}</b>!'
+        already_disabled: "¡Este comando ya está deshabilitado!"
+        disabled: "¡El comando <code>{cmd}</code> ha sido desactivado en <b>{chat_name}</b>!"
+        wot_to_enable: "¿Qué quieres habilitar?"
+        already_enabled: "¡Este comando no está desactivado!"
+        enabled: "¡El comando <code>{cmd}</code> ha sido activado en <b>{chat_name}</b>!"
+      bot_rights:
+        change_info: "No tengo derechos para cambiar la información del grupo, por favor hazme administradora con ese permiso."
+        edit_messages: "¡No tengo permisos para editar los mensajes del canal!"
+        delete_messages: "No tengo permisos para borrar mensajes aquí."
+        ban_user: "No tengo derechos para banear a los usuarios, por favor hazme administradora con ese permiso."
+        pin_messages: "No tengo permisos para anclar mensajes, por favor hazme administradora con ese permiso."
+        add_admins: "No tengo permisos para añadir administradores, por favor hazme administradora con ese permiso."
+      feds:
+        #decorators
+        need_fed_admin: "No eres administrador en <b>{name}</b> Federación"
+        need_fed_owner: "No eres dueño de <b>{name}</b> Federación"
+        #/newfed
+        fed_name_long: "¡El nombre de la Federación no puede tener más de 60 símbolos!"
+        can_only_1_fed: "1 usuario puede crear sólo 1 Federación, por favor elimine uno."
+        name_not_avaible: "¡La Federación con el nombre <code>{name}</code> ya se ha salido! Por favor, usa otro nombre."
+        created_fed: |
+          Felicidades, has creado con éxito la Federación.
+          <b>Nombre:</b> {name}
+          <b>ID:</b> <code>{id}</code>
+          <b>Creador:</b> {creator}
+          Use <code>/joinfed {id}</code> para conectarse al chat
+        #/joinfed
+        only_creators: "Debes ser un creador de chat para poder conectar el chat a federación."
+        fed_id_invalid: "¡El ID de la Federación no es válido! Por favor, dame un ID válido."
+        joined_fed_already: "¡Este chat ya se ha unido a una Federación! Por favor usa /leavefed para dejar esa federación"
+        join_fed_success: "¡Genial! ¡El chat <b>{chat}</b> es ahora parte de <b>{fed}</b> Federación!"
+        join_chat_fed_log: |
+          <b>El nuevo chat se unió a la Federación</b> #Chat se unió
+          <b>a la Federación:</b> {fed_name} (<code>{fed_id}</code>)
+          <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
+        #/leavefed
+        chat_not_in_fed: "Este chat no está en ninguna federación todavía."
+        leave_fed_success: "El chat <b>{chat}</b> dejó la federación <b>de{fed}</b>."
+        leave_chat_fed_log: |
+          <b>Chat ha salido de la Federación</b> #ChatLeaved
+          <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
+          <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
+        #/fsub
+        already_subsed: "La Federación <b>{name}</b> ya está suscrita a <b>{name2}</b>"
+        subsed_success: "Federación <b>{name}</b> suscrito a <b>{name2}</b>!"
+        #/fpromote
+        #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
+        admin_added_to_fed: "Usuario {user} añadido a <b>{name}</b> Administradores de la Federación."
+        promote_user_fed_log: |
+          <b>Usuario ascendido a los administradores de la federación</b> #UserPromoted
+          <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
+          <b>Usuario:</b> {user} (<code>{user_id}</code>)
+        #/fdemote
+        #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
+        admin_demoted_from_fed: "Usuario {user} degradado de <b>{name}</b> Administradores de la Federación."
+        demote_user_fed_log: |
+          <b>Usuario degradado de los administradores de la federación</b> #Degradación de usuario
+          <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
+          <b>Usuario:</b> {user} (<code>{user_id}</code>)
+        #/fsetlog
+        already_have_chatlog: "<b>{name}</b> ¡La Federación ya ha habilitado el registro en otro chat/canal!"
+        set_chat_log: "Este chat ahora registra todas las acciones en <b>{name}</b> Federación"
+        set_log_fed_log: |
+          <b>Activado registro</b> #LoggingEnabled
+          <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
+        #/funsetlog
+        not_logging: "<b>{name}</b> ¡La Federación no ha iniciado sesión en ningún chat/canal!"
+        logging_removed: "Se ha eliminado correctamente el registro de <b>{name}</b> Federación."
+        unset_log_fed_log: |
+          <b>Registro deshabilitado</b> #LoggingDisabled
+          <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
+        #/fchatlist
+        chats_in_fed: "<b>Chats conectados a {name} Federación:</b>\n"
+        too_large: "Salida demasiado grande, enviando como archivo"
+        #/finfo
+        finfo_text: |
+          <b>Información de la Federación</b>
+          <b>Nombre:</b> {name}
+          <b>ID:</b> <code>{fed_id}</code>
+          <b>Creador:</b> {creator}
+          <b>Chats en la federación:</b> {chats}
+          <b>Usuarios Baneados en la federación:</b> {fbanned}
+        finfo_subs_title: "<b>La Federación está suscrita a estas federaciones:</b>\n"
+        #/fadminlist
+        fadmins_header: "Administradores en <b>{fed_name}</b> Clan:\n"
+        #no_fbanned_in_fed: "There isn't any banned users in {fed_name} Federation!"
+        #/fban
+        user_wl: "Este usuario está en la lista blanca del baneo."
+        fban_self: "¡Eso es un buen espectáculo!"
+        fban_creator: "¿Cómo puedo banearr al creador de la Federación?! No creo que sea divertido."
+        fban_fed_admin: "¡No voy a banear a un administrador de su propia federación!"
+        already_fbanned: "{user} ya está baneado en esta federación."
+        fbanned_header: "<b>Nuevo FedBan</b>\n"
+        fban_info: |
+          <b>Federación:</b> {fed}
+          <b>Administrador de la Federación:</b> {fadmin}
+          <b>Usuario:</b> {user} (<code>{user_id}</code>)
+        fbanned_reason: "<b>Razón:</b> <code>{reason}</code>"
+        fbanned_process: "\n<b>Estado:</b> Baneando en <code>{num}</code> chats de federación..."
+        fbanned_done: "\n<b>Estado:</b> ¡Hecho! baneado en <code>{num}</code> chats!"
+        fbanned_subs_process: "\n<b>Estado:</b> Baneando en <code>{feds}</code> federaciones suscritas..."
+        fbanned_subs_done: "\n<b>Estado:</b> Hecho! baneado en <code>{chats}</code> chats de esta federación y <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones suscritas"
+        fban_usr_rmvd: |
+          El usuario {user} está baneado en la federación actual <b>{fed}</b>. ¡Se ha eliminado!
+          Razón: <code>{rsn}</code>
+        fban_log_fed_log: |
+          <b>Banear usuario en la federación</b> #FederBan
+          <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
+          <b>Chats:</b> usuario baneado en <code>{chat_count}</code>/<code>{all_chats}</code> chats
+        fban_reason_fed_log: "<b>Razón:</b> <code>{reason}</code>\n"
+        fban_subs_fed_log: "\n<b>federaciones suscritas:</b> baneado en <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones"
+        #/unfban
+        unfban_self: "Piensa en algo más para divertirte que esto."
+        user_not_fbanned: "{user} no fue baneado en esta federación."
+        un_fbanned_header: "<b>Nuevo Un-FedBan</b>\n"
+        un_fbanned_process: "\n<b>Estado:</b> Desbaneando en <code>{num}</code> chats..."
+        un_fbanned_done: "\n<b>Estado:</b> ¡Listo! ¡Desbaneado en <code>{num}</code> chats!"
+        un_fbanned_subs_process: "\n<b>Estado:</b> Desbaneando en <code>{feds}</code> federaciones suscritas..."
+        un_fbanned_subs_done: "\n<b>Estado:</b> ¡Listo! Desbaneado en <code>{chats}</code> chats de esta federación y <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones suscritas"
+        un_fban_log_fed_log: |
+          <b>Desbanear usuario en la federación</b> #FederUnBan
+          <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
+          <b>Chats:</b> usuario desbaneado en <code>{chat_count}</code>/<code>{all_chats}</code> chats
+        un_fban_subs_fed_log: "\n<b>federaciones suscritas:</b> desbaneado en <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones"
+      reports:
+        user_user_admin: "Eres un administrador aquí, ¿por qué necesitarías reportar a alguien?.."
+        user_is_whitelisted: "Eres un usuario en la lista blanca, ¿por qué necesitarías reportar a alguien?.."
+        reports_disabled: "Los reportes están actualmente <b>deshabilitados</b> en este grupo."
+        no_user_to_report: "¿Qué usuario desea reportar?"
+        report_admin: "<b>no puedes</b> reportara un administrador."
+        report_whitedlisted: "<b>no puedes</b> reportar a un usuario de la lista blanca."
+        reported_user: "<b>Reportado</b> {user} <b>a los administradores.</b>"
+        reported_reason: "\n<b>Motivo:</b>\n<code>{reason}</code>"
+        reports_on: "Los reportes están activados <b>en</b> en este grupo."
+        reports_off: "Los reportes están actualmente <b>deshabilitados</b> en este grupo."
+        user_not_admin: "<b>No eres administrador. Significa que no puedes cambiar el estado de los reportes. </b>"
+        reports_already_on: "<b>Los reportes ya están activados.</b>"
+        reports_turned_on: "Reportes activados <b>.</b>"
+        reports_already_off: "<b>Los reportes ya están desactivados.</b>"
+        wrong_argument: "<b> Argumento incorrecto. </b>"
+      language:
+        your_lang: "Tu idioma actual: <b>{lang}</b>"
+        chat_lang: "Idioma del chat actual: <b>{lang}</b>"
+        select_pm_lang: "\n<b>Selecciona tu nuevo idioma:</b>"
+        select_chat_lang: "\n<b>Seleccionar nuevo idioma del chat:</b>"
+        crowdin_btn: "🌎 Ayúdanos con la traducción"
+        help_us_translate: "\n\n<a href=\"https://crowdin.com/project/sophiebot\">🌎 Ayúdanos a mejorar los idiomas</a>"
+        not_supported_lang: '¡Este idioma no es soportado!'
+        lang_changed: Idioma cambiado a <b>{lang_name}</b>.
+        see_translators: '👥 Ver traductores'
+      connections:
+        pm_connected: "¡Tu MP se ha conectado con éxito a <b>{chat_name}</b>!"
+        connected_pm_to_me: "¡Tu MP se ha conectado con éxito a <b>{chat_name}</b>! Por favor, envíame mensaje privado para empezar a usar la conexión."
+        chat_connection_tlt: "<b>Conexión de chat</b>\n"
+        connected_chat: "<b>Chat conectado actualmente:</b>\n{chat_name}\n"
+        u_wasnt_connected: "¡No has sido conectado a ningún chat antes!"
+        select_chat_to_connect: "\n<b>Selecciona un chat para conectarse:</b>"
+        disconnected: "Has sido desconectado de <b>{chat_name}</b>."
+        cant_find_chat: "No puedo encontrar este chat."
+        cant_find_chat_use_id: "No puedo encontrar este chat. Usa el ID del chat."
+        bad_arg_bool: "Elección incorrecta: solo soportado <code>en</code>/<code>off</code> <code>habilitar</code>/<code>desactivar</code>"
+        enabled: activado
+        disabled: deshabilitado
+        chat_users_connections_info: "Las conexiones para usuarios normales actualmente es <b>{status}</b> para <b>{chat_name}</b>"
+        chat_users_connections_cng: "Conexiones para usuarios normales cambiadas a <b>{status}</b> para <b>{chat_name}</b>"
+        not_in_group: "No estás en el grupo al que estás intentando conectarse, unirte y envia un mensaje."
+        history_empty: "No estás conectado a ningún chat para el historial, conecta a través de `/connect (chat id)`"
+        not_in_chat: "Ya no estás en este chat, te desconectaré."
+        u_should_be_admin: "¡Debes ser un administrador en {}!"
+        usage_only_in_groups: "¡El uso limitado sólo en grupos!"
+      global:
+        u_not_admin: '¡Deberías ser un administrador para hacer esto!'
+        #Rights
+        "bot_no_right:not_admin": '¡No soy un administrador!'
+        "user_no_right:not_admin": '¡Deberías ser administrador para hacerlo!'
+      owner_stuff:
+        father: "\nÉl es mi creador."
+        sudo_crown: "\n¡Oye! Mira que el usuario tiene una corona, déjame verla.. Wow, tiene un grabado - <b>'sudo user'</b>!"
+      stickers:
+        rpl_to_sticker: "Responder a un sticker!"
+        ur_sticker: |
+          <b>Emoji:</b> <code>{emoji}</code>
+          <b>ID del Sticker:</b> <code>{id}</code>
+      pins:
+        no_reply_msg: "Responde a un mensaje para fijar!"
+        chat_not_modified_pin: "¡Ese mensaje ya está fijado!"
+        chat_not_modified_unpin: "¡No hay ningún mensaje anclado para desanclar!"
+        pinned_success: "¡Fijado con éxito!"
+        unpin_success: "¡Desfijado con éxito!"
+      users:
+        user_info: "<b>Información del usuario:</b>\n"
+        info_id: "ID: <code>{id}</code>"
+        info_first: "\nNombre: {first_name}"
+        info_last: "\nApellidos: {last_name}"
+        info_username: "\nNombre de usuario: {username}"
+        info_link: "\nEnlace de usuario: {user_link}"
+        info_saw: "\nLos vi en <code>{num}</code> grupos"
+        info_fbanned: "\nBaneado en la Federación actual: "
+        info_admeme: "\nEl usuario tiene derechos de administrador en este chat."
+        upd_cache: "Actualizando caché ahora..."
+        admins: "<b>Administrador en este grupo:</b>\n"
+      imports_exports:
+        #Exporting
+        started_exporting: '¡Exportación iniciada! Por favor espere...'
+        export_done: Exportación de <b>%s</b> hecho!
+        exports_locked: '¡Por favor, espera %s para volver a usar exportaciones!'
+        #Importing
+        send_import_file: '¡Por favor, envía un archivo de importación!'
+        rpl_to_file: '¡Por favor, responde a un archivo!'
+        big_file: '¡Archivos de importación soportados solo por menos de 50 MB!'
+        started_importing: '¡Importación iniciada! Por favor espere...'
+        bad_file: '¡Archivo erróneo! Se esperaba <code>columna ''general''</code>.'
+        imports_locked: '¡Por favor, espera %s para usar las importaciones de nuevo!'
+        import_done: '¡Importación hecha!'
+      restrictions:
+        user_not_in_chat: Usuario no está en este chat!
+        #Kicks
+        kick_sophie: En lugar de tratar de expulsarme podrías usar mejor tu tiempo. Eso es aburrido.
+        kick_admin: Expulsar a los administradores no es la mejor idea.
+        kick_self: Si quieres expulsarte a ti mismo - simplemente deja este chat. Yo prefiero no verte que mirar estos patéticos intentos de autocastigo.
+        user_kicked: "{user} fue expulsado por {admin} en {chat_name}."
+        #Mutes
+        mute_sophie: En realidad, estaré encantada de callarte en su lugar.
+        mute_admin: Si crees que puedes callar a admin, ¡estás equivocado!
+        mute_self: Si quieres expulsarte a ti mismo - simplemente deja este chat. Yo prefiero no verte que mirar estos patéticos intentos de autocastigo.
+        user_muted: "{user} fue silenciado por {admin} en {chat_name}."
+        unmute_sophie: En realidad, no estoy silenciada.
+        unmute_admin: '¡Jajaja no, trata de silenciarlo por primera vez!'
+        unmute_self: '¿Debería silenciarte por primera vez?'
+        user_unmuted: "{user} fue desmuteado por {admin} en {chat_name}."
+        #Bans
+        ban_sophie: '¡No, no lo haré! ¡Pídele al creador del chat que lo haga!'
+        ban_admin: Jajaja, vamos a <code>/degradarlo</code> por primera vez.
+        ban_self: '¿Por qué intentas banearte a ti mismo?'
+        user_banned: "{user} fue baneado por {admin} en {chat_name}."
+        unban_sophie: En realidad, no estoy baneada.
+        unban_admin: '¡Jajaja no, trata de banearlo por primera vez!'
+        unban_self: '¿Debería banearte por primera vez?'
+        user_unband: "{user} fue desbaneado por {admin} en {chat_name}."
+        invalid_time: Hora inválida!
+        enter_time: '¡Por favor, añade tiempo!'
+        on_time: "\nEn <code>%s</code>"
+        reason: "\nRazón: <code>%s</code>"
+        purge: "\nEn 5 segundos se purgarán los mensajes!"
+      rules:
+        #Set
+        saved: Reglas guardadas en <b>%s</b>
+        updated: Reglas actualizadas en <b>%s</b>
+        #Reset
+        deleted: '¡Reglas eliminadas!'
+        not_found: '¡Reglas no encontradas!'
+        #Callback
+        user_blocked: "Escríbeme /start por mensaje privado!"
+        rules_was_pmed: '¡Reglas enviadas por mensaje privado!'
+      #cannot_find_note: "I can't find the note <code>{}</code>"
+      #set_note: "Successfully set the rules note to <code>{}</code>"
+      #didnt_set_note: "This group doesn't have rules note set."
+      #cannot_find_set_note: "I can't find the rules note."
+      #havent_set_rules_note: "You haven't set the rules note yet."
+      #success_remove_rules_note: "Successfully removed rules note in <b>{}</b>."
+      greetings:
+        default_welcome: "¡Bienvenido/a {mention}! ¿Cómo estás?"
+        default_security_note: "¡Bienvenido/a {mention}! ¡Por favor pulsa el botón de abajo para verificarte como humano!"
+        bool_invalid_arg: Argumento inválido, se esperaba <code>on</code>/<code>off</code>.
+        #/setwelcome
+        saved: Mensaje de bienvenida guardado en <b>%s</b>
+        updated: Mensaje de bienvenida actualizado en <b>%s</b>
+        #/turnwelcome
+        turnwelcome_status: Bienvenidas es <code>{status}</code> en <b>{chat_name}</b>
+        turnwelcome_enabled: Bienvenidas habilitadas en <b>%s</b>
+        turnwelcome_disabled: Bienvenidas deshabilitadas en <b>%s</b>
+        #/welcome
+        enabled: habilitado
+        disabled: deshabilitado
+        wlcm_security_enabled: "habilitado, establecido a {level}"
+        wlcm_mutes_enabled: "habilitado, establecido a {time}"
+        welcome_info: |
+          <b>Configuración de bienvenida en {chat_name}:</b>
+          Bienvenidas están <code>{welcomes_status}</code>
+          La seguridad de bienvenida es <code>{wlcm_security}</code>
+          Bienvenida mutes es <code>{wlcm_mutes}</code>
+          Eliminar la vieja bienvenida es <code>{clean_welcomes}</code>
+          Eliminar mensajes del servicio es <code>{clean_service}</code>
+        wlcm_note: "\n\nLa nota de bienvenida es:"
+        raw_wlcm_note: "Nota de bienvenida rapida es:"
+        security_note: "El texto de seguridad de bienvenida es:"
+        #/setsecuritynote
+        security_note_saved: "Se guardó el texto de seguridad personalizado <b>%s</b>"
+        security_note_updated: "Texto de seguridad personalizado actualizado <b>%s</b>"
+        #/delsecuritynote
+        security_note_not_found: Texto de seguridad en <b>%s</b> no ha sido instalado antes
+        del_security_note_ok: Texto de seguridad restablecido por defecto en <b>%s</b>
+        #/cleanwelcome
+        cleanwelcome_enabled: Limpieza de bienvenida activada en <b>%s</b>
+        cleanwelcome_disabled: Limpieza de bienvenida desactivada en <b>%s</b>
+        cleanwelcome_status: La limpieza bienvenida es de <code>{status}</code> en <b>{chat_name}</b>
+        #/cleanservice
+        cleanservice_enabled: Limpieza de mensajes de servicio habilitada en <b>%s</b>
+        cleanservice_disabled: Limpieza de mensajes de servicio deshabilitada en <b>%s</b>
+        cleanservice_status: Los mensajes de servicio de limpieza son <code>{status}</code> en <b>{chat_name}</b>
+        #/welcomemute
+        welcomemute_invalid_arg: Argumento inválido, tiempo esperado.
+        welcomemute_enabled: Silencio de bienvenida activado en <b>%s</b>
+        welcomemute_disabled: Silencio de bienvenida deshabilitado en <b>%s</b>
+        welcomemute_status: El silencio de bienvenida es <code>{status}</code> en <b>{chat_name}</b>
+        #/welcomesecurity
+        welcomesecurity_enabled: Seguridad de bienvenida activada en <b>{chat_name}</b> al nivel <code>{level}</code>.
+        welcomesecurity_enabled_word: habilitado, establecido al nivel {level}
+        welcomesecurity_disabled: Seguridad de bienvenida deshabilitada en <b>%s</b>.
+        welcomesecurity_invalid_arg: Argumento inválido, se esperaba <code>button</code>/<code>captcha</code>.
+        welcomesecurity_status: La seguridad de bienvenida es <code>{status}</code> en <b>{chat_name}</b>
+        #Welcomesecurity handler
+        click_here: '¡Haz clic aquí!'
+        not_allowed: '¡No tienes permiso para usar esto!'
+        ws_captcha_text: Hola {user}, por favor ingresa el número del captcha para desmutearte en el chat.
+        regen_captcha_btn: '🔄 Cambiar captcha'
+        num_is_not_digit: '¡Por favor, introduzca sólo números!'
+        bad_num: '¡Número incorrecto! Por favor, inténtalo de nuevo.'
+        passed: '¡Verificación pasada, has sido desmuteado en <b>%s</b>!'
+        passed_no_frm: La verificación ha pasado, ¡Has sido desmuteado en %s!
+        last_chance: '¡Tienes una última oportunidad para ingresar el captcha!'
+        btn_wc_text: |
+          Por favor, pulsa a la derecha si coincide con esta expresión:
+          %s
+        math_wc_rtr_text: "¡Tienes la última oportunidad! Ten cuidado.\n"
+        math_wc_wrong: '¡Error, por favor inténtalo de nuevo!'
+        math_wc_sry: Lo sentimos, has usado el último intento. Pregunta a los administradores del chat.
+        not_admin_wm: No puedo restringir gente aquí, ¡así que no usaré silencio de bienvenida!
+        not_admin_ws: No puedo restringir gente aquí, así que no usaré seguridad de bienvenida!
+    RANDOM_STRINGS:
+      RUNS:
+        - "¡Noooooooooooo!.."
+        - "M cri"
+        - "Señor, ¿por qué?"
+        - "¿Por qué haces esto? Estoy llorando."
+        - "Alguien realmente me escribió este hilo ;_;"
+        - "Alexa, ¡pon Despacito!"
+        - "TODO: ESCRIBE ESTE HILO."
+        - "Plox, sr, sar"
+        - "Espera, oh, para... No puedo enviar stickers ;_;"
+        - "/runs"
+        - "Meow! 😺"
+        - "Prueba /cat"
+        - "Corre de Rose"
+        - "Corre de Yana"
+        - "Si pensabas que te enviaré una nuevo de broma - estás equivocado, ¡no lo haré!"
+        - "SaNd NeW KrANUl LeNk"
+        - "?_?"
+        - "OwO"
+        - "¿Hay alguna raza!?"
+        - "Acceso denegado!!"
+        - "Ok, tu corre y déjame ver qué tanto puedes..."
+        - "Es épico"
+        - "Es tan malditamente épico!!"
+        - "Estoy tan pobre... :("
+        - "¿Si?"
+        - "Sí, presiona /runs más 😏"
+        - "U r smol"
+        - ">~<"
+        - "@admins plz <code>/disable /runs</code>"
+        - "Spam spam spam spam"
+        - "puerto bacup bro gsi ijo"
+        - "port fine sur plz make room bholit mustah Sir"
+        - "fax bacup bad englis bad englis trable workz fox bag dot"
+        - Soy una máquina
+        - Nunca duermo
+        - Mantengo mis ojos abiertos
+        - Soy una máquina
+        - Desearía al menos poder sentir algo
+    
