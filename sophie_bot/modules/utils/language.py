@@ -67,10 +67,24 @@ async def get_strings(chat_id, module, mas_name="STRINGS"):
     if chat_lang not in LANGUAGES:
         await change_chat_lang(chat_id, 'en')
 
-    data = LANGUAGES[chat_lang][mas_name][module]
-    if mas_name == 'STRINGS':
-        data['language_info'] = LANGUAGES[chat_lang]['language_info']
-    return data
+    class Strings:
+        def get_strings(self, lang, mas_name, module):
+            data = LANGUAGES[lang][mas_name][module]
+            if mas_name == 'STRINGS':
+                data['language_info'] = LANGUAGES[chat_lang]['language_info']
+            return data
+
+        def get_string(self, name):
+            data = self.get_strings(chat_lang, mas_name, module)
+            if name not in data:
+                data = self.get_strings('en', mas_name, module)
+
+            return data[name]
+
+        def __getitem__(self, key):
+            return self.get_string(key)
+
+    return Strings()
 
 
 async def get_string(chat_id, module, name, mas_name="STRINGS"):
