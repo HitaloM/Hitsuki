@@ -109,8 +109,6 @@ async def get_note(message, strings, note_name=None, db_item=None,
     text, kwargs = await t_unparse_note_item(message, db_item, chat_id, noformat=noformat, event=event)
     kwargs['reply_to'] = rpl_id
 
-    print(kwargs)
-
     await tbot.send_message(send_id, text, **kwargs)
 
 
