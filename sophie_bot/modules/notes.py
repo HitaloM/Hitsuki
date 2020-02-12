@@ -258,7 +258,7 @@ async def clear_all_notes(message, chat, strings):
     await message.reply(text, reply_markup=buttons)
 
 
-@register(regexp='clean_all_notes_cb', f='cb')
+@register(regexp='clean_all_notes_cb', f='cb', is_admin=True)
 @chat_connection(admin=True)
 @get_strings_dec('notes')
 async def clear_all_notes_cb(event, chat, strings):
