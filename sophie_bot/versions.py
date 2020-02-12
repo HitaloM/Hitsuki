@@ -10,5 +10,5 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-SOPHIE_VERSION = "v2.0-beta"
+SOPHIE_VERSION = "v2.0.1-beta"
 DB_STRUCTURE_VER = 3
