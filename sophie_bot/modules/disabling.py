@@ -1,5 +1,5 @@
 # Copyright (C) 2019 The Raphielscape Company LLC.
-# Copyright (C) 2018 - 2019 MrYacha
+# Copyright (C) 2018 - 2020 MrYacha
 #
 # This file is part of SophieBot.
 #
@@ -10,8 +10,11 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
+from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
+
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
+
 from .utils.connections import chat_connection
 from .utils.disable import DISABLABLE_COMMANDS, disablable_dec
 from .utils.language import get_strings_dec
@@ -96,6 +99,33 @@ async def enable_command(message, chat, strings):
     await message.reply(strings["enabled"].format(
         cmd=cmd, chat_name=chat['chat_title']
     ))
+
+
+@register(cmds="enableall", is_admin=True)
+@chat_connection(admin=True, only_groups=True)
+@get_strings_dec("disable")
+async def enable_all(message, chat, strings):
+    # Ensure that something is disabled
+    if not await db.disabled_v2.find_one({'chat_id': chat['chat_id']}):
+        await message.reply(strings['not_disabled_anything'].format(chat_title=chat['chat_title']))
+        return
+
+    text = strings['enable_all_text'].format(chat_name=chat['chat_title'])
+    buttons = InlineKeyboardMarkup()
+    buttons.add(InlineKeyboardButton(strings['enable_all_btn_yes'], callback_data='enable_all_notes_cb'))
+    buttons.add(InlineKeyboardButton(strings['enable_all_btn_no'], callback_data='cancel'))
+    await message.reply(text, reply_markup=buttons)
+
+
+@register(regexp='enable_all_notes_cb', f='cb', is_admin=True)
+@chat_connection(admin=True)
+@get_strings_dec('disable')
+async def enable_all_notes_cb(event, chat, strings):
+    data = await db.disabled_v2.find_one({'chat_id': chat['chat_id']})
+    await db.disabled_v2.delete_one({'_id': data['_id']})
+
+    text = strings['enable_all_done'].format(num=len(data['cmds']), chat_name=chat['chat_title'])
+    await event.message.edit_text(text)
 
 
 async def __export__(chat_id):
