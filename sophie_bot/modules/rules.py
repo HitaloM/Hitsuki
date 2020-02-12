@@ -119,9 +119,9 @@ async def __export__(chat_id):
 
 
 async def __import__(chat_id, data):
+    rules = data
     for column in [i for i in data if i not in ALLOWED_COLUMNS]:
         del rules[column]
 
-        rules['chat_id'] = chat_id
-
+    rules['chat_id'] = chat_id
     await db.rules_v2.replace_one({'chat_id': rules['chat_id']}, rules, upsert=True)

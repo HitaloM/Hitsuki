@@ -689,8 +689,8 @@ async def test_captcha(message):
 
 
 async def __export__(chat_id):
-    greetings = await db.greetings.find_one({'chat_id': chat_id})
-    del greetings['_id']
-    del greetings['chat_id']
+    if greetings := await db.greetings.find_one({'chat_id': chat_id}):
+        del greetings['_id']
+        del greetings['chat_id']
 
-    return {'greetings': greetings}
+        return {'greetings': greetings}

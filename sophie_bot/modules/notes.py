@@ -410,7 +410,6 @@ async def __import__(chat_id, data):
             del note[item]
 
         note['chat_id'] = chat_id
-        # TODO
         new.append(ReplaceOne({'chat_id': note['chat_id'], 'names': {'$in': [note['names'][0]]}}, note, upsert=True))
 
     await db.notes_v2.bulk_write(new)

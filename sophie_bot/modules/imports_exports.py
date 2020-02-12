@@ -59,7 +59,8 @@ async def export_chat_data(message, chat, strings):
 
     for module in [m for m in LOADED_MODULES if hasattr(m, '__export__')]:
         await asyncio.sleep(0.2)
-        data.update(await module.__export__(chat_id))
+        if k := await module.__export__(chat_id):
+            data.update(k)
 
     jfile = InputFile(io.StringIO(ujson.dumps(data, indent=2)), filename=f'{chat_id}_export.json')
     text = strings['export_done'] % chat['chat_title']
