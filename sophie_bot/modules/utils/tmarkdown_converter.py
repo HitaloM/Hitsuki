@@ -1,6 +1,6 @@
 # Copyright (C) 2019 The Raphielscape Company LLC.
-# Copyright (C) 2018-2019 MrYacha
-# Copyright (C) 2017-2019 Aiogram
+# Copyright (C) 2018 - 2020 MrYacha
+# Copyright (C) 2017 - 2020 Aiogram
 #
 # This file is part of SophieBot.
 #
