@@ -20,7 +20,8 @@ from aiogram.utils import markdown
 
 from telethon.tl.custom import Button
 
-from .tmarkdown_converter import tbold, titalic, tpre, tcode, tlink, tstrikethrough, tunderline
+import sophie_bot.modules.utils.tmarkdown as tmarkdown
+from .tmarkdown import tbold, titalic, tpre, tcode, tlink, tstrikethrough, tunderline
 from .user_details import get_user_link
 
 from .message import get_args
@@ -301,6 +302,13 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
         'file': file_id,
         'link_preview': preview
     }
+
+
+async def send_note(send_id, text, **kwargs):
+    if 'parse_mode' in kwargs and kwargs['parse_mode'] == 'md':
+        kwargs['parse_mode'] = tmarkdown
+
+    await tbot.send_message(send_id, text, **kwargs)
 
 
 def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):

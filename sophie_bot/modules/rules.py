@@ -14,7 +14,7 @@ from telethon.errors.rpcerrorlist import UserIsBlockedError, PeerIdInvalidError
 
 from .utils.language import get_strings_dec
 from .utils.connections import chat_connection
-from .utils.notes import BUTTONS, ALLOWED_COLUMNS, get_parsed_note_list, t_unparse_note_item
+from .utils.notes import BUTTONS, ALLOWED_COLUMNS, get_parsed_note_list, t_unparse_note_item, send_note
 from .utils.message import need_args_dec
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
@@ -65,7 +65,7 @@ async def rules(message, chat, strings):
     text, kwargs = await t_unparse_note_item(message, db_item, chat_id, noformat=noformat)
     kwargs['reply_to'] = rpl_id
 
-    await tbot.send_message(send_id, text, **kwargs)
+    await send_note(send_id, text, **kwargs)
 
 
 @register(cmds='resetrules', user_admin=True)
@@ -101,7 +101,7 @@ async def rules_btn(event, strings, regexp=None, **kwargs):
         await event.message.delete()
 
     try:
-        await tbot.send_message(user_id, text, **kwargs)
+        await send_note(user_id, text, **kwargs)
         await event.answer(strings['rules_was_pmed'])
     except (UserIsBlockedError, PeerIdInvalidError):
         await event.answer(strings['user_blocked'], show_alert=True)

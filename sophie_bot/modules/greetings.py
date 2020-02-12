@@ -27,7 +27,7 @@ from telethon.tl.custom import Button
 
 from .utils.language import get_strings_dec
 from .utils.connections import chat_connection
-from .utils.notes import get_parsed_note_list, t_unparse_note_item
+from .utils.notes import get_parsed_note_list, t_unparse_note_item, send_note
 from .utils.message import need_args_dec, convert_time
 from .utils.user_details import is_user_admin, get_user_link, check_admin_rights
 from .utils.restrictions import mute_user, restrict_user, unmute_user, kick_user
@@ -68,7 +68,7 @@ async def welcome(message, chat, strings):
     if noformat:
         await message.reply(strings['raw_wlcm_note'])
         text, kwargs = await t_unparse_note_item(message, db_item['note'], chat_id, noformat=True)
-        await tbot.send_message(send_id, text, **kwargs)
+        await send_note(send_id, text, **kwargs)
         return
 
     text = strings['welcome_info']
@@ -89,7 +89,7 @@ async def welcome(message, chat, strings):
         text += strings['wlcm_note']
         await message.reply(text)
         text, kwargs = await t_unparse_note_item(message, db_item['note'], chat_id)
-        await tbot.send_message(send_id, text, **kwargs)
+        await send_note(send_id, text, **kwargs)
     else:
         await message.reply(text)
 
@@ -98,7 +98,7 @@ async def welcome(message, chat, strings):
             db_item['security_note']['text'] = strings['default_security_note']
         await message.reply(strings['security_note'])
         text, kwargs = await t_unparse_note_item(message, db_item['security_note'], chat_id)
-        await tbot.send_message(send_id, text, **kwargs)
+        await send_note(send_id, text, **kwargs)
 
 
 @register(cmds=['setwelcome', 'savewelcome'], user_admin=True)
@@ -306,7 +306,7 @@ async def set_security_note(message, chat, strings):
         text, kwargs = await t_unparse_note_item(message, db_item['security_note'], chat_id, noformat=True)
         kwargs['reply_to'] = message.message_id
 
-        await tbot.send_message(chat_id, text, **kwargs)
+        await send_note(chat_id, text, **kwargs)
         return
 
     note = await get_parsed_note_list(message, split_args=0)
@@ -371,7 +371,7 @@ async def welcome_security_handler(message, strings):
     kwargs['reply_to'] = message.message_id
 
     kwargs['buttons'] = None if not kwargs['buttons'] else kwargs['buttons']
-    msg = await tbot.send_message(chat_id, text, **kwargs)
+    msg = await send_note(chat_id, text, **kwargs)
 
     # Edit msg to apply button
     kwargs['buttons'] = [] if not kwargs['buttons'] else kwargs['buttons']
@@ -620,7 +620,7 @@ async def welcome_security_passed(message, state, strings):
             db_item['note'],
             chat_id
         )
-        await tbot.send_message(user_id, text, **kwargs)
+        await send_note(user_id, text, **kwargs)
 
     # Welcome mute
     if 'welcome_mute' in db_item and db_item['welcome_mute']['enabled'] is not False:
@@ -650,7 +650,7 @@ async def welcome_trigger(message, strings):
         db_item['note']['parse_mode'] = 'md'
 
     text, kwargs = await t_unparse_note_item(message, db_item['note'], chat_id)
-    msg = await tbot.send_message(chat_id, text, reply_to=message.message_id, **kwargs)
+    msg = await send_note(chat_id, text, reply_to=message.message_id, **kwargs)
     # Clean welcome
     if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False:
         if 'last_msg' in db_item['clean_welcome']:

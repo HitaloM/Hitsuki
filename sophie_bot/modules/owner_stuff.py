@@ -27,7 +27,7 @@ from sophie_bot.services.telethon import tbot
 from .utils.api import html_white_text
 from .utils.covert import convert_size
 from .utils.language import get_strings_dec
-from .utils.notes import BUTTONS, get_parsed_note_list, t_unparse_note_item
+from .utils.notes import BUTTONS, get_parsed_note_list, t_unparse_note_item, send_note
 from .utils.message import need_args_dec
 from .utils.term import chat_term
 
@@ -114,7 +114,7 @@ async def check_message_for_smartbroadcast(message):
     text, kwargs = await t_unparse_note_item(message, db_item, chat_id)
     kwargs['reply_to'] = message.message_id
 
-    await tbot.send_message(chat_id, text, **kwargs)
+    await send_note(chat_id, text, **kwargs)
 
     await db.sbroadcast.update_one({'_id': db_item['_id']}, {'$pull': {'chats': chat_id}, '$inc': {'recived_chats': 1}})
 

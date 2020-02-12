@@ -23,7 +23,7 @@ from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardBu
 from .utils.connections import chat_connection
 from .utils.disable import disablable_dec
 from .utils.language import get_strings_dec
-from .utils.notes import BUTTONS, ALLOWED_COLUMNS, get_parsed_note_list, t_unparse_note_item
+from .utils.notes import BUTTONS, ALLOWED_COLUMNS, get_parsed_note_list, t_unparse_note_item, send_note
 from .utils.message import get_arg, need_args_dec
 from .utils.user_details import get_user_link
 
@@ -109,7 +109,7 @@ async def get_note(message, strings, note_name=None, db_item=None,
     text, kwargs = await t_unparse_note_item(message, db_item, chat_id, noformat=noformat, event=event)
     kwargs['reply_to'] = rpl_id
 
-    await tbot.send_message(send_id, text, **kwargs)
+    await send_note(send_id, text, **kwargs)
 
 
 @register(cmds='get')
