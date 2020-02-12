@@ -27,9 +27,15 @@ class IsAdmin(BoundFilter):
         self.is_admin = is_admin
 
     @get_strings_dec('global')
-    async def check(self, message: types.Message, strings):
-        if not await is_user_admin(message.chat.id, message.from_user.id):
-            await message.reply(strings['u_not_admin'])
+    async def check(self, event, strings):
+
+        if hasattr(event, 'message'):
+            chat_id = event.message.chat.id
+        else:
+            chat_id = event.chat.id
+
+        if not await is_user_admin(chat_id, event.from_user.id):
+            await event.reply(strings['u_not_admin'])
             return False
         return True
 
