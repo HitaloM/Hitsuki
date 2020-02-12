@@ -86,9 +86,9 @@ def parse(message, delimiters=None, url_re=None):
 
                 # Remove the delimiter from the string
                 message = ''.join((
-                        message[:i],
-                        message[i + len(delim):end],
-                        message[end + len(delim):]
+                    message[:i],
+                    message[i + len(delim):end],
+                    message[end + len(delim):]
                 ))
 
                 # Check other affected entities
