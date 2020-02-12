@@ -53,7 +53,7 @@ async def export_chat_data(message, chat, strings):
             'chat_name': chat['chat_title'],
             'chat_id': chat_id,
             'timestamp': datetime.now(),
-            'version': 1
+            'version': 2
         }
     }
 

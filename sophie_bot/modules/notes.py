@@ -406,6 +406,12 @@ ALLOWED_COLUMNS_NOTES = ALLOWED_COLUMNS + [
 async def __import__(chat_id, data):
     new = []
     for note in data:
+
+        # File ver 1 to 2
+        if 'name' in note:
+            note['names'] = [note['name']]
+            del note['name']
+
         for item in [i for i in note if i not in ALLOWED_COLUMNS_NOTES]:
             del note[item]
 
