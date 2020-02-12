@@ -32,7 +32,7 @@ from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 
-RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`', '#', '"', '[', ']', "'", '$']
+RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`', '#', '"', '[', ']', "'", '$', '||']
 
 
 @register(cmds='save', user_admin=True)
@@ -45,11 +45,11 @@ async def save_note(message, chat, strings):
     if arg[0] == '#':
         arg = arg[1:]
 
-    note_names = arg.split('|')
-
-    if any((sym := s) in note_names for s in RESTRICTED_SYMBOLS_IN_NOTENAMES):
+    if any((sym := s) in arg for s in RESTRICTED_SYMBOLS_IN_NOTENAMES):
         await message.reply(strings['notename_cant_contain'].format(symbol=sym))
         return
+
+    note_names = arg.split('|')
 
     note = await get_parsed_note_list(message)
 
