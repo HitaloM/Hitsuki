@@ -19,7 +19,6 @@ from .utils.message import need_args_dec
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
-from sophie_bot.services.telethon import tbot
 
 
 @register(cmds=['setrules', 'saverules'], user_admin=True)

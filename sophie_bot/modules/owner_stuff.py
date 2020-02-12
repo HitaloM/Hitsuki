@@ -11,7 +11,6 @@
 # you may not use this file except in compliance with the License.
 
 import ujson
-import datetime
 import html
 import os
 
