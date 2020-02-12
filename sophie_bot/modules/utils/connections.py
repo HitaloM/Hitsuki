@@ -27,10 +27,10 @@ async def get_connected_chat(message, admin=False, only_groups=False, from_id=No
         return {'status': 'chat', 'chat_id': real_chat_id, 'chat_title': chat_title}
 
     # Cached
-    #if cached := redis.hgetall(key):
-    #    cached['status'] = True
-    #    cached['chat_id'] = int(cached['chat_id'])
-    #    return cached
+    if cached := redis.hgetall(key):
+        cached['status'] = True
+        cached['chat_id'] = int(cached['chat_id'])
+        return cached
 
     # if pm and not connected
     if not (connected := await db.connections_v2.find_one({'user_id': user_id})) or 'chat_id' not in connected:
