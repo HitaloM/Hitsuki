@@ -214,8 +214,7 @@ def tcode(text, sep=' '):
 
 
 def tpre(text, sep=' '):
-    # TODO: pass
-    return f'[{text}['
+    return f'```{text}```'
 
 
 def tstrikethrough(text, sep=' '):
