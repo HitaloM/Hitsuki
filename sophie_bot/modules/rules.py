@@ -16,6 +16,7 @@ from .utils.language import get_strings_dec
 from .utils.connections import chat_connection
 from .utils.notes import BUTTONS, ALLOWED_COLUMNS, get_parsed_note_list, t_unparse_note_item, send_note
 from .utils.message import need_args_dec
+from .utils.disable import disablable_dec
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
@@ -40,6 +41,7 @@ async def set_rules(message, chat, strings):
 
 
 @register(cmds='rules')
+@disablable_dec('rules')
 @chat_connection(only_groups=True)
 @get_strings_dec('rules')
 async def rules(message, chat, strings):
