@@ -92,6 +92,9 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
         async def new_func(*def_args, **def_kwargs):
             message = def_args[0]
 
+            if cmds:
+                message.conf['cmds'] = cmds
+
             if allow_kwargs is False:
                 def_kwargs = dict()
 
