@@ -12,7 +12,7 @@
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 
-from sophie_bot.decorator import register
+from sophie_bot.decorator import register, COMMANDS_ALIASES
 from sophie_bot.services.mongo import db
 
 from .utils.connections import chat_connection
@@ -55,6 +55,13 @@ async def disable_command(message, chat, strings):
     cmd = get_arg(message).lower()
     if cmd[0] == '/' or cmd[0] == '!':
         cmd = cmd[1:]
+
+    # Check on commands aliases
+    for name, keys in COMMANDS_ALIASES.items():
+        if cmd in keys:
+            cmd = name
+            break
+
     if cmd not in DISABLABLE_COMMANDS:
         await message.reply(strings["wot_to_disable"])
         return
@@ -84,9 +91,17 @@ async def enable_command(message, chat, strings):
     cmd = get_arg(message).lower()
     if cmd[0] == '/' or cmd[0] == '!':
         cmd = cmd[1:]
+
+    # Check on commands aliases
+    for name, keys in COMMANDS_ALIASES.items():
+        if cmd in keys:
+            cmd = name
+            break
+
     if cmd not in DISABLABLE_COMMANDS:
         await message.reply(strings["wot_to_enable"])
         return
+
     if not await db.disabled_v2.find_one({'chat_id': chat['chat_id'], 'cmds': {'$in': [cmd]}}):
         await message.reply(strings["already_enabled"])
         return
