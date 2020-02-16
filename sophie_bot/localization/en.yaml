@@ -27,7 +27,11 @@ STRINGS:
             <b>Matched notes:</b>
         
         # /clear
-        note_removed: "Note <code>{note_name}</code> removed in <b>{chat_name}</b>!"
+        note_removed: "Note <code>#{note_name}</code> removed in <b>{chat_name}</b>!"
+        note_removed_multiple: |
+            Multiple notes removing in <b>{chat_name}</b>
+            <b>Removed:</b><code>{removed}</code>
+        not_removed_multiple: "<b>Not removed:</b><code>{not_removed}</code>"
 
         # /clearall
         clear_all_text: "This will remove all notes from {chat_name}. Are you sure?"

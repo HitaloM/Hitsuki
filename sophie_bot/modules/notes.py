@@ -230,19 +230,35 @@ async def search_in_note(message, chat, strings):
 @chat_connection(admin=True)
 @get_strings_dec('notes')
 async def clear_note(message, chat, strings):
-    note_name = get_arg(message).lower()
-    if note_name[0] == '#':
-        note_name = note_name[1:]
+    note_names = get_arg(message).lower().split('|')
 
-    if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
-        text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
-        if alleged_note_name := await get_simmilar_note(chat['chat_id'], note_name):
-            text += strings['u_mean'].format(note_name=alleged_note_name)
+    removed = ''
+    not_removed = ''
+    for note_name in note_names:
+        if note_name[0] == '#':
+            note_name = note_name[1:]
+
+        if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
+            if len(note_names) < 1:
+                text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
+                if alleged_note_name := await get_simmilar_note(chat['chat_id'], note_name):
+                    text += strings['u_mean'].format(note_name=alleged_note_name)
+                await message.reply(text)
+                return
+            else:
+                not_removed += ' #' + note_name
+                continue
+
+        await db.notes_v2.delete_one({'_id': note['_id']})
+        removed += ' #' + note_name
+
+    if len(note_names) > 1:
+        text = strings['note_removed_multiple'].format(chat_name=chat['chat_title'], removed=removed)
+        if not_removed:
+            text += strings['not_removed_multiple'].format(not_removed=not_removed)
         await message.reply(text)
-        return
-
-    await db.notes_v2.delete_one({'_id': note['_id']})
-    await message.reply(strings['note_removed'].format(note_name=note_name, chat_name=chat['chat_title']))
+    else:
+        await message.reply(strings['note_removed'].format(note_name=note_name, chat_name=chat['chat_title']))
 
 
 @register(cmds='clearall')
