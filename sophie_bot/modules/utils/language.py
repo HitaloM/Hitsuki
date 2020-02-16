@@ -69,7 +69,12 @@ async def get_strings(chat_id, module, mas_name="STRINGS"):
 
     class Strings:
         def get_strings(self, lang, mas_name, module):
+
+            if mas_name not in LANGUAGES[lang] or module not in LANGUAGES[lang][mas_name]:
+                return {}
+
             data = LANGUAGES[lang][mas_name][module]
+
             if mas_name == 'STRINGS':
                 data['language_info'] = LANGUAGES[chat_lang]['language_info']
             return data
