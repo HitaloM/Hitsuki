@@ -35,6 +35,19 @@ from sophie_bot.services.redis import redis
 RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`', '#', '"', '[', ']', "'", '$', '||']
 
 
+async def get_simmilar_note(chat_id, note_name):
+    all_notes = []
+    async for note in db.notes_v2.find({'chat_id': chat_id}):
+        all_notes.extend(note['names'])
+
+    if len(all_notes) > 0:
+        check = difflib.get_close_matches(note_name, all_notes)
+        if len(check) > 0:
+            return check[0]
+
+    return None
+
+
 @register(cmds='save', user_admin=True)
 @need_args_dec()
 @chat_connection(admin=True)
@@ -128,19 +141,15 @@ async def get_note_cmd(message, chat, strings):
 
     if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
         text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
-        all_notes = []
-        async for note in db.notes_v2.find({'chat_id': chat['chat_id']}):
-            for note_name in note['names']:
-                all_notes.append(note_name)
-        if len(all_notes) > 0:
-            check = difflib.get_close_matches(note_name, all_notes)
-            if len(check) > 0:
-                text += strings['u_mean'].format(note_name=check[0])
+        if alleged_note_name := await get_simmilar_note(chat['chat_id'], note_name):
+            text += strings['u_mean'].format(note_name=alleged_note_name)
         await message.reply(text)
         return
 
-    arg2 = message.text.split(note_name)[1][1:].lower()
-    noformat = True if 'noformat' == arg2 or 'raw' == arg2 else False
+    noformat = False
+    if args := len(message.text.split(note_name)) > 2:
+        arg2 = args[1][1:].lower()
+        noformat = True if 'noformat' == arg2 or 'raw' == arg2 else False
 
     await get_note(message, db_item=note, rpl_id=rpl_id, noformat=noformat)
 
@@ -227,14 +236,8 @@ async def clear_note(message, chat, strings):
 
     if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
         text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
-        all_notes = []
-        async for note in db.notes_v2.find({'chat_id': chat['chat_id']}):
-            for note_name in note['names']:
-                all_notes.append(note_name)
-        if len(all_notes) > 0:
-            check = difflib.get_close_matches(note_name, all_notes)
-            if len(check) > 0:
-                text += strings['u_mean'].format(note_name=check[0])
+        if alleged_note_name := await get_simmilar_note(chat['chat_id'], note_name):
+            text += strings['u_mean'].format(note_name=alleged_note_name)
         await message.reply(text)
         return
 
@@ -278,14 +281,8 @@ async def note_info(message, chat, strings):
 
     if not (note := await db.notes_v2.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
         text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
-        all_notes = []
-        async for note in db.notes_v2.find({'chat_id': chat['chat_id']}):
-            for note_name in note['names']:
-                all_notes.append(note_name)
-        if len(all_notes) > 0:
-            check = difflib.get_close_matches(note_name, all_notes)
-            if len(check) > 0:
-                text += strings['u_mean'].format(note_name=check[0])
+        if alleged_note_name := await get_simmilar_note(chat['chat_id'], note_name):
+            text += strings['u_mean'].format(note_name=alleged_note_name)
         await message.reply(text)
         return
 

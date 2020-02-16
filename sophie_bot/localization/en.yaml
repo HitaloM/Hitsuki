@@ -18,12 +18,6 @@ STRINGS:
         no_note: "Can't find that note."
         no_notes_pattern: "No notes found by pattern <code>%s</code>"
         u_mean: "\nDid you mean <code>#{note_name}</code>?"
-        file_type_invalid: "Invalid file type <code>{file_type}</code>!"
-        cant_parse_html: |
-            Can't parse your HTML formatting, please keep in mind:
-            1. Every HTML tag should be closed, like: `<b>bold</b>`
-            2. Every `<` symbol which not used in HTML tags should be replaced on `&gt`
-            TIP: Get raw text by `/get {notename} noformat`
         
         #/notes
         notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
@@ -46,8 +40,6 @@ STRINGS:
             <b>Search request in {chat_name}</b>:
             <b>Pattern:</b> <code>{request}</code>
             <b>Matched notes:</b>
-
-        pmed_note: "I have PM'ed that note to you!"
 
         # /noteinfo
         note_info_title: "<b>Note info</b>\n"
