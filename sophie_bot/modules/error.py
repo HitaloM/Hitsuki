@@ -11,6 +11,7 @@
 # you may not use this file except in compliance with the License.
 
 import sys
+import html
 
 from sophie_bot import dp, bot
 
@@ -29,5 +30,5 @@ async def all_errors_handler(message, dp):
         return True
 
     text = "<b>Sorry, I encountered a error!</b>\n"
-    text += f'<code>{err_tlt}: {err_msg}</code>'
+    text += f'<code>{html.escape(err_tlt)}: {html.escape(err_msg)}</code>'
     await bot.send_message(chat_id, text, reply_to_message_id=msg.message_id)
