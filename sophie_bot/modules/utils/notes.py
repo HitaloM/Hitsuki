@@ -15,6 +15,10 @@ import html
 import re
 import sys
 
+from datetime import datetime
+
+from babel.dates import format_date, format_time, format_datetime
+
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
 
@@ -23,6 +27,7 @@ from telethon.tl.custom import Button
 import sophie_bot.modules.utils.tmarkdown as tmarkdown
 from .tmarkdown import tbold, titalic, tpre, tcode, tlink, tstrikethrough, tunderline
 from .user_details import get_user_link
+from .language import get_chat_lang
 
 from .message import get_args
 
@@ -376,6 +381,9 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
     if not text:
         return text
 
+    language_code = await get_chat_lang(chat_id)
+    current_datetime = datetime.now()
+
     first_name = html.escape(event.from_user.first_name)
     last_name = html.escape(event.from_user.last_name or "")
     user_id = event.from_user.id
@@ -385,6 +393,11 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
     chat_id = message.chat.id
     chat_name = html.escape(message.chat.title or 'Local')
     chat_nick = message.chat.username or chat_name
+
+    current_date = html.escape(format_date(date=current_datetime, locale=language_code))
+    current_time = html.escape(format_time(time=current_datetime, locale=language_code))
+    current_timedate = html.escape(format_datetime(datetime=current_datetime, locale=language_code))
+
     text = text.replace('{first}', first_name) \
                .replace('{last}', last_name) \
                .replace('{fullname}', first_name + " " + last_name) \
@@ -393,5 +406,8 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
                .replace('{username}', username) \
                .replace('{chatid}', str(chat_id)) \
                .replace('{chatname}', str(chat_name)) \
-               .replace('{chatnick}', str(chat_nick))
+               .replace('{chatnick}', str(chat_nick)) \
+               .replace('{date}', str(current_date)) \
+               .replace('{time}', str(current_time)) \
+               .replace('{timedate}', str(current_timedate))
     return text
