@@ -15,6 +15,9 @@ from aiogram.utils.callback_data import CallbackData
 
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
+from sophie_bot.services.quart import quart
+
+from .utils.api import html_white_text
 from .utils.language import LANGUAGES, get_strings_dec, change_chat_lang, get_chat_lang_info, get_strings
 from .utils.message import get_arg
 
@@ -91,6 +94,20 @@ async def select_lang_msg(message, strings):
 async def select_lang_callback(query, callback_data=None, **kwargs):
     lang = callback_data['lang']
     await change_lang(query.message, lang, e=True)
+
+
+@quart.route('/wiki/languages_loaded')
+async def languages_loaded_wiki_page():
+    text = "<h2>Loaded languages:</h2>"
+
+    text += '<ul>'
+    for language in LANGUAGES.values():
+        info = language['language_info']
+        text += f"\n<li>{info['flag']} {info['babel'].display_name}</li>" 
+
+    text += '</ul>'
+
+    return html_white_text(text)
 
 
 async def __stats__():
