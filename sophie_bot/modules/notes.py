@@ -147,7 +147,7 @@ async def get_note_cmd(message, chat, strings):
         return
 
     noformat = False
-    if args := len(message.text.split(note_name)) > 2:
+    if len(args := message.text.split(note_name)) > 1:
         arg2 = args[1][1:].lower()
         noformat = True if 'noformat' == arg2 or 'raw' == arg2 else False
 
