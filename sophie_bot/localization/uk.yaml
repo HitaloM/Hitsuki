@@ -7,7 +7,7 @@ STRINGS:
         # /save
         note_saved: "🗒 Нотатка <code>{note_name}</code> буда збережена в <b>{chat_title}</b>!"
         note_updated: "🗒 Нотатка <code>{note_name}</code> буда оновлена в <b>{chat_title}</b>!"
-        you_can_get_note: "\nВи можете отримати замітку використовуя <code>/get {note_name}</code>, чи <code>#{note_name}</code>"
+        you_can_get_note: "\nВи можете отримати нотатку використовуя <code>/get {note_name}</code>, чи <code>#{note_name}</code>"
         # Translator note: please keep sure that you don't have space in the end of string
         note_aliases: "\nІнші ім'я нотатки:"
         blank_note: "Збереження пустих нотаток заборонено!"
