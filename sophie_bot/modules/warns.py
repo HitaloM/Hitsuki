@@ -39,7 +39,6 @@ async def warn(message, chat, user, strings):
         return
 
     args = message.get_args().split(' ', 1)
-    print(args)
     if len(args) >= 1:
         reason = ' '.join(args[0:])
     else:
@@ -78,10 +77,9 @@ async def warn(message, chat, user, strings):
 
     if warn_count >= max_warn:
         await ban_user(str(chat_id), str(user_id))
-        return
-
         text = strings['warn_bun'].format(user=user)
-        await db.warns_v2.delete_many({'user_id': user_id, 'chat_id': chat_id})
+        db.warns_v2.delete_many({'user_id': user_id, 'chat_id': chat_id})
+        return
     else:
         text += strings['warn_num'].format(curr_warns=warn_count, max_warns=max_warn)
 
@@ -120,7 +118,6 @@ async def warns(message, chat, user, strings):
     count = 0
     async for warn in warns:
         count += 1
-        print(warn)
         by = await get_user_link(warn['by'])
         reason = warn['reason']
         if not reason or reason == 'None':
@@ -177,8 +174,7 @@ async def resetwarn(message, chat, user, strings):
         await message.reply(strings['rst_wrn_sofi'])
         return
 
-    if (chk := await db.warns_v2.find_one({'chat_id': chat_id, 'user_id': user_id})):
-        print(chk)
+    if (await db.warns_v2.find_one({'chat_id': chat_id, 'user_id': user_id})):
         deleted = await db.warns_v2.delete_many({'chat_id': chat_id, 'user_id': user_id})
         purged = deleted.deleted_count
         await message.reply(strings['purged_warns'].format(

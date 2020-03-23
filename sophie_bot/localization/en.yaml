@@ -112,6 +112,7 @@ STRINGS:
         warn_self: "Do you wanna warn yourself? Just leave the chat then."
         warn_admin: "Well.. you are wrong. You can't warn an admin."
         warn: "{admin} has warned {user} in <b>{chat_name}</b>\n"
+        warn_bun: "Warnings has been exceeded! {user} has been banned!"
         warn_num: "Warns: {curr_warns}/{max_warns}\n"
         warn_rsn: "Reason: <code>{reason}</code>\n"
         warn_no_admin_alert: "⚠ You are NOT 👷‍♂️ admin to remove warn!"
