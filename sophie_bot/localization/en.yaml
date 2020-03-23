@@ -18,14 +18,14 @@ STRINGS:
         no_note: "Can't find that note."
         no_notes_pattern: "No notes found by pattern <code>%s</code>"
         u_mean: "\nDid you mean <code>#{note_name}</code>?"
-        
+
         #/notes
         notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
         notelist_header: "<b>Notes in {chat_name}</b>:"
         notelist_search: |
             <b>Pattern:</b> <code>{request}</code>
             <b>Matched notes:</b>
-        
+
         # /clear
         note_removed: "Note <code>#{note_name}</code> removed in <b>{chat_name}</b>!"
         note_removed_multiple: |
@@ -108,23 +108,23 @@ STRINGS:
         new_filter_note: "\nNote: <code>{note}</code>"
         new_filter_reason: "\nReason:\n"
     warns:
-        user_no_admeme: "You're not admin."
-        purged_warns: "{admin} reset <code>{number}</code> warns of {user} in <b>{chat_name}</b>!"
-        usr_no_wrn: "{user} hasn't got any warn yet!"
-        usr_whitelist: "This is a whitelisted user!"
-        Admin_no_wrn: "I can't warn admins!"
-        warn: "{admin} has warned {user} in {chat_name}\n"
-        warn_rsn: "Reason: <code>{reason}</code>\n"
-        warn_bun: "Warnings has been exceeded! {user} has been banned!"
+        warn_sofi: "Haha no way to warn myself!"
+        warn_self: "Do you wanna warn yourself? Just leave the chat then."
+        warn_admin: "Well.. you are wrong. You can't warn an admin."
+        warn: "{admin} has warned {user} in <b>{chat_name}</b>\n"
         warn_num: "Warns: {curr_warns}/{max_warns}\n"
-        rmv_warn_admin: "You're not an admin, only admins can remove a warn!"
-        rmv_sfl: "Warn was removed by {admin}"
-        warn_list_head: "{user}'s <b>warnings in {chat_name}:</b>\n"
-        user_hasnt_warned: "{user} hasn't been warned in <b>{chat_name}</b> before!"
+        warn_rsn: "Reason: <code>{reason}</code>\n"
+        warn_no_admin_alert: "⚠ You are NOT 👷‍♂️ admin to remove warn!"
+        warn_btn_rmvl_sucess: "✔ Warn removed by 👷‍♂️ {admin} !"
+        warns_header: "Here is your warns in this chat \n\n"
+        warns: "{count} : <code>{reason}</code> by {admin}\n"
+        no_warns: "Well, {user} dont have any warns."
         warn_limit: "Warn limit in <b>{chat_name}</b> is currently: <code>{num}</code>"
-        warn_limit_upd: "Warn limit has been updated to <code>{}</code>!"
-        no_user_warns: "{user} don't have any warning yet!"
-        warnlimit_too_small: "Specified warnlimit is too small. Minimal - 2."
+        warnlimit_short: 'Warnlimit should be atleast 2.'
+        warnlimit_updated: '✔ Warnlimit has successfully updated to {num}'
+        purged_warns: "👷‍♂️ {admin} resetted <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
+        usr_no_wrn: '{user} dont have any warns to reset.'
+        rst_wrn_sofi: 'Sofi never have warns to reset.'
     msg_deleting:
         no_rights_purge: "You don't have enough rights to purge in this group!"
         reply_to_msg: "Reply to a message to delete!"
@@ -159,11 +159,11 @@ STRINGS:
     disable:
         #/disableable
         disablable: "<b>Disable-able commands:</b>\n"
-        
+
         #/disabled
         no_disabled_cmds: No disable commands in <b>{chat_name}</b>!
         disabled_list: "<b>Disabled commands in {chat_name}:</b>\n"
-        
+
         #/disable
         wot_to_disable: "What do you want to disable?"
         already_disabled: "This command is already disabled!"
@@ -272,7 +272,7 @@ STRINGS:
 
         # /fadminlist
         fadmins_header: "Admins in <b>{fed_name}</b> Fed:\n"
-    
+
         # no_fbanned_in_fed: "There isn't any banned users in {fed_name} Federation!"
 
         # /fban
@@ -301,7 +301,7 @@ STRINGS:
             <b>Chats:</b> user banned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
         fban_reason_fed_log: "<b>Reason:</b> <code>{reason}</code>\n"
         fban_subs_fed_log: "\n<b>Subscribed feds:</b> banned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
-        
+
         # /unfban
         unfban_self: "Think of something else to have fun instead of this."
         user_not_fbanned: "{user} wasn't banned in this federation."
@@ -359,7 +359,7 @@ STRINGS:
         disabled: disabled
         chat_users_connections_info: "Connections for normal users currently is <b>{status}</b> for <b>{chat_name}</b>"
         chat_users_connections_cng: "Connections for normal users changed to <b>{status}</b> for <b>{chat_name}</b>"
-        
+
         not_in_group: "You're not in the group you're trying to connect to, join and send a message."
         history_empty: "You're not connected to any chat for history, connect via `/connect (chat id)`"
         not_in_chat: "You're not in this chat anymore, I'll disconnect you."
@@ -402,7 +402,7 @@ STRINGS:
         started_exporting: Exporting started! Please wait...
         export_done: Export from <b>%s</b> done!
         exports_locked: Please wait %s till using exports again!
-    
+
         # Importing
         send_import_file: Please send a import file!
         rpl_to_file: Please reply to a file!
@@ -413,7 +413,7 @@ STRINGS:
         import_done: Import done!
     restrictions:
         user_not_in_chat: User not in this chat!
-        
+
         # Kicks
         kick_sophie: Instead of trying kick me you could spend your time better. Thats just boring.
         kick_admin: Kicking admin is not best idea thought.
