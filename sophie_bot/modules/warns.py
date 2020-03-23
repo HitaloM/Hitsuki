@@ -77,7 +77,7 @@ async def warn(message, chat, user, strings):
 
     if warn_count >= max_warn:
         await ban_user(str(chat_id), str(user_id))
-        text = strings['warn_bun'].format(user=user)
+        await message.reply(strings['warn_bun'].format(user=member))
         db.warns_v2.delete_many({'user_id': user_id, 'chat_id': chat_id})
         return
     else:
