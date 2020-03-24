@@ -12,14 +12,15 @@ from sophie_bot.services.mongo import db
 from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 from .utils.restrictions import ban_user
-from .utils.user_details import get_user_dec, get_user_link, is_user_admin
+from .utils.user_details import (get_user_and_text_dec, get_user_dec,
+                                 get_user_link, is_user_admin)
 
 
 @register(cmds='warn', user_can_restrict_members=True, bot_can_restrict_members=True)
 @chat_connection(admin=True, only_groups=True)
-@get_user_dec()
+@get_user_and_text_dec()
 @get_strings_dec('warns')
-async def warn(message, chat, user, strings):
+async def warn(message, chat, user, text, strings):
     chat_id = chat['chat_id']
     chat_title = chat['chat_title']
     by = message.from_user.id
@@ -38,12 +39,7 @@ async def warn(message, chat, user, strings):
         await message.reply(strings['warn_admin'])
         return
 
-    args = message.get_args().split(' ', 1)
-    if len(args) >= 1:
-        reason = ' '.join(args[0:])
-    else:
-        reason = None
-
+    reason = text
     await db.warns_v2.insert_one({
         'warn_id': warn_id,
         'user_id': user_id,
@@ -91,7 +87,7 @@ async def warn(message, chat, user, strings):
 async def rmv_warn_btn(event, strings, regexp=None, **kwargs):
     warn_id = re.search(r'remove_warn_(.*)', str(regexp)).group(1)[:-2]
     chat_id = event.message.chat.id
-    user_id = event.message.from_user.id
+    user_id = event['from']['id']
     admin = await get_user_link(user_id)
 
     if not await is_user_admin(chat_id, user_id):
@@ -105,7 +101,7 @@ async def rmv_warn_btn(event, strings, regexp=None, **kwargs):
 
 @register(cmds='warns')
 @chat_connection(admin=True, only_groups=True)
-@get_user_dec()
+@get_user_dec(allow_self=True)
 @get_strings_dec('warns')
 async def warns(message, chat, user, strings):
     chat_id = chat['chat_id']
@@ -119,9 +115,10 @@ async def warns(message, chat, user, strings):
     async for warn in warns:
         count += 1
         by = await get_user_link(warn['by'])
-        reason = warn['reason']
-        if not reason or reason == 'None':
-            reason = '__No Reason__'
+        rsn = warn['reason']
+        reason = f"<code>{rsn}</code>"
+        if not rsn or rsn == 'None':
+            reason = '<i>No Reason</i>'
         text += strings['warns'].format(count=count, reason=reason, admin=by)
 
     if count == 0:
