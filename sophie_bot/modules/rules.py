@@ -10,16 +10,18 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from telethon.errors.rpcerrorlist import UserIsBlockedError, PeerIdInvalidError
+from telethon.errors.rpcerrorlist import PeerIdInvalidError, UserIsBlockedError
 
-from .utils.language import get_strings_dec
-from .utils.connections import chat_connection
-from .utils.notes import BUTTONS, ALLOWED_COLUMNS, get_parsed_note_list, t_unparse_note_item, send_note
-from .utils.message import need_args_dec
-from .utils.disable import disablable_dec
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
+
+from .utils.connections import chat_connection
+from .utils.disable import disablable_dec
+from .utils.language import get_strings_dec
+from .utils.message import need_args_dec
+from .utils.notes import (ALLOWED_COLUMNS, BUTTONS, get_parsed_note_list,
+                          send_note, t_unparse_note_item)
 
 
 @register(cmds=['setrules', 'saverules'], user_admin=True)
@@ -60,7 +62,7 @@ async def rules(message, chat, strings):
     noformat = True if 'noformat' == arg1 or 'raw' == arg1 else False
 
     if not (db_item := await db.rules_v2.find_one({'chat_id': chat_id})):
-        await message.reply(chat_id, strings['not_found'])
+        await message.reply(strings['not_found'])
         return
 
     text, kwargs = await t_unparse_note_item(message, db_item, chat_id, noformat=noformat)
@@ -75,8 +77,8 @@ async def rules(message, chat, strings):
 async def reset_rules(message, chat, strings):
     chat_id = chat['chat_id']
 
-    if await db.rules_v2.delete_one({'chat_id': chat_id}).deleted_count < 1:
-        await message.reply(chat_id, strings['not_found'])
+    if (await db.rules_v2.delete_one({'chat_id': chat_id})).deleted_count < 1:
+        await message.reply(strings['not_found'])
         return
 
     await message.reply(strings['deleted'])
