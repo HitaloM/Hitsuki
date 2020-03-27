@@ -18,7 +18,7 @@ from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db
 from sophie_bot.utils.logger import log
 from .utils.connections import chat_connection
-from .utils.disable import disablable_dec
+from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.user_details import get_user_dec, get_user_link, is_user_admin, get_admins_rights
 
@@ -133,7 +133,7 @@ async def update_user(chat_id, new_user):
 
 
 @register(cmds="info")
-@disablable_dec("info")
+@disableable_dec("info")
 @get_user_dec(allow_self=True)
 @get_strings_dec("users")
 async def user_info(message, user, strings):
@@ -174,7 +174,7 @@ async def reset_admins_cache(message, chat, strings):
 
 
 @register(cmds=["adminlist", "admins"])
-@disablable_dec("adminlist")
+@disableable_dec("adminlist")
 @chat_connection(only_groups=True)
 @get_strings_dec("users")
 async def adminlist(message, chat, strings):

@@ -2,7 +2,7 @@ from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 
 from .utils.connections import chat_connection
-from .utils.disable import disablable_dec
+from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.user_details import get_admins_rights, get_user_link, is_user_admin
 
@@ -21,7 +21,7 @@ async def report1_cmd(message, chat, strings):
 
 @register(cmds="report")
 @chat_connection(only_groups=True)
-@disablable_dec('report')
+@disableable_dec('report')
 @get_strings_dec('reports')
 async def report2_cmd(message, chat, strings):
 	await report(message, chat, strings)

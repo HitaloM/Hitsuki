@@ -14,13 +14,13 @@ import random
 
 from sophie_bot.decorator import register
 from .utils.connections import chat_connection
-from .utils.disable import disablable_dec
+from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.user_details import get_user_dec, get_user_link
 
 
 @register(cmds=["id", "chatid", "userid"])
-@disablable_dec('id')
+@disableable_dec('id')
 @get_user_dec(allow_self=True)
 @get_strings_dec('misc')
 @chat_connection()
@@ -52,7 +52,7 @@ async def get_id(message, user, strings, chat):
 
 @register(cmds="runs")
 @get_strings_dec("RUNS", mas_name="RANDOM_STRINGS")
-@disablable_dec('runs')
+@disableable_dec('runs')
 async def runs(message, strings):
 	await message.reply(random.choice(list(strings)))
 

@@ -24,7 +24,7 @@ from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from .utils.connections import chat_connection
-from .utils.disable import disablable_dec
+from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.message import get_arg, need_args_dec
 from .utils.notes import BUTTONS, ALLOWED_COLUMNS, get_parsed_note_list, t_unparse_note_item, send_note
@@ -123,7 +123,7 @@ async def get_note(message, strings, note_name=None, db_item=None,
 
 
 @register(cmds='get')
-@disablable_dec('get')
+@disableable_dec('get')
 @need_args_dec()
 @chat_connection()
 @get_strings_dec('notes')
@@ -153,7 +153,7 @@ async def get_note_cmd(message, chat, strings):
 
 
 @register(regexp='^#(\w+)', allow_kwargs=True)
-@disablable_dec('get')
+@disableable_dec('get')
 @chat_connection()
 @get_strings_dec('notes')
 async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
@@ -170,7 +170,7 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
 
 
 @register(cmds=['notes', 'saved'])
-@disablable_dec('notes')
+@disableable_dec('notes')
 @chat_connection()
 @get_strings_dec('notes')
 async def get_notes_list(message, chat, strings):

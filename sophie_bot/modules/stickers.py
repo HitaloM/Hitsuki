@@ -16,12 +16,12 @@ from aiogram.types.input_file import InputFile
 
 from sophie_bot import bot
 from sophie_bot.decorator import register
-from .utils.disable import disablable_dec
+from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 
 
 @register(cmds='getsticker')
-@disablable_dec('getsticker')
+@disableable_dec('getsticker')
 @get_strings_dec('stickers')
 async def get_sticker(message, strings):
 	if 'reply_to_message' not in message or 'sticker' not in message.reply_to_message:

@@ -17,7 +17,7 @@ from sophie_bot.utils.logger import log
 DISABLABLE_COMMANDS = []
 
 
-def disablable_dec(command):
+def disableable_dec(command):
 	log.debug(f'Adding {command} to the disableable commands...')
 
 	if command not in DISABLABLE_COMMANDS:
