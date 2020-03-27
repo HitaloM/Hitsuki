@@ -24,11 +24,11 @@ from .utils.user_details import (
 @get_user_and_text_dec()
 @get_strings_dec('warns')
 async def warn(message, chat, user, text, strings):
-	chat_id = chat['chat_id']
-	chat_title = chat['chat_title']
+	chat_id = chat.chat_id
+	chat_title = chat.chat_title
 	by = message.from_user.id
-	user_id = user['user_id']
-	warn_id = randomString(15)
+	user_id = user.user_id
+	warn_id = random_string(15)
 
 	if user_id == BOT_ID:
 		await message.reply(strings['warn_sofi'])
@@ -90,8 +90,8 @@ async def warn(message, chat, user, text, strings):
 async def rmv_warn_btn(event, strings, regexp=None, **kwargs):
 	warn_id = re.search(r'remove_warn_(.*)', str(regexp)).group(1)[:-2]
 	chat_id = event.message.chat.id
-	user_id = event['from']['id']
-	admin = await get_user_link(user_id)
+	user_id = event.from_user.id
+	admin_link = await get_user_link(user_id)
 
 	if not await is_user_admin(chat_id, user_id):
 		await event.answer(strings['warn_no_admin_alert'], show_alert=True)
@@ -99,7 +99,7 @@ async def rmv_warn_btn(event, strings, regexp=None, **kwargs):
 
 	await db.warns_v2.delete_one({'chat_id': chat_id, 'warn_id': warn_id})
 
-	await event.message.edit_text(strings['warn_btn_rmvl_sucess'].format(admin=admin))
+	await event.message.edit_text(strings['warn_btn_rmvl_success'].format(admin=admin_link))
 
 
 @register(cmds='warns')
@@ -107,15 +107,13 @@ async def rmv_warn_btn(event, strings, regexp=None, **kwargs):
 @get_user_dec(allow_self=True)
 @get_strings_dec('warns')
 async def warns(message, chat, user, strings):
-	chat_id = chat['chat_id']
-	user_id = user['user_id']
+	chat_id = chat.chat_id
+	user_id = user.user_id
 	text = strings['warns_header']
-	user = await get_user_link(user_id)
-
-	warns = db.warns_v2.find({'user_id': user_id, 'chat_id': chat_id})
+	user_link = await get_user_link(user_id)
 
 	count = 0
-	async for warn in warns:
+	async for warn in db.warns_v2.find({'user_id': user_id, 'chat_id': chat_id}):
 		count += 1
 		by = await get_user_link(warn['by'])
 		rsn = warn['reason']
@@ -125,7 +123,7 @@ async def warns(message, chat, user, strings):
 		text += strings['warns'].format(count=count, reason=reason, admin=by)
 
 	if count == 0:
-		await message.reply(strings['no_warns'].format(user=user))
+		await message.reply(strings['no_warns'].format(user=user_link))
 		return
 
 	await message.reply(text)
@@ -135,23 +133,26 @@ async def warns(message, chat, user, strings):
 @chat_connection(admin=True, only_groups=True)
 @get_strings_dec('warns')
 async def warnlimit(message, chat, strings):
-	chat_id = chat['chat_id']
-	chat_title = chat['chat_title']
-	arg = message.get_args().split(' ', 1)[0]
+	chat_id = chat.chat_id
+	chat_title = chat.chat_title
+	arg = int(message.get_args().split(' ', 1)[0])
 
 	if not arg:
-		if (current_limit := db.warnlimit.find_one({'chat_id': chat_id})):
+		if current_limit := db.warnlimit.find_one({'chat_id': chat_id}):
 			num = current_limit['num']
 		else:
 			num = 3  # Default value
 		await message.reply(strings['warn_limit'].format(chat_name=chat_title, num=num))
 	else:
-		if int(arg) < 2:
+		if arg < 2:
 			return await message.reply(strings['warnlimit_short'])
+
+		elif arg > 10000:  # Max value
+			return await message.reply(strings['warnlimit_long'])
 
 		new = {
 			'chat_id': chat_id,
-			'num': int(arg)
+			'num': arg
 		}
 
 		await db.warnlimit.update_one({'chat_id': chat_id}, {'$set': new}, upsert=True)
@@ -159,30 +160,29 @@ async def warnlimit(message, chat, strings):
 
 
 @register(cmds='resetwarns', user_can_restrict_members=True)
-# @register (cmds='resetwarns', user_admin=True)
 @chat_connection(admin=True, only_groups=True)
 @get_user_dec()
 @get_strings_dec('warns')
-async def resetwarn(message, chat, user, strings):
-	chat_id = chat['chat_id']
-	chat_title = chat['chat_title']
-	user_id = user['user_id']
-	user = await get_user_link(user_id)
+async def reset_warn(message, chat, user, strings):
+	chat_id = chat.chat_id
+	chat_title = chat.chat_title
+	user_id = user.user_id
+	user_link = await get_user_link(user_id)
 	admin = await get_user_link(message.from_user.id)
 
 	if user_id == BOT_ID:
 		await message.reply(strings['rst_wrn_sofi'])
 		return
 
-	if (await db.warns_v2.find_one({'chat_id': chat_id, 'user_id': user_id})):
+	if await db.warns_v2.find_one({'chat_id': chat_id, 'user_id': user_id}):
 		deleted = await db.warns_v2.delete_many({'chat_id': chat_id, 'user_id': user_id})
 		purged = deleted.deleted_count
 		await message.reply(strings['purged_warns'].format(
-			admin=admin, num=purged, user=user, chat_title=chat_title))
+			admin=admin, num=purged, user=user_link, chat_title=chat_title))
 	else:
 		await message.reply(strings['usr_no_wrn'].format(user=user))
 
 
-def randomString(stringLength):
+def random_string(stringLength):
 	letters = string.ascii_letters
 	return ''.join(random.choice(letters) for i in range(stringLength))
