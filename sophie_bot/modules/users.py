@@ -178,14 +178,13 @@ async def reset_admins_cache(message, chat, strings):
 @chat_connection(only_groups=True)
 @get_strings_dec("users")
 async def adminlist(message, chat, strings):
-	msg = await message.reply(strings['upd_cache'])
-	admins = await get_admins_rights(chat['chat_id'], force_update=True)
+	admins = await get_admins_rights(chat['chat_id'])
 	text = strings['admins']
 	for admin in admins:
 		if user := await db.user_list.find_one({'user_id': admin}):
 			text += '- {} ({})\n'.format(await get_user_link(user['user_id']), user['user_id'])
 
-	await msg.edit_text(text)
+	await message.reply(text)
 
 
 async def __stats__():
