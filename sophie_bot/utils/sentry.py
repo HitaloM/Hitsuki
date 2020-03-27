@@ -7,6 +7,6 @@ from sophie_bot.utils.logger import log
 log.info("Starting sentry.io integraion...")
 
 sentry_sdk.init(
-    get_str_key('SENTRY_API_KEY'),
-    integrations=[RedisIntegration()]
+	get_str_key('SENTRY_API_KEY'),
+	integrations=[RedisIntegration()]
 )

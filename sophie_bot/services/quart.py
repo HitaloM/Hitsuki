@@ -12,6 +12,5 @@
 
 from quart import Quart
 
-
 # Quart
 quart = Quart(__name__)

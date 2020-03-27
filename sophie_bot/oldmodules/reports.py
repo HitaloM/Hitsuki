@@ -12,10 +12,10 @@
 
 from sophie_bot.modules.connections import connection
 from sophie_bot.modules.disable import disablable_dec
-from sophie_bot.modules.language import get_strings_dec
-from sophie_bot.modules.users import is_user_admin, user_link_html, get_chat_admins, get_user_and_text
 
 from sophie_bot import WHITELISTED, decorator, dp
+from sophie_bot.modules.language import get_strings_dec
+from sophie_bot.modules.users import is_user_admin, user_link_html, get_chat_admins, get_user_and_text
 
 
 @dp.message_handler(regexp="^@admin")
@@ -23,40 +23,40 @@ from sophie_bot import WHITELISTED, decorator, dp
 @connection(only_in_groups=True)
 @get_strings_dec('reports')
 async def admin_handler(message, strings, *args, **kwargs):
-    from_id = message.from_user.id
+	from_id = message.from_user.id
 
-    if (await is_user_admin(message.chat.id, from_id)) is True:
-        return await message.reply(strings['user_user_admin'])
+	if (await is_user_admin(message.chat.id, from_id)) is True:
+		return await message.reply(strings['user_user_admin'])
 
-    if from_id in WHITELISTED:
-        return await message.reply(strings['user_is_whitelisted'])
+	if from_id in WHITELISTED:
+		return await message.reply(strings['user_is_whitelisted'])
 
-    if "reply_to_message" not in message:
-        return await message.reply(strings['no_user_to_report'])
+	if "reply_to_message" not in message:
+		return await message.reply(strings['no_user_to_report'])
 
-    reply_id = message.reply_to_message.from_user.id
+	reply_id = message.reply_to_message.from_user.id
 
-    if (await is_user_admin(message.chat.id, reply_id)) is True:
-        return await message.reply(strings['report_admin'])
+	if (await is_user_admin(message.chat.id, reply_id)) is True:
+		return await message.reply(strings['report_admin'])
 
-    if reply_id in WHITELISTED:
-        return await message.reply(strings['report_whitedlisted'])
+	if reply_id in WHITELISTED:
+		return await message.reply(strings['report_whitedlisted'])
 
-    admins = await get_chat_admins(message.chat.id)
-    reported = await user_link_html(message.reply_to_message.from_user.id)
-    text = strings['reported_user'].format(user=reported)
+	admins = await get_chat_admins(message.chat.id)
+	reported = await user_link_html(message.reply_to_message.from_user.id)
+	text = strings['reported_user'].format(user=reported)
 
-    try:
-        if message.text.split(None, 2)[1]:
-            reason = ' '.join(message.text.split(None, 2)[1:])
-            text += strings['reported_reason'].format(reason=reason)
-    except Exception:
-        pass
+	try:
+		if message.text.split(None, 2)[1]:
+			reason = ' '.join(message.text.split(None, 2)[1:])
+			text += strings['reported_reason'].format(reason=reason)
+	except Exception:
+		pass
 
-    for admin in admins:
-        text += await user_link_html(admin, custom_name="‏")
+	for admin in admins:
+		text += await user_link_html(admin, custom_name="‏")
 
-    await message.reply(text)
+	await message.reply(text)
 
 
 @decorator.register(cmds="report")
@@ -64,34 +64,34 @@ async def admin_handler(message, strings, *args, **kwargs):
 @connection(only_in_groups=True)
 @get_strings_dec('reports')
 async def report_user(message, strings, status, chat_id, chat_title):
-    from_id = message.from_user.id
-    if (await is_user_admin(message.chat.id, from_id)) is True:
-        return await message.reply(strings['user_user_admin'])
+	from_id = message.from_user.id
+	if (await is_user_admin(message.chat.id, from_id)) is True:
+		return await message.reply(strings['user_user_admin'])
 
-    if from_id in WHITELISTED:
-        return await message.reply(strings['user_is_whitelisted'])
+	if from_id in WHITELISTED:
+		return await message.reply(strings['user_is_whitelisted'])
 
-    user, text = await get_user_and_text(message)
+	user, text = await get_user_and_text(message)
 
-    if not user:
-        return await message.reply(strings['no_user_to_report'])
+	if not user:
+		return await message.reply(strings['no_user_to_report'])
 
-    reply_id = user['user_id']
+	reply_id = user['user_id']
 
-    if (await is_user_admin(message.chat.id, reply_id)) is True:
-        return await message.reply(strings['report_admin'])
+	if (await is_user_admin(message.chat.id, reply_id)) is True:
+		return await message.reply(strings['report_admin'])
 
-    if reply_id in WHITELISTED:
-        return await message.reply(strings['report_whitedlisted'])
+	if reply_id in WHITELISTED:
+		return await message.reply(strings['report_whitedlisted'])
 
-    admins = await get_chat_admins(message.chat.id)
-    reported = await user_link_html(user['user_id'])
-    msg = strings['reported_user'].format(user=reported)
+	admins = await get_chat_admins(message.chat.id)
+	reported = await user_link_html(user['user_id'])
+	msg = strings['reported_user'].format(user=reported)
 
-    if text:
-        msg += strings['reported_reason'].format(reason=text)
+	if text:
+		msg += strings['reported_reason'].format(reason=text)
 
-    for admin in admins:
-        msg += await user_link_html(admin, custom_name="‏")
+	for admin in admins:
+		msg += await user_link_html(admin, custom_name="‏")
 
-    await message.reply(msg)
+	await message.reply(msg)

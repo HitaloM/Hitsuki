@@ -11,7 +11,7 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 
 # elif raw_button[1] == 'note':
@@ -23,54 +23,56 @@ from datetime import datetime, timedelta
 
 
 class InvalidTimeUnit(Exception):
-    pass
+	pass
 
 
 def get_arg(message):
-    return message.get_args().split(' ')[0]
+	return message.get_args().split(' ')[0]
 
 
 def get_args(message):
-    return message.get_args().split(' ')
+	return message.get_args().split(' ')
 
 
 def get_cmd(message):
-    cmd = message.get_command().lower()[1:].split('@')[0]
-    return cmd
+	cmd = message.get_command().lower()[1:].split('@')[0]
+	return cmd
 
 
 def convert_time(time_val):
-    if not any(time_val.endswith(unit) for unit in ('m', 'h', 'd')):
-        raise TypeError
+	if not any(time_val.endswith(unit) for unit in ('m', 'h', 'd')):
+		raise TypeError
 
-    time_num = int(time_val[:-1])
-    unit = time_val[-1]
-    kwargs = {}
+	time_num = int(time_val[:-1])
+	unit = time_val[-1]
+	kwargs = {}
 
-    if unit == 'm':
-        kwargs['minutes'] = time_num
-        unit_str = 'minutes'
-    elif unit == 'h':
-        kwargs['hours'] = time_num
-        unit_str = 'hours'
-    elif unit == 'd':
-        kwargs['days'] = time_num
-        unit_str = 'days'
-    else:
-        raise InvalidTimeUnit()
+	if unit == 'm':
+		kwargs['minutes'] = time_num
+		unit_str = 'minutes'
+	elif unit == 'h':
+		kwargs['hours'] = time_num
+		unit_str = 'hours'
+	elif unit == 'd':
+		kwargs['days'] = time_num
+		unit_str = 'days'
+	else:
+		raise InvalidTimeUnit()
 
-    val = timedelta(**kwargs)
+	val = timedelta(**kwargs)
 
-    return val
+	return val
 
 
 def need_args_dec(num=1):
-    def wrapped(func):
-        async def wrapped_1(*args, **kwargs):
-            message = args[0]
-            if len(message.text.split(" ")) > num:
-                return await func(*args, **kwargs)
-            else:
-                await message.reply("No enoff args!")
-        return wrapped_1
-    return wrapped
+	def wrapped(func):
+		async def wrapped_1(*args, **kwargs):
+			message = args[0]
+			if len(message.text.split(" ")) > num:
+				return await func(*args, **kwargs)
+			else:
+				await message.reply("No enoff args!")
+
+		return wrapped_1
+
+	return wrapped

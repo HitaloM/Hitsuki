@@ -17,10 +17,10 @@ from sophie_bot.config import get_str_key, get_int_key
 
 # Init Redis
 redis = redis.StrictRedis(
-    host=get_str_key("REDIS_HOST"),
-    port=get_str_key("REDIS_PORT"),
-    db=get_int_key("REDIS_DB_FSM"),
-    decode_responses=True
+	host=get_str_key("REDIS_HOST"),
+	port=get_str_key("REDIS_PORT"),
+	db=get_int_key("REDIS_DB_FSM"),
+	decode_responses=True
 )
 
 rw = Root()
