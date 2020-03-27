@@ -37,7 +37,6 @@ async def report(message, chat, strings):
 		return await message.reply(strings['no_user_to_report'])
 
 	offender_id = message.reply_to_message.from_user.id
-	print(offender_id)
 	if (await is_user_admin(chat['chat_id'], offender_id)) is True:
 		return await message.reply(strings['report_admin'])
 
@@ -50,7 +49,7 @@ async def report(message, chat, strings):
 		if message.text.split(None, 2)[1]:
 			reason = ' '.join(message.text.split(None, 2)[1:])
 			text += strings['reported_reason'].format(reason=reason)
-	except Exception:
+	except IndexError:
 		pass
 
 	for admin in admins:
