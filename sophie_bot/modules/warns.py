@@ -159,7 +159,7 @@ async def warnlimit(message, chat, strings):
 		await message.reply(strings['warnlimit_updated'].format(num=arg))
 
 
-@register(cmds='resetwarns', user_can_restrict_members=True)
+@register(cmds=['resetwarns', 'delwarns'], user_can_restrict_members=True)
 @chat_connection(admin=True, only_groups=True)
 @get_user_dec()
 @get_strings_dec('warns')
