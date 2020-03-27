@@ -235,7 +235,7 @@ async def leave_fed_comm(message, chat, fed, strings):
 		fed_name=fed['fed_name'],
 		fed_id=fed['fed_id'],
 		chat_name=chat['chat_title'],
-		chat_id=chat_id
+		chat_id=chat['chat_id']
 	))
 
 
@@ -628,7 +628,7 @@ async def unfed_ban_user(message, fed, user, text, strings):
 		))
 
 		channel_text += strings['fban_subs_fed_log'].format(
-			subs_chats=all_banned_chats_count,
+			subs_chats=all_unbanned_chats_count,
 			feds=len(sfeds_list)
 		)
 	else:
