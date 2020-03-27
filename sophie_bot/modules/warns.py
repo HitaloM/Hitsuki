@@ -168,7 +168,7 @@ async def reset_warn(message, chat, user, strings):
 	chat_title = chat.chat_title
 	user_id = user.user_id
 	user_link = await get_user_link(user_id)
-	admin = await get_user_link(message.from_user.id)
+	admin_link = await get_user_link(message.from_user.id)
 
 	if user_id == BOT_ID:
 		await message.reply(strings['rst_wrn_sofi'])
@@ -178,7 +178,7 @@ async def reset_warn(message, chat, user, strings):
 		deleted = await db.warns_v2.delete_many({'chat_id': chat_id, 'user_id': user_id})
 		purged = deleted.deleted_count
 		await message.reply(strings['purged_warns'].format(
-			admin=admin, num=purged, user=user_link, chat_title=chat_title))
+			admin=admin_link, num=purged, user=user_link, chat_title=chat_title))
 	else:
 		await message.reply(strings['usr_no_wrn'].format(user=user))
 
