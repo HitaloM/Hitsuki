@@ -24,10 +24,10 @@ from .utils.user_details import (
 @get_user_and_text_dec()
 @get_strings_dec('warns')
 async def warn(message, chat, user, text, strings):
-	chat_id = chat.chat_id
-	chat_title = chat.chat_title
+	chat_id = chat['chat_id']
+	chat_title = chat['chat_title']
 	by = message.from_user.id
-	user_id = user.user_id
+	user_id = user['user_id']
 	warn_id = random_string(15)
 
 	if user_id == BOT_ID:
@@ -107,8 +107,8 @@ async def rmv_warn_btn(event, strings, regexp=None, **kwargs):
 @get_user_dec(allow_self=True)
 @get_strings_dec('warns')
 async def warns(message, chat, user, strings):
-	chat_id = chat.chat_id
-	user_id = user.user_id
+	chat_id = chat['chat_id']
+	user_id = user['user_id']
 	text = strings['warns_header']
 	user_link = await get_user_link(user_id)
 
@@ -133,8 +133,8 @@ async def warns(message, chat, user, strings):
 @chat_connection(admin=True, only_groups=True)
 @get_strings_dec('warns')
 async def warnlimit(message, chat, strings):
-	chat_id = chat.chat_id
-	chat_title = chat.chat_title
+	chat_id = chat['chat_id']
+	chat_title = chat['chat_title']
 	arg = int(message.get_args().split(' ', 1)[0])
 
 	if not arg:
@@ -164,9 +164,9 @@ async def warnlimit(message, chat, strings):
 @get_user_dec()
 @get_strings_dec('warns')
 async def reset_warn(message, chat, user, strings):
-	chat_id = chat.chat_id
-	chat_title = chat.chat_title
-	user_id = user.user_id
+	chat_id = chat['chat_id']
+	chat_title = chat['chat_title']
+	user_id = user['user_id']
 	user_link = await get_user_link(user_id)
 	admin_link = await get_user_link(message.from_user.id)
 
