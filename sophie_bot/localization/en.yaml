@@ -401,6 +401,7 @@ STRINGS:
     info_fbanned: "\nBanned in current Federation: "
     info_admeme: "\nUser has admin rights in this chat."
     upd_cache: "Updating cache now..."
+    upd_cache_done: "Admins cache was updated."
     admins: "<b>Admin in this group:</b>\n"
   imports_exports:
     # Exporting

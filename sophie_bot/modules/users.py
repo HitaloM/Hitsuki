@@ -165,6 +165,14 @@ async def user_info(message, user, strings):
 	await message.reply(text)
 
 
+@register(cmds="admincache", is_admin=True)
+@chat_connection(only_groups=True, admin=True)
+@get_strings_dec("users")
+async def reset_admins_cache(message, chat, strings):
+	await get_admins_rights(chat['chat_id'], force_update=True)  # Reset a cache
+	await message.reply(strings['upd_cache_done'])
+
+
 @register(cmds=["adminlist", "admins"])
 @disablable_dec("adminlist")
 @chat_connection(only_groups=True)
