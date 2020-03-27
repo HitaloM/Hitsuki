@@ -25,8 +25,6 @@ from sophie_bot.utils.logger import log
 DEBUG_MODE = get_bool_key('DEBUG_MODE')
 ALLOW_F_COMMANDS = get_bool_key("allow_forwards_commands")
 ALLOW_COMMANDS_FROM_EXC = get_bool_key("allow_commands_with_!")
-BLOCK_GBANNED_USERS = get_bool_key("block_gbanned_users")
-RATE_LIMIT = get_bool_key("rate_limit")
 
 REGISTRED_COMMANDS = []
 COMMANDS_ALIASES = {}
