@@ -412,6 +412,9 @@ ALLOWED_COLUMNS_NOTES = ALLOWED_COLUMNS + [
 
 
 async def __import__(chat_id, data):
+	if not data:
+		return
+
 	new = []
 	for note in data:
 
