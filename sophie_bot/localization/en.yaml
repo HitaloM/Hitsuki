@@ -415,6 +415,7 @@ STRINGS:
     big_file: Supported importing files only under 50 MB!
     started_importing: Importing started! Please wait...
     bad_file: Bad file! Expected <code>'general'</code> column.
+    file_version_so_new: Exported file version is never than Sophie currently supports!
     imports_locked: Please wait %s till using imports again!
     import_done: Import done!
   restrictions:

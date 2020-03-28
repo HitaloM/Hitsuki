@@ -28,6 +28,9 @@ from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 
 
+VERSION = 3
+
+
 # Waiting for import file state
 class ImportFileWait(StatesGroup):
 	waiting = State()
@@ -53,7 +56,7 @@ async def export_chat_data(message, chat, strings):
 			'chat_name': chat['chat_title'],
 			'chat_id': chat_id,
 			'timestamp': datetime.now(),
-			'version': 2
+			'version': VERSION
 		}
 	}
 
@@ -117,10 +120,15 @@ async def import_fun(message, document, chat, strings):
 		await message.reply(strings['bad_file'])
 		return
 
+	file_version = data['general']['version']
+
+	if file_version > VERSION:
+		await message.reply(strings['file_version_so_new'])
+		return
+
 	imported = []
 	for module in [m for m in LOADED_MODULES if hasattr(m, '__import__')]:
 		module_name = module.__name__.replace('sophie_bot.modules.', '')
-		print(module_name)
 		if module_name in data:
 			imported.append(module_name)
 			await asyncio.sleep(0.2)
