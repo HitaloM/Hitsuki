@@ -6,6 +6,7 @@ from aiogram.types.inline_keyboard import (
 	InlineKeyboardButton,
 	InlineKeyboardMarkup
 )
+from bson.objectid import ObjectId
 
 from sophie_bot import BOT_ID
 from sophie_bot.decorator import register
@@ -26,9 +27,8 @@ from .utils.user_details import (
 async def warn(message, chat, user, text, strings):
 	chat_id = chat['chat_id']
 	chat_title = chat['chat_title']
-	by = message.from_user.id
+	by_id = message.from_user.id
 	user_id = user['user_id']
-	warn_id = random_string(15)
 
 	if user_id == BOT_ID:
 		await message.reply(strings['warn_sofi'])
@@ -43,14 +43,13 @@ async def warn(message, chat, user, text, strings):
 		return
 
 	reason = text
-	await db.warns_v2.insert_one({
-		'warn_id': warn_id,
+	warn_id = str((await db.warns_v2.insert_one({
 		'user_id': user_id,
 		'chat_id': chat_id,
 		'reason': str(reason),
-		'by': by
-	})
-
+		'by': by_id
+	})).inserted_id)
+	
 	admin = await get_user_link(message.from_user.id)
 	member = await get_user_link(user_id)
 	text = strings['warn'].format(admin=admin, user=member, chat_name=chat_title)
@@ -58,10 +57,7 @@ async def warn(message, chat, user, text, strings):
 	if reason:
 		text += strings['warn_rsn'].format(reason=reason)
 
-	wrns = db.warns_v2.find({'chat_id': chat_id, 'user_id': user_id})
-	warn_count = 0
-	async for wrn in wrns:
-		warn_count += 1
+	warns_count = await db.warns_v2.count_documents({'chat_id': chat_id, 'user_id': user_id})
 
 	button = InlineKeyboardMarkup().add(InlineKeyboardButton(
 		"⚠️ Remove warn", callback_data='remove_warn_{}'.format(warn_id)
@@ -74,13 +70,13 @@ async def warn(message, chat, user, text, strings):
 	else:
 		max_warn = 3
 
-	if warn_count >= max_warn:
+	if warns_count >= max_warn:
 		await ban_user(str(chat_id), str(user_id))
 		await message.reply(strings['warn_bun'].format(user=member))
 		db.warns_v2.delete_many({'user_id': user_id, 'chat_id': chat_id})
 		return
 	else:
-		text += strings['warn_num'].format(curr_warns=warn_count, max_warns=max_warn)
+		text += strings['warn_num'].format(curr_warns=warns_count, max_warns=max_warn)
 
 	await message.reply(text, reply_markup=button, disable_web_page_preview=True)
 
@@ -88,7 +84,7 @@ async def warn(message, chat, user, text, strings):
 @register(regexp=r'remove_warn_(.*)', f='cb', allow_kwargs=True)
 @get_strings_dec('warns')
 async def rmv_warn_btn(event, strings, regexp=None, **kwargs):
-	warn_id = re.search(r'remove_warn_(.*)', str(regexp)).group(1)[:-2]
+	warn_id = ObjectId(re.search(r'remove_warn_(.*)', str(regexp)).group(1)[:-2])
 	chat_id = event.message.chat.id
 	user_id = event.from_user.id
 	admin_link = await get_user_link(user_id)
@@ -97,7 +93,7 @@ async def rmv_warn_btn(event, strings, regexp=None, **kwargs):
 		await event.answer(strings['warn_no_admin_alert'], show_alert=True)
 		return
 
-	await db.warns_v2.delete_one({'chat_id': chat_id, 'warn_id': warn_id})
+	await db.warns_v2.delete_one({'_id': warn_id})
 
 	await event.message.edit_text(strings['warn_btn_rmvl_success'].format(admin=admin_link))
 
