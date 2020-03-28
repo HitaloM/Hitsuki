@@ -116,10 +116,11 @@ async def rules_btn(event, strings, regexp=None, **kwargs):
 
 async def __export__(chat_id):
 	rules = await db.rules_v2.find_one({'chat_id': chat_id})
-	del rules['_id']
-	del rules['chat_id']
+	if rules:
+		del rules['_id']
+		del rules['chat_id']
 
-	return {'rules': rules}
+		return {'rules': rules}
 
 
 async def __import__(chat_id, data):
