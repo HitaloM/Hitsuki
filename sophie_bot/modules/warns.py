@@ -49,7 +49,7 @@ async def warn(message, chat, user, text, strings):
 		'reason': str(reason),
 		'by': by_id
 	})).inserted_id)
-	
+
 	admin = await get_user_link(message.from_user.id)
 	member = await get_user_link(user_id)
 	text = strings['warn'].format(admin=admin, user=member, chat_name=chat_title)
@@ -179,6 +179,22 @@ async def reset_warn(message, chat, user, strings):
 		await message.reply(strings['usr_no_wrn'].format(user=user))
 
 
-def random_string(stringLength):
-	letters = string.ascii_letters
-	return ''.join(random.choice(letters) for i in range(stringLength))
+async def __export__(chat_id):
+	if data := await db.warnlimit.find_one({'chat_id': chat_id}):
+		number = data['num']
+	else:
+		number = 3
+
+	return {'warns': {'warns_limit': number}}
+
+
+async def __import__(chat_id, data):
+	if 'warns_limit' in data:
+		number = data['warns_limit']
+		if number < 2:
+			return
+
+		elif number > 10000:  # Max value
+			return
+
+		await db.warnlimit.update_one({'chat_id': chat_id}, {'$set': {'num': number}}, upsert=True)
