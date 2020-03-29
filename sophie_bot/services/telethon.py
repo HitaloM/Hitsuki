@@ -6,9 +6,9 @@ TOKEN = get_str_key("TOKEN", required=True)
 NAME = TOKEN.split(':')[0]
 
 tbot = TelegramClient(
-	NAME,
-	get_int_key("APP_ID", required=True),
-	get_str_key("APP_HASH", required=True)
+    NAME,
+    get_int_key("APP_ID", required=True),
+    get_str_key("APP_HASH", required=True)
 )
 
 # Telethon

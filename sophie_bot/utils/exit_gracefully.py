@@ -18,13 +18,13 @@ from sophie_bot.utils.logger import log
 
 
 def exit_gracefully(signum, frame):
-	log.warning("Bye!")
+    log.warning("Bye!")
 
-	try:
-		redis.save()
-	except Exception:
-		log.error("Exiting immediately!")
-	os.kill(os.getpid(), signal.SIGUSR1)
+    try:
+        redis.save()
+    except Exception:
+        log.error("Exiting immediately!")
+    os.kill(os.getpid(), signal.SIGUSR1)
 
 
 # Signal exit

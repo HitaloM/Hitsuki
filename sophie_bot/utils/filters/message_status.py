@@ -17,36 +17,36 @@ from sophie_bot import dp
 
 
 class NotForwarded(BoundFilter):
-	key = 'not_forwarded'
+    key = 'not_forwarded'
 
-	def __init__(self, not_forwarded):
-		self.not_forwarded = not_forwarded
+    def __init__(self, not_forwarded):
+        self.not_forwarded = not_forwarded
 
-	async def check(self, message: types.Message):
-		if 'forward_from' not in message:
-			return True
+    async def check(self, message: types.Message):
+        if 'forward_from' not in message:
+            return True
 
 
 class NoArgs(BoundFilter):
-	key = 'no_args'
+    key = 'no_args'
 
-	def __init__(self, no_args):
-		self.no_args = no_args
+    def __init__(self, no_args):
+        self.no_args = no_args
 
-	async def check(self, message: types.Message):
-		if not len(message.text.split(' ')) > 1:
-			return True
+    async def check(self, message: types.Message):
+        if not len(message.text.split(' ')) > 1:
+            return True
 
 
 class HasArgs(BoundFilter):
-	key = 'has_args'
+    key = 'has_args'
 
-	def __init__(self, has_args):
-		self.has_args = has_args
+    def __init__(self, has_args):
+        self.has_args = has_args
 
-	async def check(self, message: types.Message):
-		if len(message.text.split(' ')) > 1:
-			return True
+    async def check(self, message: types.Message):
+        if len(message.text.split(' ')) > 1:
+            return True
 
 
 dp.filters_factory.bind(NotForwarded)

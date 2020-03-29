@@ -24,17 +24,17 @@ from .utils.language import get_strings_dec
 @disableable_dec('getsticker')
 @get_strings_dec('stickers')
 async def get_sticker(message, strings):
-	if 'reply_to_message' not in message or 'sticker' not in message.reply_to_message:
-		await message.reply(strings['rpl_to_sticker'])
-		return
+    if 'reply_to_message' not in message or 'sticker' not in message.reply_to_message:
+        await message.reply(strings['rpl_to_sticker'])
+        return
 
-	sticker = message.reply_to_message.sticker
-	file_id = sticker.file_id
-	text = strings['ur_sticker'].format(emoji=sticker.emoji, id=file_id)
+    sticker = message.reply_to_message.sticker
+    file_id = sticker.file_id
+    text = strings['ur_sticker'].format(emoji=sticker.emoji, id=file_id)
 
-	sticker_file = await bot.download_file_by_id(file_id, io.BytesIO())
+    sticker_file = await bot.download_file_by_id(file_id, io.BytesIO())
 
-	await message.reply_document(
-		InputFile(sticker_file, filename=f'{sticker.set_name}_{sticker.file_id[:5]}.png'),
-		text
-	)
+    await message.reply_document(
+        InputFile(sticker_file, filename=f'{sticker.set_name}_{sticker.file_id[:5]}.png'),
+        text
+    )

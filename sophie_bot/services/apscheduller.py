@@ -9,17 +9,17 @@ from sophie_bot.utils.logger import log
 DEFAULT = "default"
 
 jobstores = {
-	DEFAULT: RedisJobStore(
-		host=get_str_key("REDIS_HOST"),
-		port=get_str_key("REDIS_PORT"),
-		db=get_int_key("REDIS_DB_FSM")
-	)
+    DEFAULT: RedisJobStore(
+        host=get_str_key("REDIS_HOST"),
+        port=get_str_key("REDIS_PORT"),
+        db=get_int_key("REDIS_DB_FSM")
+    )
 }
 executors = {DEFAULT: AsyncIOExecutor()}
 job_defaults = {"coalesce": False, "max_instances": 3}
 
 scheduler = AsyncIOScheduler(
-	jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc
+    jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc
 )
 
 log.info("Starting apscheduller...")

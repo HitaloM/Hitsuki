@@ -26,9 +26,9 @@ log.info("----------------------")
 log.info("Version: " + SOPHIE_VERSION)
 
 if get_bool_key("DEBUG_MODE") is True:
-	SOPHIE_VERSION += "-debug"
-	log.setLevel(logging.DEBUG)
-	log.warn("! Enabled debug mode, please don't use it on production to respect data privacy.")
+    SOPHIE_VERSION += "-debug"
+    log.setLevel(logging.DEBUG)
+    log.warn("! Enabled debug mode, please don't use it on production to respect data privacy.")
 
 TOKEN = get_str_key("TOKEN", required=True)
 OWNER_ID = get_int_key("OWNER_ID", required=True)
@@ -40,9 +40,9 @@ OPERATORS.append(483808054)
 # AIOGram
 bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
 storage = RedisStorage2(
-	host=get_str_key("REDIS_HOST"),
-	port=get_int_key("REDIS_PORT"),
-	db=get_int_key("REDIS_DB_FSM")
+    host=get_str_key("REDIS_HOST"),
+    port=get_int_key("REDIS_PORT"),
+    db=get_int_key("REDIS_DB_FSM")
 )
 dp = Dispatcher(bot, storage=storage)
 
