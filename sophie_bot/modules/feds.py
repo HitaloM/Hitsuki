@@ -27,7 +27,7 @@ from aiogram.types import InputFile
 from sophie_bot import OWNER_ID, BOT_ID, OPERATORS, decorator, bot
 from sophie_bot.services.mongo import db
 from .utils.connections import get_connected_chat, chat_connection
-from .utils.language import get_strings_dec, get_string
+from .utils.language import get_strings_dec, get_strings, get_string
 from .utils.message import need_args_dec
 from .utils.restrictions import ban_user, unban_user
 from .utils.user_details import is_chat_creator, get_user_link, get_user_and_text
@@ -35,7 +35,7 @@ from .utils.user_details import is_chat_creator, get_user_link, get_user_and_tex
 
 # functions
 
-async def get_fed_f(message, chat_id):
+async def get_fed_f(message, chat_id):  # DEBUGME: chat_id is not used, is it needed? Is it cause any bugs?
     chat = await get_connected_chat(message, admin=True, only_groups=True)
     fed = await db.feds.find_one({'chats': {'$in': [chat['chat_id']]}})
     if not fed:
@@ -71,13 +71,14 @@ def get_fed_user_text(func):
         message = args[0]
         real_chat_id = message.chat.id
         user, text = await get_user_and_text(message, send_text=False)
+        strings = await get_strings(real_chat_id, 'feds')
 
-        # Check nonexits user
+        # Check non exits user
         if not user and (args := message.get_args().split(None, 1))[0].isdigit():
             user = {'user_id': args[0]}
             text = args[1] if len(args) > 1 else None
         elif not user:
-            await message.reply("I can't get this user.")
+            await message.reply(strings['cant_get_user'])
 
         # Check fed_id in args
         if text:
@@ -86,14 +87,14 @@ def get_fed_user_text(func):
                 if text_args[0].count('-') == 4:
                     text = text_args[1] if len(text_args) > 1 else ''
                     if not (fed := await db.feds.find_one({'fed_id': text_args[0]})):
-                        await message.reply(get_string(real_chat_id, "feds", 'fed_id_invalid'))
+                        await message.reply(strings['fed_id_invalid'])
                         return
                 else:
                     text = " ".join(text_args)
 
         if not fed:
             if not (fed := await get_fed_f(message, message.chat.id)):
-                await message.reply(get_string(real_chat_id, "feds", 'chat_not_in_fed'))
+                await message.reply(strings['chat_not_in_fed'])
                 return
 
         return await func(*args, fed, user, text, **kwargs)
@@ -130,7 +131,8 @@ def is_fed_owner(func):
         user_id = message.from_user.id
 
         if not user_id == fed["creator"] and user_id != OWNER_ID:
-            await message.reply(get_string(message.chat.id, "feds", 'need_fed_admin').format(name=fed['fed_name']))
+            text = get_string(message.chat.id, "feds", 'need_fed_admin').format(name=fed['fed_name'])
+            await message.reply(text)
             return
 
         return await func(*args, **kwargs)
@@ -146,7 +148,8 @@ def is_fed_admin(func):
 
         if not user_id == fed["creator"] and user_id != OWNER_ID:
             if user_id not in fed['admins']:
-                await message.reply(get_string(message.chat.id, "feds", 'need_fed_admin').format(name=fed['fed_name']))
+                text = get_string(message.chat.id, "feds", 'need_fed_admin').format(name=fed['fed_name'])
+                await message.reply(text)
 
         return await func(*args, **kwargs)
 

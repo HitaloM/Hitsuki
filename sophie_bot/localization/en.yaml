@@ -193,6 +193,7 @@ STRINGS:
     # decorators
     need_fed_admin: "You are not a admin in <b>{name}</b> Federation"
     need_fed_owner: "You are not a owner of <b>{name}</b> Federation"
+    cant_get_user: "Sorry, I can't get that user, try using user ID"
 
     # /newfed
     fed_name_long: "Federation name can't be longer than 60 symbols!"
