@@ -469,7 +469,7 @@ async def send_button(message, state, strings):
 
 
 @register(regexp='wc_button_btn', f='cb', state=WelcomeSecurityState.button, allow_kwargs=True)
-async def wc_math_check_cb(event, state=None, **kwargs):
+async def wc_button_btn_cb(event, state=None, **kwargs):
     await welcome_security_passed(event, state)
 
 
