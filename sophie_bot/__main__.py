@@ -23,7 +23,7 @@ import hypercorn
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 
 from sophie_bot import dp
-from sophie_bot.config import get_bool_key, get_list_key
+from sophie_bot.config import get_bool_key, get_list_key, get_int_key
 from sophie_bot.modules import ALL_MODULES, LOADED_MODULES
 from sophie_bot.services.quart import quart
 from sophie_bot.utils.logger import log
@@ -84,7 +84,8 @@ async def startup():
 async def start():
     log.debug("Running webserver..")
     config = hypercorn.Config()
-    config.bind = ["localhost:8087"]
+    port = get_int_key('API_PORT')
+    config.bind = [f"localhost:{port}"]
     await hypercorn.asyncio.serve(quart, config)
 
 

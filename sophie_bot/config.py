@@ -35,7 +35,7 @@ DEFAULTS = {
     'MONGODB_URI': 'localhost',
     'MONGO_DB': 'sophie',
 
-    'BACKUP_PASS': "DEFAULT_SOPHIE_BACKUP_PASS",
+    'API_PORT': 8080,
 
     'JOIN_CONFIRM_DURATION': '30m',
 }
