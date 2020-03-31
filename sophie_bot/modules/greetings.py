@@ -46,6 +46,7 @@ from .utils.user_details import is_user_admin, get_user_link, check_admin_rights
 
 
 class WelcomeSecurityState(StatesGroup):
+    button = State()
     captcha = State()
     math = State()
 
@@ -58,17 +59,16 @@ async def welcome(message, chat, strings):
     send_id = message.chat.id
 
     if len(args := message.get_args().split()) > 0:
-        noformat = True if 'noformat' == args[0] or 'raw' == args[0] else False
+        no_format = True if 'no_format' == args[0] or 'raw' == args[0] else False
     else:
-        noformat = None
+        no_format = None
 
     if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
         db_item = {}
     if 'note' not in db_item:
-        db_item['note'] = {}
-        db_item['note']['text'] = strings['default_welcome']
+        db_item['note'] = {'text': strings['default_welcome']}
 
-    if noformat:
+    if no_format:
         await message.reply(strings['raw_wlcm_note'])
         text, kwargs = await t_unparse_note_item(message, db_item['note'], chat_id, noformat=True)
         await send_note(send_id, text, **kwargs)
@@ -101,7 +101,7 @@ async def welcome(message, chat, strings):
 
     if 'welcome_security' in db_item:
         if 'security_note' not in db_item:
-            db_item['security_note']['text'] = strings['default_security_note']
+            db_item['security_note'] = {'text': strings['default_security_note']}
         await message.reply(strings['security_note'])
         text, kwargs = await t_unparse_note_item(message, db_item['security_note'], chat_id)
         await send_note(send_id, text, **kwargs)
@@ -134,8 +134,11 @@ async def set_welcome(message, chat, strings):
     else:
         note = await get_parsed_note_list(message, split_args=0)
 
-        if (await db.greetings.update_one({'chat_id': chat_id}, {'$set': {'chat_id': chat_id, 'note': note}},
-                                          upsert=True)).modified_count > 0:
+        if (await db.greetings.update_one(
+                {'chat_id': chat_id},
+                {'$set': {'chat_id': chat_id, 'note': note}, '$unset': {'welcome_disabled': 1}},
+                upsert=True
+        )).modified_count > 0:
             text = strings['updated']
         else:
             text = strings['saved']
@@ -279,7 +282,7 @@ async def welcome_security(message, chat, strings):
 
     no = ['no', 'off', '0', 'false', 'disable']
 
-    if args[0].lower() in ['math', 'captcha']:
+    if args[0].lower() in ['button', 'math', 'captcha']:
         level = args[0].lower()
     elif args[0] in no:
         await db.greetings.update_one({'chat_id': chat_id}, {'$unset': {'welcome_security': 1}}, upsert=True)
@@ -391,7 +394,7 @@ async def welcome_security_handler(message, strings):
     del kwargs['reply_to']
     await msg.edit(text, **kwargs)
 
-    redis.set(f'welcomesecurity_users_{user_id}', chat_id)
+    redis.set(f'welcome_security_users:{user_id}', chat_id)
 
     scheduler.add_job(
         join_expired,
@@ -432,7 +435,7 @@ async def welcome_security_handler_pm(message, strings, regexp=None, state=None,
         data['msg_id'] = int(args[4])
 
     if not message.from_user.id == int(args[3]):
-        if not (rkey := redis.get(f'welcomesecurity_users_{user_id}')) and not chat_id == rkey:
+        if not (rkey := redis.get(f'welcome_security_users:{user_id}')) and not chat_id == rkey:
             await message.reply(strings['not_allowed'])  # TODO
             return
 
@@ -440,13 +443,34 @@ async def welcome_security_handler_pm(message, strings, regexp=None, state=None,
 
     level = db_item['welcome_security']['level']
 
-    if level == 'captcha':
-        await WelcomeSecurityState.captcha.set()
-        await send_captcha(message, state)
+    if level == 'button':
+        await WelcomeSecurityState.button.set()
+        await send_button(message, state)
 
     elif level == 'math':
         await WelcomeSecurityState.math.set()
         await send_btn_math(message, state)
+
+    elif level == 'captcha':
+        await WelcomeSecurityState.captcha.set()
+        await send_captcha(message, state)
+
+
+@get_strings_dec('greetings')
+async def send_button(message, state, strings):
+    text = strings['btn_button_text']
+    buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(
+        strings['click_here'],
+        callback_data='wc_button_btn'
+    ))
+    verify_msg_id = (await message.reply(text, reply_markup=buttons)).message_id
+    async with state.proxy() as data:
+        data['verify_msg_id'] = verify_msg_id
+
+
+@register(regexp='wc_button_btn', f='cb', state=WelcomeSecurityState.button, allow_kwargs=True)
+async def wc_math_check_cb(event, state=None, **kwargs):
+    await welcome_security_passed(event, state)
 
 
 def generate_captcha(number=None):
@@ -542,15 +566,15 @@ def gen_expression():
     return expr, answr
 
 
-def gen_int_btns(ansrw):
+def gen_int_btns(answer):
     buttons = []
 
     for a in [random.randint(1, 20) for _ in range(3)]:
-        while a == ansrw:
+        while a == answer:
             a = random.randint(1, 20)
         buttons.append(Button.inline(str(a), data='wc_int_btn:' + str(a)))
 
-    buttons.insert(random.randint(0, 3), Button.inline(str(ansrw), data='wc_int_btn:' + str(ansrw)))
+    buttons.insert(random.randint(0, 3), Button.inline(str(answer), data='wc_int_btn:' + str(answer)))
 
     return buttons
 
@@ -558,12 +582,12 @@ def gen_int_btns(ansrw):
 @get_strings_dec('greetings')
 async def send_btn_math(message, state, strings, msg_id=False):
     chat_id = message.chat.id
-    expr, answr = gen_expression()
+    expr, answer = gen_expression()
 
     async with state.proxy() as data:
-        data['num'] = answr
+        data['num'] = answer
 
-    btns = gen_int_btns(answr)
+    btns = gen_int_btns(answer)
 
     if msg_id:
         async with state.proxy() as data:
@@ -576,7 +600,7 @@ async def send_btn_math(message, state, strings, msg_id=False):
     async with state.proxy() as data:
         data['verify_msg_id'] = msg_id
 
-    await tbot.edit_message(chat_id, msg_id, text, buttons=btns)
+    await tbot.edit_message(chat_id, msg_id, text, buttons=btns)  # TODO: change to aiogram
 
 
 @register(regexp='wc_int_btn:', f='cb', state=WelcomeSecurityState.math, allow_kwargs=True)
@@ -585,14 +609,14 @@ async def wc_math_check_cb(event, strings, state=None, **kwargs):
     num = int(event.data.split(':')[1])
 
     async with state.proxy() as data:
-        answr = data['num']
+        answer = data['num']
         if 'last' in data:
             await state.finish()
             await event.answer(strings['math_wc_sry'], show_alert=True)
             await event.message.delete()
             return
 
-    if not num == answr:
+    if not num == answer:
         await send_btn_math(event.message, state, msg_id=event.message.message_id)
         await event.answer(strings['math_wc_wrong'], show_alert=True)
         return
@@ -657,9 +681,10 @@ async def welcome_trigger(message, strings):
 
     # Welcome
     if 'note' not in db_item:
-        db_item['note'] = {}
-        db_item['note']['text'] = strings['default_welcome']
-        db_item['note']['parse_mode'] = 'md'
+        db_item['note'] = {
+            'text': strings['default_welcome'],
+            'parse_mode': 'md'
+        }
 
     text, kwargs = await t_unparse_note_item(message, db_item['note'], chat_id)
     msg = await send_note(chat_id, text, reply_to=message.message_id, **kwargs)
@@ -681,10 +706,10 @@ async def welcome_trigger(message, strings):
             await restrict_user(chat_id, user_id, until_date=convert_time(db_item['welcome_mute']['time']))
 
 
-# Cleanservice trigger
+# Clean service trigger
 @register(only_groups=True, f='service', bot_can_delete_messages=True)
 @get_strings_dec('greetings')
-async def cleanservice_trigger(message, strings):
+async def clean_service_trigger(message, strings):
     chat_id = message.chat.id
     if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
         return
@@ -693,12 +718,6 @@ async def cleanservice_trigger(message, strings):
         return
 
     await message.delete()
-
-
-@register(cmds='captcha', is_owner=True)
-async def test_captcha(message):
-    img, number = generate_captcha()
-    await message.answer_photo(img, caption=number)
 
 
 async def __export__(chat_id):

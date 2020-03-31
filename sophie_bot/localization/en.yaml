@@ -544,6 +544,9 @@ STRINGS:
     passed: Verification passed, you was unmuted in <b>%s</b>!
     passed_no_frm: Verification passed, you was unmuted in %s!
     last_chance: You have a last chance to enter captcha!
+
+    btn_button_text: "Please clock button below to prove yourself."
+
     btn_wc_text: |
       Please press right buttom matched on this expression:
       %s
