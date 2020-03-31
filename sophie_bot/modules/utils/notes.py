@@ -311,7 +311,7 @@ async def send_note(send_id, text, **kwargs):
     if 'parse_mode' in kwargs and kwargs['parse_mode'] == 'md':
         kwargs['parse_mode'] = tmarkdown
 
-    await tbot.send_message(send_id, text, **kwargs)
+    return await tbot.send_message(send_id, text, **kwargs)
 
 
 def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
