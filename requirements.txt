@@ -1,5 +1,5 @@
 # General
-https://github.com/LonamiWebs/Telethon/archive/master.zip
+telethon
 aiogram
 
 # DBs
