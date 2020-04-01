@@ -27,8 +27,8 @@ from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.message import need_args_dec
 from .utils.notes import (
-	ALLOWED_COLUMNS, BUTTONS, get_parsed_note_list,
-	send_note, t_unparse_note_item
+    ALLOWED_COLUMNS, BUTTONS, get_parsed_note_list,
+    send_note, t_unparse_note_item
 )
 
 
