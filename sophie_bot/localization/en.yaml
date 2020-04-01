@@ -557,6 +557,15 @@ STRINGS:
 
     not_admin_wm: I can't restrict peoples here, so I won't use welcome mute!
     not_admin_ws: I can't restrict peoples here, so I won't use welcome security!
+  locks:
+    locks_header: "Here is the current lock settings in {chat_title} \n\n"
+    no_lock_args: Give me some args to lock!
+    already_locked: This is already locked bruh
+    no_such_lock: Uhh see /locks to find out what can be locked and unlocked!
+    locked_successfully: Locked {lock} in {chat} sucessfully!
+    no_unlock_args: Give me some args to unlock!
+    not_locked: Bruh, its not locked to unlock.
+    unlocked_successfully: Unlocked {lock} in {chat} successfully!
 RANDOM_STRINGS:
   RUNS:
     - "Noooooooo!.."
