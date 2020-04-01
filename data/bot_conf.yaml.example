@@ -1,54 +1,28 @@
-# SophieBot Example config
+# Sophie example config
 
-Basic:
-    token: "YOUR_TOKEN"
+# Basic
+TOKEN: "YOUR_TOKEN"
 
-    # Get them from https://my.telegram.org/
-    app_id: 12345
-    app_hash: "API_HASH"
+# Get they in https://my.telegram.org/
+APP_ID: 1234
+APP_HASH: "YOUR_APP_HASH"
 
-    owner_id: 483808054
-    mongodb_uri: "localhost"
+MONGO_URI: localhost
+MONGO_PORT: 27017
+MONGO_DB: 'sophie'
 
-    redis_conn: "localhost"
-    redis_port: 6379
+REDIS_URI: localhost
+REDIS_PORT: 6379
+REDIS_DB_FSM: 1
 
-    logs_channel_id: -1111111111
+OWNER_ID: 483808054
+OPERATORS: [483808054, 00000000]
 
-Advanced:
-    # This is advanced settings, you can leave them by default.
-    bot_name_additional: ""
+# Advanced
+SENTRY_API_KEY: "SENTRY_API_URL"
 
-    debug_mode: true
+DEBUG_MODE: False
+LOAD_MODULES: True
 
-    sync_cas_bans: false
-
-    enable_unfiedbans_integration: true
-    utoken: "UBANS_TOKEN"
-
-    gbans_channel_enabled: false
-    gbans_channel: -1111111111
-
-    errors_channel_enabled: false
-    errors_channel: -1111111111
-
-    backups_password: "pass"
-    auto_backups_enabled: false
-
-    webhooks: false
-    webhook_host: "https://google.com/"
-    webapp_host: "localhost"
-    webapp_port: 8086
-
-    skip_catch_up: true
-    rate_limit: false
-    block_gbanned_users: true
-
-    sudo: [483808054, 782229305, 654839744]
-    whitelisted: [123456789, 928173281]
-
-    allow_forwards_commands: false
-    allow_commands_with_!: false
-
-    load_components: false
-    disabled_components: ["afk", "fox"]
+ALLOW_FORWARDS_COMMANDS: False
+ALLOW_COMMANDS_WITH_!: False
