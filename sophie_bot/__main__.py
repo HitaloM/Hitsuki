@@ -39,12 +39,14 @@ DONT_LOAD = get_list_key("DONT_LOAD")
 
 if get_bool_key('LOAD_MODULES'):
     if len(LOAD) > 0:
-        ALL_MODULES = LOAD
+        modules = LOAD
+    else:
+        modules = ALL_MODULES
 
-    ALL_MODULES = [x for x in ALL_MODULES if x not in DONT_LOAD]
+    modules = [x for x in modules if x not in DONT_LOAD]
 
-    log.info("Modules to load: %s", str(ALL_MODULES))
-    for module_name in ALL_MODULES:
+    log.info("Modules to load: %s", str(modules))
+    for module_name in modules:
         log.debug(f"Importing <d><n>{module_name}</></>")
         imported_module = import_module("sophie_bot.modules." + module_name)
         LOADED_MODULES.append(imported_module)
