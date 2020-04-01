@@ -20,8 +20,8 @@
 import re
 
 from aiogram.types.inline_keyboard import (
-	InlineKeyboardButton,
-	InlineKeyboardMarkup
+    InlineKeyboardButton,
+    InlineKeyboardMarkup
 )
 from bson.objectid import ObjectId
 
@@ -32,8 +32,8 @@ from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 from .utils.restrictions import ban_user
 from .utils.user_details import (
-	get_user_and_text_dec, get_user_dec,
-	get_user_link, is_user_admin
+    get_user_and_text_dec, get_user_dec,
+    get_user_link, is_user_admin
 )
 
 
