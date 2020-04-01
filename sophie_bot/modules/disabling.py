@@ -152,4 +152,19 @@ async def enable_all_notes_cb(event, chat, strings):
 async def __export__(chat_id):
     disabled = await db.disabled_v2.find_one({'chat_id': chat_id})
 
-    return {'disabled': disabled['cmds'] if disabled else []}
+    return {'disabling': disabled['cmds'] if disabled else []}
+
+
+async def __import__(chat_id, data):
+    new = []
+    for cmd in data:
+        if cmd not in DISABLABLE_COMMANDS:
+            continue
+
+        new.append(cmd)
+
+    await db.disabled_v2.update_one(
+        {'chat_id': chat_id},
+        {'$set': {'cmds': new}},
+        upsert=True
+    )
