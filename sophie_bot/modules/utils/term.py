@@ -45,6 +45,5 @@ async def term(command):
         stderr=asyncio.subprocess.PIPE
     )
     stdout, stderr = await process.communicate()
-    result = str(stdout.decode().strip()) \
-             + str(stderr.decode().strip())
+    result = str(stdout.decode().strip()) + str(stderr.decode().strip())
     return result
