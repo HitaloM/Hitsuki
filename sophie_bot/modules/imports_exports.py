@@ -34,7 +34,7 @@ from . import LOADED_MODULES
 from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 
-VERSION = 3
+VERSION = 4
 
 
 # Waiting for import file state
@@ -61,13 +61,13 @@ async def export_chat_data(message, chat, strings):
         'general': {
             'chat_name': chat['chat_title'],
             'chat_id': chat_id,
-            'timestamp': datetime.now(),
+            'date': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'version': VERSION
         }
     }
 
     for module in [m for m in LOADED_MODULES if hasattr(m, '__export__')]:
-        await asyncio.sleep(0.2)
+        await asyncio.sleep(0)  # Switch to other events before continue
         if k := await module.__export__(chat_id):
             data.update(k)
 
@@ -135,10 +135,13 @@ async def import_fun(message, document, chat, strings):
     imported = []
     for module in [m for m in LOADED_MODULES if hasattr(m, '__import__')]:
         module_name = module.__name__.replace('sophie_bot.modules.', '')
-        if module_name in data:
-            imported.append(module_name)
-            await asyncio.sleep(0.2)
-            await module.__import__(chat_id, data[module_name])
+        if module_name not in data:
+            continue
+        if not data[module_name]:
+            continue
 
-    await msg.delete()
-    await message.answer(strings['import_done'], reply=message.message_id)
+        imported.append(module_name)
+        await asyncio.sleep(0)  # Switch to other events before continue
+        await module.__import__(chat_id, data[module_name])
+
+    await msg.edit_text(strings['import_done'])
