@@ -54,13 +54,10 @@ def convert_time(time_val):
 
     if unit == 'm':
         kwargs['minutes'] = time_num
-        unit_str = 'minutes'
     elif unit == 'h':
         kwargs['hours'] = time_num
-        unit_str = 'hours'
     elif unit == 'd':
         kwargs['days'] = time_num
-        unit_str = 'days'
     else:
         raise InvalidTimeUnit()
 
