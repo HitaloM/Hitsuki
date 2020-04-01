@@ -388,8 +388,10 @@ async def welcome_security_handler(message, strings):
 
     # Edit msg to apply button
     kwargs['buttons'] = [] if not kwargs['buttons'] else kwargs['buttons']
-    kwargs['buttons'] += [Button.url(strings['click_here'],
-                                     f'https://t.me/{BOT_USERNAME}?start=welcome_security_{chat_id}_{user_id}_{msg.id}')]
+    kwargs['buttons'] += [Button.url(
+        strings['click_here'],
+        f'https://t.me/{BOT_USERNAME}?start=welcome_security_{chat_id}_{user_id}_{msg.id}'
+    )]
 
     del kwargs['reply_to']
     await msg.edit(text, **kwargs)
