@@ -20,8 +20,9 @@
 import itertools
 
 from aiogram.types.chat_permissions import ChatPermissions
-from sophie_bot.decorator import register
+
 from sophie_bot import bot
+from sophie_bot.decorator import register
 
 from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
@@ -68,7 +69,7 @@ async def lock_cmd(message, chat, strings):
 @register(cmds="unlock", user_can_restrict_members=True, bot_can_restrict_members=True)
 @chat_connection()
 @get_strings_dec('locks')
-async def lock_cmd(message, chat, strings):
+async def unlock_cmd(message, chat, strings):
     chat_id = chat['chat_id']
     chat_title = chat['chat_title']
 
