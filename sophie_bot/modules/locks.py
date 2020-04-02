@@ -31,80 +31,80 @@ from .utils.language import get_strings_dec
 @chat_connection(only_groups=True)
 @get_strings_dec('locks')
 async def lock_types(message, chat, strings):
-	chat_id = chat['chat_id']
-	chat_title = chat['chat_title']
-	text = strings['locks_header'].format(chat_title=chat_title)
+    chat_id = chat['chat_id']
+    chat_title = chat['chat_title']
+    text = strings['locks_header'].format(chat_title=chat_title)
 
-	async for lock, status in lock_parser(chat_id):
-		text += f"- {lock} = {status} \n"
-	await message.reply(text)
+    async for lock, status in lock_parser(chat_id):
+        text += f"- {lock} = {status} \n"
+    await message.reply(text)
 
 
 @register(cmds="lock", user_can_restrict_members=True, bot_can_restrict_members=True)
 @chat_connection()
 @get_strings_dec('locks')
 async def lock_cmd(message, chat, strings):
-	chat_id = chat['chat_id']
-	chat_title = chat['chat_title']
+    chat_id = chat['chat_id']
+    chat_title = chat['chat_title']
 
-	if (args := message.get_args().split(' ', 1)) == ['']:
-		await message.reply(strings['no_lock_args'])
-		return
+    if (args := message.get_args().split(' ', 1)) == ['']:
+        await message.reply(strings['no_lock_args'])
+        return
 
-	async for lock, status in lock_parser(chat_id, rev=True):
-		if args[0] == lock[0]:
-			if status is True:
-				await message.reply(strings['already_locked'])
-				break
+    async for lock, status in lock_parser(chat_id, rev=True):
+        if args[0] == lock[0]:
+            if status is True:
+                await message.reply(strings['already_locked'])
+                break
 
-			to_lock = {lock[1]: False}
-			new_perm = ChatPermissions(
-				**to_lock
-			)
-			await bot.set_chat_permissions(chat_id, new_perm)
-			await message.reply(strings['locked_successfully'].format(lock=lock[0], chat=chat_title))
+            to_lock = {lock[1]: False}
+            new_perm = ChatPermissions(
+                **to_lock
+            )
+            await bot.set_chat_permissions(chat_id, new_perm)
+            await message.reply(strings['locked_successfully'].format(lock=lock[0], chat=chat_title))
 
 
 @register(cmds="unlock", user_can_restrict_members=True, bot_can_restrict_members=True)
 @chat_connection()
 @get_strings_dec('locks')
 async def lock_cmd(message, chat, strings):
-	chat_id = chat['chat_id']
-	chat_title = chat['chat_title']
+    chat_id = chat['chat_id']
+    chat_title = chat['chat_title']
 
-	if not (args := message.get_args().split(' ', 1)) == ['']:
-		await message.reply(strings['no_unlock_args'])
-		return
+    if not (args := message.get_args().split(' ', 1)) == ['']:
+        await message.reply(strings['no_unlock_args'])
+        return
 
-	async for lock, status in lock_parser(chat_id, rev=True):
-		if args[0] == lock[0]:
-			if status is False:
-				await message.reply(strings['not_locked'])
-				break
+    async for lock, status in lock_parser(chat_id, rev=True):
+        if args[0] == lock[0]:
+            if status is False:
+                await message.reply(strings['not_locked'])
+                break
 
-			to_unlock = {lock[1]: True}
-			new_perm = ChatPermissions(
-				**to_unlock
-			)
-			await bot.set_chat_permissions(chat_id, new_perm)
-			await message.reply(strings['unlocked_successfully'].format(lock=lock[0], chat=chat_title))
+            to_unlock = {lock[1]: True}
+            new_perm = ChatPermissions(
+                **to_unlock
+            )
+            await bot.set_chat_permissions(chat_id, new_perm)
+            await message.reply(strings['unlocked_successfully'].format(lock=lock[0], chat=chat_title))
 
 
 async def lock_parser(chat_id, rev=False):
-	keywords = {
-		'all': 'can_send_messages',
-		'media': 'can_send_media_messages',
-		'polls': 'can_send_polls',
-		'others': 'can_send_other_messages'
-	}
-	current_lock = (await bot.get_chat(chat_id)).permissions
+    keywords = {
+        'all': 'can_send_messages',
+        'media': 'can_send_media_messages',
+        'polls': 'can_send_polls',
+        'others': 'can_send_other_messages'
+    }
+    current_lock = (await bot.get_chat(chat_id)).permissions
 
-	for lock, keyword in itertools.zip_longest(dict(current_lock).keys(), keywords.items()):
-		if keyword is not None and lock in keyword:
-			if rev:
-				lock = list([keyword[0], keyword[1]])
-				status = not current_lock[keyword[1]]
-			else:
-				status = not current_lock[lock]
-				lock = keyword[0]
-			yield lock, status
+    for lock, keyword in itertools.zip_longest(dict(current_lock).keys(), keywords.items()):
+        if keyword is not None and lock in keyword:
+            if rev:
+                lock = list([keyword[0], keyword[1]])
+                status = not current_lock[keyword[1]]
+            else:
+                status = not current_lock[lock]
+                lock = keyword[0]
+            yield lock, status
