@@ -1,33 +1,43 @@
-# Copyright (C) 2019 The Raphielscape Company LLC.
-# Copyright (C) 2018 - 2019 MrYacha
+# Copyright (C) 2018 - 2020 MrYacha. All rights reserved. Source code available under the AGPL.
+# Copyright (C) 2019 Aiogram
 #
 # This file is part of SophieBot.
 #
-# SophieBot is distributed in the hope that it will be useful,
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-#
-# Licensed under the Raphielscape Public License, Version 1.c (the "License");
-# you may not use this file except in compliance with the License.
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
 
-FROM python:3.8-alpine
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# install system-wide deps for python and node --no-cache --virtual .build-deps
-RUN apk add gcc musl-dev libffi-dev openssl openssl-dev build-base zlib-dev jpeg-dev yaml-dev libstdc++
-RUN pip install cython
+# Build image
+FROM python:3.8-slim AS compile-image
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends build-essential gcc
+RUN apt-get install -y --no-install-recommends libyaml-dev
 
-# copy our application code
-ADD . /opt/sophie_bot
-WORKDIR /opt/sophie_bot
+COPY requirements.txt .
+RUN pip install --user -r requirements.txt
 
-RUN rm -rf /opt/sophie_bot/data
-RUN rm -rf /data
 
-# fetch app specific deps
-RUN ls ./
-RUN pip install -r requirements.txt
+# Run image
+FROM python:3.8-slim AS run-image
 
-RUN apk del gcc build-base zlib
+# Temp
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends libyaml-dev
 
-# start app
+COPY --from=compile-image /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+
+ADD . /sophie_bot
+RUN rm -rf /sophie_bot/data/
+WORKDIR /sophie_bot
+
 CMD [ "python", "-m", "sophie_bot" ]
