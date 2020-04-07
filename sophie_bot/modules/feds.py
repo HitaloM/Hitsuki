@@ -1,5 +1,6 @@
 # Copyright (C) 2018 - 2020 MrYacha. All rights reserved. Source code available under the AGPL.
 # Copyright (C) 2019 Aiogram
+# Copyright (C) 2020 Jeepeo
 
 #
 # This file is part of SophieBot.
@@ -20,9 +21,12 @@
 import asyncio
 import datetime
 import io
+import re
 import uuid
 
 from aiogram.types import InputFile
+from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
+
 
 from sophie_bot import OWNER_ID, BOT_ID, OPERATORS, decorator, bot
 from sophie_bot.services.mongo import db
@@ -645,3 +649,46 @@ async def unfed_ban_user(message, fed, user, text, strings):
         await msg.edit_text(text + strings['un_fbanned_done'].format(num=counter))
 
     await fed_post_log(fed, channel_text)
+
+
+@decorator.register(cmds='delfed')
+@get_fed_dec
+@is_fed_owner
+@get_strings_dec('feds')
+async def del_fed_cmd(message, fed, strings):
+    fed_name = fed['fed_name']
+    fed_id = fed['fed_id']
+    fed_owner = fed['creator']
+
+    buttons = InlineKeyboardMarkup()
+    buttons.add(InlineKeyboardButton(text=strings['delfed_btn_yes'], callback_data=f'delfed_{fed_id}_{fed_owner}'))
+    buttons.add(InlineKeyboardButton(text=strings['delfed_btn_no'], callback_data=f'cancel_{fed_owner}'))
+
+    await message.reply(strings['delfed'] % fed_name, reply_markup=buttons)
+
+
+@decorator.register(regexp='delfed_(.*)_(.*)', f='cb')
+@get_strings_dec('feds')
+async def del_fed_func(event, strings):
+    data = re.search(r'delfed_(.*)_(.*)', event.data)
+    fed_id = data.group(1)
+    fed_owner = data.group(2)
+
+    if event.from_user.id != int(fed_owner):
+        return
+
+    await db.feds.delete_one({'fed_id': fed_id})
+    async for subscribed_fed in db.feds.find({'subscribed': fed_id}):
+        await db.feds.update_one(
+            {'_id': subscribed_fed['_id']},
+            {'$pull': {'subscribed': [str(fed_id)]}}
+        )
+
+    await event.message.edit_text(strings['delfed_success'])
+
+
+@decorator.register(regexp='cancel_(.*)', f='cb')
+async def cancel(event):
+    if event.from_user.id != int((re.search(r'cancel_(.*)', event.data)).group(1)):
+        return
+    await event.message.delete()

@@ -330,6 +330,15 @@ STRINGS:
       <b>Chats:</b> user unbanned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
     un_fban_subs_fed_log: "\n<b>Subscribed feds:</b> unbanned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
 
+    # /delfed
+    delfed_btn_yes: Yes. Delete federation
+    delfed_btn_no: No.
+    delfed: |
+      Are you sure to delete this federation <b>%s</b>?
+
+      <i>Disclaimer: Deleting federation will remove all datas associated with it from our Database!
+      This action cannot be reversed at any cost!</i>
+    delfed_success: Successfully deleted the federation!
   reports:
     user_user_admin: "You're an admin here, why'd you need to report someone?.."
     user_is_whitelisted: "You're a whitelisted user, why'd you need to report someone?.."
