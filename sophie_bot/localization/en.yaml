@@ -339,6 +339,10 @@ STRINGS:
       <i>Disclaimer: Deleting federation will remove all datas associated with it from our Database!
       This action cannot be reversed at any cost!</i>
     delfed_success: Successfully deleted the federation!
+
+    # /frename
+    frename_same_name: Please enter a name different from existing one!
+    frename_success: The Federation <b>{old_name}</b> renamed to <b>{new_name}</b> successfully!
   reports:
     user_user_admin: "You're an admin here, why'd you need to report someone?.."
     user_is_whitelisted: "You're a whitelisted user, why'd you need to report someone?.."

@@ -696,3 +696,24 @@ async def cancel(event):
     if event.from_user.id != int((re.search(r'cancel_(.*)', event.data)).group(1)):
         return
     await event.message.delete()
+
+
+@decorator.register(cmds='frename')
+@need_args_dec()
+@get_fed_dec
+@is_fed_owner
+@get_strings_dec('feds')
+async def fed_rename(message, fed, strings):
+    # Check whether first arg is fed ID
+    if len(raw_name := message.get_args().split()) > 2 and raw_name[0].count('-') == 4:
+        new_name = ' '.join(raw_name[1:])
+    else:
+        new_name = ' '.join(raw_name[0:])
+
+    if new_name == fed['fed_name']:
+        await message.reply(strings['frename_same_name'])
+        return
+
+    await db.feds.update_one({'_id': fed['_id']},
+                             {'$set': {'fed_name': new_name}})
+    await message.reply(strings['frename_success'].format(old_name=fed['fed_name'], new_name=new_name))
