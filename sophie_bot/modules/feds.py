@@ -30,7 +30,7 @@ from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardBu
 
 from sophie_bot import OWNER_ID, BOT_ID, OPERATORS, decorator, bot
 from sophie_bot.services.mongo import db
-from .utils.connections import get_connected_chat, chat_connection
+from .utils.connections import chat_connection
 from .utils.language import get_strings_dec, get_strings, get_string
 from .utils.message import need_args_dec
 from .utils.restrictions import ban_user, unban_user
@@ -39,9 +39,8 @@ from .utils.user_details import is_chat_creator, get_user_link, get_user_and_tex
 
 # functions
 
-async def get_fed_f(message, chat_id):  # DEBUGME: chat_id is not used, is it needed? Is it cause any bugs?
-    chat = await get_connected_chat(message, admin=True, only_groups=True)
-    fed = await db.feds.find_one({'chats': {'$in': [chat['chat_id']]}})
+async def get_fed_f(message):
+    fed = await db.feds.find_one({'chats': {'$in': [int(message.chat.id)]}})
     if not fed:
         return False
     return fed
@@ -60,8 +59,8 @@ def get_current_chat_fed(func):
     async def wrapped_1(*args, **kwargs):
         message = args[0]
         real_chat_id = message.chat.id
-        if not (fed := await get_fed_f(message, message.chat.id)):
-            await message.reply(get_string(real_chat_id, "feds", 'chat_not_in_fed'))
+        if not (fed := await get_fed_f(message)):
+            await message.reply(await get_string(real_chat_id, "feds", 'chat_not_in_fed'))
             return
 
         return await func(*args, fed, **kwargs)
@@ -97,7 +96,7 @@ def get_fed_user_text(func):
                     text = " ".join(text_args)
 
         if not fed:
-            if not (fed := await get_fed_f(message, message.chat.id)):
+            if not (fed := await get_fed_f(message)):
                 await message.reply(strings['chat_not_in_fed'])
                 return
 
@@ -116,12 +115,15 @@ def get_fed_dec(func):
             text_args = message.text.split(" ", 1)
             if not len(text_args) < 2 and text_args[1].count('-') == 4:
                 if not (fed := await db.feds.find_one({'fed_id': text_args[1]})):
-                    await message.reply(get_string(real_chat_id, "feds", 'fed_id_invalid'))
+                    await message.reply(await get_string(real_chat_id, "feds", 'fed_id_invalid'))
                     return
 
-        if not (fed := await get_fed_f(message, message.chat.id)):
-            await message.reply(await get_string(real_chat_id, "feds", 'chat_not_in_fed'))
-            return
+        # Check whether fed is still None; This will allow above fed variable to be passed
+        # TODO(Better handling?)
+        if fed is None:
+            if not (fed := await get_fed_f(message)):
+                await message.reply(await get_string(real_chat_id, "feds", 'chat_not_in_fed'))
+                return
 
         return await func(*args, fed, **kwargs)
 
@@ -135,7 +137,7 @@ def is_fed_owner(func):
         user_id = message.from_user.id
 
         if not user_id == fed["creator"] and user_id != OWNER_ID:
-            text = get_string(message.chat.id, "feds", 'need_fed_admin').format(name=fed['fed_name'])
+            text = (await get_string(message.chat.id, "feds", 'need_fed_admin')).format(name=fed['fed_name'])
             await message.reply(text)
             return
 
@@ -152,7 +154,7 @@ def is_fed_admin(func):
 
         if not user_id == fed["creator"] and user_id != OWNER_ID:
             if user_id not in fed['admins']:
-                text = get_string(message.chat.id, "feds", 'need_fed_admin').format(name=fed['fed_name'])
+                text = (await get_string(message.chat.id, "feds", 'need_fed_admin')).format(name=fed['fed_name'])
                 await message.reply(text)
 
         return await func(*args, **kwargs)
@@ -345,7 +347,8 @@ async def set_fed_log_chat(message, fed, strings):
     text = strings['set_chat_log'].format(name=fed['fed_name'])
     await message.reply(text)
 
-    await fed_post_log(fed.update({'log_chat_id': message.chat.id}), strings['set_log_fed_log'].format(
+    # Current fed variable is not updated
+    await fed_post_log(await db.feds.find_one({'_id': fed['_id']}), strings['set_log_fed_log'].format(
         fed_name=fed['fed_name'],
         fed_id=fed['fed_id']
     ))
