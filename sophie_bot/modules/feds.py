@@ -30,7 +30,7 @@ from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardBu
 
 from sophie_bot import OWNER_ID, BOT_ID, OPERATORS, decorator, bot
 from sophie_bot.services.mongo import db
-from .utils.connections import chat_connection
+from .utils.connections import get_connected_chat, chat_connection
 from .utils.language import get_strings_dec, get_strings, get_string
 from .utils.message import need_args_dec
 from .utils.restrictions import ban_user, unban_user
@@ -40,7 +40,8 @@ from .utils.user_details import is_chat_creator, get_user_link, get_user_and_tex
 # functions
 
 async def get_fed_f(message):
-    fed = await db.feds.find_one({'chats': {'$in': [int(message.chat.id)]}})
+    chat = await get_connected_chat(message, admin=True, only_groups=True)
+    fed = await db.feds.find_one({'chats': {'$in': [chat['chat_id']]}})
     if not fed:
         return False
     return fed
