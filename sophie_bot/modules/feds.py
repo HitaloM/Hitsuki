@@ -19,25 +19,35 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-import datetime
 import io
 import re
+import ujson
 import uuid
 
+from aiogram import types
+from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import InputFile
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 
+from babel.dates import format_timedelta
+from datetime import datetime, timedelta
 
 from sophie_bot import OWNER_ID, BOT_ID, OPERATORS, decorator, bot
 from sophie_bot.services.mongo import db
+from sophie_bot.services.redis import redis
+
 from .utils.connections import get_connected_chat, chat_connection
 from .utils.language import get_strings_dec, get_strings, get_string
 from .utils.message import need_args_dec
 from .utils.restrictions import ban_user, unban_user
-from .utils.user_details import is_chat_creator, get_user_link, get_user_and_text
+from .utils.user_details import is_chat_creator, get_user_link, get_user_and_text, get_user_by_id
 
+
+class ImportFbansFileWait(StatesGroup):
+    waiting = State()
 
 # functions
+
 
 async def get_fed_f(message):
     chat = await get_connected_chat(message, admin=True, only_groups=True)
@@ -497,12 +507,12 @@ async def fed_ban_user(message, fed, user, reason, strings):
 
     new = {
         'banned_chats': banned_chats,
-        'time': datetime.datetime.now(),
+        'time': datetime.now(),
         'by': message.from_user.id
     }
 
-    if text:
-        new['reason'] = text
+    if reason:
+        new['reason'] = reason
 
     await db.feds.update_one(
         {'_id': fed['_id']},
@@ -544,10 +554,13 @@ async def fed_ban_user(message, fed, user, reason, strings):
 
                     new = {
                         'banned_chats': banned_chats,
-                        'time': datetime.datetime.now(),
+                        'time': datetime.now(),
                         'origin_fed': fed['fed_id'],
                         'by': message.from_user.id
                     }
+
+                    if reason:
+                        new['reason'] = reason
 
                     await db.feds.update_one({'_id': sfed['_id']}, {'$set': {f'banned.{user_id}': new}})
 
@@ -717,3 +730,156 @@ async def fed_rename(message, fed, strings):
     await db.feds.update_one({'_id': fed['_id']},
                              {'$set': {'fed_name': new_name}})
     await message.reply(strings['frename_success'].format(old_name=fed['fed_name'], new_name=new_name))
+
+
+@decorator.register(cmds=['fbanlist', 'exportfbans'])
+@get_fed_dec
+@is_fed_admin
+@get_strings_dec('feds')
+async def fban_export(message, fed, strings):
+    data = {}
+    fed_id = fed['fed_id']
+    key = 'fbanlist_lock:' + str(fed_id)
+    if redis.get(key) and message.from_user.id not in OPERATORS:
+        ttl = format_timedelta(timedelta(seconds=redis.ttl(key)), strings['language_info']['babel'])
+        await message.reply(strings['fbanlist_locked'] % ttl)
+        return
+
+    redis.set(key, 1)
+    redis.expire(key, 7200)
+
+    msg = await message.reply(strings['creating_fbanlist'])
+    for banned_user in fed['banned']:
+        ban_data = fed['banned'][banned_user]
+        data.update({banned_user: {'time': str(ban_data['time']), 'by': ban_data['by']}})
+
+        try:
+            data[banned_user]['reason'] = ban_data['reason']
+        except KeyError:
+            pass
+
+        await asyncio.sleep(0)
+
+    jfile = InputFile(io.StringIO(ujson.dumps(data, indent=2)), filename='fban_export.json')
+    text = strings['fbanlist_done'] % fed['fed_name']
+    await message.answer_document(jfile, text, reply=message.message_id)
+    await msg.delete()
+
+
+@decorator.register(cmds='importfbans')
+@get_fed_dec
+@is_fed_admin
+@get_strings_dec('feds')
+async def importfbans_cmd(message, fed, strings):
+
+    if 'document' in message:
+        document = message.document
+    else:
+        if 'reply_to_message' not in message:
+            await ImportFbansFileWait.waiting.set()
+            await message.reply(strings['send_import_file'])
+            return
+
+        elif 'document' not in message.reply_to_message:
+            await message.reply(strings['rpl_to_file'])
+            return
+        document = message.reply_to_message.document
+
+    await importfbans_func(message, fed, document=document)
+
+
+@get_strings_dec('feds')
+async def importfbans_func(message, fed, strings, document=None):
+    fed_id = fed['fed_id']
+    key = 'importfbans_lock:' + str(fed_id)
+    if redis.get(key) and message.from_user.id not in OPERATORS:
+        ttl = format_timedelta(timedelta(seconds=redis.ttl(key)), strings['language_info']['babel'])
+        await message.reply(strings['importfbans_locked'] % ttl)
+        return
+
+    redis.set(key, 1)
+    redis.expire(key, 7200)
+
+    msg = await message.reply(strings['started_importing'])
+    if document['file_size'] > 52428800:
+        await message.reply(strings['big_file'])
+        return
+    data = await bot.download_file_by_id(document.file_id, io.BytesIO())
+    data = ujson.load(data)
+
+    for banned_user in data:
+        new = {'time': data[banned_user]['time'],
+               'by': data[banned_user]['by']}
+        try:
+            new['reason'] = data[banned_user]['reason']
+        except KeyError:
+            pass
+        # Ban user
+        banned_chats = []
+        user = await get_user_by_id(int(banned_user))
+        for chat_id in fed['chats']:
+            if 'banned' in fed and str(user['user_id']) in fed['banned']:
+                break
+
+            await asyncio.sleep(0.2)  # Do not slow down other updates
+            if await ban_user(chat_id, user['user_id']):
+                banned_chats.append(chat_id)
+        new['banned_chats'] = banned_chats
+        await db.feds.update_one({'_id': fed['_id']},
+                                 {'$set': {f'banned.{banned_user}': new}})
+
+        # sub fed banning process
+        if len(sfeds_list := await get_all_subs_feds_r(fed['fed_id'], [])) > 1:
+            sfeds_list.remove(fed['fed_id'])
+
+            for sfed in sfeds_list:
+                sfed = await db.feds.find_one({'fed_id': sfed})
+                banned_chats = []
+
+                for chat_id in sfed['chats']:
+                    if 'banned' in sfed and str(user['user_id']) in sfed['banned']:
+                        break
+
+                    await asyncio.sleep(0.2)  # Do not slow down other updates
+
+                    if await ban_user(chat_id, user['user_id']):
+                        banned_chats.append(chat_id)
+                    new = {'banned_chats': banned_chats,
+                           'time': data[banned_user]['time'],
+                           'by': data[banned_user]['by']}
+
+                    try:
+                        new['reason'] = data[banned_user]['reason']
+                    except KeyError:
+                        pass
+
+                    await db.feds.update_one({'_id': sfed['_id']},
+                                             {'$set': {f'banned.{banned_user}': new}})
+    await msg.edit_text(strings['import_done'])
+
+
+@decorator.register(state=ImportFbansFileWait.waiting, content_types=types.ContentTypes.DOCUMENT, allow_kwargs=True)
+@get_fed_dec
+@is_fed_admin
+async def import_state(message, fed, state=None, **kwargs):
+    if await importfbans_func(message, fed, document=message.document):
+        await state.finish()
+    else:
+        await state.finish()
+        # May this prevent Bophie from hating user in case wrng file. or any err in code
+
+
+async def __export__(chat_id):
+
+    if chat_fed := await db.feds.find_one({'chats': [chat_id]}):
+        return {'feds': {'fed_id': chat_fed['fed_id']}}
+
+
+async def __import__(chat_id, data):
+
+    if fed_id := data['fed_id']:
+        if current_fed := await db.feds.find_one({'chats': [int(chat_id)]}):
+            await db.feds.update_one({'_id': current_fed['_id']},
+                                     {'$pull': {'chats': chat_id}})
+        await db.feds.update_one({'fed_id': fed_id},
+                                 {'$addToSet': {'chats': {'$each': [chat_id]}}})

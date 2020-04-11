@@ -343,6 +343,24 @@ STRINGS:
     # /frename
     frename_same_name: Please enter a name different from existing one!
     frename_success: The Federation <b>{old_name}</b> renamed to <b>{new_name}</b> successfully!
+
+    # /fbanlist
+    fbanlist_locked: Please wait till %s to use fbanlist again.
+    creating_fbanlist: Creating fban list! Please wait ..
+    fbanlist_done: Fbanlist of Federation <b>%s</b>!
+
+    # /importfbans
+    send_import_file: |
+      Send the import file!
+
+      To cancel this process ; use /cancel
+    rpl_to_file: Please reply to a file!
+    importfbans_locked: Importing fbans is locked for %s in this federation.
+    big_file: Only supports import files less 50 Megabytes!
+    started_importing: Started importing fbans!
+    import_done: Importing fbans finished!
+
+
   reports:
     user_user_admin: "You're an admin here, why'd you need to report someone?.."
     user_is_whitelisted: "You're a whitelisted user, why'd you need to report someone?.."
