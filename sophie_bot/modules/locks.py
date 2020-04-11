@@ -73,7 +73,7 @@ async def unlock_cmd(message, chat, strings):
     chat_id = chat['chat_id']
     chat_title = chat['chat_title']
 
-    if not (args := message.get_args().split(' ', 1)) == ['']:
+    if (args := message.get_args().split(' ', 1)) == ['']:
         await message.reply(strings['no_unlock_args'])
         return
 
