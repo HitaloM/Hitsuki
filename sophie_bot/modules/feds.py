@@ -732,7 +732,7 @@ async def fed_rename(message, fed, strings):
     await message.reply(strings['frename_success'].format(old_name=fed['fed_name'], new_name=new_name))
 
 
-@decorator.register(cmds=['fbanlist', 'exportfbans'])
+@decorator.register(cmds=['fbanlist', 'exportfbans', 'fexport'])
 @get_fed_dec
 @is_fed_admin
 @get_strings_dec('feds')
@@ -766,12 +766,11 @@ async def fban_export(message, fed, strings):
     await msg.delete()
 
 
-@decorator.register(cmds='importfbans')
+@decorator.register(cmds=['importfbans', 'fimport'])
 @get_fed_dec
 @is_fed_admin
 @get_strings_dec('feds')
 async def importfbans_cmd(message, fed, strings):
-
     if 'document' in message:
         document = message.document
     else:
@@ -862,11 +861,8 @@ async def importfbans_func(message, fed, strings, document=None):
 @get_fed_dec
 @is_fed_admin
 async def import_state(message, fed, state=None, **kwargs):
-    if await importfbans_func(message, fed, document=message.document):
-        await state.finish()
-    else:
-        await state.finish()
-        # May this prevent Bophie from hating user in case wrng file. or any err in code
+    await importfbans_func(message, fed, document=message.document)
+    await state.finish()
 
 
 async def __export__(chat_id):
@@ -876,7 +872,6 @@ async def __export__(chat_id):
 
 
 async def __import__(chat_id, data):
-
     if fed_id := data['fed_id']:
         if current_fed := await db.feds.find_one({'chats': [int(chat_id)]}):
             await db.feds.update_one({'_id': current_fed['_id']},
