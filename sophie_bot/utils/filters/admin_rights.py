@@ -81,7 +81,7 @@ class UserRestricting(Filter):
 
     async def no_rights_msg(self, message, required_permissions):
         strings = await get_strings(message.chat.id, 'global')
-        if required_permissions is not bool: # Check if check_admin_rights func returned missing perm
+        if required_permissions is not bool:  # Check if check_admin_rights func returned missing perm
             await message.reply(strings['user_no_right'] % required_permissions)
         else:
             await message.reply(strings['user_no_right:not_admin'])
