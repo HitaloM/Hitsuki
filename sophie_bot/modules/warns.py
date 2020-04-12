@@ -148,28 +148,30 @@ async def warns(message, chat, user, strings):
 async def warnlimit(message, chat, strings):
     chat_id = chat['chat_id']
     chat_title = chat['chat_title']
-    arg = int(message.get_args().split(' ', 1)[0])
+    arg = message.get_args().split()
 
     if not arg:
-        if current_limit := db.warnlimit.find_one({'chat_id': chat_id}):
+        if current_limit := await db.warnlimit.find_one({'chat_id': chat_id}):
             num = current_limit['num']
         else:
             num = 3  # Default value
         await message.reply(strings['warn_limit'].format(chat_name=chat_title, num=num))
+    elif not arg[0].isdigit():
+        return await message.reply(strings['not_digit'])
     else:
-        if arg < 2:
+        if arg[0] < 2:
             return await message.reply(strings['warnlimit_short'])
 
-        elif arg > 10000:  # Max value
+        elif arg[0] > 10000:  # Max value
             return await message.reply(strings['warnlimit_long'])
 
         new = {
             'chat_id': chat_id,
-            'num': arg
+            'num': int(arg[0])
         }
 
         await db.warnlimit.update_one({'chat_id': chat_id}, {'$set': new}, upsert=True)
-        await message.reply(strings['warnlimit_updated'].format(num=arg))
+        await message.reply(strings['warnlimit_updated'].format(num=arg[0]))
 
 
 @register(cmds=['resetwarns', 'delwarns'], user_can_restrict_members=True)

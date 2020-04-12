@@ -137,6 +137,7 @@ STRINGS:
     purged_warns: "👷‍♂️ {admin} was reset <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
     usr_no_wrn: '{user} dont have any warns to reset.'
     rst_wrn_sofi: 'Sofi never have warns to reset.'
+    not_digit: Warnlimits should be digits!
   msg_deleting:
     no_rights_purge: "You don't have enough rights to purge in this group!"
     reply_to_msg: "Reply to a message to delete!"
