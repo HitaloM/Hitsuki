@@ -76,11 +76,14 @@ async def warn(message, chat, user, text, strings):
 
     warns_count = await db.warns_v2.count_documents({'chat_id': chat_id, 'user_id': user_id})
 
-    button = InlineKeyboardMarkup().add(InlineKeyboardButton(
+    buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(
         "⚠️ Remove warn", callback_data='remove_warn_{}'.format(warn_id)
     ))
 
-    # TODO(Rules button)
+    if await db.rules_v2.find_one({'chat_id': chat_id}):
+        buttons.insert(InlineKeyboardButton(
+            "📝 Rules", callback_data='btn_rules:{}'.format(chat_id)
+        ))
 
     if warn_limit := await db.warnlimit.find_one({'chat_id': chat_id}):
         max_warn = int(warn_limit['num'])
@@ -95,7 +98,7 @@ async def warn(message, chat, user, text, strings):
     else:
         text += strings['warn_num'].format(curr_warns=warns_count, max_warns=max_warn)
 
-    await message.reply(text, reply_markup=button, disable_web_page_preview=True)
+    await message.reply(text, reply_markup=buttons, disable_web_page_preview=True)
 
 
 @register(regexp=r'remove_warn_(.*)', f='cb', allow_kwargs=True)
