@@ -62,6 +62,8 @@ STRINGS:
     enabled_successfully: "Private notes is <b>Enabled</b> in %s successfully!"
     disabled_successfully: "Private notes is <b>Disabled</b> in %s successfully!"
     not_enabled: "Private notes is not enabled to disable."
+    enabled: 'Enabled'
+    disabled: 'Disabled'
 
 
     #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"

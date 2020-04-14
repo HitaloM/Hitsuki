@@ -475,9 +475,9 @@ async def private_notes_cmd(message, chat, strings):
     else:
         # Assume admin asked for current state
         if database:
-            state = 'Enabled'
+            state = strings['enabled']
         else:
-            state = 'Disabled'
+            state = strings['disabled']
         await message.reply(strings['current_state_info'].format(state=state, chat=chat_name))
 
 
