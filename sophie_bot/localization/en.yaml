@@ -118,6 +118,7 @@ STRINGS:
     new_filter_note: "\nNote: <code>{note}</code>"
     new_filter_reason: "\nReason:\n"
   warns:
+    # /warn
     warn_sofi: "Haha no way to warn myself!"
     warn_self: "Do you wanna warn yourself? Just leave the chat then."
     warn_admin: "Well.. you are wrong. You can't warn an admin."
@@ -125,19 +126,42 @@ STRINGS:
     warn_bun: "Warnings has been exceeded! {user} has been banned!"
     warn_num: "Warns: {curr_warns}/{max_warns}\n"
     warn_rsn: "Reason: <code>{reason}</code>\n"
+    max_warn_exceeded: Warnings has been exceeded! %s has been %s!
+    max_warn_exceeded:tmute: Warnings has been exceeded! %s has been tmuted for %s!
+
+    # warn rmv callback
     warn_no_admin_alert: "⚠ You are NOT 👷‍♂️ admin to remove warn!"
     warn_btn_rmvl_success: "✔ Warn removed by 👷‍♂️ {admin} !"
+
+    # /warns
     warns_header: "Here is your warns in this chat \n\n"
     warns: "{count} : <code>{reason}</code> by {admin}\n"
     no_warns: "Well, {user} dont have any warns."
+
+    # /warnlimit
     warn_limit: "Warn limit in <b>{chat_name}</b> is currently: <code>{num}</code>"
     warnlimit_short: 'Warnlimit should be at least 2!'
     warnlimit_long: 'Warnlimit should be shorter than 1 000!'
     warnlimit_updated: '✔ Warnlimit has successfully updated to {num}'
+
+    # /delwarns
     purged_warns: "👷‍♂️ {admin} was reset <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
     usr_no_wrn: '{user} dont have any warns to reset.'
     rst_wrn_sofi: 'Sofi never have warns to reset.'
     not_digit: Warnlimits should be digits!
+
+    # /warnmode
+    same_mode: This is the current mode! How can I change it?
+    no_time: For selecting mode 'tmute'; you have to mention time!
+    invalid_time: Invalid time !
+    warnmode_success: Warn mode of <b>%s</b> has successfully changed to <b>%s</b> !
+    wrng_args: |
+      These are the available options:
+      <code>%s</code>
+    mode_info: 'Current mode in this chat is <b>%s</b>.'
+    banned: banned
+    muted: muted
+
   msg_deleting:
     no_rights_purge: "You don't have enough rights to purge in this group!"
     reply_to_msg: "Reply to a message to delete!"
