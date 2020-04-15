@@ -668,7 +668,7 @@ async def unfed_ban_user(message, fed, user, text, strings):
     await fed_post_log(fed, channel_text)
 
 
-@decorator.register(cmds='delfed')
+@decorator.register(cmds=['delfed', 'fdel'])
 @get_fed_dec
 @is_fed_owner
 @get_strings_dec('feds')

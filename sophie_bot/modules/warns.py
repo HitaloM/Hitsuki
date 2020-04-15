@@ -209,7 +209,7 @@ async def reset_warn(message, chat, user, strings):
         await message.reply(strings['usr_no_wrn'].format(user=user))
 
 
-@register(cmds='warnmode', user_admin=True, bot_can_restrict_members=True)
+@register(cmds=['warnmode', 'warnaction'], user_admin=True, bot_can_restrict_members=True)
 @chat_connection(admin=True)
 @get_strings_dec('warns')
 async def warnmode(message, chat, strings):
