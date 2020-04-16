@@ -43,7 +43,7 @@ async def list_disablable(message, strings):
 async def list_disabled(message, chat, strings):
     text = strings['disabled_list'].format(chat_name=chat['chat_title'])
 
-    if not (disabled := await db.disabled_v2.find_one({'chat_id': chat['chat_id']})):
+    if not (disabled := await db.disabled.find_one({'chat_id': chat['chat_id']})):
         await message.reply(strings['no_disabled_cmds'].format(chat_name=chat['chat_title']))
         return
 
@@ -72,11 +72,11 @@ async def disable_command(message, chat, strings):
         await message.reply(strings["wot_to_disable"])
         return
 
-    if await db.disabled_v2.find_one({'chat_id': chat['chat_id'], 'cmds': {'$in': [cmd]}}):
+    if await db.disabled.find_one({'chat_id': chat['chat_id'], 'cmds': {'$in': [cmd]}}):
         await message.reply(strings['already_disabled'])
         return
 
-    await db.disabled_v2.update_one(
+    await db.disabled.update_one(
         {'chat_id': chat['chat_id']},
         {"$addToSet": {'cmds': {'$each': [cmd]}}},
         upsert=True
@@ -108,11 +108,11 @@ async def enable_command(message, chat, strings):
         await message.reply(strings["wot_to_enable"])
         return
 
-    if not await db.disabled_v2.find_one({'chat_id': chat['chat_id'], 'cmds': {'$in': [cmd]}}):
+    if not await db.disabled.find_one({'chat_id': chat['chat_id'], 'cmds': {'$in': [cmd]}}):
         await message.reply(strings["already_enabled"])
         return
 
-    await db.disabled_v2.update_one(
+    await db.disabled.update_one(
         {'chat_id': chat_id},
         {'$pull': {'cmds': cmd}}
     )
@@ -127,7 +127,7 @@ async def enable_command(message, chat, strings):
 @get_strings_dec("disable")
 async def enable_all(message, chat, strings):
     # Ensure that something is disabled
-    if not await db.disabled_v2.find_one({'chat_id': chat['chat_id']}):
+    if not await db.disabled.find_one({'chat_id': chat['chat_id']}):
         await message.reply(strings['not_disabled_anything'].format(chat_title=chat['chat_title']))
         return
 
@@ -142,15 +142,15 @@ async def enable_all(message, chat, strings):
 @chat_connection(admin=True)
 @get_strings_dec('disable')
 async def enable_all_notes_cb(event, chat, strings):
-    data = await db.disabled_v2.find_one({'chat_id': chat['chat_id']})
-    await db.disabled_v2.delete_one({'_id': data['_id']})
+    data = await db.disabled.find_one({'chat_id': chat['chat_id']})
+    await db.disabled.delete_one({'_id': data['_id']})
 
     text = strings['enable_all_done'].format(num=len(data['cmds']), chat_name=chat['chat_title'])
     await event.message.edit_text(text)
 
 
 async def __export__(chat_id):
-    disabled = await db.disabled_v2.find_one({'chat_id': chat_id})
+    disabled = await db.disabled.find_one({'chat_id': chat_id})
 
     return {'disabling': disabled['cmds'] if disabled else []}
 
@@ -163,7 +163,7 @@ async def __import__(chat_id, data):
 
         new.append(cmd)
 
-    await db.disabled_v2.update_one(
+    await db.disabled.update_one(
         {'chat_id': chat_id},
         {'$set': {'cmds': new}},
         upsert=True

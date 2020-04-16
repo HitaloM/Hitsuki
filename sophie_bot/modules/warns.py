@@ -62,7 +62,7 @@ async def warn(message, chat, user, text, strings):
         return
 
     reason = text
-    warn_id = str((await db.warns_v2.insert_one({
+    warn_id = str((await db.warns.insert_one({
         'user_id': user_id,
         'chat_id': chat_id,
         'reason': str(reason),
@@ -76,13 +76,13 @@ async def warn(message, chat, user, text, strings):
     if reason:
         text += strings['warn_rsn'].format(reason=reason)
 
-    warns_count = await db.warns_v2.count_documents({'chat_id': chat_id, 'user_id': user_id})
+    warns_count = await db.warns.count_documents({'chat_id': chat_id, 'user_id': user_id})
 
     buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(
         "⚠️ Remove warn", callback_data='remove_warn_{}'.format(warn_id)
     ))
 
-    if await db.rules_v2.find_one({'chat_id': chat_id}):
+    if await db.rules.find_one({'chat_id': chat_id}):
         buttons.insert(InlineKeyboardButton(
             "📝 Rules", callback_data='btn_rules:{}'.format(chat_id)
         ))
@@ -94,7 +94,7 @@ async def warn(message, chat, user, text, strings):
 
     if warns_count >= max_warn:
         if await max_warn_func(chat_id, user_id):
-            await db.warns_v2.delete_many({'user_id': user_id, 'chat_id': chat_id})
+            await db.warns.delete_many({'user_id': user_id, 'chat_id': chat_id})
             data = await db.warnmode.find_one({'chat_id': chat_id})
             if data['mode'] != 'tmute':
                 return await message.reply(strings['max_warn_exceeded'] % (member,
@@ -121,7 +121,7 @@ async def rmv_warn_btn(event, strings, regexp=None, **kwargs):
         await event.answer(strings['warn_no_admin_alert'], show_alert=True)
         return
 
-    await db.warns_v2.delete_one({'_id': warn_id})
+    await db.warns.delete_one({'_id': warn_id})
 
     await event.message.edit_text(strings['warn_btn_rmvl_success'].format(admin=admin_link))
 
@@ -137,7 +137,7 @@ async def warns(message, chat, user, strings):
     user_link = await get_user_link(user_id)
 
     count = 0
-    async for warn in db.warns_v2.find({'user_id': user_id, 'chat_id': chat_id}):
+    async for warn in db.warns.find({'user_id': user_id, 'chat_id': chat_id}):
         count += 1
         by = await get_user_link(warn['by'])
         rsn = warn['reason']
@@ -200,8 +200,8 @@ async def reset_warn(message, chat, user, strings):
         await message.reply(strings['rst_wrn_sofi'])
         return
 
-    if await db.warns_v2.find_one({'chat_id': chat_id, 'user_id': user_id}):
-        deleted = await db.warns_v2.delete_many({'chat_id': chat_id, 'user_id': user_id})
+    if await db.warns.find_one({'chat_id': chat_id, 'user_id': user_id}):
+        deleted = await db.warns.delete_many({'chat_id': chat_id, 'user_id': user_id})
         purged = deleted.deleted_count
         await message.reply(strings['purged_warns'].format(
             admin=admin_link, num=purged, user=user_link, chat_title=chat_title))

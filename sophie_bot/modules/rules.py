@@ -42,7 +42,7 @@ async def set_rules(message, chat, strings):
     note = await get_parsed_note_list(message, split_args=0)
     note['chat_id'] = chat_id
 
-    if (await db.rules_v2.replace_one({'chat_id': chat_id}, note, upsert=True)).modified_count > 0:
+    if (await db.rules.replace_one({'chat_id': chat_id}, note, upsert=True)).modified_count > 0:
         text = strings['updated']
     else:
         text = strings['saved']
@@ -69,7 +69,7 @@ async def rules(message, chat, strings):
         arg1 = None
     noformat = True if 'noformat' == arg1 or 'raw' == arg1 else False
 
-    if not (db_item := await db.rules_v2.find_one({'chat_id': chat_id})):
+    if not (db_item := await db.rules.find_one({'chat_id': chat_id})):
         await message.reply(strings['not_found'])
         return
 
@@ -85,7 +85,7 @@ async def rules(message, chat, strings):
 async def reset_rules(message, chat, strings):
     chat_id = chat['chat_id']
 
-    if (await db.rules_v2.delete_one({'chat_id': chat_id})).deleted_count < 1:
+    if (await db.rules.delete_one({'chat_id': chat_id})).deleted_count < 1:
         await message.reply(strings['not_found'])
         return
 
@@ -102,7 +102,7 @@ async def rules_btn(event, strings, regexp=None, **kwargs):
     user_id = event.from_user.id
     # smthg = regexp.group(2).lower()
 
-    if not (db_item := await db.rules_v2.find_one({'chat_id': chat_id})):
+    if not (db_item := await db.rules.find_one({'chat_id': chat_id})):
         await event.answer(strings['not_found'])
         return
 
@@ -122,7 +122,7 @@ async def rules_btn(event, strings, regexp=None, **kwargs):
 
 
 async def __export__(chat_id):
-    rules = await db.rules_v2.find_one({'chat_id': chat_id})
+    rules = await db.rules.find_one({'chat_id': chat_id})
     if rules:
         del rules['_id']
         del rules['chat_id']
@@ -136,4 +136,4 @@ async def __import__(chat_id, data):
         del rules[column]
 
     rules['chat_id'] = chat_id
-    await db.rules_v2.replace_one({'chat_id': rules['chat_id']}, rules, upsert=True)
+    await db.rules.replace_one({'chat_id': rules['chat_id']}, rules, upsert=True)
