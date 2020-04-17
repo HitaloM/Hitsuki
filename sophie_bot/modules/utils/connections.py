@@ -39,7 +39,7 @@ async def get_connected_chat(message, admin=False, only_groups=False, from_id=No
         return cached
 
     # if pm and not connected
-    if not (connected := await db.connections_v2.find_one({'user_id': user_id})) or 'chat_id' not in connected:
+    if not (connected := await db.connections.find_one({'user_id': user_id})) or 'chat_id' not in connected:
         if only_groups:
             return {'status': None, 'err_msg': 'usage_only_in_groups'}
         else:
@@ -102,12 +102,12 @@ def chat_connection(**dec_kwargs):
 
 async def set_connected_chat(user_id, chat_id):
     if not chat_id:
-        await db.connections_v2.update_one({'user_id': user_id}, {"$unset": {'chat_id': 1}}, upsert=True)
+        await db.connections.update_one({'user_id': user_id}, {"$unset": {'chat_id': 1}}, upsert=True)
         key = 'connection_cache_' + str(user_id)
         redis.delete(key)
         return
 
-    return await db.connections_v2.update_one(
+    return await db.connections.update_one(
         {'user_id': user_id},
         {
             "$set": {'user_id': user_id, 'chat_id': chat_id},

@@ -21,6 +21,7 @@ import html
 import sys
 
 from sophie_bot import dp, bot
+from sophie_bot.utils.logger import log
 
 
 @dp.errors_handler()
@@ -39,3 +40,10 @@ async def all_errors_handler(message, dp):
     text = "<b>Sorry, I encountered a error!</b>\n"
     text += f'<code>{html.escape(err_tlt)}: {html.escape(err_msg)}</code>'
     await bot.send_message(chat_id, text, reply_to_message_id=msg.message_id)
+
+    # Protect Privacy
+    msg['chat'] = ['HIDDEN']
+    msg['from'] = ['HIDDEN']
+    msg['message_id'] = ['HIDDEN']
+
+    log.error('Error caused update is: \n' + str(msg))
