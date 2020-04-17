@@ -76,9 +76,9 @@ async def check_msg(message):
     text = message.text
 
     # Workaround to disable all filters if admin want to remove filter
-    if await is_user_admin(chat_id, message.from_user.id) and (text[1:].startswith('addfilter') or
-                                                               text[1:].startswith('delfilter')):
-        return
+    if await is_user_admin(chat_id, message.from_user.id):
+        if text[1:].startswith('addfilter') or text[1:].startswith('delfilter'):
+            return
 
     for handler in filters:
         pattern = handler
