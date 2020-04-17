@@ -34,7 +34,7 @@ from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from .utils.connections import chat_connection
 from .utils.disable import disableable_dec
-from .utils.language import get_strings_dec
+from .utils.language import get_strings_dec, get_string
 from .utils.message import get_arg, need_args_dec
 from .utils.notes import BUTTONS, ALLOWED_COLUMNS, get_parsed_note_list, t_unparse_note_item, send_note
 from .utils.user_details import get_user_link
@@ -534,3 +534,39 @@ async def __import__(chat_id, data):
         new.append(ReplaceOne({'chat_id': note['chat_id'], 'names': {'$in': [note['names'][0]]}}, note, upsert=True))
 
     await db.notes_v2.bulk_write(new)
+
+
+async def filter_handle(message, chat, data):
+    chat_id = chat['chat_id']
+    read_chat_id = message.chat.id
+    note_name = data['note_name']
+    note = await db.notes_v2.find_one({'chat_id': chat_id, 'names': {'$in': [note_name]}})
+    await get_note(message, db_item=note, chat_id=chat_id, send_id=read_chat_id, rpl_id=None)
+
+
+async def setup_start(message):
+    text = await get_string(message.chat.id, 'notes', 'filters_setup_start')
+    await message.edit_text(text)
+
+
+async def setup_finish(message, data):
+    note_name = message.text.split(' ', 1)[0].split()[0]
+
+    if not (await db.notes_v2.find_one({'chat_id': data['chat_id'], 'names': note_name})):
+        await message.reply('no such note!')
+        return
+
+    return {'note_name': note_name}
+
+
+__filters__ = {
+    'get_note': {
+        'title': {'module': 'notes', 'string': 'filters_title'},
+        'handle': filter_handle,
+        'setup': {
+            'start': setup_start,
+            'finish': setup_finish
+        },
+        'del_btn_name': lambda msg, data: f"Get note: {data['note_name']}"
+    }
+}
