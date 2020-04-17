@@ -63,60 +63,30 @@ STRINGS:
     disabled_successfully: "Private notes is <b>Disabled</b> in %s successfully!"
     not_enabled: "Private notes is not enabled to disable."
 
+    # Filter
+    filters_title: 'Send a note'
+    filters_setup_start: 'Please send a note name.'
+
 
     #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
     #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
   filters:
-    filters_in: "Filters in <b>{chat_name}</b>:\n"
-    no_filters_in: "No filters was found in <b>{}</b>!"
-    filtes_in: "<b>Filters in {}:</b>\n"
-    cant_find_filter: "I can't find that filter!"
-    filter_deleted: "Filter <code>{filter}</code> in <b>{chat_name}</b> deleted!"
-    filter_ban_success: "User {user} has been banned due to automated action on filter <code>{filter}</code>."
-    filter_mute_success: "User {user} has been muted due to automated action on filter <code>{filter}</code>."
-    filter_tban_success: "User {user} temporary got banned on <code>{time}</code> {unit} due to automated action on filter <code>{filter}</code>."
-    filter_tmute_success: "User {user} temporary got muted on <code>{time}</code> {unit} due to automated action on filter <code>{filter}</code>."
-    filter_kick_success: "User {user} kicked due to automated action on filter <code>{filter}</code>."
-    filter_warn_ban: "That's {warns}/{warns} warns. {user} was banned due to\n<code>{reason}</code>."
-    filter_warn_warned: "{user} was warned in {chat} \nHandler: <code>{handler}</code>\nWarns: {current_warns}/{max_warns}\nReason:\n<code>{reason}</code> "
-    not_enoff_rights: "I don't have enough rights to do filter action here!"
-    write_keyword: "Please write keyword(s)."
-    handler_added: "Okay! I will answer on '<code>{handler}</code>'."
-    select_action: "\nNow please select an action for this filter:"
-    action_note: "Send note"
-    action_answer: "Answer on message"
-    action_delmsg: "Delete message"
-    action_warn: "Warn user"
-    action_ban: "Ban user"
-    action_mute: "Mute user"
-    action_kick: "Kick user"
-    del_origin_off: "❌ Delete origin message: OFF"
-    del_origin_on: "❌ Delete origin message: ON"
-    exit: "❗️ Exit"
-    back: "◀️ Back"
-    write_reason: "Okay! Please write reason with which we will do this action."
-    write_notename: "Okay! Please write note name."
-    write_text: "Okay! Please write text for answer."
-    select_time: "<b>Okay! Now select time for this action.</b>"
-    select_time_tip: "\nYou can also manually write time, for example write '2d'"
-    select_time_btns: "\nOr select time by buttons below:"
-    time_f: "Forever"
-    time_2h: "2 hours"
-    time_5h: "5 hours"
-    time_24h: "24 hours"
-    time_2d: "2 Days"
-    time_1w: "1 Week"
-    time_not_valid: "Time value isn't valid!"
-    cant_find_note: "Sorry, I can't find that note."
-    filter_added: "<b>Filter added successfully!</b>"
-    filter_updated: "<b>Filter updated successfully!</b>"
-    new_filter_chat: "\nChat: <b>{chat_title}</b>"
-    new_filter_handler: "\nHandler: <code>{handler}</code>"
-    new_filter_action: "\nAction: <code>{action}</code>"
-    new_filter_also_del_msg: "\nAlso delete origin message."
-    new_filter_time: "\nTime: on <code>{time}</code>"
-    new_filter_note: "\nNote: <code>{note}</code>"
-    new_filter_reason: "\nReason:\n"
+    no_filters_found: "No filters was found in <b>{chat_name}</b>!"
+
+    # /addfilter
+    adding_filter: |
+      Adding filter <code>{handler}</code> in <b>{chat_name}</b>
+      Select action below:
+
+    # /filters
+    list_filters: "Filters in <b>{chat_name}</b>:\n"
+
+    # /delfilter
+    no_such_filter: I can't find that filter in <b>{chat_name}</b>, check enabled filters by <code>/filters</code> command.
+    del_filter: "Filter with handler '<code>{handler}</code>' was successfully removed!"
+    select_filter_to_remove: |
+      I have found many filters with handler '<code>{handler}</code>'.
+      Please select one to remove:
   warns:
     warn_sofi: "Haha no way to warn myself!"
     warn_self: "Do you wanna warn yourself? Just leave the chat then."
