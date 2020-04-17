@@ -275,17 +275,12 @@ async def __export__(chat_id):
         number = 3
 
     if data := await db.warnmode.find_one({'chat_id': chat_id}):
-        if (mode := data['mode']) == 'tmute':
-            new = {
-                'mode': mode,
-                'time': data['time']
-            }
-        else:
-            new = {
-                'mode': mode
-            }
+        mode = data['mode']
+        new = {'mode': mode}
+        if mode.startswith('t'):
+            new['time'] = data['time']
     else:
-        new = None  # null
+        new = None
 
     return {'warns': {'warns_limit': number, 'warn_mode': new}}
 
