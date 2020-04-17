@@ -843,9 +843,11 @@ async def importfbans_func(message, fed, strings, document=None):
 
                     if await ban_user(chat_id, user['user_id']):
                         banned_chats.append(chat_id)
-                    new = {'banned_chats': banned_chats,
-                           'time': data[banned_user]['time'],
-                           'by': data[banned_user]['by']}
+                    new = {
+                        'banned_chats': banned_chats,
+                        'time': data[banned_user]['time'],
+                        'by': data[banned_user]['by']
+                    }
 
                     try:
                         new['reason'] = data[banned_user]['reason']
@@ -866,7 +868,6 @@ async def import_state(message, fed, state=None, **kwargs):
 
 
 async def __export__(chat_id):
-
     if chat_fed := await db.feds.find_one({'chats': [chat_id]}):
         return {'feds': {'fed_id': chat_fed['fed_id']}}
 
@@ -874,7 +875,5 @@ async def __export__(chat_id):
 async def __import__(chat_id, data):
     if fed_id := data['fed_id']:
         if current_fed := await db.feds.find_one({'chats': [int(chat_id)]}):
-            await db.feds.update_one({'_id': current_fed['_id']},
-                                     {'$pull': {'chats': chat_id}})
-        await db.feds.update_one({'fed_id': fed_id},
-                                 {'$addToSet': {'chats': {'$each': [chat_id]}}})
+            await db.feds.update_one({'_id': current_fed['_id']}, {'$pull': {'chats': chat_id}})
+        await db.feds.update_one({'fed_id': fed_id}, {'$addToSet': {'chats': chat_id}})
