@@ -31,7 +31,6 @@ from .utils.connections import chat_connection, get_connected_chat
 
 from sophie_bot.decorator import register
 from sophie_bot.modules import LOADED_MODULES
-from sophie_bot.utils.logger import log
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from sophie_bot.utils.logger import log
