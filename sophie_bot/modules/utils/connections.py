@@ -29,7 +29,10 @@ async def get_connected_chat(message, admin=False, only_groups=False, from_id=No
     key = 'connection_cache_' + str(user_id)
 
     if not message.chat.type == 'private':
-        chat_title = (await db.chat_list.find_one({'chat_id': real_chat_id}))['chat_title']
+        _chat = await db.chat_list.find_one({'chat_id': real_chat_id})
+        chat_title = _chat['chat_title'] if _chat is not None else message.chat.title
+        # On some strange cases such as Database is fresh or new ; it doesn't contain chat data
+        # Only to "handle" the error, we do the above workaround - getting chat title from the update
         return {'status': 'chat', 'chat_id': real_chat_id, 'chat_title': chat_title}
 
     # Cached
