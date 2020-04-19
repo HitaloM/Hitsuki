@@ -177,6 +177,7 @@ def is_fed_admin(func):
 
 
 @decorator.register(cmds=['newfed', 'fnew'])
+@need_args_dec()
 @get_strings_dec("feds")
 async def new_fed(message, strings):
     fed_name = message.get_args()
