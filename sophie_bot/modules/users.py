@@ -167,7 +167,7 @@ async def user_info(message, user, strings):
         if txt := await module.__user_info__(message, user['user_id']):
             text += txt
 
-    text += strings['info_saw'].format(num=len(user['chats']))
+    text += strings['info_saw'].format(num=len(user['chats']) if 'chats' in user else 0)
 
     await message.reply(text)
 
