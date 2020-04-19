@@ -19,6 +19,8 @@
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
+from aiogram.utils.exceptions import MessageNotModified
+from contextlib import suppress
 
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
@@ -27,14 +29,19 @@ from .utils.api import html_white_text
 from .utils.language import LANGUAGES, get_strings_dec, change_chat_lang, get_chat_lang_info, get_strings
 from .utils.message import get_arg
 
-select_lang_cb = CallbackData('select_lang_cb', 'lang')
+select_lang_cb = CallbackData('select_lang_cb', 'lang', 'back_btn')
 translators_lang_cb = CallbackData('translators_lang_cb', 'lang')
 
 
 @register(cmds='lang', no_args=True, user_can_change_info=True)
+async def select_lang_cmd(message):
+    await select_lang_keyboard(message)
+
+
 @get_strings_dec('language')
-async def select_lang_keyboard(message, strings):
+async def select_lang_keyboard(message, strings, edit=False):
     markup = InlineKeyboardMarkup(row_width=2)
+    task = message.reply if edit is False else message.edit_text
 
     lang_info = await get_chat_lang_info(message.chat.id)
 
@@ -54,15 +61,17 @@ async def select_lang_keyboard(message, strings):
         lang_info = lang['language_info']
         markup.insert(InlineKeyboardButton(
             lang_info['flag'] + " " + lang_info['babel'].display_name,
-            callback_data=select_lang_cb.new(lang=lang_info['code']))
+            callback_data=select_lang_cb.new(lang=lang_info['code'], back_btn=False if edit is False else True))
         )
 
     markup.add(InlineKeyboardButton(strings['crowdin_btn'], url='https://crowdin.com/project/sophiebot'))
+    if edit:
+        markup.add(InlineKeyboardButton(strings['back'], callback_data='go_to_start'))
+    with suppress(MessageNotModified):
+        await task(text, reply_markup=markup)
 
-    await message.reply(text, reply_markup=markup)
 
-
-async def change_lang(message, lang, e=False):
+async def change_lang(message, lang, e=False, back_btn=False):
     chat_id = message.chat.id
     await change_chat_lang(chat_id, lang)
 
@@ -78,8 +87,13 @@ async def change_lang(message, lang, e=False):
     if 'translators' in lang_info:
         markup.add(InlineKeyboardButton(strings['see_translators'], callback_data=translators_lang_cb.new(lang=lang)))
 
+    if back_btn == 'True':
+        # Callback_data converts boolean to str
+        markup.add(InlineKeyboardButton(strings['back'], callback_data='go_to_start'))
+
     if e:
-        await message.edit_text(text, reply_markup=markup, disable_web_page_preview=True)
+        with suppress(MessageNotModified):
+            await message.edit_text(text, reply_markup=markup, disable_web_page_preview=True)
     else:
         await message.reply(text, reply_markup=markup, disable_web_page_preview=True)
 
@@ -99,7 +113,8 @@ async def select_lang_msg(message, strings):
 @register(select_lang_cb.filter(), f='cb', allow_kwargs=True, )
 async def select_lang_callback(query, callback_data=None, **kwargs):
     lang = callback_data['lang']
-    await change_lang(query.message, lang, e=True)
+    back_btn = callback_data['back_btn']
+    await change_lang(query.message, lang, e=True, back_btn=back_btn)
 
 
 @quart.route('/wiki/languages_loaded')

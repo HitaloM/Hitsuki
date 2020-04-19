@@ -165,6 +165,12 @@ STRINGS:
     btn_lang: "🇷🇺 Language"
     btn_chat: "👥 Sophie Group"
     btn_channel: "📡 Sophie News"
+    back: Back
+
+    # /help
+    help_header: Hey! Checkout our wiki for help
+    click_btn: Click here
+
   disable:
     #/disableable
     disablable: "<b>Disable-able commands:</b>\n"
@@ -384,6 +390,7 @@ STRINGS:
     not_supported_lang: This language not supported!
     lang_changed: Language was changed to <b>{lang_name}</b>.
     see_translators: 👥 See translators
+    back: Back
   connections:
     pm_connected: "Your PM has been successfully connected to <b>{chat_name}</b>!"
     connected_pm_to_me: "Your PM has been successfully connected to <b>{chat_name}</b>! Please pm me to start using connection."
