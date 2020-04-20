@@ -20,12 +20,44 @@
 import html
 import sys
 
-from sophie_bot import dp, bot
+from redis.exceptions import RedisError
+
+from sophie_bot import dp, bot, OWNER_ID
 from sophie_bot.services.redis import redis
 from sophie_bot.utils.logger import log
 
+SENT = []
+
+
+def catch_redis_error(**dec_kwargs):
+    def wrapped(func):
+        async def wrapped_1(*args, **kwargs):
+            global SENT
+            # We can't use redis here
+            # So we save data - 'message sent to' in a list variable
+            message = args[0]
+            msg = message.callback_query.message if 'callback_query' in message else message.message
+            chat_id = msg.chat.id
+            try:
+                return await func(*args, **kwargs)
+            except RedisError:
+                if chat_id not in SENT:
+                    text = 'Sorry for inconvience! I encountered error in my redis DB, which is necessary for running '\
+                           'bot \n\nPlease report this to my support group immediately when you see this error!'
+                    if await bot.send_message(chat_id, text):
+                        SENT.append(chat_id)
+                # Alert bot owner
+                if OWNER_ID not in SENT:
+                    text = 'Sophie panic: Got redis error'
+                    if await bot.send_message(OWNER_ID, text):
+                        SENT.append(OWNER_ID)
+                return False
+        return wrapped_1
+    return wrapped
+
 
 @dp.errors_handler()
+@catch_redis_error()
 async def all_errors_handler(message, dp):
     msg = message.callback_query.message if 'callback_query' in message else message.message
     chat_id = msg.chat.id
