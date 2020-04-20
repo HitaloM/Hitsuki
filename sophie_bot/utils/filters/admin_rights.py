@@ -63,15 +63,15 @@ class UserRestricting(Filter):
                 config[argument] = full_config.pop(alias)
         return config
 
-    async def check(self, message):
+    async def check(self, event):
+        user_id = await self.get_target_id(event)
+        message = event.message if hasattr(event, 'message') else event
         # If pm skip checks
         if message.chat.type == 'private':
             return True
 
-        user_id = await self.get_target_id(message)
-
         if not (p := await check_admin_rights(message.chat.id, user_id, self.required_permissions.keys())) is True:
-            await self.no_rights_msg(message, p)
+            await self.no_rights_msg(event, p)
             return False
 
         return True
@@ -80,11 +80,13 @@ class UserRestricting(Filter):
         return message.from_user.id
 
     async def no_rights_msg(self, message, required_permissions):
-        strings = await get_strings(message.chat.id, 'global')
-        if required_permissions is not bool:  # Check if check_admin_rights func returned missing perm
-            await message.reply(strings['user_no_right'] % required_permissions)
+        strings = await get_strings(message.message.chat.id if hasattr(message, 'message')
+                                    else message.chat.id, 'global')
+        task = message.answer if hasattr(message, 'message') else message.reply
+        if required_permissions is True or False:  # Check if check_admin_rights func returned missing perm
+            await task(strings['user_no_right'] % required_permissions)
         else:
-            await message.reply(strings['user_no_right:not_admin'])
+            await task(strings['user_no_right:not_admin'])
 
 
 class BotHasPermissions(UserRestricting):

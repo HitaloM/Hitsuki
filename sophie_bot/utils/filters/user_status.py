@@ -41,7 +41,8 @@ class IsAdmin(BoundFilter):
             chat_id = event.chat.id
 
         if not await is_user_admin(chat_id, event.from_user.id):
-            await event.reply(strings['u_not_admin'])
+            task = event.answer if hasattr(event, 'message') else event.reply
+            await task(strings['u_not_admin'])
             return False
         return True
 
