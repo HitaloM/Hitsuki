@@ -134,6 +134,9 @@ STRINGS:
     banned: banned
     muted: muted
 
+    filters_title: Warn the user
+    filter_handle_rsn: Automated filter action on word '%s'
+
   msg_deleting:
     no_rights_purge: "You don't have enough rights to purge in this group!"
     reply_to_msg: "Reply to a message to delete!"

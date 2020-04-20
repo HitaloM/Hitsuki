@@ -23,8 +23,10 @@ from aiogram.types.inline_keyboard import (
     InlineKeyboardButton,
     InlineKeyboardMarkup
 )
+from aiogram.utils.exceptions import MessageNotModified
 from babel.dates import format_timedelta
 from bson.objectid import ObjectId
+from contextlib import suppress
 
 from sophie_bot import BOT_ID
 from sophie_bot.decorator import register
@@ -42,23 +44,29 @@ from .utils.user_details import (
 @register(cmds='warn', user_can_restrict_members=True, bot_can_restrict_members=True)
 @chat_connection(admin=True, only_groups=True)
 @get_user_and_text_dec()
+async def warn_cmd(message, chat, user, text):
+    await warn_func(message, chat, user, text)
+
+
 @get_strings_dec('warns')
-async def warn(message, chat, user, text, strings):
+async def warn_func(message, chat, user, text, strings, filter_action=False):
     chat_id = chat['chat_id']
     chat_title = chat['chat_title']
-    by_id = message.from_user.id
-    user_id = user['user_id']
+    by_id = BOT_ID if filter_action is True else message.from_user.id
+    user_id = user['user_id'] if filter_action is False else user
 
     if user_id == BOT_ID:
         await message.reply(strings['warn_sofi'])
         return
 
-    elif user_id == message.from_user.id:
-        await message.reply(strings['warn_self'])
-        return
+    elif not filter_action:
+        if user_id == message.from_user.id:
+            await message.reply(strings['warn_self'])
+            return
 
     elif await is_user_admin(chat_id, user_id):
-        await message.reply(strings['warn_admin'])
+        if not filter_action:
+            await message.reply(strings['warn_admin'])
         return
 
     reason = text
@@ -69,7 +77,7 @@ async def warn(message, chat, user, text, strings):
         'by': by_id
     })).inserted_id)
 
-    admin = await get_user_link(message.from_user.id)
+    admin = await get_user_link(by_id)
     member = await get_user_link(user_id)
     text = strings['warn'].format(admin=admin, user=member, chat_name=chat_title)
 
@@ -109,21 +117,15 @@ async def warn(message, chat, user, text, strings):
     await message.reply(text, reply_markup=buttons, disable_web_page_preview=True)
 
 
-@register(regexp=r'remove_warn_(.*)', f='cb', allow_kwargs=True)
+@register(regexp=r'remove_warn_(.*)', f='cb', allow_kwargs=True, user_can_restrict_members=True)
 @get_strings_dec('warns')
 async def rmv_warn_btn(event, strings, regexp=None, **kwargs):
     warn_id = ObjectId(re.search(r'remove_warn_(.*)', str(regexp)).group(1)[:-2])
-    chat_id = event.message.chat.id
     user_id = event.from_user.id
     admin_link = await get_user_link(user_id)
-
-    if not await is_user_admin(chat_id, user_id):
-        await event.answer(strings['warn_no_admin_alert'], show_alert=True)
-        return
-
     await db.warns.delete_one({'_id': warn_id})
-
-    await event.message.edit_text(strings['warn_btn_rmvl_success'].format(admin=admin_link))
+    with suppress(MessageNotModified):
+        await event.message.edit_text(strings['warn_btn_rmvl_success'].format(admin=admin_link))
 
 
 @register(cmds='warns')
@@ -257,7 +259,7 @@ async def warnmode(message, chat, strings):
 
 
 async def max_warn_func(chat_id, user_id):
-    if mode := await db.warnmode.find_one({'chat_id': chat_id}):
+    if (mode := await db.warnmode.find_one({'chat_id': chat_id})) is not None:
         if mode['mode'] == 'ban':
             return await ban_user(chat_id, user_id)
         elif mode['mode'] == 'tmute':
@@ -307,3 +309,19 @@ async def __import__(chat_id, data):
                 'mode': mode['mode']
             }
         await db.warnmode.update_one({'chat_id': chat_id}, {'$set': new}, upsert=True)
+
+
+@get_strings_dec('warns')
+async def filter_handle(message, chat, data, string=None):
+    target_user = message.from_user.id
+    triggered_word = data['handler']
+    text = string['filter_handle_rsn'] % triggered_word
+    await warn_func(message, chat, target_user, text, filter_action=True)
+
+
+__filters__ = {
+    'warn_user': {
+        'title': {'module': 'warns', 'string': 'filters_title'},
+        'handle': filter_handle
+    }
+}
