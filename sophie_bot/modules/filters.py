@@ -116,6 +116,7 @@ async def add_handler(message, chat, strings):
 
 async def save_filter(message, data):
     await db.filters.insert_one(data)
+    await update_handlers_cache(data['chat_id'])
     await message.reply('Saved!')
 
 
@@ -200,7 +201,7 @@ async def del_filter(message, chat, strings):
     # Remove filter in case if we found only 1 filter with same header
     filter = filters[0]
     if len(filters) == 1:
-        await db.filters.delete_one({'id': filter['_id']})
+        await db.filters.delete_one({'_id': filter['_id']})
         await update_handlers_cache(chat_id)
         await message.reply(strings['del_filter'].format(handler=filter['handler']))
         return
