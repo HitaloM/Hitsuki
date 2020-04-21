@@ -28,7 +28,15 @@ from contextlib import suppress
 from .language import select_lang_keyboard
 
 from sophie_bot.decorator import register
+from sophie_bot.modules.utils.disable import disableable_dec
 from .utils.language import get_strings_dec
+
+
+@register(cmds='start', no_args=True, only_groups=True)
+@disableable_dec('start')
+@get_strings_dec('pm_menu')
+async def start_group_cmd(message, strings):
+    await message.reply(strings['start_hi_group'])
 
 
 @register(cmds='start', no_args=True, only_pm=True)
