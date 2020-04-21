@@ -19,9 +19,11 @@
 
 import asyncio
 
+from aiogram.utils.exceptions import MessageNotModified
 from babel.dates import format_datetime, format_timedelta
+from contextlib import suppress
 
-from sophie_bot import BOT_ID
+from sophie_bot import BOT_ID, bot
 from sophie_bot.decorator import register
 from sophie_bot.services.redis import redis
 from sophie_bot.services.telethon import tbot
@@ -299,3 +301,89 @@ async def leave_silent(message):
 
     if redis.get('leave_silent:' + str(message.chat.id)) == message.left_chat_member.id:
         await message.delete()
+
+
+@get_strings_dec('restrictions')
+async def filter_handle_ban(message, chat, data, strings=None):
+    if await ban_user(chat['chat_id'], message.from_user.id):
+        reason = strings['filter_action_rsn'] % data['handler']
+        text = strings['filtr_ban_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
+                                               reason)
+        await bot.send_message(chat['chat_id'], text)
+        await message.delete()
+
+
+@get_strings_dec('restrictions')
+async def filter_handle_mute(message, chat, data, strings=None):
+    if await mute_user(chat['chat_id'], message.from_user.id):
+        reason = strings['filter_action_rsn'] % data['handler']
+        text = strings['filtr_mute_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
+                                                reason)
+        await bot.send_message(chat['chat_id'], text)
+        await message.delete()
+
+
+@get_strings_dec('restrictions')
+async def filter_handle_tmute(message, chat, data, strings=None):
+    if await mute_user(chat['chat_id'], message.from_user.id, until_date=data['time']):
+        reason = strings['filter_action_rsn'] % data['handler']
+        time = format_timedelta(data['time'], locale=strings['language_info']['babel'])
+        text = strings['filtr_tmute_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
+                                                 time, reason)
+        await bot.send_message(chat['chat_id'], text)
+        await message.delete()
+
+
+@get_strings_dec('restrictions')
+async def filter_handle_tban(message, chat, data, strings=None):
+    if await ban_user(chat['chat_id'], message.from_user.id, until_date=data['time']):
+        reason = strings['filter_action_rsn'] % data['handler']
+        time = format_timedelta(data['time'], locale=strings['language_info']['babel'])
+        text = strings['filtr_tban_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
+                                                time, reason)
+        await bot.send_message(chat['chat_id'], text)
+        await message.delete()
+
+
+@get_strings_dec('restrictions')
+async def time_setup_start(message, strings):
+    with suppress(MessageNotModified):
+        await message.edit_text(strings['time_setup_start'])
+
+
+@get_strings_dec('restrictions')
+async def time_setup_finish(message, data, strings):
+    try:
+        time = convert_time(message.text)
+    except InvalidTimeUnit:
+        return await message.reply(strings['invalid_time'])
+    else:
+        return {'time': time}
+
+
+__filters__ = {
+    'ban_user': {
+        'title': {'module': 'restrictions', 'string': 'filter_title_ban'},
+        'handle': filter_handle_ban
+    },
+    'mute_user': {
+        'title': {'module': 'restrictions', 'string': 'filter_title_mute'},
+        'handle': filter_handle_mute
+    },
+    'tmute_user': {
+        'title': {'module': 'restrictions', 'string': 'filter_title_tmute'},
+        'handle': filter_handle_tmute,
+        'setup': {
+            'start': time_setup_start,
+            'finish': time_setup_finish
+        }
+    },
+    'tban_user': {
+        'title': {'module': 'restrictions', 'string': 'filter_title_tban'},
+        'handle': filter_handle_tban,
+        'setup': {
+            'start': time_setup_start,
+            'finish': time_setup_finish
+        }
+    }
+}

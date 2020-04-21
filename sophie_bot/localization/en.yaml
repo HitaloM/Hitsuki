@@ -135,7 +135,7 @@ STRINGS:
     muted: muted
 
     filters_title: Warn the user
-    filter_handle_rsn: Automated filter action on word '%s'
+    filter_handle_rsn: Automated filter action on '%s'
 
   msg_deleting:
     no_rights_purge: "You don't have enough rights to purge in this group!"
@@ -503,6 +503,21 @@ STRINGS:
     on_time: "\nOn <code>%s</code>"
     reason: "\nReason: <code>%s</code>"
     purge: "\nIn 5 seconds messages will be purged!"
+
+    filter_title_ban: Ban the user
+    filter_action_rsn: <code>Automated filter action on '%s'</code>
+    filtr_ban_success: '%s banned %s for %s'
+    filtr_mute_success: '%s muted %s for %s'
+    filtr_tmute_success: |
+      %s muted %s for %s
+      reason is %s
+    time_setup_start: Please send time!
+    filtr_tban_success: |
+      %s banned %s for %s
+      reason is %s
+    filter_title_tmute: tMute the user
+    filter_title_mute: Mute the user
+    filter_title_tban: tBan the user
   rules:
     # Set
     saved: Rules was saved in <b>%s</b>
