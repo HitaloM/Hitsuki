@@ -28,7 +28,7 @@ from babel.dates import format_timedelta
 from bson.objectid import ObjectId
 from contextlib import suppress
 
-from sophie_bot import BOT_ID
+from sophie_bot import BOT_ID, bot
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from .utils.connections import chat_connection
@@ -105,15 +105,21 @@ async def warn_func(message, chat, user, text, strings, filter_action=False):
             await db.warns.delete_many({'user_id': user_id, 'chat_id': chat_id})
             data = await db.warnmode.find_one({'chat_id': chat_id})
             if data['mode'] != 'tmute':
-                return await message.reply(strings['max_warn_exceeded'] % (member,
-                                           strings['banned'] if data['mode'] == 'ban' else strings['muted']))
+                text = strings['max_warn_exceeded'] % \
+                    (member, strings['banned'] if data['mode'] == 'ban' else strings['muted'])
+                if filter_action:
+                    return await bot.send_message(chat_id, text)
+                return await message.reply(text)
             else:
-                return await message.reply(strings['max_warn_exceeded:tmute'] % (member,
-                                           format_timedelta(convert_time(data['time']),
-                                                            locale=strings['language_info']['babel'])))
+                text = strings['max_warn_exceeded:tmute'] % \
+                    (member, format_timedelta(data['time'], locale=strings['language_info']['babel']))
+                if filter_action:
+                    return await bot.send_message(chat_id, text)
+                return await message.reply(text)
     else:
         text += strings['warn_num'].format(curr_warns=warns_count, max_warns=max_warn)
-
+    if filter_action:
+        return await bot.send_message(chat_id, text, reply_markup=buttons, disable_web_page_preview=True)
     await message.reply(text, reply_markup=buttons, disable_web_page_preview=True)
 
 
@@ -237,7 +243,7 @@ async def warnmode(message, chat, strings):
                 try:
                     # For better UX we have to show until time of tmute when action is done.
                     # We can't store timedelta class in mongodb; Here we check validity of given time.
-                    convert_time(time)
+                    time = convert_time(time)
                 except (InvalidTimeUnit, TypeError):
                     return await message.reply(strings['invalid_time'])
                 else:
@@ -263,7 +269,7 @@ async def max_warn_func(chat_id, user_id):
         if mode['mode'] == 'ban':
             return await ban_user(chat_id, user_id)
         elif mode['mode'] == 'tmute':
-            return await mute_user(chat_id, user_id, convert_time(mode['time']))
+            return await mute_user(chat_id, user_id, mode['time'])
         elif mode['mode'] == 'mute':
             return await mute_user(chat_id, user_id)
     else:  # Default
@@ -317,6 +323,7 @@ async def filter_handle(message, chat, data, string=None):
     triggered_word = data['handler']
     text = string['filter_handle_rsn'] % triggered_word
     await warn_func(message, chat, target_user, text, filter_action=True)
+    await message.delete()
 
 
 __filters__ = {
