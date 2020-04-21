@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from contextlib import suppress
+
 from sophie_bot import OPERATORS
 from sophie_bot.services.mongo import db
 from sophie_bot.utils.logger import log
@@ -37,8 +39,9 @@ def disableable_dec(command):
             user_id = message.from_user.id
             cmd = command
 
-            if command in (aliases := message.conf['cmds']):
-                cmd = aliases[0]
+            with suppress(KeyError):
+                if command in (aliases := message.conf['cmds']):
+                    cmd = aliases[0]
 
             check = await db.disabled.find_one({'chat_id': chat_id, 'cmds': {'$in': [cmd]}})
             if check and user_id not in OPERATORS:
