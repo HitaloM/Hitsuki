@@ -88,8 +88,6 @@ def tparse_ent(ent, text, as_html=True):
     if etype == 'text_mention' and ent.user:
         return ent.user.get_mention(entity_text, as_html=as_html)
 
-    print(etype)
-
     return entity_text
 
 
@@ -100,7 +98,6 @@ def get_parsed_msg(message):
     text = message.caption or message.text
 
     mode = get_msg_parse(text)
-    print(mode)
     if mode == 'html':
         as_html = True
     else:
