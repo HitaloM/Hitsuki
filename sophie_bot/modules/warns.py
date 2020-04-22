@@ -319,6 +319,8 @@ async def __import__(chat_id, data):
 
 @get_strings_dec('warns')
 async def filter_handle(message, chat, data, string=None):
+    if await is_user_admin(chat['chat_id'], message.from_user.id):
+        return
     target_user = message.from_user.id
     triggered_word = data['handler']
     text = string['filter_handle_rsn'] % triggered_word
