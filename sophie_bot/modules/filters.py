@@ -53,7 +53,7 @@ async def update_handlers_cache(chat_id):
     handlers = []
     async for filter in filters:
         handler = filter['handler']
-        if filter in handlers:
+        if handler in handlers:
             continue
 
         handlers.append(handler)
