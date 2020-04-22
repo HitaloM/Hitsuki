@@ -384,9 +384,11 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
 
     first_name = html.escape(event.from_user.first_name)
     last_name = html.escape(event.from_user.last_name or "")
-    user_id = event.from_user.id
+    user_id = event.from_user.id if not hasattr(event, 'new_chat_members') else \
+        str([user.id for user in event.new_chat_members])[1:-1]  # Assume that is a welcome note
     mention = await get_user_link(user_id, md=md)
-    username = '@' + (event.from_user.username or mention)
+    username = '@' + str((event.from_user.username if not hasattr(event, 'new_chat_members')
+                          else str([user.username for user in event.new_chat_members])[2:-2]) or mention)
 
     chat_id = message.chat.id
     chat_name = html.escape(message.chat.title or 'Local')

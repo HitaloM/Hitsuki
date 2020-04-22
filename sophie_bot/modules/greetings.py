@@ -355,7 +355,7 @@ async def welcome_security_handler(message, strings):
         await message.reply(strings['not_admin_ws'])
         return
 
-    user_id = message.from_user.id
+    user_id = int(str([user.id for user in message.new_chat_members])[1:-1])
     db_item = await db.greetings.find_one({'chat_id': chat_id})
 
     if not db_item or 'welcome_security' not in db_item:
@@ -673,7 +673,7 @@ async def welcome_security_passed(message, state, strings):
 @get_strings_dec('greetings')
 async def welcome_trigger(message, strings):
     chat_id = message.chat.id
-    user_id = message.from_user.id
+    user_id = int(str([user.id for user in message.new_chat_members])[1:-1])
 
     if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
         db_item = {}
