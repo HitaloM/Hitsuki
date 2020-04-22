@@ -162,6 +162,11 @@ STRINGS:
     paste_success: "<b>Pasted successfully!</b>\nDogbin URL: {}"
     paste_fail: "Failed to reach Dogbin!"
     paste_no_text: "You didn't supply text to paste!"
+
+    delmsg_filter_title: 'Delete the message'
+    send_text: Please send the reply word/sentence !
+    replymsg_filter_title: 'Reply to message'
+
   pm_menu:
     start_hi_group: 'Hey there! My name is Sophie'
     start_hi: "Hey there! My name is Sophie, I help you manage your group in an efficient way!"

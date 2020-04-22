@@ -19,7 +19,11 @@
 
 import random
 
+from aiogram.utils.exceptions import MessageNotModified
+from contextlib import suppress
+
 from sophie_bot.decorator import register
+from .utils.user_details import is_user_admin
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 
@@ -35,3 +39,42 @@ async def runs(message, strings):
 async def cancel_handle(message, state, **kwargs):
     await state.finish()
     await message.reply('Cancelled.')
+
+
+async def delmsg_filter_handle(message, chat, data):
+    if await is_user_admin(data['chat_id'], message.from_user.id):
+        return
+    await message.delete()
+
+
+async def replymsg_filter_handler(message, chat, data):
+    await message.reply(data['reply_text'])
+
+
+@get_strings_dec('misc')
+async def replymsg_setup_start(message, strings):
+    with suppress(MessageNotModified):
+        await message.edit_text(strings['send_text'])
+
+
+async def replymsg_setup_finish(message, data):
+    reply_text = message.text
+    return {'reply_text': reply_text}
+
+
+__filters__ = {
+    'delete_message': {
+        'title': {'module': 'misc', 'string': 'delmsg_filter_title'},
+        'handle': delmsg_filter_handle,
+        'del_btn_name': lambda msg, data: f"Del message: {data['handler']}"
+    },
+    'reply_message': {
+        'title': {'module': 'misc', 'string': 'replymsg_filter_title'},
+        'handle': replymsg_filter_handler,
+        'setup': {
+            'start': replymsg_setup_start,
+            'finish': replymsg_setup_finish
+        },
+        'del_btn_name': lambda msg, data: f"Reply to {data['handler']}: {data['reply_text']}"
+    }
+}
