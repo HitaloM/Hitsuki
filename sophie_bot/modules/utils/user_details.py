@@ -101,7 +101,6 @@ async def get_user_by_username(username):
 
 async def get_user_link(user_id, custom_name=None, md=False):
     user = await db.user_list.find_one({'user_id': user_id})
-    user_name = None
 
     if user:
         user_name = user['first_name']
@@ -110,6 +109,8 @@ async def get_user_link(user_id, custom_name=None, md=False):
             user = await add_user_to_db(await tbot(GetFullUserRequest(int(user_id))))
         except (ValueError, TypeError):
             user_name = str(user_id)
+        else:
+            user_name = user['first_name']
 
     if custom_name:
         user_name = custom_name
