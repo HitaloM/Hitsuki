@@ -49,7 +49,7 @@ async def def_connect_chat(message, user_id, chat_id, chat_title, strings, edit=
 
 
 # In chat - connect directly to chat
-@register(cmds='connect', only_groups=True)
+@register(cmds='connect', only_groups=True, no_args=True)
 @get_strings_dec('connections')
 async def connect_to_chat_direct(message, strings):
     user_id = message.from_user.id
