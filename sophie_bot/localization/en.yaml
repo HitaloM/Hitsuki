@@ -57,11 +57,11 @@ STRINGS:
 
     # /privatenotes
     private_notes_false_args: "You have 2 options <code>Disable</code> and <code>Enable</code> !"
-    already_enabled: "Private notes is already enabled in %s"
+    already_enabled: "Private notes are already enabled in %s"
     current_state_info: "Currently private note is {state} in {chat} ! "
-    enabled_successfully: "Private notes is <b>Enabled</b> in %s successfully!"
-    disabled_successfully: "Private notes is <b>Disabled</b> in %s successfully!"
-    not_enabled: "Private notes is not enabled to disable."
+    enabled_successfully: "Private notes are <b>Enabled</b> in %s successfully!"
+    disabled_successfully: "Private notes are <b>Disabled</b> in %s successfully!"
+    not_enabled: "Private notes are not enabled to disable."
     enabled: 'Enabled'
     disabled: 'Disabled'
 
@@ -106,9 +106,9 @@ STRINGS:
     warn_btn_rmvl_success: "✔ Warn removed by 👷‍♂️ {admin} !"
 
     # /warns
-    warns_header: "Here is your warns in this chat \n\n"
+    warns_header: "Here are your warns in this chat \n\n"
     warns: "{count} : <code>{reason}</code> by {admin}\n"
-    no_warns: "Well, {user} dont have any warns."
+    no_warns: "Well, {user} doesn't have any warns."
 
     # /warnlimit
     warn_limit: "Warn limit in <b>{chat_name}</b> is currently: <code>{num}</code>"
@@ -117,14 +117,14 @@ STRINGS:
     warnlimit_updated: '✔ Warnlimit has successfully updated to {num}'
 
     # /delwarns
-    purged_warns: "👷‍♂️ {admin} was reset <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
-    usr_no_wrn: '{user} dont have any warns to reset.'
-    rst_wrn_sofi: 'Sofi never have warns to reset.'
+    purged_warns: "{admin} reset <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
+    usr_no_wrn: '{user} doesn't have any warns to reset.'
+    rst_wrn_sofi: 'Sophie has never had warns to reset.'
     not_digit: Warnlimits should be digits!
 
     # /warnmode
     same_mode: This is the current mode! How can I change it?
-    no_time: For selecting mode 'tmute'; you have to mention time!
+    no_time: For selecting mode 'tmute' you have to mention time!
     invalid_time: Invalid time !
     warnmode_success: Warn mode of <b>%s</b> has successfully changed to <b>%s</b> !
     wrng_args: |
@@ -142,7 +142,7 @@ STRINGS:
     reply_to_msg: "Reply to a message to delete!"
     purge_error: "I can't continue purge, mostly because you started purge from a message that was sent older than 2 days."
     fast_purge_done: "<b>Fast purge completed!</b>\nThis message will be removed in 5 seconds."
-    purge_user_done: "All messages from {user} was successfully deleted!"
+    purge_user_done: "All messages from {user} were successfully deleted!"
   misc:
     your_id: "Your ID: <code>{id}</code>\n"
     chat_id: "Group ID: <code>{id}</code>\n"
@@ -180,7 +180,7 @@ STRINGS:
     disablable: "<b>Disable-able commands:</b>\n"
 
     #/disabled
-    no_disabled_cmds: No disable commands in <b>{chat_name}</b>!
+    no_disabled_cmds: No disabled commands in <b>{chat_name}</b>!
     disabled_list: "<b>Disabled commands in {chat_name}:</b>\n"
 
     #/disable
@@ -195,17 +195,17 @@ STRINGS:
 
     #/enableall
     not_disabled_anything: "Nothing was disabled in <b>{chat_title}</b>!"
-    enable_all_text: "This will enabled all commands in the {chat_name}. Are you sure?"
+    enable_all_text: "This will enabled all commands in the <b>{chat_name}</b>. Are you sure?"
     enable_all_btn_yes: "Yes. Enable all commands!"
     enable_all_btn_no: "No!"
-    enable_all_done: "All (<code>{num}</code>) commands was enabled in the {chat_name}!"
+    enable_all_done: "All (<code>{num}</code>) commands were enabled in the <b>{chat_name}</b>!"
   bot_rights:
     change_info: "I don't have rights to change group info, please make me admin with that right."
-    edit_messages: "I don't have rights to edit channel messages!"
+    edit_messages: "I don't have rights to edit messages!"
     delete_messages: "I don't have rights to delete messages here."
     ban_user: "I don't have rights to ban users, please make me admin with that right."
     pin_messages: "I don't have rights to pin messages, please make me admin with that right."
-    add_admins: "I don't have rights to add admin, please make me admin with that right."
+    add_admins: "I don't have rights to add admins, please make me admin with that right."
   feds:
     # decorators
     need_fed_admin: "You are not a admin in <b>{name}</b> Federation"
@@ -221,7 +221,7 @@ STRINGS:
       <b>Name:</b> {name}
       <b>ID:</b> <code>{id}</code>
       <b>Creator:</b> {creator}
-      Use <code>/joinfed {id}</code> to connect to chat
+      Use <code>/joinfed {id}</code> to connect federation to chat
 
     # /joinfed
     only_creators: "You should be a chat creator to be able to connect chat to federation."
@@ -375,11 +375,10 @@ STRINGS:
     no_user_to_report: "Which user you want to report?"
     report_admin: "You <b>cannot</b> report admin."
     report_whitedlisted: "You <b>cannot</b> report a whitelisted user."
-    reported_user: "<b>Reported</b> {user} <b>to admins.</b>"
+    reported_user: "<b>Reported</b> {user} to admins."
     reported_reason: "\n<b>Reason:</b>\n<code>{reason}</code>"
     reports_on: "Reports are turned <b>on</b> in this group."
     reports_off: "Reports are turned <b>off</b> in this group."
-    user_not_admin: "<b>You're not an admin. Means you can't change reports status. </b>"
     reports_already_on: "<b>Reports are already turned on.</b>"
     reports_turned_on: "Reports turned <b>on.</b>"
     reports_already_off: "<b>Reports are already turned off.</b>"
@@ -408,7 +407,7 @@ STRINGS:
     disconnected: "You were disconnected from <b>{chat_name}</b>."
     cant_find_chat: "I can't find this chat."
     cant_find_chat_use_id: "I can't find this chat. Use chat ID."
-    bad_arg_bool: "Bad choice: suppored only <code>on</code>/<code>off</code> <code>enable</code>/<code>disable</code>"
+    bad_arg_bool: "Bad choice: supported only <code>on</code>/<code>off</code> <code>enable</code>/<code>disable</code>"
 
     enabled: enabled
     disabled: disabled
@@ -430,7 +429,7 @@ STRINGS:
     user_no_right:not_admin: You should be admin to-do it!
   owner_stuff:
     father: "\nHe is my creator."
-    sudo_crown: "\nHey! Look, that user has a crown, let me see it.. Wow, it has an engraving - <b>'sudo user'</b>!"
+    sudo_crown: "\nHey! Look, that user has a crown, let me see it... Wow, it has an engraving - <b>'sudo user'</b>!"
   stickers:
     rpl_to_sticker: "Reply to a sticker!"
     ur_sticker: |
@@ -467,7 +466,7 @@ STRINGS:
     big_file: Supported importing files only under 50 MB!
     started_importing: Importing started! Please wait...
     bad_file: Bad file! Expected <code>'general'</code> column.
-    file_version_so_new: Exported file version is never than Sophie currently supports!
+    file_version_so_new: Exported file version is newer than Sophie currently supports!
     imports_locked: Please wait %s till using imports again!
     import_done: Import done!
   restrictions:
@@ -486,17 +485,17 @@ STRINGS:
     user_muted: "{user} was muted by {admin} in {chat_name}."
     unmute_sophie: Actually, I'm not muted.
     unmute_admin: Haha no, try mute him for first!
-    unmute_self: Should I mute you for first?
+    unmute_self: Should I mute you first?
     user_unmuted: "{user} was unmuted by {admin} in {chat_name}."
 
     # Bans
-    ban_sophie: No, I won't do it! Ask chat creator to-do it!
-    ban_admin: Haha, let's <code>/demote</code> him for first.
-    ban_self: Why are you tring to ban self?
+    ban_sophie: No, I won't do it! Ask chat creator to do it!
+    ban_admin: Haha, let's <code>/demote</code> him first.
+    ban_self: Why are you trying to ban yourself?
     user_banned: "{user} was banned by {admin} in {chat_name}."
     unban_sophie: Actually, I'm not banned.
-    unban_admin: Haha no, try ban him for first!
-    unban_self: Should I ban you for first?
+    unban_admin: Haha no, try ban him first!
+    unban_self: Should I ban you first?
     user_unband: "{user} was unbanned by {admin} in {chat_name}."
 
     invalid_time: Invalid time!
@@ -521,17 +520,17 @@ STRINGS:
     filter_title_tban: tBan the user
   rules:
     # Set
-    saved: Rules was saved in <b>%s</b>
-    updated: Rules was updated in <b>%s</b>
+    saved: Rules were saved in <b>%s</b>
+    updated: Rules were updated in <b>%s</b>
 
     # Reset
-    deleted: Rules was deleted!
+    deleted: Rules were deleted!
 
-    not_found: Rules was not found!
+    not_found: Rules were not found!
 
     # Callback
     user_blocked: "Write /start in my PM!"
-    rules_was_pmed: Rules was sended to your PM!
+    rules_was_pmed: Rules were sent to your PM!
 
     # cannot_find_note: "I can't find the note <code>{}</code>"
     # set_note: "Successfully set the rules note to <code>{}</code>"
@@ -550,7 +549,7 @@ STRINGS:
     updated: Welcome message was updated in <b>%s</b>
 
     # /turnwelcome
-    turnwelcome_status: Welcomes is <code>{status}</code> in <b>{chat_name}</b>
+    turnwelcome_status: Welcomes are <code>{status}</code> in <b>{chat_name}</b>
     turnwelcome_enabled: Welcomes enabled in <b>%s</b>
     turnwelcome_disabled: Welcomes disabled in <b>%s</b>
 
@@ -608,14 +607,14 @@ STRINGS:
     regen_captcha_btn: 🔄 Change captcha
     num_is_not_digit: Please enter only numbers!
     bad_num: Wrong number! Please try again.
-    passed: Verification passed, you was unmuted in <b>%s</b>!
+    passed: Verification passed, you were unmuted in <b>%s</b>!
     passed_no_frm: Verification passed, you was unmuted in %s!
     last_chance: You have a last chance to enter captcha!
 
     btn_button_text: "Please click button below to prove yourself."
 
     btn_wc_text: |
-      Please press right buttom matched on this expression:
+      Please press right button matched on this expression:
       %s
     math_wc_rtr_text: "You have last chance! Be careful.\n"
     math_wc_wrong: Wrong, please try again!
@@ -627,7 +626,7 @@ STRINGS:
     locks_header: "Here is the current lock settings in {chat_title} \n\n"
     no_lock_args: Give me some args to lock!
     already_locked: This is already locked bruh
-    no_such_lock: Uhh see /locks to find out what can be locked and unlocked!
+    no_such_lock: See /locks to find out what can be locked and unlocked!
     locked_successfully: Locked {lock} in {chat} sucessfully!
     no_unlock_args: Give me some args to unlock!
     not_locked: Bruh, its not locked to unlock.
