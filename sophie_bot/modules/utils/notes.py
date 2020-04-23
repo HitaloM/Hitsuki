@@ -370,7 +370,7 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
 
 
 async def vars_parser(text, message, chat_id, md=False, event=None):
-    if not event:
+    if event is None:
         event = message
 
     if not text:
@@ -381,12 +381,12 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
 
     first_name = html.escape(event.from_user.first_name)
     last_name = html.escape(event.from_user.last_name or "")
-    user_id = event.from_user.id if not hasattr(event, 'new_chat_members') else \
-        str([user.id for user in event.new_chat_members])[1:-1]  # Assume that is a welcome note
+    user_id = ([user.id for user in event.new_chat_members][0]
+               if event.new_chat_members != [] else event.from_user.id)
     mention = await get_user_link(user_id, md=md)
-    username = '@' + str((event.from_user.username if not hasattr(event, 'new_chat_members')
-                          else str([user.username for user in event.new_chat_members])[2:-2]) or mention)
-
+    username = ('@' + [user.username for user in event.new_chat_members][0]
+                if event.new_chat_members != [] else '@' + event.from_user.username
+                if event.from_user.username is not None else mention)
     chat_id = message.chat.id
     chat_name = html.escape(message.chat.title or 'Local')
     chat_nick = message.chat.username or chat_name
