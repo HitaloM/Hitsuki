@@ -116,7 +116,7 @@ async def set_welcome(message, chat, strings):
     if len(args := message.get_args().lower().split()) < 1:
         db_item = await db.greetings.find_one({'chat_id': chat_id})
 
-        if db_item and 'note' in db_item and db_item['note']['disabled'] is True:
+        if db_item and 'welcome_disabled' in db_item and db_item['welcome_disabled'] is True:
             status = strings['disabled']
         else:
             status = strings['enabled']
