@@ -194,7 +194,7 @@ async def new_fed(message, strings):
         return
 
     if await db.feds.find_one({'fed_name': fed_name}):
-        await message.reply(strings['name_not_avaible'])
+        await message.reply(strings['name_not_avaible'].format(name=fed_name))
         return
 
     data = {
@@ -738,7 +738,6 @@ async def fed_rename(message, fed, strings):
 @is_fed_admin
 @get_strings_dec('feds')
 async def fban_export(message, fed, strings):
-    data = {}
     fed_id = fed['fed_id']
     key = 'fbanlist_lock:' + str(fed_id)
     if redis.get(key) and message.from_user.id not in OPERATORS:
@@ -750,9 +749,12 @@ async def fban_export(message, fed, strings):
     redis.expire(key, 7200)
 
     msg = await message.reply(strings['creating_fbanlist'])
+    data = {}
     for banned_user in fed['banned']:
         ban_data = fed['banned'][banned_user]
-        data.update({banned_user: {'time': str(ban_data['time']), 'by': ban_data['by']}})
+        data[banned_user] = {
+            'time': str(ban_data['time']), 'by': ban_data['by']
+        }
 
         try:
             data[banned_user]['reason'] = ban_data['reason']
@@ -808,44 +810,33 @@ async def importfbans_func(message, fed, strings, document=None):
     data = ujson.load(data)
 
     for banned_user in data:
-        new = {'time': data[banned_user]['time'],
-               'by': data[banned_user]['by']}
+        user = await get_user_by_id(int(banned_user))
+        new = {
+            'time': data[banned_user]['time'],
+            'by': data[banned_user]['by']
+        }
+
         try:
             new['reason'] = data[banned_user]['reason']
         except KeyError:
             pass
-        # Ban user
-        banned_chats = []
-        user = await get_user_by_id(int(banned_user))
-        for chat_id in fed['chats']:
-            if 'banned' in fed and str(user['user_id']) in fed['banned']:
-                break
 
-            await asyncio.sleep(0.2)  # Do not slow down other updates
-            if await ban_user(chat_id, user['user_id']):
-                banned_chats.append(chat_id)
-        new['banned_chats'] = banned_chats
-        await db.feds.update_one({'_id': fed['_id']},
-                                 {'$set': {f'banned.{banned_user}': new}})
+        await db.feds.update_one({'_id': fed['_id']}, {'$set': {f'banned.{banned_user}': new}})
 
         # sub fed banning process
         if len(sfeds_list := await get_all_subs_feds_r(fed['fed_id'], [])) > 1:
             sfeds_list.remove(fed['fed_id'])
 
-            for sfed in sfeds_list:
-                sfed = await db.feds.find_one({'fed_id': sfed})
-                banned_chats = []
+            for fed in sfeds_list:
+                fed = await db.feds.find_one({'fed_id': fed})
 
-                for chat_id in sfed['chats']:
-                    if 'banned' in sfed and str(user['user_id']) in sfed['banned']:
-                        break
+                for chat_id in fed['chats']:
+                    if 'banned' in fed and user['user_id'] in fed['banned']:
+                        continue
 
                     await asyncio.sleep(0.2)  # Do not slow down other updates
 
-                    if await ban_user(chat_id, user['user_id']):
-                        banned_chats.append(chat_id)
                     new = {
-                        'banned_chats': banned_chats,
                         'time': data[banned_user]['time'],
                         'by': data[banned_user]['by']
                     }
@@ -855,8 +846,7 @@ async def importfbans_func(message, fed, strings, document=None):
                     except KeyError:
                         pass
 
-                    await db.feds.update_one({'_id': sfed['_id']},
-                                             {'$set': {f'banned.{banned_user}': new}})
+                    await db.feds.update_one({'_id': fed['_id']}, {'$set': {f'banned.{banned_user}': new}})
     await msg.edit_text(strings['import_done'])
 
 
