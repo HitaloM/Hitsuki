@@ -79,9 +79,7 @@ async def connect_chat_keyboard(message, strings, chat):
     text += strings['select_chat_to_connect']
     markup = InlineKeyboardMarkup(row_width=1)
 
-    if 'history' in (
-            connected := await db.connections.find_one({'user_id': message.from_user.id},
-                                                       {'history': {'$slice': -3}})):
+    if connected := await db.connections.find_one({'user_id': message.from_user.id}, {'history': {'$slice': -3}}):
         for chat_id in reversed(connected['history']):
             chat = await db.chat_list.find_one({'chat_id': chat_id})
             markup.insert(InlineKeyboardButton(
