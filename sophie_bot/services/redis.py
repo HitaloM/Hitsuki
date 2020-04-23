@@ -17,8 +17,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import redis
+import sys
+
+from redis import ConnectionError
 from redisworks import Root
 
+from sophie_bot import log
 from sophie_bot.config import get_str_key, get_int_key
 
 # Init Redis
@@ -30,3 +34,8 @@ redis = redis.StrictRedis(
 )
 
 rw = Root()
+
+try:
+    redis.ping()
+except ConnectionError:
+    sys.exit(log.critical("Can't connect to RedisDB! Exiting..."))

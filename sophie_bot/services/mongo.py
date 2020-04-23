@@ -16,13 +16,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import asyncio
 import pickle
+import sys
 
 from bson.codec_options import TypeDecoder, TypeRegistry
 from bson.binary import Binary, USER_DEFINED_SUBTYPE
 from motor import motor_asyncio
 from pymongo import MongoClient
+from pymongo.errors import ServerSelectionTimeoutError
 
+from sophie_bot import log
 from sophie_bot.config import get_str_key, get_int_key
 
 MONGO_URI = get_str_key("MONGO_URI")
@@ -48,3 +52,8 @@ type_registry = TypeRegistry([PickledBinaryDecoder()], fallback_encoder=fallback
 mongodb = MongoClient(MONGO_URI, MONGO_PORT, type_registry=type_registry)[MONGO_DB]
 motor = motor_asyncio.AsyncIOMotorClient(MONGO_URI, MONGO_PORT, type_registry=type_registry)
 db = motor[MONGO_DB]
+
+try:
+    asyncio.get_event_loop().run_until_complete(motor.server_info())
+except ServerSelectionTimeoutError:
+    sys.exit(log.critical("Can't connect to mongodb! Exiting..."))
