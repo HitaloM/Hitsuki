@@ -28,6 +28,7 @@ from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import InputFile
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.callback_data import CallbackData
 
 from babel.dates import format_timedelta
 from datetime import datetime, timedelta
@@ -46,6 +47,8 @@ from .utils.user_details import is_chat_creator, get_user_link, get_user_and_tex
 class ImportFbansFileWait(StatesGroup):
     waiting = State()
 
+
+delfed_cb = CallbackData('delfed_cb', 'fed_id', 'creator_id')
 # functions
 
 
@@ -711,18 +714,18 @@ async def del_fed_cmd(message, fed, strings):
     fed_owner = fed['creator']
 
     buttons = InlineKeyboardMarkup()
-    buttons.add(InlineKeyboardButton(text=strings['delfed_btn_yes'], callback_data=f'delfed_{fed_id}_{fed_owner}'))
+    buttons.add(InlineKeyboardButton(text=strings['delfed_btn_yes'], callback_data=delfed_cb.new(fed_id=fed_id,
+                                                                                                 creator_id=fed_owner)))
     buttons.add(InlineKeyboardButton(text=strings['delfed_btn_no'], callback_data=f'cancel_{fed_owner}'))
 
     await message.reply(strings['delfed'] % fed_name, reply_markup=buttons)
 
 
-@decorator.register(regexp='delfed_(.*)_(.*)', f='cb')
+@decorator.register(delfed_cb.filter(), f='cb', allow_kwargs=True)
 @get_strings_dec('feds')
-async def del_fed_func(event, strings):
-    data = re.search(r'delfed_(.*)_(.*)', event.data)
-    fed_id = data.group(1)
-    fed_owner = data.group(2)
+async def del_fed_func(event, strings, callback_data=None, **kwargs):
+    fed_id = callback_data['fed_id']
+    fed_owner = callback_data['creator_id']
 
     if event.from_user.id != int(fed_owner):
         return
@@ -731,7 +734,7 @@ async def del_fed_func(event, strings):
     async for subscribed_fed in db.feds.find({'subscribed': fed_id}):
         await db.feds.update_one(
             {'_id': subscribed_fed['_id']},
-            {'$pull': {'subscribed': [str(fed_id)]}}
+            {'$pull': {'subscribed': fed_id}}
         )
 
     await event.message.edit_text(strings['delfed_success'])
