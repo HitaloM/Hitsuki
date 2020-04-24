@@ -27,6 +27,7 @@ from aiogram.utils.exceptions import MessageNotModified
 from babel.dates import format_timedelta
 from bson.objectid import ObjectId
 from contextlib import suppress
+from datetime import datetime, timedelta
 
 from sophie_bot import BOT_ID, bot
 from sophie_bot.decorator import register
@@ -286,7 +287,7 @@ async def __export__(chat_id):
         mode = data['mode']
         new = {'mode': mode}
         if mode.startswith('t'):
-            new['time'] = data['time']
+            new['time'] = str(data['time'])
     else:
         new = None
 
@@ -306,10 +307,10 @@ async def __import__(chat_id, data):
 
     if (mode := data['warn_mode']) is not None:
         if mode['mode'] == 'tmute':
-            new = {
-                'mode': mode['mode'],
-                'time': mode['time']
-            }
+            new = {'mode': mode['mode']}
+            raw_time = datetime.strptime(mode['time'], '%H:%M:%S')
+            time = timedelta(hours=raw_time.hour, minutes=raw_time.minute, seconds=raw_time.second)
+            new['time'] = time
         else:
             new = {
                 'mode': mode['mode']
