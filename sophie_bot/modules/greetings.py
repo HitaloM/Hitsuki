@@ -728,3 +728,8 @@ async def __export__(chat_id):
         del greetings['chat_id']
 
         return {'greetings': greetings}
+
+
+async def __import__(chat_id, data):
+    print(data)
+    await db.greetings.update_one({'chat_id': chat_id}, {'$set': data}, upsert=True)
