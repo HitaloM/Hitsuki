@@ -88,11 +88,13 @@ def get_fed_user_text(func):
         strings = await get_strings(real_chat_id, 'feds')
 
         # Check non exits user
-        if not user and (args := message.get_args().split(None, 1))[0].isdigit():
+        if not user and len(args) > 1 and (args := message.get_args().split(None, 1))[0].isdigit():
             user = {'user_id': args[0]}
             text = args[1] if len(args) > 1 else None
         elif not user:
             await message.reply(strings['cant_get_user'])
+            # Passing 'None' user will throw err
+            return
 
         # Check fed_id in args
         if text:
@@ -830,23 +832,22 @@ async def importfbans_func(message, fed, strings, document=None):
             for fed in sfeds_list:
                 fed = await db.feds.find_one({'fed_id': fed})
 
-                for chat_id in fed['chats']:
-                    if 'banned' in fed and user['user_id'] in fed['banned']:
-                        continue
+                if 'banned' in fed and user['user_id'] in fed['banned']:
+                    continue
 
-                    await asyncio.sleep(0.2)  # Do not slow down other updates
+                await asyncio.sleep(0.2)  # Do not slow down other updates
 
-                    new = {
-                        'time': data[banned_user]['time'],
-                        'by': data[banned_user]['by']
-                    }
+                new = {
+                    'time': data[banned_user]['time'],
+                    'by': data[banned_user]['by']
+                }
 
-                    try:
-                        new['reason'] = data[banned_user]['reason']
-                    except KeyError:
-                        pass
+                try:
+                    new['reason'] = data[banned_user]['reason']
+                except KeyError:
+                    pass
 
-                    await db.feds.update_one({'_id': fed['_id']}, {'$set': {f'banned.{banned_user}': new}})
+                await db.feds.update_one({'_id': fed['_id']}, {'$set': {f'banned.{banned_user}': new}})
     await msg.edit_text(strings['import_done'])
 
 
