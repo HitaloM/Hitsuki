@@ -250,6 +250,10 @@ STRINGS:
     already_subsed: "Federation <b>{name}</b> already subscribed to <b>{name2}</b>"
     subsed_success: "Federation <b>{name}</b> subscribed to <b>{name2}</b>!"
 
+    # /funsub
+    not_subsed: "Federation <b>{name}</b> is not subscribed to <b>{name2}</b> to unsubscribe"
+    unsubsed_success: "Federation <b>{name}</b> unsubscribed <b>{name2}</b>!"
+
     # /fpromote
     #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
     admin_added_to_fed: "User {user} added to <b>{name}</b> Federation admins."

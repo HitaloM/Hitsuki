@@ -301,6 +301,36 @@ async def fed_sub(message, fed, strings):
     ))
 
 
+@decorator.register(cmds='funsub')
+@need_args_dec()
+@get_current_chat_fed
+@is_fed_owner
+@get_strings_dec("feds")
+async def fed_unsub(message, fed, strings):
+    fed_id = message.get_args().split(' ')[0]
+
+    if not (fed2 := await db.feds.find_one({'fed_id': fed_id})):
+        await message.reply(strings['fed_id_invalid'])
+        return
+
+    if 'subscribed' in fed and fed_id not in fed['subscribed']:
+        message.reply(strings['not_subsed'].format(
+            name=fed['fed_name'],
+            name2=fed2['fed_name']
+        ))
+        return
+
+    await db.feds.update_one(
+        {'_id': fed['_id']},
+        {'$pull': {'subscribed': str(fed_id)}}
+    )
+
+    await message.reply(strings['unsubsed_success'].format(
+        name=fed['fed_name'],
+        name2=fed2['fed_name']
+    ))
+
+
 @decorator.register(cmds='fpromote')
 @get_fed_user_text
 @is_fed_owner
