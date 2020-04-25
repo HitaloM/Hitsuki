@@ -27,11 +27,11 @@ from .utils.message import get_arg
 
 
 @register(cmds="unpin", user_can_pin_messages=True, bot_can_pin_messages=True)
-@chat_connection(admin=True, only_in_groups=True)
+@chat_connection(admin=True, only_groups=True)
 @get_strings_dec('pins')
-async def unpin_message(message, strings, status, chat_id, chat_title):
+async def unpin_message(message, chat, strings):
     try:
-        await bot.unpin_chat_message(chat_id)
+        await bot.unpin_chat_message(chat['chat_id'])
     except BadRequest:
         await message.reply(strings['chat_not_modified_unpin'])
         return
