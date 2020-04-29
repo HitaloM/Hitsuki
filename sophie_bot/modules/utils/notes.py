@@ -384,7 +384,7 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
     user_id = ([user.id for user in event.new_chat_members][0]
                if event.new_chat_members != [] else event.from_user.id)
     mention = await get_user_link(user_id, md=md)
-    username = ('@' + [user.username for user in event.new_chat_members][0]
+    username = ('@' + str([user.username for user in event.new_chat_members])
                 if event.new_chat_members != [] else '@' + event.from_user.username
                 if event.from_user.username is not None else mention)
     chat_id = message.chat.id
