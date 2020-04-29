@@ -55,7 +55,8 @@ async def connect_to_chat_direct(message, strings):
     user_id = message.from_user.id
     chat_id = message.chat.id
 
-    chat_title = (await db.chat_list.find_one({'chat_id': chat_id}))['chat_title']
+    chat = await db.chat_list.find_one({'chat_id': chat_id})
+    chat_title = chat['chat_title'] if chat is not None else message.chat.title
     text = strings['pm_connected'].format(chat_name=chat_title)
 
     try:
