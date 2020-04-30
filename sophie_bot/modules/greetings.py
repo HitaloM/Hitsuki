@@ -349,13 +349,16 @@ async def reset_security_note(message, chat, strings):
 @register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
 async def welcome_security_handler(message, strings):
+    user_id = int(str([user.id for user in message.new_chat_members])[1:-1])
     chat_id = message.chat.id
+
+    if user_id == BOT_ID:
+        return
 
     if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
         await message.reply(strings['not_admin_ws'])
         return
 
-    user_id = int(str([user.id for user in message.new_chat_members])[1:-1])
     db_item = await db.greetings.find_one({'chat_id': chat_id})
 
     if not db_item or 'welcome_security' not in db_item:
@@ -698,10 +701,12 @@ async def welcome_trigger(message, strings):
                                       upsert=True)
 
     # Welcome mute
+    if user_id == BOT_ID:
+        return
     if 'welcome_mute' in db_item and db_item['welcome_mute']['enabled'] is not False:
         user = await bot.get_chat_member(chat_id, user_id)
         if 'can_send_messages' not in user or user['can_send_messages'] is True:
-            if not check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+            if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
                 await message.reply(strings['not_admin_wm'])
                 return
 
@@ -709,14 +714,22 @@ async def welcome_trigger(message, strings):
 
 
 # Clean service trigger
-@register(only_groups=True, f='service', bot_can_delete_messages=True)
+@register(only_groups=True, f='service')
 @get_strings_dec('greetings')
 async def clean_service_trigger(message, strings):
     chat_id = message.chat.id
+
+    if message.new_chat_members[0].id == BOT_ID:
+        return
+
     if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
         return
 
     if 'clean_welcome' not in db_item or db_item['clean_welcome']['enabled'] is False:
+        return
+
+    if not await check_admin_rights(chat_id, BOT_ID, ['can_delete_messages']):
+        await bot.send_message(chat_id, strings['not_admin_wsr'])
         return
 
     await message.delete()
@@ -731,5 +744,4 @@ async def __export__(chat_id):
 
 
 async def __import__(chat_id, data):
-    print(data)
     await db.greetings.update_one({'chat_id': chat_id}, {'$set': data}, upsert=True)
