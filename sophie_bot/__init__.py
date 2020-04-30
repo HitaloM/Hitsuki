@@ -46,7 +46,7 @@ OPERATORS.append(483808054)
 # AIOGram
 bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
 storage = RedisStorage2(
-    host=get_str_key("REDIS_HOST"),
+    host=get_str_key("REDIS_URI"),
     port=get_int_key("REDIS_PORT"),
     db=get_int_key("REDIS_DB_FSM")
 )
