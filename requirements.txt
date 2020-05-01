@@ -4,7 +4,6 @@ aiogram
 
 # DBs
 redis
-redisworks
 aioredis # Redis memery storage fom aiogram
 pymongo
 motor

@@ -16,26 +16,27 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import redis
+import redis as redis_lib
 import sys
-
-from redis import ConnectionError
-from redisworks import Root
 
 from sophie_bot import log
 from sophie_bot.config import get_str_key, get_int_key
 
 # Init Redis
-redis = redis.StrictRedis(
+redis = redis_lib.StrictRedis(
     host=get_str_key("REDIS_URI"),
     port=get_str_key("REDIS_PORT"),
     db=get_int_key("REDIS_DB_FSM"),
     decode_responses=True
 )
 
-rw = Root()
+bredis = redis_lib.StrictRedis(
+    host=get_str_key("REDIS_URI"),
+    port=get_str_key("REDIS_PORT"),
+    db=get_int_key("REDIS_DB_FSM")
+)
 
 try:
     redis.ping()
-except ConnectionError:
+except redis_lib.ConnectionError:
     sys.exit(log.critical("Can't connect to RedisDB! Exiting..."))

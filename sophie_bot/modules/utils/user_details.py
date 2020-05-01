@@ -17,11 +17,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import pickle
+
 from telethon.tl.functions.users import GetFullUserRequest
 
 from sophie_bot import OPERATORS, bot
 from sophie_bot.services.mongo import db
-from sophie_bot.services.redis import redis, rw
+from sophie_bot.services.redis import bredis
 from sophie_bot.services.telethon import tbot
 from .message import get_arg
 
@@ -121,15 +123,16 @@ async def get_user_link(user_id, custom_name=None, md=False):
         return "<a href=\"tg://user?id={id}\">{name}</a>".format(name=user_name, id=user_id)
 
 
-async def get_admins_rights(chat_id, force_update=False):
+async def get_admins_rights(chat_id, force_update=True):
     key = 'admin_cache:' + str(chat_id)
-    if alist := rw[key] and not force_update:
-        pass
+    if alist := bredis.get(key) and not force_update:
+        return pickle.loads(alist)
     else:
         alist = {}
         admins = await bot.get_chat_administrators(chat_id)
         for admin in admins:
-            alist[admin['user']['id']] = {
+            user_id = admin['user']['id']
+            alist[user_id] = {
                 'status': admin['status'],
                 'admin': True,
                 'can_change_info': admin['can_change_info'],
@@ -140,8 +143,8 @@ async def get_admins_rights(chat_id, force_update=False):
                 'can_promote_members': admin['can_promote_members']
             }
 
-        rw[key] = alist
-        redis.expire(key, 900)
+        bredis.set(key, pickle.dumps(alist))
+        bredis.expire(key, 900)
     return alist
 
 
