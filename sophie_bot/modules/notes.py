@@ -25,7 +25,9 @@ from datetime import datetime
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.deep_linking import get_start_link
+from aiogram.utils.exceptions import MessageNotModified
 from babel.dates import format_datetime
+from contextlib import suppress
 from pymongo import ReplaceOne
 
 from sophie_bot import bot
@@ -548,7 +550,8 @@ async def filter_handle(message, chat, data):
 
 async def setup_start(message):
     text = await get_string(message.chat.id, 'notes', 'filters_setup_start')
-    await message.edit_text(text)
+    with suppress(MessageNotModified):
+        await message.edit_text(text)
 
 
 async def setup_finish(message, data):
