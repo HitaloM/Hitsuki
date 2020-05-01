@@ -28,7 +28,7 @@ DEFAULT = "default"
 
 jobstores = {
     DEFAULT: RedisJobStore(
-        host=get_str_key("REDIS_HOST"),
+        host=get_str_key("REDIS_URI"),
         port=get_str_key("REDIS_PORT"),
         db=get_int_key("REDIS_DB_FSM")
     )
