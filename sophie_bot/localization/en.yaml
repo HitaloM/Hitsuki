@@ -631,6 +631,7 @@ STRINGS:
 
     not_admin_wm: I can't restrict peoples here, so I won't use welcome mute!
     not_admin_ws: I can't restrict peoples here, so I won't use welcome security!
+    not_admin_wsr: I can't delete messages here, so I won't delete service messages!
   locks:
     locks_header: "Here is the current lock settings in {chat_title} \n\n"
     no_lock_args: Give me some args to lock!
