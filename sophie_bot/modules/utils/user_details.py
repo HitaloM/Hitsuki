@@ -121,7 +121,7 @@ async def get_user_link(user_id, custom_name=None, md=False):
         return "<a href=\"tg://user?id={id}\">{name}</a>".format(name=user_name, id=user_id)
 
 
-async def get_admins_rights(chat_id, force_update=True):
+async def get_admins_rights(chat_id, force_update=False):
     key = 'admin_cache:' + str(chat_id)
     if alist := rw[key] and not force_update:
         pass

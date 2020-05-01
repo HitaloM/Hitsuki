@@ -218,7 +218,7 @@ async def get_id(message, user, strings, chat):
 async def adminlist(message, chat, strings):
     admins = await get_admins_rights(chat['chat_id'])
     text = strings['admins']
-    for admin in admins:
+    for admin in admins.keys():
         if user := await db.user_list.find_one({'user_id': admin}):
             text += '- {} ({})\n'.format(await get_user_link(user['user_id']), user['user_id'])
 
