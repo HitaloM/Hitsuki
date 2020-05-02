@@ -125,7 +125,7 @@ async def get_user_link(user_id, custom_name=None, md=False):
 
 async def get_admins_rights(chat_id, force_update=False):
     key = 'admin_cache:' + str(chat_id)
-    if alist := bredis.get(key) and not force_update:
+    if (alist := bredis.get(key)) and not force_update:
         return pickle.loads(alist)
     else:
         alist = {}
