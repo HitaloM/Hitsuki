@@ -128,7 +128,7 @@ def get_fed_dec(func):
         real_chat_id = message.chat.id
 
         if message.text:
-            text_args = message.text.split(" ", 1)
+            text_args = message.text.split(" ", 2)
             if not len(text_args) < 2 and text_args[1].count('-') == 4:
                 if not (fed := await db.feds.find_one({'fed_id': text_args[1]})):
                     await message.reply(await get_string(real_chat_id, "feds", 'fed_id_invalid'))
@@ -753,11 +753,12 @@ async def cancel(event):
 @is_fed_owner
 @get_strings_dec('feds')
 async def fed_rename(message, fed, strings):
-    # Check whether first arg is fed ID
-    if len(raw_name := message.get_args().split()) > 2 and raw_name[0].count('-') == 4:
-        new_name = ' '.join(raw_name[1:])
+    # Check whether first arg is fed ID | TODO: Remove this
+    args = message.get_args().split(' ', 2)
+    if len(args) > 1 and args[0].count('-') == 4:
+        new_name = ' '.join(args[1:])
     else:
-        new_name = ' '.join(raw_name[0:])
+        new_name = ' '.join(args[0:])
 
     if new_name == fed['fed_name']:
         await message.reply(strings['frename_same_name'])
