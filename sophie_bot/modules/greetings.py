@@ -384,7 +384,9 @@ async def welcome_security_handler(message, strings):
 
     text, kwargs = await t_unparse_note_item(message, db_item['security_note'], chat_id)
 
-    kwargs['reply_to'] = message.message_id
+    db_item = await db.greetings.find_one({'chat_id': chat_id})
+    kwargs['reply_to'] = (None if 'clean_service' in db_item and db_item['clean_service']['enabled'] is True
+                          else message.message_id)
 
     kwargs['buttons'] = None if not kwargs['buttons'] else kwargs['buttons']
     msg = await send_note(chat_id, text, **kwargs)
@@ -690,9 +692,10 @@ async def welcome_trigger(message, strings):
             'text': strings['default_welcome'],
             'parse_mode': 'md'
         }
-
+    reply_to = (message.message_id if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False
+                else None)
     text, kwargs = await t_unparse_note_item(message, db_item['note'], chat_id)
-    msg = await send_note(chat_id, text, reply_to=message.message_id, **kwargs)
+    msg = await send_note(chat_id, text, reply_to=reply_to, **kwargs)
     # Clean welcome
     if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False:
         if 'last_msg' in db_item['clean_welcome']:
