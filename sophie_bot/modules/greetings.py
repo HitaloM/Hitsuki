@@ -725,7 +725,7 @@ async def clean_service_trigger(message, strings):
     if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
         return
 
-    if 'clean_welcome' not in db_item or db_item['clean_welcome']['enabled'] is False:
+    if 'clean_service' not in db_item or db_item['clean_service']['enabled'] is False:
         return
 
     if not await check_admin_rights(chat_id, BOT_ID, ['can_delete_messages']):
