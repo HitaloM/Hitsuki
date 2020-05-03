@@ -205,13 +205,11 @@ async def get_msg_file(message):
 
     tmsg = await tbot.get_messages(message.chat.id, ids=message_id)
 
-    if 'sticker' in message:
-        return {'id': tmsg.file.id, 'type': 'sticker'}
-    elif 'photo' in message:
-        return {'id': tmsg.file.id, 'type': 'photo'}
-    elif 'document' in message:
-        return {'id': tmsg.file.id, 'type': 'document'}
-
+    file_types = ['sticker', 'photo', 'document', 'video', 'audio']
+    for file_type in file_types:
+        if file_type not in message:
+            continue
+        return {'id': tmsg.file.id, 'type': file_type}
     return None
 
 
