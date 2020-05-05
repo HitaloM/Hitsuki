@@ -349,6 +349,7 @@ async def clear_all_notes_cb(event, chat, strings):
 
 @register(cmds='noteinfo', user_admin=True)
 @chat_connection()
+@need_args_dec()
 @get_strings_dec('notes')
 async def note_info(message, chat, strings):
     note_name = get_arg(message).lower()
