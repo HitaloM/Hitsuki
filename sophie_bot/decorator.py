@@ -21,7 +21,6 @@ from importlib import import_module
 
 from aiogram import types
 from aiogram.dispatcher.handler import SkipHandler
-from sentry_sdk import configure_scope
 
 from sophie_bot import BOT_USERNAME, dp
 from sophie_bot.config import get_bool_key
@@ -101,10 +100,6 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
 
             if allow_kwargs is False:
                 def_kwargs = dict()
-
-            # Sentry
-            with configure_scope() as scope:
-                scope.set_extra("update", str(message))
 
             if DEBUG_MODE:
                 # log.debug('[*] Starting {}.'.format(func.__name__))
