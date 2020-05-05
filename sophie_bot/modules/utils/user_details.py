@@ -59,6 +59,9 @@ async def add_user_to_db(user):
 
 
 async def get_user_by_id(user_id: int):
+    if not user_id <= 2147483647:
+        return None
+
     user = await db.user_list.find_one(
         {'user_id': user_id}
     )
