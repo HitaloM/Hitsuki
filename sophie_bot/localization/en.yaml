@@ -119,7 +119,7 @@ STRINGS:
     # /delwarns
     purged_warns: "{admin} reset <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
     usr_no_wrn: "{user} doesn't have any warns to reset."
-    rst_wrn_sofi: 'Sophie has never had warns to reset.'
+    rst_wrn_sofi: 'Sophie never had warns to reset.'
     not_digit: Warnlimits should be digits!
 
     # /warnmode
