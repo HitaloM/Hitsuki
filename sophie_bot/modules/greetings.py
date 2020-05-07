@@ -355,13 +355,12 @@ async def welcome_security_handler(message, strings):
     if user_id == BOT_ID:
         return
 
-    if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
-        await message.reply(strings['not_admin_ws'])
+    db_item = await db.greetings.find_one({'chat_id': chat_id})
+    if not db_item or 'welcome_security' not in db_item:
         return
 
-    db_item = await db.greetings.find_one({'chat_id': chat_id})
-
-    if not db_item or 'welcome_security' not in db_item:
+    if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+        await message.reply(strings['not_admin_ws'])
         return
 
     user = await message.chat.get_member(user_id)
