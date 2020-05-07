@@ -224,6 +224,7 @@ async def join_fed(message, chat, strings):
 
     if not await is_chat_creator(chat_id, user_id):
         await message.reply(strings['only_creators'])
+        return
 
     # Assume Fed ID invalid
     if not (fed := await db.feds.find_one({'fed_id': fed_id})):
