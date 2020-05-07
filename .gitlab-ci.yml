@@ -14,7 +14,7 @@ python:flake8:
     - pip install flake8
     - pip install --force-reinstall git+https://github.com/pycqa/pyflakes
   script:
-    - cd /builds/sophiebot/sophie/
+    - cd /builds/SophieBot/sophie/
     - python3 -m flake8 sophie_bot --max-line-length=120 --ignore=E203,E231,E701 | tee flake8-report.txt
   artifacts:
     paths: [flake8-report.txt]
