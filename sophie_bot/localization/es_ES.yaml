@@ -357,7 +357,6 @@ STRINGS:
     connected_chat: |
       <b>Chat conectado actualmente:</b>
       {chat_name}
-
     u_wasnt_connected: "¡No has sido conectado a ningún chat antes!"
     select_chat_to_connect: "\n<b>Selecciona un chat para conectarse:</b>"
     disconnected: "Has sido desconectado de <b>{chat_name}</b>."
