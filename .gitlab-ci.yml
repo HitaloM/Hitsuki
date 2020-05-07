@@ -14,7 +14,7 @@ python:flake8:
     - pip install flake8
     - pip install --force-reinstall git+https://github.com/pycqa/pyflakes
   script:
-    - cd /builds/MrYacha/sophie/
+    - cd /builds/sophiebot/sophie/
     - python3 -m flake8 sophie_bot --max-line-length=120 --ignore=E203,E231,E701 | tee flake8-report.txt
   artifacts:
     paths: [flake8-report.txt]
@@ -30,7 +30,7 @@ docker:deploy:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" registry.gitlab.com
   script:
     - docker build --pull -t "$DOCKER_IMAGE" .
-    - docker push "registry.gitlab.com/mryacha/sophie:$CI_COMMIT_BRANCH"
+    - docker push "registry.gitlab.com/sophiebot/sophie:$CI_COMMIT_BRANCH"
   only:
     - stable
     - unstable
