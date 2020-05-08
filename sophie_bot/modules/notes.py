@@ -505,6 +505,8 @@ async def __export__(chat_id):
         del note['_id']
         del note['chat_id']
         note['created_date'] = str(note['created_date'])
+        if 'edited_date' in note:
+            note['edited_date'] = str(note['edited_date'])
         data.append(note)
 
     return {'notes': data}
@@ -536,6 +538,8 @@ async def __import__(chat_id, data):
 
         note['chat_id'] = chat_id
         note['created_date'] = datetime.fromisoformat(note['created_date'])
+        if 'edited_date' in note:
+            note['edited_date'] = datetime.fromisoformat(note['edited_date'])
         new.append(ReplaceOne({'chat_id': note['chat_id'], 'names': {'$in': [note['names'][0]]}}, note, upsert=True))
 
     await db.notes.bulk_write(new)
