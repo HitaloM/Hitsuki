@@ -117,6 +117,11 @@ async def add_handler(message, chat, strings):
 
 
 async def save_filter(message, data):
+    if await db.filters.find_one(data):
+        # prevent saving duplicate filter
+        await message.reply('Duplicate filter!')
+        return
+
     await db.filters.insert_one(data)
     await update_handlers_cache(data['chat_id'])
     await message.reply('Saved!')
