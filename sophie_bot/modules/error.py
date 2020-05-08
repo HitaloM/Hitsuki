@@ -21,7 +21,6 @@ import html
 import sys
 
 from redis.exceptions import RedisError
-from sentry_sdk import configure_scope
 
 from sophie_bot import dp, bot, OWNER_ID
 from sophie_bot.services.redis import redis
@@ -68,9 +67,6 @@ async def all_errors_handler(message, error):
     err_msg = str(sys.exc_info()[1])
 
     log.warn('Error caused update is: \n' + str(parse_update(message)))
-    # log to sentry
-    with configure_scope() as scope:
-        scope.set_extra("update", str(parse_update(message)))
 
     if redis.get(chat_id) == str(error):
         # by err_tlt we assume that it is same error
@@ -87,20 +83,21 @@ async def all_errors_handler(message, error):
 
 def parse_update(update):
     # The parser to hide sensitive informations in the update (for logging)
-    update = update.message if hasattr(update, 'message') else update
-    update = update.callback_query.message if 'callback_query' in update else update
+    update = update['message'] if hasattr(update, 'message') else update
+    update = update['callback_query']['message'] if 'callback_query' in update else update
 
-    if chat := update.chat:
-        chat.id = chat.title = chat.username = chat.first_name = chat.last_name = []
-    if user := update.from_user:
-        user.id = user.first_name = user.last_name = user.username = []
-    if reply_msg := update.reply_to_message:
-        reply_msg.chat.id = reply_msg.chat.title = reply_msg.chat.first_name = reply_msg.chat.last_name = \
-            reply_msg.chat.username = []
-        reply_msg.from_user.id = reply_msg.from_user.first_name = reply_msg.from_user.last_name = \
-            reply_msg.from_user.username = []
-        reply_msg.message_id = []
-        reply_msg.new_chat_members = reply_msg.left_chat_members = []
-    update.new_chat_members = update.left_chat_members = []
-    update.message_id = []
+    if chat := update['chat']:
+        chat['id'] = chat['title'] = chat['username'] = chat['first_name'] = chat['last_name'] = []
+    if user := update['from']:
+        user['id'] = user['first_name'] = user['last_name'] = user['username'] = []
+    if 'reply_to_message' in update:
+        reply_msg = update['reply_to_message']
+        reply_msg['chat']['id'] = reply_msg['chat']['title'] = reply_msg['chat']['first_name'] = \
+            reply_msg['chat']['last_name'] = reply_msg['chat']['username'] = []
+        reply_msg['from']['id'] = reply_msg['from']['first_name'] = reply_msg['from']['last_name'] = \
+            reply_msg['from']['username'] = []
+        reply_msg['message_id'] = []
+        reply_msg['new_chat_members'] = reply_msg['left_chat_member'] = []
+    update['new_chat_members'] = update['left_chat_member'] = []
+    update['message_id'] = []
     return update

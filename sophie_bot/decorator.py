@@ -21,11 +21,13 @@ from importlib import import_module
 
 from aiogram import types
 from aiogram.dispatcher.handler import SkipHandler
+from sentry_sdk import configure_scope
 
 from sophie_bot import BOT_USERNAME, dp
 from sophie_bot.config import get_bool_key
 from sophie_bot.utils.filters import ALL_FILTERS
 from sophie_bot.utils.logger import log
+from sophie_bot.modules.error import parse_update
 
 DEBUG_MODE = get_bool_key('DEBUG_MODE')
 ALLOW_F_COMMANDS = get_bool_key("allow_forwards_commands")
@@ -100,6 +102,10 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
 
             if allow_kwargs is False:
                 def_kwargs = dict()
+
+            with configure_scope() as scope:
+                parsed_update = parse_update(dict(message))
+                scope.set_extra("update", str(parsed_update))
 
             if DEBUG_MODE:
                 # log.debug('[*] Starting {}.'.format(func.__name__))
