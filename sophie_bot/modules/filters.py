@@ -23,6 +23,8 @@ from aiogram.types.inline_keyboard import InlineKeyboardButton, InlineKeyboardMa
 from aiogram.utils.callback_data import CallbackData
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from bson.objectid import ObjectId
+from datetime import datetime, timedelta
+from pymongo import UpdateOne
 
 from .utils.message import need_args_dec, get_arg
 from .utils.user_details import is_user_admin
@@ -242,3 +244,27 @@ async def __before_serving__(loop):
         log.debug(f'Adding filter action from {module_name} module')
         for data in module.__filters__.items():
             FILTERS_ACTIONS[data[0]] = data[1]
+
+
+async def __export__(chat_id):
+    data = []
+    filters = db.filters.find({'chat_id': chat_id})
+    async for filter in filters:
+        del filter['_id'], filter['chat_id']
+        if 'time' in filter:
+            filter['time'] = str(filter['time'])
+        data.append(filter)
+
+    return {'filters': data}
+
+
+async def __import__(chat_id, data):
+    new = []
+    for filter in data:
+        if 'time' in filter:
+            raw_time = datetime.strptime(filter['time'], '%H:%M:%S')
+            filter['time'] = timedelta(hours=raw_time.hour, minutes=raw_time.minute, seconds=raw_time.second)
+        new.append(UpdateOne({'chat_id': chat_id, 'handler': filter['handler'], 'action': filter['action']},
+                             {'$set': filter},
+                             upsert=True))
+    await db.filters.bulk_write(new)
