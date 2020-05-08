@@ -288,6 +288,7 @@ async def search_in_note(message, chat, strings):
 
 @register(cmds=['clear', 'delnote'])
 @chat_connection(admin=True)
+@need_args_dec()
 @get_strings_dec('notes')
 async def clear_note(message, chat, strings):
     note_names = get_arg(message).lower().split('|')
