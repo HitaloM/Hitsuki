@@ -527,6 +527,7 @@ STRINGS:
     filter_title_tmute: tMute the user
     filter_title_mute: Mute the user
     filter_title_tban: tBan the user
+    filter_title_kick: Kick user
   rules:
     # Set
     saved: Rules were saved in <b>%s</b>

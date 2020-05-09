@@ -369,6 +369,18 @@ async def time_setup_finish(message, data, strings):
         return {'time': time}
 
 
+@get_strings_dec('restrictions')
+async def filter_handle_kick(message, chat, data, strings=None):
+    if await is_user_admin(chat['chat_id'], message.from_user.id):
+        return
+    if await kick_user(chat['chat_id'], message.from_user.id):
+        await bot.send_message(chat['chat_id'], strings['user_kicked'].format(
+            user=await get_user_link(message.from_user.id),
+            admin=await get_user_link(BOT_ID),
+            chat_name=chat['chat_title']
+        ))
+
+
 __filters__ = {
     'ban_user': {
         'title': {'module': 'restrictions', 'string': 'filter_title_ban'},
@@ -393,5 +405,9 @@ __filters__ = {
             'start': time_setup_start,
             'finish': time_setup_finish
         }
+    },
+    'kick_user': {
+        'title': {'module': 'restrictions', 'string': 'filter_title_kick'},
+        'handle': filter_handle_kick
     }
 }
