@@ -83,8 +83,8 @@ async def all_errors_handler(message, error):
 
 def parse_update(update):
     # The parser to hide sensitive informations in the update (for logging)
-    update = update['message'] if hasattr(update, 'message') else update
-    update = update['callback_query']['message'] if 'callback_query' in update else update
+    update = (update['callback_query']['message'] if 'callback_query' in update else
+              update['message'] if hasattr(update, 'message') else update)
 
     if chat := update['chat']:
         chat['id'] = chat['title'] = chat['username'] = chat['first_name'] = chat['last_name'] = []
