@@ -86,7 +86,8 @@ def parse_update(update):
     update = (update['callback_query']['message'] if 'callback_query' in update else
               update['message'] if hasattr(update, 'message') else update)
 
-    if chat := update['chat']:
+    if 'chat' in update:
+        chat = update['chat']
         chat['id'] = chat['title'] = chat['username'] = chat['first_name'] = chat['last_name'] = []
     if user := update['from']:
         user['id'] = user['first_name'] = user['last_name'] = user['username'] = []

@@ -105,18 +105,23 @@ async def warn_func(message, chat, user, text, strings, filter_action=False):
         if await max_warn_func(chat_id, user_id):
             await db.warns.delete_many({'user_id': user_id, 'chat_id': chat_id})
             data = await db.warnmode.find_one({'chat_id': chat_id})
-            if data['mode'] != 'tmute':
-                text = strings['max_warn_exceeded'] % \
-                    (member, strings['banned'] if data['mode'] == 'ban' else strings['muted'])
-                if filter_action:
-                    return await bot.send_message(chat_id, text)
-                return await message.reply(text)
-            else:
-                text = strings['max_warn_exceeded:tmute'] % \
-                    (member, format_timedelta(data['time'], locale=strings['language_info']['babel']))
-                if filter_action:
-                    return await bot.send_message(chat_id, text)
-                return await message.reply(text)
+            if data is not None:
+                if data['mode'] == 'tmute':
+                    text = strings['max_warn_exceeded:tmute'] % \
+                        (member, format_timedelta(data['time'], locale=strings['language_info']['babel']))
+                    if filter_action:
+                        return await bot.send_message(chat_id, text)
+                    return await message.reply(text)
+                else:
+                    text = strings['max_warn_exceeded'] % \
+                        (member, strings['banned'] if data['mode'] == 'ban' else strings['muted'])
+                    if filter_action:
+                        return await bot.send_message(chat_id, text)
+                    return await message.reply(text)
+            text = strings['max_warn_exceeded'] % (member, strings['banned'])
+            if filter_action:
+                return await bot.send_message(chat_id, text)
+            return await message.reply(text)
     else:
         text += strings['warn_num'].format(curr_warns=warns_count, max_warns=max_warn)
     if filter_action:
@@ -274,7 +279,7 @@ async def max_warn_func(chat_id, user_id):
         elif mode['mode'] == 'mute':
             return await mute_user(chat_id, user_id)
     else:  # Default
-        return ban_user(chat_id, user_id)
+        return await ban_user(chat_id, user_id)
 
 
 async def __export__(chat_id):
