@@ -54,10 +54,11 @@ delfed_cb = CallbackData('delfed_cb', 'fed_id', 'creator_id')
 
 async def get_fed_f(message):
     chat = await get_connected_chat(message, admin=True, only_groups=True)
-    fed = await db.feds.find_one({'chats': {'$in': [chat['chat_id']]}})
-    if not fed:
-        return False
-    return fed
+    if 'err_msg' not in chat:
+        fed = await db.feds.find_one({'chats': {'$in': [chat['chat_id']]}})
+        if not fed:
+            return False
+        return fed
 
 
 async def fed_post_log(fed, text):
