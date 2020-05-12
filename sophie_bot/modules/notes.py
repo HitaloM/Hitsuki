@@ -206,7 +206,8 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
 @get_strings_dec('notes')
 async def get_notes_list_cmd(message, chat, strings):
 
-    if await db.privatenotes.find_one({'chat_id': chat['chat_id']}):
+    if await db.privatenotes.find_one({'chat_id': chat['chat_id']})\
+            and message.chat.id == chat['chat_id']:  # Workaround to avoid sending PN to connected PM
         text = strings['notes_in_private']
         if not (keyword := message.get_args()):
             keyword = None
