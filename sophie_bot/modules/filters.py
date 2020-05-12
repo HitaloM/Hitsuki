@@ -83,7 +83,8 @@ async def check_msg(message):
             return
 
     for handler in filters:
-        pattern = handler
+        pattern = re.escape(handler)
+        pattern = pattern.replace('(+)', '(.*)')
         if re.search(pattern, text, flags=re.IGNORECASE):
 
             # We can have few filters with same handler, that's why we create a new loop.
