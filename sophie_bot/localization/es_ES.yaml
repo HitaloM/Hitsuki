@@ -20,7 +20,6 @@ STRINGS:
     #/notes
     notelist_no_notes: "¡No hay notas en <b>{chat_title}</b>!"
     notelist_header: "<b>Notas en {chat_name}</b>:"
-    notes_in_private: "Haga clic en botón inferior para obtener la lista de notas."
     notelist_search: |
       <b>Patrón:</b> <code>{request}</code>
       <b>Notas coincidentes:</b>
@@ -48,18 +47,6 @@ STRINGS:
     note_info_created: "Fue creado en: <code>{date}</code> por {user}\n"
     note_info_updated: "Última actualización en: <code>{date}</code> por {user}\n"
     user_blocked: "¡Escríbeme /start por mensaje privado!"
-    #/privatenotes
-    private_notes_false_args: "Tienes 2 opciones <code>Desactivar</code> y <code>Activar</code>!"
-    already_enabled: "Las notas privadas ya están habilitadas en %s"
-    current_state_info: "¡Actualmente la nota privada es {state} en {chat}! "
-    enabled_successfully: "¡Las notas privadas están <b>habilitadas</b> en %s con éxito!"
-    disabled_successfully: "¡Las notas privadas están <b>Desactivadas</b> en %s con éxito!"
-    not_enabled: "Las notas privadas no están habilitadas para desactivar."
-    enabled: 'Activado'
-    disabled: 'Deshabilitado'
-    #Filter
-    filters_title: 'Enviar una nota'
-    filters_setup_start: 'Por favor, envíe un nombre de nota.'
   #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
   #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
   filters:
@@ -184,23 +171,23 @@ STRINGS:
     add_admins: "No tengo permisos para añadir administradores, por favor hazme administradora con ese permiso."
   feds:
     #decorators
-    need_fed_admin: "No eres administrador en <b>{name}</b> Federación"
+    need_fed_admin: "No eres un administrador en <b>{name}</b> Federación"
     need_fed_owner: "No eres dueño de <b>{name}</b> Federación"
     cant_get_user: "Lo siento, no puedo obtener ese usuario, intente usar el ID de usuario"
-    #/newfed
+    #/fnew
     fed_name_long: "¡El nombre de la Federación no puede tener más de 60 símbolos!"
     can_only_1_fed: "1 usuario puede crear sólo 1 Federación, por favor elimine uno."
     name_not_avaible: "¡La Federación con el nombre <code>{name}</code> ya se ha salido! Por favor, usa otro nombre."
     created_fed: |
-      Felicidades, has creado con éxito la Federación.
+      Felicidades, ha creado con éxito la Federación.
       <b>Nombre:</b> {name}
       <b>ID:</b> <code>{id}</code>
       <b>Creador:</b> {creator}
-      Use <code>/joinfed {id}</code> para conectarse al chat
-    #/joinfed
+      Usa <code>/fjoin {id}</code> para conectar federación al chat
+    #/fjoin
     only_creators: "Debes ser un creador de chat para poder conectar el chat a federación."
     fed_id_invalid: "¡El ID de la Federación no es válido! Por favor, dame un ID válido."
-    joined_fed_already: "¡Este chat ya se ha unido a una Federación! Por favor usa /leavefed para dejar esa federación"
+    joined_fed_already: "¡Este chat ya se ha unido a una Federación! Por favor, usa /fleave para dejar esa federación"
     join_fed_success: "¡Genial! ¡El chat <b>{chat}</b> es ahora parte de <b>{fed}</b> Federación!"
     join_chat_fed_log: |
       <b>El nuevo chat se unió a la Federación</b> #Chat se unió
@@ -464,6 +451,7 @@ STRINGS:
     filter_title_tmute: tMute al usuario
     filter_title_mute: Silenciar al usuario
     filter_title_tban: tBan al usuario
+    filter_title_kick: Expulsar usuario
   rules:
     #Set
     saved: Reglas guardadas en <b>%s</b>

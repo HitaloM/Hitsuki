@@ -20,7 +20,6 @@ STRINGS:
     #/notes
     notelist_no_notes: "Нет заметок в <b>{chat_title}</b>!"
     notelist_header: "<b>Заметки в {chat_name}</b>:"
-    notes_in_private: "Нажмите на кнопку ниже, чтобы получить список заметок."
     notelist_search: |
       <b>Шаблон:</b> <code>{request}</code>
       <b>Соответствующие заметки:</b>
@@ -48,15 +47,6 @@ STRINGS:
     note_info_created: "Заметка создана: <code>{date}</code> пользователем {user}\n"
     note_info_updated: "Последнее обновление: <code>{date}</code> пользователем {user}\n"
     user_blocked: "Напишите /start мне в личные сообщения!"
-    #/privatenotes
-    private_notes_false_args: "У вас есть 2 варианта <code>Disable</code> (отключить) и <code>Enable</code> (включить)!"
-    already_enabled: "Приватные заметки уже включены в %s"
-    current_state_info: "В настоящее время приватные заметки {state} в {chat}! "
-    enabled_successfully: "Успешно <b>включены</b>приватные заметки в %s!"
-    disabled_successfully: "Успешно <b>отключены</b>приватные заметки в %s!"
-    not_enabled: "Приватные заметки уже отключены. Отключать нечего."
-    enabled: 'Включены'
-    disabled: 'Выключены'
     #Filter
     filters_title: 'Отправить заметку'
     filters_setup_start: 'Пожалуйста, отправьте название заметки.'
@@ -465,6 +455,7 @@ STRINGS:
     filter_title_tmute: Временно заткнуть юзера
     filter_title_mute: Заткнуть юзера
     filter_title_tban: Временно забанить юзера
+    filter_title_kick: Кикнуть пользователя
   rules:
     #Set
     saved: Правила были сохранены в <b>%s</b>
