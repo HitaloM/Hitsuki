@@ -36,7 +36,8 @@ def catch_redis_error(**dec_kwargs):
             # We can't use redis here
             # So we save data - 'message sent to' in a list variable
             message = args[0]
-            msg = message.callback_query.message if 'callback_query' in message else message.message
+            msg = (message['callback_query']['message'] if hasattr(message, 'callback_query') else
+                   message['message'] if hasattr(message, 'message') else message)
             chat_id = msg.chat.id
             try:
                 return await func(*args, **kwargs)
