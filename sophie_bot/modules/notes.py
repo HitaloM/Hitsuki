@@ -23,7 +23,6 @@ from datetime import datetime
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.utils.deep_linking import get_start_link
 from aiogram.utils.exceptions import MessageNotModified
 from babel.dates import format_datetime
 from contextlib import suppress
