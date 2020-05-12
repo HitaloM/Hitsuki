@@ -20,6 +20,8 @@
 import datetime
 import html
 
+from aiogram.dispatcher.middlewares import BaseMiddleware
+
 from sophie_bot.decorator import register
 from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db
@@ -28,9 +30,9 @@ from .utils.connections import chat_connection
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.user_details import get_user_dec, get_user_link, is_user_admin, get_admins_rights
+from sophie_bot import dp
 
 
-@register()
 async def update_users_handler(message):
     chat_id = message.chat.id
 
@@ -223,6 +225,15 @@ async def adminlist(message, chat, strings):
             text += '- {} ({})\n'.format(await get_user_link(user['user_id']), user['user_id'])
 
     await message.reply(text)
+
+
+class SaveUser(BaseMiddleware):
+    async def on_process_message(self, message, data):
+        await update_users_handler(message)
+
+
+async def __before_serving__(loop):
+    dp.middleware.setup(SaveUser())
 
 
 async def __stats__():
