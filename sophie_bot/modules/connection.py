@@ -107,7 +107,16 @@ async def connect_chat_keyboard_cb(message, callback_data=False, **kwargs):
 @get_strings_dec('connections')
 async def connect_to_chat_from_arg(message, chat, strings):
     user_id = message.from_user.id
-    chat_id = message.chat.id
+
+    chat_id = None
+
+    arg = get_arg(message)
+    if arg.startswith('-'):
+        chat_id = int(arg)
+
+    if not chat_id:
+        await message.reply(strings['cant_find_chat_use_id'])
+        return
 
     await def_connect_chat(message, user_id, chat_id, chat['chat_title'])
 
