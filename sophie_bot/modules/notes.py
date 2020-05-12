@@ -144,7 +144,7 @@ async def get_note_cmd(message, chat, strings):
     chat_name = chat['chat_title']
     send_id = None
 
-    if message.from_user.id == message.chat.id:
+    if message.from_user.id == chat_id:
         if redis.exists(f'notes_{message.from_user.id}'):
             chat_id = redis.get(f'notes_{message.from_user.id}')
             send_id = int(message.from_user.id)
@@ -183,13 +183,13 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
     chat_id = chat['chat_id']
     send_id = None
 
-    if message.from_user.id == message.chat.id:
+    if message.from_user.id == chat_id:
         if redis.exists(f'notes_{message.from_user.id}'):
             chat_id = redis.get(f'notes_{message.from_user.id}')
             send_id = int(message.from_user.id)
 
     note_name = regexp.group(1).lower()
-    if not (note := await db.notes.find_one({'chat_id': chat_id, 'names': {'$in': [note_name]}})):
+    if not (note := await db.notes.find_one({'chat_id': int(chat_id), 'names': {'$in': [note_name]}})):
         return
 
     if 'reply_to_message' in message:
