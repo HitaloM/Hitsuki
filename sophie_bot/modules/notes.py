@@ -34,7 +34,7 @@ from sophie_bot import bot
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
-from .utils.connections import chat_connection
+from .utils.connections import chat_connection, set_connected_chat
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec, get_string
 from .utils.message import get_arg, need_args_dec
@@ -487,6 +487,7 @@ async def private_notes_cmd(message, chat, strings):
 
 @register(CommandStart(re.compile('notes')))
 async def private_notes_func(message):
+    await set_connected_chat(message.from_user.id, None)
     chat_id = (message.get_args().split('_'))[1]
     chat = (await db.chat_list.find_one({'chat_id': int(chat_id)}))
     await get_notes_list(message, chat=chat, pm=True)
