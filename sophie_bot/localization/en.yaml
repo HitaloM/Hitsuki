@@ -22,7 +22,6 @@ STRINGS:
     #/notes
     notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
     notelist_header: "<b>Notes in {chat_name}</b>:"
-    notes_in_private: "Click below button to get notes list."
     notelist_search: |
       <b>Pattern:</b> <code>{request}</code>
       <b>Matched notes:</b>
@@ -54,21 +53,6 @@ STRINGS:
     note_info_created: "Was created in: <code>{date}</code> by {user}\n"
     note_info_updated: "Last updated in: <code>{date}</code> by {user}\n"
     user_blocked: "Write /start in my PM!"
-
-    # /privatenotes
-    private_notes_false_args: "You have 2 options <code>Disable</code> and <code>Enable</code> !"
-    already_enabled: "Private notes are already enabled in %s"
-    current_state_info: "Currently private note is {state} in {chat} ! "
-    enabled_successfully: "Private notes are <b>Enabled</b> in %s successfully!"
-    disabled_successfully: "Private notes are <b>Disabled</b> in %s successfully!"
-    not_enabled: "Private notes are not enabled to disable."
-    enabled: 'Enabled'
-    disabled: 'Disabled'
-
-    # Filter
-    filters_title: 'Send a note'
-    filters_setup_start: 'Please send a note name.'
-
 
     #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
     #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
