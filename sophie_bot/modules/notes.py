@@ -485,9 +485,9 @@ async def private_notes_cmd(message, chat, strings):
         await message.reply(strings['current_state_info'].format(state=state, chat=chat_name))
 
 
-@register(regexp='start notes_(.*)', only_pm=True)
+@register(CommandStart(re.compile('notes')))
 async def private_notes_func(message):
-    chat_id = re.search(r'notes_(.*)_(\w+)', message.get_args()).group(1)
+    chat_id = (message.get_args().split('_'))[1]
     chat = (await db.chat_list.find_one({'chat_id': int(chat_id)}))
     await get_notes_list(message, chat=chat, pm=True)
 
