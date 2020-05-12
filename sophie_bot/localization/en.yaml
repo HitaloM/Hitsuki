@@ -54,6 +54,10 @@ STRINGS:
     note_info_updated: "Last updated in: <code>{date}</code> by {user}\n"
     user_blocked: "Write /start in my PM!"
 
+    # Filter
+    filters_title: 'Send a note'
+    filters_setup_start: 'Please send a note name.'
+
     #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
     #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
   filters:
