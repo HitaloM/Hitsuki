@@ -654,10 +654,13 @@ async def welcome_security_passed(message, state, strings):
 
     db_item = await db.greetings.find_one({'chat_id': chat_id})
 
+    if 'message' in message:
+        message = message.message
+
     # Welcome
     if 'note' in db_item:
         text, kwargs = await t_unparse_note_item(
-            message.message.reply_to_message if 'message' in message else message.reply_to_message,
+            message,
             db_item['note'],
             chat_id
         )
