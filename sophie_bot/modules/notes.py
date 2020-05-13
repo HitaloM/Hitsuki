@@ -1,5 +1,6 @@
 # Copyright (C) 2018 - 2020 MrYacha. All rights reserved. Source code available under the AGPL.
 # Copyright (C) 2019 Aiogram
+# Copyright (C) 2020 Jeepeo
 
 #
 # This file is part of SophieBot.
@@ -32,7 +33,7 @@ from sophie_bot import bot
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
-from .utils.connections import chat_connection
+from .utils.connections import chat_connection, set_connected_chat
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec, get_string
 from .utils.message import get_arg, need_args_dec
@@ -42,7 +43,7 @@ from .utils.user_details import get_user_link
 RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`', '#', '"', '[', ']', "'", '$', '||']
 
 
-async def get_simmilar_note(chat_id, note_name):
+async def get_similar_note(chat_id, note_name):
     all_notes = []
     async for note in db.notes.find({'chat_id': chat_id}):
         all_notes.extend(note['names'])
@@ -111,7 +112,7 @@ async def get_note(message, strings, note_name=None, db_item=None,
         chat_id = message.chat.id
 
     if not send_id:
-        send_id = chat_id
+        send_id = message.chat.id
 
     if rpl_id is False:
         rpl_id = None
@@ -140,6 +141,14 @@ async def get_note(message, strings, note_name=None, db_item=None,
 async def get_note_cmd(message, chat, strings):
     chat_id = chat['chat_id']
     chat_name = chat['chat_title']
+    send_id = None
+
+    if message.from_user.id == chat_id:
+        if redis.exists(f'notes_{message.from_user.id}'):
+            chat_id = redis.get(f'notes_{message.from_user.id}')
+            send_id = int(message.from_user.id)
+            chat_name = (await db.chat_list.find_one({'chat_id': int(chat_id)}))['chat_title']
+
     note_name = get_arg(message).lower()
     if note_name[0] == '#':
         note_name = note_name[1:]
@@ -151,7 +160,7 @@ async def get_note_cmd(message, chat, strings):
 
     if not (note := await db.notes.find_one({'chat_id': int(chat_id), 'names': {'$in': [note_name]}})):
         text = strings['cant_find_note'].format(chat_name=chat_name)
-        if alleged_note_name := await get_simmilar_note(chat_id, note_name):
+        if alleged_note_name := await get_similar_note(chat_id, note_name):
             text += strings['u_mean'].format(note_name=alleged_note_name)
         await message.reply(text)
         return
@@ -161,7 +170,8 @@ async def get_note_cmd(message, chat, strings):
         arg2 = args[1][1:].lower()
         noformat = True if 'noformat' == arg2 or 'raw' == arg2 else False
 
-    await get_note(message, db_item=note, rpl_id=rpl_id, noformat=noformat)
+    await get_note(message, db_item=note, rpl_id=rpl_id, noformat=noformat, chat_id=int(chat_id),
+                   send_id=send_id)
 
 
 @register(regexp=r'^#(\w+)', allow_kwargs=True)
@@ -170,8 +180,15 @@ async def get_note_cmd(message, chat, strings):
 @get_strings_dec('notes')
 async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
     chat_id = chat['chat_id']
+    send_id = None
+
+    if message.from_user.id == chat_id:
+        if redis.exists(f'notes_{message.from_user.id}'):
+            chat_id = redis.get(f'notes_{message.from_user.id}')
+            send_id = int(message.from_user.id)
+
     note_name = regexp.group(1).lower()
-    if not (note := await db.notes.find_one({'chat_id': chat_id, 'names': {'$in': [note_name]}})):
+    if not (note := await db.notes.find_one({'chat_id': int(chat_id), 'names': {'$in': [note_name]}})):
         return
 
     if 'reply_to_message' in message:
@@ -179,14 +196,32 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
     else:
         rpl_id = message.message_id
 
-    await get_note(message, db_item=note, rpl_id=rpl_id)
+    await get_note(message, db_item=note, rpl_id=rpl_id, chat_id=int(chat_id), send_id=send_id)
 
 
 @register(cmds=['notes', 'saved'])
 @disableable_dec('notes')
 @chat_connection()
 @get_strings_dec('notes')
-async def get_notes_list(message, chat, strings):
+async def get_notes_list_cmd(message, chat, strings):
+
+    if await db.privatenotes.find_one({'chat_id': chat['chat_id']})\
+            and message.chat.id == chat['chat_id']:  # Workaround to avoid sending PN to connected PM
+        text = strings['notes_in_private']
+        if not (keyword := message.get_args()):
+            keyword = None
+        button = InlineKeyboardMarkup().add(InlineKeyboardButton(
+            text='Click here',
+            url=await get_start_link(f"notes_{chat['chat_id']}_{keyword}")
+        ))
+        await message.reply(text, reply_markup=button, disable_web_page_preview=True)
+        return
+    else:
+        await get_notes_list(message, chat=chat)
+
+
+@get_strings_dec('notes')
+async def get_notes_list(message, strings, chat, pm=False):
     text = strings["notelist_header"].format(chat_name=chat['chat_title'])
 
     notes = await db.notes.find({'chat_id': chat['chat_id']}).sort("names", 1).to_list(length=300)
@@ -194,8 +229,8 @@ async def get_notes_list(message, chat, strings):
         await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
         return
 
-    # Search
-    if len(request := message.get_args()) > 0:
+    async def search_notes(request):
+        nonlocal notes, text, note, note_name
         text += strings['notelist_search'].format(request=request)
         all_notes = notes
         notes = []
@@ -207,12 +242,26 @@ async def get_notes_list(message, chat, strings):
             await message.reply(strings['no_notes_pattern'] % request)
             return
 
-    for note in notes:
-        text += '\n-'
-        for note_name in note['names']:
-            text += f" <code>#{note_name}</code>"
-    text += strings['you_can_get_note']
-    await message.reply(text)
+    # Search
+    if len(keyword := message.get_args()) > 0 and pm is False:
+        await search_notes(keyword)
+    if pm is True:
+        if redis.exists(f'notes_{message.from_user.id}') == 1:
+            if int(redis.get(f'notes_{message.from_user.id}')) != chat['chat_id']:
+                redis.delete(f'notes_{message.from_user.id}')
+                redis.set(f'notes_{message.from_user.id}', chat['chat_id'])
+        else:
+            redis.set(f'notes_{message.from_user.id}', chat['chat_id'])
+        if (keyword := (re.search(r'notes_(.*)_(\w+)', message.get_args())).group(2)) != 'None':
+            await search_notes(keyword)
+
+    if len(notes) > 0:
+        for note in notes:
+            text += '\n-'
+            for note_name in note['names']:
+                text += f" <code>#{note_name}</code>"
+        text += strings['you_can_get_note']
+        await message.reply(text)
 
 
 @register(cmds='search')
@@ -253,7 +302,7 @@ async def clear_note(message, chat, strings):
         if not (note := await db.notes.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
             if len(note_names) < 1:
                 text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
-                if alleged_note_name := await get_simmilar_note(chat['chat_id'], note_name):
+                if alleged_note_name := await get_similar_note(chat['chat_id'], note_name):
                     text += strings['u_mean'].format(note_name=alleged_note_name)
                 await message.reply(text)
                 return
@@ -310,7 +359,7 @@ async def note_info(message, chat, strings):
 
     if not (note := await db.notes.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
         text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
-        if alleged_note_name := await get_simmilar_note(chat['chat_id'], note_name):
+        if alleged_note_name := await get_similar_note(chat['chat_id'], note_name):
             text += strings['u_mean'].format(note_name=alleged_note_name)
         await message.reply(text)
         return
@@ -397,6 +446,51 @@ async def btn_note_start_state(message, strings):
     await get_note(message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None)
 
     redis.delete(key)
+
+
+@register(cmds='privatenotes', is_admin=True)
+@chat_connection(admin=True)
+@get_strings_dec('notes')
+async def private_notes_cmd(message, chat, strings):
+    chat_id = chat['chat_id']
+    chat_name = chat['chat_title']
+    text = str
+
+    try:
+        (text := ''.join(message.text.split()[1]).lower())
+    except IndexError:
+        pass
+
+    enabling = ['true', 'enable', 'on']
+    disabling = ['false', 'disable', 'off']
+    if database := await db.privatenotes.find_one({'chat_id': chat_id}):
+        if text in enabling:
+            await message.reply(strings['already_enabled'] % chat_name)
+            return
+    if text in enabling:
+        await db.privatenotes.insert_one({'chat_id': chat_id})
+        await message.reply(strings['enabled_successfully'] % chat_name)
+    elif text in disabling:
+        if not database:
+            await message.reply(strings['not_enabled'])
+            return
+        await db.privatenotes.delete_one({'_id': database['_id']})
+        await message.reply(strings['disabled_successfully'] % chat_name)
+    else:
+        # Assume admin asked for current state
+        if database:
+            state = strings['enabled']
+        else:
+            state = strings['disabled']
+        await message.reply(strings['current_state_info'].format(state=state, chat=chat_name))
+
+
+@register(CommandStart(re.compile('notes')))
+async def private_notes_func(message):
+    await set_connected_chat(message.from_user.id, None)
+    chat_id = (message.get_args().split('_'))[1]
+    chat = (await db.chat_list.find_one({'chat_id': int(chat_id)}))
+    await get_notes_list(message, chat=chat, pm=True)
 
 
 async def __stats__():

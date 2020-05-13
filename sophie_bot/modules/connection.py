@@ -31,7 +31,7 @@ from sophie_bot.services.redis import redis
 from .utils.connections import chat_connection, set_connected_chat
 from .utils.language import get_strings_dec
 from .utils.message import get_arg
-from .utils.notes import BUTTONS
+from .utils.notes import BUTTONS, disconnect_privatenotes
 from .utils.user_details import get_chat_dec
 
 connect_to_chat_cb = CallbackData('connect_to_chat_cb', 'chat_id')
@@ -58,6 +58,7 @@ async def connect_to_chat_direct(message, strings):
     chat = await db.chat_list.find_one({'chat_id': chat_id})
     chat_title = chat['chat_title'] if chat is not None else message.chat.title
     text = strings['pm_connected'].format(chat_name=chat_title)
+    await disconnect_privatenotes(user_id)
 
     try:
         await bot.send_message(user_id, text)
@@ -98,6 +99,7 @@ async def connect_chat_keyboard(message, strings, chat):
 async def connect_chat_keyboard_cb(message, callback_data=False, **kwargs):
     chat_id = int(callback_data['chat_id'])
     chat = await db.chat_list.find_one({'chat_id': chat_id})
+    await disconnect_privatenotes(message.from_user.id)
     await def_connect_chat(message.message, message.from_user.id, chat_id, chat['chat_title'], edit=True)
 
 
@@ -118,6 +120,7 @@ async def connect_to_chat_from_arg(message, chat, strings):
         await message.reply(strings['cant_find_chat_use_id'])
         return
 
+    await disconnect_privatenotes(user_id)
     await def_connect_chat(message, user_id, chat_id, chat['chat_title'])
 
 
