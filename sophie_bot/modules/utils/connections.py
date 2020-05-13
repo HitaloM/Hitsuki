@@ -104,10 +104,10 @@ def chat_connection(**dec_kwargs):
 
 
 async def set_connected_chat(user_id, chat_id):
+    key = f'connection_cache_{user_id}'
+    redis.delete(key)
     if not chat_id:
         await db.connections.update_one({'user_id': user_id}, {"$unset": {'chat_id': 1}}, upsert=True)
-        key = 'connection_cache_' + str(user_id)
-        redis.delete(key)
         return
 
     return await db.connections.update_one(

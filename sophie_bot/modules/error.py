@@ -36,7 +36,8 @@ def catch_redis_error(**dec_kwargs):
             # We can't use redis here
             # So we save data - 'message sent to' in a list variable
             message = args[0]
-            msg = message.callback_query.message if 'callback_query' in message else message.message
+            msg = (message['callback_query']['message'] if 'callback_query' in message else
+                   message['message'] if hasattr(message, 'message') else message)
             chat_id = msg.chat.id
             try:
                 return await func(*args, **kwargs)
@@ -51,6 +52,7 @@ def catch_redis_error(**dec_kwargs):
                     text = 'Sophie panic: Got redis error'
                     if await bot.send_message(OWNER_ID, text):
                         SENT.append(OWNER_ID)
+                log.error(RedisError, exc_info=True)
                 return False
         return wrapped_1
     return wrapped
@@ -58,13 +60,16 @@ def catch_redis_error(**dec_kwargs):
 
 @dp.errors_handler()
 @catch_redis_error()
-async def all_errors_handler(message, dp):
+async def all_errors_handler(message, error):
     msg = message.callback_query.message if 'callback_query' in message else message.message
     chat_id = msg.chat.id
+    reply_to = msg.message_id
     err_tlt = sys.exc_info()[0].__name__
     err_msg = str(sys.exc_info()[1])
 
-    if redis.get(chat_id) == err_tlt:
+    log.warn('Error caused update is: \n' + str(parse_update(message)))
+
+    if redis.get(chat_id) == str(error):
         # by err_tlt we assume that it is same error
         return
 
@@ -73,14 +78,28 @@ async def all_errors_handler(message, dp):
 
     text = "<b>Sorry, I encountered a error!</b>\n"
     text += f'<code>{html.escape(err_tlt)}: {html.escape(err_msg)}</code>'
-    redis.set(chat_id, err_tlt, ex=120)
-    await bot.send_message(chat_id, text, reply_to_message_id=msg.message_id)
+    redis.set(chat_id, str(error), ex=600)
+    await bot.send_message(chat_id, text, reply_to_message_id=reply_to)
 
-    # Protect Privacy
-    msg['chat'] = ['HIDDEN']
-    msg['from'] = ['HIDDEN']
-    msg['message_id'] = ['HIDDEN']
-    if hasattr(msg, 'reply_to_message'):
-        msg['reply_to_message'] = ['HIDDEN']
 
-    log.error('Error caused update is: \n' + str(msg))
+def parse_update(update):
+    # The parser to hide sensitive informations in the update (for logging)
+    update = (update['callback_query']['message'] if 'callback_query' in update else
+              update['message'] if hasattr(update, 'message') else update)
+
+    if 'chat' in update:
+        chat = update['chat']
+        chat['id'] = chat['title'] = chat['username'] = chat['first_name'] = chat['last_name'] = []
+    if user := update['from']:
+        user['id'] = user['first_name'] = user['last_name'] = user['username'] = []
+    if 'reply_to_message' in update:
+        reply_msg = update['reply_to_message']
+        reply_msg['chat']['id'] = reply_msg['chat']['title'] = reply_msg['chat']['first_name'] = \
+            reply_msg['chat']['last_name'] = reply_msg['chat']['username'] = []
+        reply_msg['from']['id'] = reply_msg['from']['first_name'] = reply_msg['from']['last_name'] = \
+            reply_msg['from']['username'] = []
+        reply_msg['message_id'] = []
+        reply_msg['new_chat_members'] = reply_msg['left_chat_member'] = []
+    update['new_chat_members'] = update['left_chat_member'] = []
+    update['message_id'] = []
+    return update

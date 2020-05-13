@@ -20,10 +20,12 @@
 import io
 import random
 import re
+from contextlib import suppress
 from datetime import datetime
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.utils.exceptions import MessageToDeleteNotFound
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
 from captcha.image import ImageCaptcha
@@ -355,13 +357,12 @@ async def welcome_security_handler(message, strings):
     if user_id == BOT_ID:
         return
 
-    if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
-        await message.reply(strings['not_admin_ws'])
+    db_item = await db.greetings.find_one({'chat_id': chat_id})
+    if not db_item or 'welcome_security' not in db_item:
         return
 
-    db_item = await db.greetings.find_one({'chat_id': chat_id})
-
-    if not db_item or 'welcome_security' not in db_item:
+    if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+        await message.reply(strings['not_admin_ws'])
         return
 
     user = await message.chat.get_member(user_id)
@@ -680,6 +681,9 @@ async def welcome_trigger(message, strings):
     chat_id = message.chat.id
     user_id = int(str([user.id for user in message.new_chat_members])[1:-1])
 
+    if user_id == BOT_ID:
+        return
+
     if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
         db_item = {}
 
@@ -699,7 +703,8 @@ async def welcome_trigger(message, strings):
     # Clean welcome
     if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False:
         if 'last_msg' in db_item['clean_welcome']:
-            await bot.delete_message(chat_id, db_item['clean_welcome']['last_msg'])
+            with suppress(MessageToDeleteNotFound):
+                await bot.delete_message(chat_id, db_item['clean_welcome']['last_msg'])
         await db.greetings.update_one({'_id': db_item['_id']}, {'$set': {'clean_welcome.last_msg': msg.id}},
                                       upsert=True)
 

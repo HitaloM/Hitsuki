@@ -59,6 +59,9 @@ async def add_user_to_db(user):
 
 
 async def get_user_by_id(user_id: int):
+    if not user_id <= 2147483647:
+        return None
+
     user = await db.user_list.find_one(
         {'user_id': user_id}
     )
@@ -230,7 +233,7 @@ async def get_user_and_text(message, send_text=True, allow_self=False):
                 text = args[2]
             user = await get_user_by_username(mention) if item.type != 'text_mention'\
                 else await get_user_by_id(int(item.user.id))
-            if not user:
+            if not user and send_text:
                 await message.answer("I can't get the user!")
                 return None, None
 
@@ -269,7 +272,7 @@ def get_user_and_text_dec(**dec_kwargs):
 
             user, text = await get_user_and_text(message, **dec_kwargs, send_text=False)
             if not user:
-                await message.reply('cant_find_the_user')
+                await message.reply("I can't get the user!")
                 return
             else:
                 return await func(*args, user, text, **kwargs)
@@ -286,9 +289,9 @@ def get_user_dec(**dec_kwargs):
             if hasattr(message, 'message'):
                 message = message.message
 
-            user, text = await get_user_and_text(message, **dec_kwargs)
+            user, text = await get_user_and_text(message, send_text=False, **dec_kwargs)
             if not user:
-                await message.reply('cant_find_the_user')
+                await message.reply("I can't get the user!")
                 return
             else:
                 return await func(*args, user, **kwargs)
@@ -310,11 +313,11 @@ def get_chat_dec(func):
         elif arg.startswith('@'):
             chat = await db.chat_list.find_one({'chat_nick': arg.lower()})
         else:
-            await message.reply('cant_find_chat_use_id')
+            await message.reply("Please give me valid chat ID/username")
             return
 
         if not chat:
-            await message.reply('cant_find_chat')
+            await message.reply("I can't find any chats on given information!")
             return
 
         return await func(*args, chat, **kwargs)

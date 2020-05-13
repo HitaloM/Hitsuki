@@ -40,7 +40,7 @@ for filename in os.listdir('sophie_bot/localization'):
     LANGUAGES[lang_code] = lang
 
 log.info("Languages loaded: {}".format(
-    [l['language_info']['babel'].display_name for l in LANGUAGES.values()]))
+    [language['language_info']['babel'].display_name for language in LANGUAGES.values()]))
 
 
 async def get_chat_lang(chat_id):

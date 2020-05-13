@@ -22,7 +22,6 @@ STRINGS:
     #/notes
     notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
     notelist_header: "<b>Notes in {chat_name}</b>:"
-    notes_in_private: "Click below button to get notes list."
     notelist_search: |
       <b>Pattern:</b> <code>{request}</code>
       <b>Matched notes:</b>
@@ -55,20 +54,9 @@ STRINGS:
     note_info_updated: "Last updated in: <code>{date}</code> by {user}\n"
     user_blocked: "Write /start in my PM!"
 
-    # /privatenotes
-    private_notes_false_args: "You have 2 options <code>Disable</code> and <code>Enable</code> !"
-    already_enabled: "Private notes are already enabled in %s"
-    current_state_info: "Currently private note is {state} in {chat} ! "
-    enabled_successfully: "Private notes are <b>Enabled</b> in %s successfully!"
-    disabled_successfully: "Private notes are <b>Disabled</b> in %s successfully!"
-    not_enabled: "Private notes are not enabled to disable."
-    enabled: 'Enabled'
-    disabled: 'Disabled'
-
     # Filter
     filters_title: 'Send a note'
     filters_setup_start: 'Please send a note name.'
-
 
     #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
     #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
@@ -119,7 +107,7 @@ STRINGS:
     # /delwarns
     purged_warns: "{admin} reset <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
     usr_no_wrn: "{user} doesn't have any warns to reset."
-    rst_wrn_sofi: 'Sophie has never had warns to reset.'
+    rst_wrn_sofi: 'Sophie never had warns to reset.'
     not_digit: Warnlimits should be digits!
 
     # /warnmode
@@ -213,11 +201,11 @@ STRINGS:
     add_admins: "I don't have rights to add admins, please make me admin with that right."
   feds:
     # decorators
-    need_fed_admin: "You are not a admin in <b>{name}</b> Federation"
-    need_fed_owner: "You are not a owner of <b>{name}</b> Federation"
+    need_fed_admin: "You are not an admin in <b>{name}</b> Federation"
+    need_fed_owner: "You are not an owner of <b>{name}</b> Federation"
     cant_get_user: "Sorry, I can't get that user, try using user ID"
 
-    # /newfed
+    # /fnew
     fed_name_long: "Federation name can't be longer than 60 symbols!"
     can_only_1_fed: "1 user can create only 1 Federation, please remove one."
     name_not_avaible: "Federation with name <code>{name}</code> already exits! Please use another name."
@@ -226,12 +214,12 @@ STRINGS:
       <b>Name:</b> {name}
       <b>ID:</b> <code>{id}</code>
       <b>Creator:</b> {creator}
-      Use <code>/joinfed {id}</code> to connect federation to chat
+      Use <code>/fjoin {id}</code> to connect federation to chat
 
-    # /joinfed
+    # /fjoin
     only_creators: "You should be a chat creator to be able to connect chat to federation."
     fed_id_invalid: "The given Federation ID is invalid! Please give me a Valid ID."
-    joined_fed_already: "This chat has already joined a Federation! Please use /leavefed to leave that federation"
+    joined_fed_already: "This chat has already joined a Federation! Please use /fleave to leave that federation"
     join_fed_success: "Great! Chat <b>{chat}</b> is now a part of <b>{fed}</b> Federation!"
     join_chat_fed_log: |
       <b>New chat joined to the Fed</b> #ChatJoined
@@ -527,6 +515,7 @@ STRINGS:
     filter_title_tmute: tMute the user
     filter_title_mute: Mute the user
     filter_title_tban: tBan the user
+    filter_title_kick: Kick user
   rules:
     # Set
     saved: Rules were saved in <b>%s</b>
