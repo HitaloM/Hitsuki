@@ -34,7 +34,7 @@ from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
-from .utils.message import convert_time, InvalidTimeUnit
+from .utils.message import convert_time, convert_timedelta, InvalidTimeUnit
 from .utils.restrictions import ban_user, mute_user
 from .utils.user_details import (
     get_user_and_text_dec, get_user_dec,
@@ -107,8 +107,9 @@ async def warn_func(message, chat, user, text, strings, filter_action=False):
             data = await db.warnmode.find_one({'chat_id': chat_id})
             if data is not None:
                 if data['mode'] == 'tmute':
+                    time = timedelta(days=data['time']['days'], seconds=data['time']['seconds'])
                     text = strings['max_warn_exceeded:tmute'] % \
-                        (member, format_timedelta(data['time'], locale=strings['language_info']['babel']))
+                        (member, format_timedelta(time, locale=strings['language_info']['babel']))
                     if filter_action:
                         return await bot.send_message(chat_id, text)
                     return await message.reply(text)
@@ -254,7 +255,7 @@ async def warnmode(message, chat, strings):
                     return await message.reply(strings['invalid_time'])
                 else:
                     new['mode'] = option
-                    new['time'] = time
+                    new['time'] = convert_timedelta(time)
                     await db.warnmode.update_one({'chat_id': chat_id},
                                                  {'$set': new}, upsert=True)
         elif arg[0] == acceptable_args[2]:
@@ -275,7 +276,8 @@ async def max_warn_func(chat_id, user_id):
         if mode['mode'] == 'ban':
             return await ban_user(chat_id, user_id)
         elif mode['mode'] == 'tmute':
-            return await mute_user(chat_id, user_id, mode['time'])
+            time = timedelta(days=mode['time']['days'], seconds=mode['time']['seconds'])
+            return await mute_user(chat_id, user_id, time)
         elif mode['mode'] == 'mute':
             return await mute_user(chat_id, user_id)
     else:  # Default

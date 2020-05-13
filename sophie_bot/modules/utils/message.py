@@ -66,6 +66,10 @@ def convert_time(time_val):
     return val
 
 
+def convert_timedelta(time):
+    return {'days': time.days, 'seconds': time.seconds}
+
+
 def need_args_dec(num=1):
     def wrapped(func):
         async def wrapped_1(*args, **kwargs):
