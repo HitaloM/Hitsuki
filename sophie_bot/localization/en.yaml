@@ -136,14 +136,6 @@ STRINGS:
     chat_id: "Group ID: <code>{id}</code>\n"
     user_id: "{user}'s ID: <code>{id}</code>\n"
     conn_chat_id: "Current connected chat ID: <code>{id}</code>"
-
-    promote_success: "{user} was successfully promoted in {chat_name}!"
-    promote_title: "\nWith custom role <code>{role}</code>!"
-    rank_to_loong: "Custom role text cannot be longer than 16 symbols."
-    promote_failed: "Promotion failed! Check if I have rights to."
-    demote_success: "{user} was successfully demoted in {chat_name}!"
-    demote_not_admin: "That user isn't admin."
-    demote_failed: "Demotion failed. Maybe I can't demote or the person is promoted by someone else"
     help_btn: "Click me for help!"
     help_txt: "Click the button below for help!"
     paste_success_extra: "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}"
@@ -154,6 +146,15 @@ STRINGS:
     delmsg_filter_title: 'Delete the message'
     send_text: Please send the reply word/sentence !
     replymsg_filter_title: 'Reply to message'
+
+  promotes:
+    promote_success: "{user} was successfully promoted in {chat_name}!"
+    promote_title: "\nWith custom role <code>{role}</code>!"
+    rank_to_loong: "Custom role text cannot be longer than 16 symbols."
+    promote_failed: "Promotion failed! Check if I have rights to."
+    demote_success: "{user} was successfully demoted in {chat_name}!"
+    demote_not_admin: "That user isn't admin."
+    demote_failed: "Demotion failed. Maybe I can't demote or the person is promoted by someone else"
 
   pm_menu:
     start_hi_group: 'Hey there! My name is Sophie'
