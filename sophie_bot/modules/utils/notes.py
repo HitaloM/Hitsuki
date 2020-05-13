@@ -284,7 +284,7 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
         pm = True if message.chat.type == 'private' else False
         text, markup = button_parser(chat_id, text, pm=pm)
         if not text and not file_id:
-            text = '#' + db_item['name']
+            text = '#' + db_item['names'][0]
 
         if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
             db_item['parse_mode'] = None
