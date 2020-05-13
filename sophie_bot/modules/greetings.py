@@ -25,7 +25,7 @@ from datetime import datetime
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.utils.exceptions import MessageToDeleteNotFound
+from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
 from captcha.image import ImageCaptcha
@@ -703,7 +703,7 @@ async def welcome_trigger(message, strings):
     # Clean welcome
     if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False:
         if 'last_msg' in db_item['clean_welcome']:
-            with suppress(MessageToDeleteNotFound):
+            with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
                 await bot.delete_message(chat_id, db_item['clean_welcome']['last_msg'])
         await db.greetings.update_one({'_id': db_item['_id']}, {'$set': {'clean_welcome.last_msg': msg.id}},
                                       upsert=True)
