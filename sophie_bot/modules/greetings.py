@@ -740,7 +740,8 @@ async def clean_service_trigger(message, strings):
         await bot.send_message(chat_id, strings['not_admin_wsr'])
         return
 
-    await message.delete()
+    with suppress(MessageToDeleteNotFound):
+        await message.delete()
 
 
 async def __export__(chat_id):

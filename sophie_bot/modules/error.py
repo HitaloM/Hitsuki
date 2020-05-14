@@ -63,7 +63,6 @@ def catch_redis_error(**dec_kwargs):
 async def all_errors_handler(message, error):
     msg = message.callback_query.message if 'callback_query' in message else message.message
     chat_id = msg.chat.id
-    reply_to = msg.message_id
     err_tlt = sys.exc_info()[0].__name__
     err_msg = str(sys.exc_info()[1])
 
@@ -82,7 +81,7 @@ async def all_errors_handler(message, error):
     text = "<b>Sorry, I encountered a error!</b>\n"
     text += f'<code>{html.escape(err_tlt)}: {html.escape(err_msg)}</code>'
     redis.set(chat_id, str(error), ex=600)
-    await bot.send_message(chat_id, text, reply_to_message_id=reply_to)
+    await bot.send_message(chat_id, text)
 
 
 def parse_update(update):
