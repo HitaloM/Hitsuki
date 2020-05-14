@@ -688,6 +688,9 @@ async def welcome_trigger(message, strings):
     if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
         db_item = {}
 
+    if 'welcome_disabled' in db_item and db_item['welcome_disabled'] is True:
+        return
+
     if 'welcome_security' in db_item and db_item['welcome_security']['enabled']:
         return
 
