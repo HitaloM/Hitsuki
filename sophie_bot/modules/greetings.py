@@ -154,11 +154,11 @@ async def set_welcome(message, chat, strings):
 async def reset_welcome(message, chat, strings):
     chat_id = chat['chat_id']
 
-    if await db.greetings.delete_one({'chat_id': chat_id}).deleted_count < 1:
-        await message.reply(chat_id, strings['not_found'])
+    if (await db.greetings.delete_one({'chat_id': chat_id})).deleted_count < 1:
+        await message.reply(strings['not_found'])
         return
 
-    await message.reply(strings['deleted'])
+    await message.reply(strings['deleted'].format(chat=chat['chat_title']))
 
 
 @register(cmds='cleanwelcome', user_admin=True)
