@@ -21,7 +21,6 @@ import html
 import sys
 
 from redis.exceptions import RedisError
-from aiogram.types.callback_query import CallbackQuery
 
 from sophie_bot import dp, bot, OWNER_ID
 from sophie_bot.services.redis import redis
@@ -88,9 +87,9 @@ async def all_errors_handler(message, error):
 
 def parse_update(update):
     # The parser to hide sensitive informations in the update (for logging)
-    update = (update['message'] if 'message' in update and update['message'] is not None
-              else update['callback_query']['message'] if 'callback_query' in update and
-              update['callback_query'] is not None else update)
+    update = (update['message'] if 'message' in update and update['message'] is not None else
+              update['callback_query']['message'] if 'callback_query' in update and update['callback_query']
+              is not None else update)
 
     if 'chat' in update:
         chat = update['chat']
