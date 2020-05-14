@@ -76,6 +76,9 @@ async def all_errors_handler(message, error):
     if err_tlt == 'BadRequest' and err_msg == 'Have no rights to send a message':
         return True
 
+    if err_tlt == 'FloodWaitError':
+        return True
+
     text = "<b>Sorry, I encountered a error!</b>\n"
     text += f'<code>{html.escape(err_tlt)}: {html.escape(err_msg)}</code>'
     redis.set(chat_id, str(error), ex=600)
