@@ -47,6 +47,9 @@ STRINGS:
     note_info_created: "Fue creado en: <code>{date}</code> por {user}\n"
     note_info_updated: "Última actualización en: <code>{date}</code> por {user}\n"
     user_blocked: "¡Escríbeme /start por mensaje privado!"
+    #Filter
+    filters_title: 'Enviar una nota'
+    filters_setup_start: 'Por favor, envía un nombre de nota.'
   #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
   #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
   filters:
@@ -115,13 +118,6 @@ STRINGS:
     chat_id: "ID del grupo: <code>{id}</code>\n"
     user_id: "{user}'s ID: <code>{id}</code>\n"
     conn_chat_id: "ID de chat conectado actualmente: <code>{id}</code>"
-    promote_success: "¡{user} fue promovido con éxito en {chat_name}!"
-    promote_title: "\nCon un rol personalizado <code>{role}</code>"
-    rank_to_loong: "El texto de rol personalizado no puede tener más de 16 símbolos."
-    promote_failed: "¡Ascenso fallido! Compruebe si tengo permisos."
-    demote_success: "¡{user} fue degradado con éxito en {chat_name}!"
-    demote_not_admin: "Ese usuario no es administrador."
-    demote_failed: "Demostración fallida. Tal vez no pueda demorar o la persona es promovida por otra persona"
     help_btn: "¡Haz clic para ayuda!"
     help_txt: "¡Haz clic en el botón de abajo para obtener ayuda!"
     paste_success_extra: "<b>¡Pegado con éxito!</b>\nURL acortada: {}\nURL original de Dogbin: {}"
@@ -131,6 +127,14 @@ STRINGS:
     delmsg_filter_title: 'Eliminar el mensaje'
     send_text: Por favor envíe la respuesta/frase !
     replymsg_filter_title: 'Responder al mensaje'
+  promotes:
+    promote_success: "¡{user} fue promovido con éxito en {chat_name}!"
+    promote_title: "\nCon un rol personalizado <code>{role}</code>!"
+    rank_to_loong: "El texto de rol personalizado no puede tener más de 16 símbolos."
+    promote_failed: "¡Promoción fallida! Comprueba si tengo permisos."
+    demote_success: "¡{user} fue degradado con éxito en {chat_name}!"
+    demote_not_admin: "Ese usuario no es administrador."
+    demote_failed: "La democión falló. Tal vez no puedo degradar o la persona es promovida por otra persona"
   pm_menu:
     start_hi_group: '¡Hola! Mi nombre es Sophie'
     start_hi: "¡Hola! ¡Mi nombre es Sophie, te ayudo a gestionar tu grupo de una manera eficiente!"

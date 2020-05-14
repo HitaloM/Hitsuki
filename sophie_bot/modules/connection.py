@@ -22,7 +22,7 @@ import re
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
-from aiogram.utils.exceptions import BotBlocked
+from aiogram.utils.exceptions import BotBlocked, CantInitiateConversation
 
 from sophie_bot import bot
 from sophie_bot.decorator import register
@@ -63,7 +63,7 @@ async def connect_to_chat_direct(message, strings):
     try:
         await bot.send_message(user_id, text)
         await def_connect_chat(message, user_id, chat_id, chat_title)
-    except BotBlocked:
+    except (BotBlocked, CantInitiateConversation):
         await message.reply(strings['connected_pm_to_me'].format(chat_name=chat_title))
         redis.set('sophie_connected_start_state:' + str(user_id), 1)
 

@@ -25,7 +25,7 @@ from datetime import datetime
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.utils.exceptions import MessageToDeleteNotFound
+from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
 from captcha.image import ImageCaptcha
@@ -154,11 +154,11 @@ async def set_welcome(message, chat, strings):
 async def reset_welcome(message, chat, strings):
     chat_id = chat['chat_id']
 
-    if await db.greetings.delete_one({'chat_id': chat_id}).deleted_count < 1:
-        await message.reply(chat_id, strings['not_found'])
+    if (await db.greetings.delete_one({'chat_id': chat_id})).deleted_count < 1:
+        await message.reply(strings['not_found'])
         return
 
-    await message.reply(strings['deleted'])
+    await message.reply(strings['deleted'].format(chat=chat['chat_title']))
 
 
 @register(cmds='cleanwelcome', user_admin=True)
@@ -656,10 +656,13 @@ async def welcome_security_passed(message, state, strings):
 
     db_item = await db.greetings.find_one({'chat_id': chat_id})
 
+    if 'message' in message:
+        message = message.message
+
     # Welcome
     if 'note' in db_item:
         text, kwargs = await t_unparse_note_item(
-            message.message.reply_to_message if 'message' in message else message.reply_to_message,
+            message,
             db_item['note'],
             chat_id
         )
@@ -687,6 +690,9 @@ async def welcome_trigger(message, strings):
     if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
         db_item = {}
 
+    if 'welcome_disabled' in db_item and db_item['welcome_disabled'] is True:
+        return
+
     if 'welcome_security' in db_item and db_item['welcome_security']['enabled']:
         return
 
@@ -703,7 +709,7 @@ async def welcome_trigger(message, strings):
     # Clean welcome
     if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False:
         if 'last_msg' in db_item['clean_welcome']:
-            with suppress(MessageToDeleteNotFound):
+            with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
                 await bot.delete_message(chat_id, db_item['clean_welcome']['last_msg'])
         await db.greetings.update_one({'_id': db_item['_id']}, {'$set': {'clean_welcome.last_msg': msg.id}},
                                       upsert=True)
@@ -740,7 +746,8 @@ async def clean_service_trigger(message, strings):
         await bot.send_message(chat_id, strings['not_admin_wsr'])
         return
 
-    await message.delete()
+    with suppress(MessageToDeleteNotFound):
+        await message.delete()
 
 
 async def __export__(chat_id):

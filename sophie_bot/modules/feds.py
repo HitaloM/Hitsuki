@@ -18,11 +18,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import csv
 import asyncio
 import io
 import re
 import ujson
 import uuid
+import os
+
+from pymongo import UpdateOne
 
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -840,50 +844,55 @@ async def importfbans_func(message, fed, strings, document=None):
     redis.set(key, 1)
     redis.expire(key, 7200)
 
-    msg = await message.reply(strings['started_importing'])
-    if document['file_size'] > 52428800:
-        await message.reply(strings['big_file'])
+    file_type = os.path.splitext(document['file_name'])[1][1:]
+
+    if file_type == 'json':
+        if document['file_size'] > 2097152:
+            await message.reply(strings['big_file_json'].format(num='2'))
+            return
+    elif file_type == 'csv':
+        if document['file_size'] > 52428800:
+            await message.reply(strings['big_file_csv'].format(num='50'))
+            return
+    else:
+        await message.reply(strings['wrong_file_ext'])
         return
-    data = await bot.download_file_by_id(document.file_id, io.BytesIO())
-    data = ujson.load(data)
 
-    for banned_user in data:
-        user = await get_user_by_id(int(banned_user))
-        new = {
-            'time': data[banned_user]['time'],
-            'by': data[banned_user]['by']
-        }
+    f = await bot.download_file_by_id(document.file_id, io.BytesIO())
+    msg = await message.reply(strings['importing_queue'])
 
-        try:
-            new['reason'] = data[banned_user]['reason']
-        except KeyError:
-            pass
+    if file_type == 'json':
+        data = ujson.load(f).items()
+    elif file_type == 'csv':
+        data = csv.DictReader(io.TextIOWrapper(f))
 
-        await db.feds.update_one({'_id': fed['_id']}, {'$set': {f'banned.{banned_user}': new}})
+    queue = []
+    for row in data:
+        new = {}
+        if file_type == 'json':
+            user_id = row[0]
+            data = row[1]
+        elif file_type == 'csv':
+            if 'user_id' in row:
+                user_id = row['user_id']
+            elif 'id' in row:
+                user_id = row['id']
+            else:
+                continue
 
-        # sub fed banning process
-        if len(sfeds_list := await get_all_subs_feds_r(fed['fed_id'], [])) > 1:
-            sfeds_list.remove(fed['fed_id'])
+        if 'reason' in row:
+            new['reason'] = row['reason']
 
-            for fed in sfeds_list:
-                fed = await db.feds.find_one({'fed_id': fed})
+        if 'by' in row:
+            new['by'] = row['by']
 
-                if 'banned' in fed and user['user_id'] in fed['banned']:
-                    continue
+        if 'time' in row:
+            new['time'] = row['time']
 
-                await asyncio.sleep(0.2)  # Do not slow down other updates
+        queue.append(UpdateOne({'_id': fed['_id']}, {'$set': {f'banned.{user_id}': new}}))
 
-                new = {
-                    'time': data[banned_user]['time'],
-                    'by': data[banned_user]['by']
-                }
-
-                try:
-                    new['reason'] = data[banned_user]['reason']
-                except KeyError:
-                    pass
-
-                await db.feds.update_one({'_id': fed['_id']}, {'$set': {f'banned.{banned_user}': new}})
+    await msg.edit_text(strings['importing_write'])
+    await db.feds.bulk_write(queue)
     await msg.edit_text(strings['import_done'])
 
 

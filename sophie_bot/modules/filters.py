@@ -68,6 +68,9 @@ async def update_handlers_cache(chat_id):
 async def check_msg(message):
     log.debug("Running check msg for filters function.")
     chat = await get_connected_chat(message)
+    if 'err_msg' in chat:
+        return
+
     chat_id = chat['chat_id']
     if not (filters := redis.lrange(f'filters_cache_{chat_id}', 0, -1)):
         filters = await update_handlers_cache(chat_id)

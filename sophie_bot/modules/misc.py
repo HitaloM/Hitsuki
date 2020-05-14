@@ -32,7 +32,7 @@ from .utils.language import get_strings_dec
 @get_strings_dec("RUNS", mas_name="RANDOM_STRINGS")
 @disableable_dec('runs')
 async def runs(message, strings):
-    await message.reply(random.choice(list(strings)))
+    await message.reply(random.choice(list(strings)), parse_mode='markdown')
 
 
 @register(cmds='cancel', state='*', allow_kwargs=True)

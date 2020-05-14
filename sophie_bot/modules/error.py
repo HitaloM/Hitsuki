@@ -35,10 +35,10 @@ def catch_redis_error(**dec_kwargs):
             global SENT
             # We can't use redis here
             # So we save data - 'message sent to' in a list variable
-            message = args[0]
-            msg = (message['callback_query']['message'] if 'callback_query' in message else
-                   message['message'] if hasattr(message, 'message') else message)
-            chat_id = msg.chat.id
+            update = args[0]
+            message = (update.message if update.message is not None else update.callback_query
+                       if update.callback_query is not None else update)
+            chat_id = message.chat.id if 'chat' in message else None
             try:
                 return await func(*args, **kwargs)
             except RedisError:
@@ -63,7 +63,6 @@ def catch_redis_error(**dec_kwargs):
 async def all_errors_handler(message, error):
     msg = message.callback_query.message if 'callback_query' in message else message.message
     chat_id = msg.chat.id
-    reply_to = msg.message_id
     err_tlt = sys.exc_info()[0].__name__
     err_msg = str(sys.exc_info()[1])
 
@@ -76,16 +75,20 @@ async def all_errors_handler(message, error):
     if err_tlt == 'BadRequest' and err_msg == 'Have no rights to send a message':
         return True
 
+    if err_tlt == 'FloodWaitError':
+        return True
+
     text = "<b>Sorry, I encountered a error!</b>\n"
     text += f'<code>{html.escape(err_tlt)}: {html.escape(err_msg)}</code>'
     redis.set(chat_id, str(error), ex=600)
-    await bot.send_message(chat_id, text, reply_to_message_id=reply_to)
+    await bot.send_message(chat_id, text)
 
 
 def parse_update(update):
     # The parser to hide sensitive informations in the update (for logging)
-    update = (update['callback_query']['message'] if 'callback_query' in update else
-              update['message'] if hasattr(update, 'message') else update)
+    update = (update['message'] if 'message' in update and update['message'] is not None else
+              update['callback_query']['message'] if 'callback_query' in update and update['callback_query']
+              is not None else update)
 
     if 'chat' in update:
         chat = update['chat']
@@ -100,6 +103,8 @@ def parse_update(update):
             reply_msg['from']['username'] = []
         reply_msg['message_id'] = []
         reply_msg['new_chat_members'] = reply_msg['left_chat_member'] = []
-    update['new_chat_members'] = update['left_chat_member'] = []
-    update['message_id'] = []
+    if ('new_chat_members', 'left_chat_member') in update:
+        update['new_chat_members'] = update['left_chat_member'] = []
+    if 'message_id' in update:
+        update['message_id'] = []
     return update
