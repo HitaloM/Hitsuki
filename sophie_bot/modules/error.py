@@ -21,6 +21,7 @@ import html
 import sys
 
 from redis.exceptions import RedisError
+from aiogram.types.callback_query import CallbackQuery
 
 from sophie_bot import dp, bot, OWNER_ID
 from sophie_bot.services.redis import redis
@@ -35,10 +36,10 @@ def catch_redis_error(**dec_kwargs):
             global SENT
             # We can't use redis here
             # So we save data - 'message sent to' in a list variable
-            message = args[0]
-            msg = (message['callback_query']['message'] if 'callback_query' in message else
-                   message['message'] if hasattr(message, 'message') else message)
-            chat_id = msg.chat.id
+            update = args[0]
+            message = (update.message if update.message is not None else update.callback_query
+                       if update.callback_query is not None else update)
+            chat_id = message.chat.id if 'chat' in message else None
             try:
                 return await func(*args, **kwargs)
             except RedisError:
@@ -87,8 +88,9 @@ async def all_errors_handler(message, error):
 
 def parse_update(update):
     # The parser to hide sensitive informations in the update (for logging)
-    update = (update['callback_query']['message'] if 'callback_query' in update else
-              update['message'] if hasattr(update, 'message') else update)
+    update = (update['message'] if 'message' in update and update['message'] is not None
+              else update['callback_query']['message'] if 'callback_query' in update and
+              update['callback_query'] is not None else update)
 
     if 'chat' in update:
         chat = update['chat']
@@ -103,6 +105,8 @@ def parse_update(update):
             reply_msg['from']['username'] = []
         reply_msg['message_id'] = []
         reply_msg['new_chat_members'] = reply_msg['left_chat_member'] = []
-    update['new_chat_members'] = update['left_chat_member'] = []
-    update['message_id'] = []
+    if ('new_chat_members', 'left_chat_member') in update:
+        update['new_chat_members'] = update['left_chat_member'] = []
+    if 'message_id' in update:
+        update['message_id'] = []
     return update
