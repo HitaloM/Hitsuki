@@ -588,7 +588,9 @@ async def fed_ban_user(message, fed, user, reason, strings):
             sfed = await db.feds.find_one({'fed_id': sfed})
             banned_chats = []
             for chat_id in sfed['chats']:
-                if user is None or chat_id not in user['user_id']:
+                if not user:
+                    continue
+                if chat_id == user['user_id']:
                     continue
 
                 await asyncio.sleep(0.2)  # Do not slow down other updates
