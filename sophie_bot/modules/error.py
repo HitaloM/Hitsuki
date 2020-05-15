@@ -36,7 +36,7 @@ def catch_redis_error(**dec_kwargs):
             # We can't use redis here
             # So we save data - 'message sent to' in a list variable
             update = args[0]
-            message = (update.message if update.message is not None else update.callback_query
+            message = (update.message if update.message is not None else update.callback_query.message
                        if update.callback_query is not None else update)
             chat_id = message.chat.id if 'chat' in message else None
             try:
@@ -61,7 +61,7 @@ def catch_redis_error(**dec_kwargs):
 @dp.errors_handler()
 @catch_redis_error()
 async def all_errors_handler(message, error):
-    message = (message.message if message.message is not None else message.callback_query
+    message = (message.message if message.message is not None else message.callback_query.message
                if message.callback_query is not None else message)
     chat_id = message.chat.id
     err_tlt = sys.exc_info()[0].__name__
