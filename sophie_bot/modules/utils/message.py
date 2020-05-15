@@ -32,7 +32,7 @@ class InvalidTimeUnit(Exception):
 
 
 def get_arg(message):
-    return message.get_args().split(' ')[0]
+    return message.get_args().split()[0]
 
 
 def get_args(message):

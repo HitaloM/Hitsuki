@@ -24,6 +24,7 @@ from datetime import datetime
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
 from babel.dates import format_date, format_time, format_datetime
+from telethon.errors import ButtonUrlInvalidError
 from telethon.tl.custom import Button
 
 import sophie_bot.modules.utils.tmarkdown as tmarkdown
@@ -239,10 +240,7 @@ async def get_parsed_note_list(message, split_args=1):
             note['file'] = msg_file
     else:
         text, note['parse_mode'] = get_parsed_msg(message)
-        to_split = ''.join([" " + q for q in get_args(message)[:split_args]])
-        if not to_split:
-            to_split = ' '
-        text = text.partition(message.get_command() + to_split)[2]
+        text = re.sub('(\\w+)', '', message.get_args(), split_args)
 
         # Check on attachment
         if msg_file := await get_msg_file(message):
@@ -307,8 +305,11 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
 async def send_note(send_id, text, **kwargs):
     if 'parse_mode' in kwargs and kwargs['parse_mode'] == 'md':
         kwargs['parse_mode'] = tmarkdown
-
-    return await tbot.send_message(send_id, text, **kwargs)
+    try:
+        return await tbot.send_message(send_id, text, **kwargs)
+    except (ButtonUrlInvalidError, ValueError):
+        text = 'I found this note is not valid! Please update it (read Wiki).'
+        return await tbot.send_message(send_id, text)
 
 
 def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
@@ -363,7 +364,7 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     if not aio and len(buttons) == 0:
         buttons = None
 
-    if not text or text == ' ':  # TODO: Sometimes we can return text == ' '
+    if not text or text == ' ' or text.isspace():  # TODO: Sometimes we can return text == ' '
         text = None
 
     return text, buttons

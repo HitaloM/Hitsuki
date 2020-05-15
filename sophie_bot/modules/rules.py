@@ -39,7 +39,7 @@ from .utils.notes import (
 async def set_rules(message, chat, strings):
     chat_id = chat['chat_id']
 
-    note = await get_parsed_note_list(message, split_args=0)
+    note = await get_parsed_note_list(message, split_args=-1)
     note['chat_id'] = chat_id
 
     if (await db.rules.replace_one({'chat_id': chat_id}, note, upsert=True)).modified_count > 0:
