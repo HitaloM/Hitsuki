@@ -61,8 +61,9 @@ def catch_redis_error(**dec_kwargs):
 @dp.errors_handler()
 @catch_redis_error()
 async def all_errors_handler(message, error):
-    msg = message.callback_query.message if 'callback_query' in message else message.message
-    chat_id = msg.chat.id
+    message = (message.message if message.message is not None else message.callback_query
+               if message.callback_query is not None else message)
+    chat_id = message.chat.id
     err_tlt = sys.exc_info()[0].__name__
     err_msg = str(sys.exc_info()[1])
 
