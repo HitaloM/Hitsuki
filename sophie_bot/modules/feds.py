@@ -864,6 +864,7 @@ async def importfbans_func(message, fed, strings, document=None):
     f = await bot.download_file_by_id(document.file_id, io.BytesIO())
     msg = await message.reply(strings['importing_queue'])
 
+    data = None
     if file_type == 'json':
         data = ujson.load(f).items()
     elif file_type == 'csv':
@@ -888,9 +889,13 @@ async def importfbans_func(message, fed, strings, document=None):
 
         if 'by' in row:
             new['by'] = row['by']
+        else:
+            new['by'] = message.from_user.id
 
         if 'time' in row:
             new['time'] = row['time']
+        else:
+            new['time'] = datetime.now()
 
         queue.append(UpdateOne({'_id': fed['_id']}, {'$set': {f'banned.{user_id}': new}}))
 
