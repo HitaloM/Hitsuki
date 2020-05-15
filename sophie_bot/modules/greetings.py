@@ -639,8 +639,9 @@ async def welcome_security_passed(message, state, strings):
         verify_msg_id = data['verify_msg_id']
 
     await unmute_user(chat_id, user_id)
-    await bot.delete_message(chat_id, msg_id)
-    await bot.delete_message(user_id, verify_msg_id)
+    with suppress(MessageToDeleteNotFound):
+        await bot.delete_message(chat_id, msg_id)
+        await bot.delete_message(user_id, verify_msg_id)
     await state.finish()
 
     scheduler.remove_job(f"wc_expire:{chat_id}:{user_id}")
