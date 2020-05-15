@@ -175,9 +175,9 @@ def is_fed_admin(func):
         user_id = message.from_user.id
 
         if not user_id == fed["creator"] and user_id != OWNER_ID:
-            if user_id not in fed['admins']:
+            if 'admins' not in fed or user_id not in fed['admins']:
                 text = (await get_string(message.chat.id, "feds", 'need_fed_admin')).format(name=fed['fed_name'])
-                await message.reply(text)
+                return await message.reply(text)
 
         return await func(*args, **kwargs)
 
@@ -457,8 +457,9 @@ async def fed_chat_list(message, fed, strings):
 async def fed_admins_list(message, fed, strings):
     text = strings['fadmins_header'].format(fed_name=fed['fed_name'])
     text += '* {} (<code>{}</code>)\n'.format(await get_user_link(fed['creator']), fed['creator'])
-    for user_id in fed['admins']:
-        text += '* {} (<code>{}</code>)\n'.format(await get_user_link(user_id), user_id)
+    if 'admins' in fed:
+        for user_id in fed['admins']:
+            text += '* {} (<code>{}</code>)\n'.format(await get_user_link(user_id), user_id)
     await message.reply(text)
 
 
