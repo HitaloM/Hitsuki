@@ -224,7 +224,7 @@ async def ban_user_cmd(message, chat, user, strings):
         if len(args := message.get_args().split(' ', 2)) > 1:
             try:
                 until_date, unit = convert_time(args[1])
-            except InvalidTimeUnit:
+            except (InvalidTimeUnit, TypeError):
                 await message.reply(strings['invalid_time'])
                 return
 
@@ -363,7 +363,7 @@ async def time_setup_start(message, strings):
 async def time_setup_finish(message, data, strings):
     try:
         time = convert_time(message.text)
-    except InvalidTimeUnit:
+    except (InvalidTimeUnit, TypeError):
         return await message.reply(strings['invalid_time'])
     else:
         return {'time': time}
