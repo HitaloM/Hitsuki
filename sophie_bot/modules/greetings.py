@@ -25,6 +25,7 @@ from datetime import datetime
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.utils.callback_data import CallbackData
 from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
@@ -43,6 +44,7 @@ from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 from .utils.message import need_args_dec, convert_time
 from .utils.notes import get_parsed_note_list, t_unparse_note_item, send_note
+from .utils.restrictions import ban_user
 from .utils.restrictions import mute_user, restrict_user, unmute_user, kick_user
 from .utils.user_details import is_user_admin, get_user_link, check_admin_rights
 
@@ -748,6 +750,136 @@ async def clean_service_trigger(message, strings):
 
     with suppress(MessageToDeleteNotFound):
         await message.delete()
+
+# WelcomeRestrict
+whitelist_cb = CallbackData('whitelist_cb', 'chat_id', 'user_id')
+ban_cb = CallbackData('ban_cb', 'chat_id', 'user_id')
+
+
+@register(cmds='welcomerestrict', is_admin=True, bot_can_restrict_members=True, bot_can_delete_messages=True)
+@chat_connection(admin=True)
+@get_strings_dec('greetings')
+async def welcomerestrict_cmd(message, chat, strings):
+    print(strings)
+    chat_id = chat['chat_id']
+    disable = ['no', 'off', '0', 'false', 'disable']
+    enable = ['yes', 'on', '1', 'true', 'enable']
+
+    database = await db.greetings.find_one({'chat_id': chat_id})
+    if len(args := message.get_args().split()) < 1:
+        if 'welcome_restrict' in database and database['welcome_restrict']['enabled'] is True:
+            state = strings['enabled']
+        else:
+            state = strings['disabled']
+        await message.reply(strings['restrict_status'].format(state=state, chat=chat['chat_title']))
+    else:
+        if args[0] in disable:
+            if 'welcome_restrict' not in database or database['welcome_restrict']['enabled'] is False:
+                return await message.reply(strings['already_disabled'])
+            await db.greetings.update_one(
+                {'chat_id': chat_id},
+                {'$unset': {'welcome_restrict': 1}}
+            )
+            await message.reply(strings['disabled_sucessfully'].format(chat=chat['chat_title']))
+        if args[0] in enable:
+            if 'welcome_restrict' in database and database['welcome_restrict']['enabled'] is True:
+                await message.reply(strings['already_enabled'])
+            else:
+                await db.greetings.update_one(
+                    {'chat_id': chat_id},
+                    {'$set': {'chat_id': chat_id, 'welcome_restrict': {'enabled': True}}}
+                )
+                await message.reply(strings['enabled_sucessfully'].format(chat=chat['chat_title']))
+
+
+@register(f='welcome')
+async def welcome_restrict(message):
+    chat_id = message.chat.id
+    user_id = message.new_chat_members[0].id
+    if not await is_user_admin(chat_id, user_id):
+        redis.set(f'new_chatmember:{chat_id}:{user_id}', 1, ex=86400)
+
+
+@register(f='any', only_groups=True)
+async def welcomerestrict_handler(message):
+    user_id = message.from_user.id
+    chat_id = message.chat.id
+
+    database = await db.greetings.find_one({'chat_id': chat_id})
+    if 'welcome_restrict' in database and database['welcome_restrict']['enabled'] is True:
+        if not await is_user_admin(chat_id, user_id):
+            if await new_joinee(user_id, chat_id):
+                if await check_forward(message):
+                    return await restrict_action(message, 'fwd')
+                if 'url' in [entities.type for entities in message.entities]:
+                    return await restrict_action(message, 'url')
+                if await check_media(message):
+                    return await restrict_action(message, 'media')
+
+
+@get_strings_dec('greetings')
+async def restrict_action(message, item, strings=None):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+
+    buttons = InlineKeyboardMarkup()
+    buttons.add(InlineKeyboardButton(strings['whitelist'],
+                                     callback_data=whitelist_cb.new(chat_id=chat_id, user_id=user_id)))
+    buttons.add(InlineKeyboardButton(strings['ban'],
+                                     callback_data=ban_cb.new(chat_id=chat_id, user_id=user_id)))
+    await message.delete()
+    await message.answer(strings[f'del_{item}'].format(user=await get_user_link(user_id)), reply_markup=buttons)
+
+
+@register(ban_cb.filter(), f='cb', user_can_restrict_members=True, bot_can_restrict_members=True, allow_kwargs=True)
+@get_strings_dec('greetings')
+async def ban_button_cb(messsage, strings, callback_data=None, **kwargs):
+    chat_id = callback_data['chat_id']
+    user_id = callback_data['user_id']
+    from_user = messsage.from_user.id
+
+    if await ban_user(chat_id, user_id):
+        await messsage.message.edit_text(strings['banned'].format(
+            user=await get_user_link(user_id),
+            by=await get_user_link(from_user)
+        ))
+
+
+@register(whitelist_cb.filter(), f='cb', allow_kwargs=True, is_admin=True)
+@get_strings_dec('greetings')
+async def whitlist_btn_cb(message, strings, callback_data=None, **kwargs):
+    chat_id = callback_data['chat_id']
+    user_id = callback_data['user_id']
+    from_user = message.from_user.id
+
+    redis.delete(f'new_chatmember:{chat_id}:{user_id}')
+    await message.message.edit_text(strings['whitelisted'].format(
+        user=await get_user_link(user_id),
+        by=await get_user_link(from_user)
+    ))
+
+
+async def new_joinee(user_id, chat_id):
+    if redis.exists(f'new_chatmember:{chat_id}:{user_id}'):
+        return True
+
+
+async def check_media(message):
+    media_types = ['audio', 'document', 'photo', 'sticker', 'video', 'video_note', 'voice']
+    for media in media_types:
+        if media not in message:
+            continue
+        return True
+    return False
+
+
+async def check_forward(message):
+    forwards = ['forward_from', 'forward_from_chat']
+    for forward in forwards:
+        if forward not in message:
+            continue
+        return True
+    return False
 
 
 async def __export__(chat_id):

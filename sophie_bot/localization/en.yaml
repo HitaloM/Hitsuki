@@ -642,6 +642,22 @@ STRINGS:
     # /resetwelcome
     deleted: Successfully resetted greetings in <b>{chat}</b>!
     not_found: There's nothing to reset!
+
+    # /welcomerestrict
+    del_url: Message containing URL from {user} was deleted!
+    del_fwd: Forwarded message from {user} was deleted!
+    del_media: Message containing media from {user} was deleted!
+
+    banned: '{by} banned {user}!'
+    whitelisted: '{by} whitelisted {user}!'
+    enabled_sucessfully: Chat security enabled successfully in <b>{chat}</b>
+    disabled_sucessfully: Chat security disabled successfully in <b>{chat}</b>
+    already_enabled: Chat security is already enabled!
+    already_disabled: Chat security is already disabled!
+    restrict_status: Welcome restrict is <b>{state}</b> in <b>{chat}</b>!
+
+    whitelist: '🏳️ Whitelist'
+    ban: '❌ Ban'
   locks:
     locks_header: "Here is the current lock settings in {chat_title} \n\n"
     no_lock_args: Give me some args to lock!

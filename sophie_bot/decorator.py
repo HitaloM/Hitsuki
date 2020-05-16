@@ -88,6 +88,8 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
 
     elif f == 'service':
         register_kwargs['content_types'] = types.ContentTypes.NEW_CHAT_MEMBERS
+    elif f == 'any':
+        register_kwargs['content_types'] = types.ContentTypes.ANY
 
     log.debug(f"Registred new handler: <d><n>{str(register_kwargs)}</></>")
 
