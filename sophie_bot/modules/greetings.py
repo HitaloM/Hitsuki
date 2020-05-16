@@ -136,7 +136,7 @@ async def set_welcome(message, chat, strings):
         await message.reply(strings['turnwelcome_disabled'] % chat['chat_title'])
         return
     else:
-        note = await get_parsed_note_list(message, split_args=0)
+        note = await get_parsed_note_list(message, split_args=-1)
 
         if (await db.greetings.update_one(
                 {'chat_id': chat_id},
@@ -324,7 +324,7 @@ async def set_security_note(message, chat, strings):
         await send_note(chat_id, text, **kwargs)
         return
 
-    note = await get_parsed_note_list(message, split_args=0)
+    note = await get_parsed_note_list(message, split_args=-1)
 
     if (await db.greetings.update_one({'chat_id': chat_id}, {'$set': {'chat_id': chat_id, 'security_note': note}},
                                       upsert=True)).modified_count > 0:
@@ -643,8 +643,9 @@ async def welcome_security_passed(message, state, strings):
         verify_msg_id = data['verify_msg_id']
 
     await unmute_user(chat_id, user_id)
-    await bot.delete_message(chat_id, msg_id)
-    await bot.delete_message(user_id, verify_msg_id)
+    with suppress(MessageToDeleteNotFound):
+        await bot.delete_message(chat_id, msg_id)
+        await bot.delete_message(user_id, verify_msg_id)
     await state.finish()
 
     scheduler.remove_job(f"wc_expire:{chat_id}:{user_id}")

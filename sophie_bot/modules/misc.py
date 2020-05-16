@@ -19,6 +19,7 @@
 
 import random
 
+from aiogram.utils.exceptions import BadRequest
 from aiogram.utils.exceptions import MessageNotModified
 from contextlib import suppress
 
@@ -48,7 +49,8 @@ async def delmsg_filter_handle(message, chat, data):
 
 
 async def replymsg_filter_handler(message, chat, data):
-    await message.reply(data['reply_text'])
+    with suppress(BadRequest):
+        await message.reply(data['reply_text'])
 
 
 @get_strings_dec('misc')

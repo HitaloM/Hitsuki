@@ -45,7 +45,7 @@ from .utils.connections import get_connected_chat, chat_connection
 from .utils.language import get_strings_dec, get_strings, get_string
 from .utils.message import need_args_dec
 from .utils.restrictions import ban_user, unban_user
-from .utils.user_details import is_chat_creator, get_user_link, get_user_and_text, get_user_by_id
+from .utils.user_details import is_chat_creator, get_user_link, get_user_and_text
 
 
 class ImportFbansFileWait(StatesGroup):
@@ -96,9 +96,10 @@ def get_fed_user_text(func):
         strings = await get_strings(real_chat_id, 'feds')
 
         # Check non exits user
-        if not user and len(args) > 1 and (args := message.get_args().split(None, 1))[0].isdigit():
-            user = {'user_id': args[0]}
-            text = args[1] if len(args) > 1 else None
+        data = message.get_args().split(' ')
+        if not user and len(data) > 0 and data[0].isdigit() and int(data[0]) <= 2147483647:
+            user = {'user_id': int(data[0])}
+            text = data[1] if len(data) > 1 else None
         elif not user:
             await message.reply(strings['cant_get_user'])
             # Passing 'None' user will throw err
@@ -174,9 +175,9 @@ def is_fed_admin(func):
         user_id = message.from_user.id
 
         if not user_id == fed["creator"] and user_id != OWNER_ID:
-            if user_id not in fed['admins']:
+            if 'admins' not in fed or user_id not in fed['admins']:
                 text = (await get_string(message.chat.id, "feds", 'need_fed_admin')).format(name=fed['fed_name'])
-                await message.reply(text)
+                return await message.reply(text)
 
         return await func(*args, **kwargs)
 
@@ -456,8 +457,9 @@ async def fed_chat_list(message, fed, strings):
 async def fed_admins_list(message, fed, strings):
     text = strings['fadmins_header'].format(fed_name=fed['fed_name'])
     text += '* {} (<code>{}</code>)\n'.format(await get_user_link(fed['creator']), fed['creator'])
-    for user_id in fed['admins']:
-        text += '* {} (<code>{}</code>)\n'.format(await get_user_link(user_id), user_id)
+    if 'admins' in fed:
+        for user_id in fed['admins']:
+            text += '* {} (<code>{}</code>)\n'.format(await get_user_link(user_id), user_id)
     await message.reply(text)
 
 
@@ -542,10 +544,11 @@ async def fed_ban_user(message, fed, user, reason, strings):
 
     banned_chats = []
     for chat_id in fed['chats']:
-        if chat_id in user['chats']:
-            await asyncio.sleep(0.2)  # Do not slow down other updates
-            if await ban_user(chat_id, user_id):
-                banned_chats.append(chat_id)
+        if user is not None:
+            if chat_id in user['chats']:
+                await asyncio.sleep(0.2)  # Do not slow down other updates
+                if await ban_user(chat_id, user_id):
+                    banned_chats.append(chat_id)
 
     new = {
         'banned_chats': banned_chats,
@@ -564,8 +567,8 @@ async def fed_ban_user(message, fed, user, reason, strings):
     channel_text = strings['fban_log_fed_log'].format(
         fed_name=fed['fed_name'],
         fed_id=fed['fed_id'],
-        user=await get_user_link(user['user_id']),
-        user_id=user['user_id'],
+        user=await get_user_link(user_id),
+        user_id=user_id,
         chat_count=len(banned_chats),
         all_chats=len(fed['chats'])
     )
@@ -585,7 +588,9 @@ async def fed_ban_user(message, fed, user, reason, strings):
             sfed = await db.feds.find_one({'fed_id': sfed})
             banned_chats = []
             for chat_id in sfed['chats']:
-                if chat_id not in user['chats']:
+                if not user:
+                    continue
+                if chat_id == user['user_id']:
                     continue
 
                 await asyncio.sleep(0.2)  # Do not slow down other updates
@@ -861,6 +866,7 @@ async def importfbans_func(message, fed, strings, document=None):
     f = await bot.download_file_by_id(document.file_id, io.BytesIO())
     msg = await message.reply(strings['importing_queue'])
 
+    data = None
     if file_type == 'json':
         data = ujson.load(f).items()
     elif file_type == 'csv':
@@ -885,9 +891,13 @@ async def importfbans_func(message, fed, strings, document=None):
 
         if 'by' in row:
             new['by'] = row['by']
+        else:
+            new['by'] = message.from_user.id
 
         if 'time' in row:
             new['time'] = row['time']
+        else:
+            new['time'] = datetime.now()
 
         queue.append(UpdateOne({'_id': fed['_id']}, {'$set': {f'banned.{user_id}': new}}))
 
