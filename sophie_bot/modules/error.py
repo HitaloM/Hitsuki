@@ -76,7 +76,7 @@ async def all_errors_handler(message, error):
     if err_tlt == 'BadRequest' and err_msg == 'Have no rights to send a message':
         return True
 
-    if err_tlt == 'FloodWaitError':
+    if err_tlt in ('FloodWaitError', 'RetryAfter', 'SlowModeWaitError'):
         return True
 
     text = "<b>Sorry, I encountered a error!</b>\n"
