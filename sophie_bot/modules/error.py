@@ -67,7 +67,7 @@ async def all_errors_handler(message, error):
     err_tlt = sys.exc_info()[0].__name__
     err_msg = str(sys.exc_info()[1])
 
-    log.warn('Error caused update is: \n' + str(parse_update(message)))
+    log.warn('Error caused update is: \n' + html.escape(str(parse_update(message))))
 
     if redis.get(chat_id) == str(error):
         # by err_tlt we assume that it is same error
