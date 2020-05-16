@@ -164,7 +164,7 @@ async def get_note_cmd(message, chat, strings):
     await get_note(message, db_item=note, rpl_id=rpl_id, noformat=noformat)
 
 
-@register(regexp=r'^#(\w+)', allow_kwargs=True)
+@register(regexp=r'^#(\w+[-]\w+|\w+)', allow_kwargs=True)
 @disableable_dec('get')
 @chat_connection()
 @get_strings_dec('notes')

@@ -240,7 +240,7 @@ async def get_parsed_note_list(message, split_args=1):
             note['file'] = msg_file
     else:
         text, note['parse_mode'] = get_parsed_msg(message)
-        text = re.sub('(\\w+)', '', message.get_args(), split_args)
+        text = re.sub(r'(\w+[-]\w+|\w+)', '', message.get_args(), split_args)
 
         # Check on attachment
         if msg_file := await get_msg_file(message):
