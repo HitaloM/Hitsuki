@@ -31,7 +31,7 @@ from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 from .utils.message import InvalidTimeUnit, get_cmd, convert_time
 from .utils.restrictions import kick_user, mute_user, unmute_user, ban_user, unban_user
-from .utils.user_details import get_user_dec, get_user_link, is_user_admin
+from .utils.user_details import get_user_dec, get_user_link, is_user_admin, get_user_and_text_dec
 
 
 @register(cmds=['kick', 'skick'], bot_can_restrict_members=True, user_can_restrict_members=True)
@@ -88,9 +88,9 @@ async def kick_user_cmd(message, chat, user, strings):
 
 @register(cmds=['mute', 'smute', 'tmute', 'stmute'], bot_can_restrict_members=True, user_can_restrict_members=True)
 @chat_connection(admin=True, only_groups=True)
-@get_user_dec()
+@get_user_and_text_dec()
 @get_strings_dec('restrictions')
-async def mute_user_cmd(message, chat, user, strings):
+async def mute_user_cmd(message, chat, user, args, strings):
     chat_id = chat['chat_id']
     user_id = user['user_id']
 
@@ -117,10 +117,10 @@ async def mute_user_cmd(message, chat, user, strings):
     # Check if temprotary
     until_date = None
     if curr_cmd == 'tmute' or curr_cmd == 'stmute':
-        if len(args := message.get_args().split()) > 0:
+        if len(args := args.split()) > 0:
             try:
                 until_date = convert_time(args[0])
-            except InvalidTimeUnit:
+            except (InvalidTimeUnit, TypeError):
                 await message.reply(strings['invalid_time'])
                 return
 
@@ -134,7 +134,7 @@ async def mute_user_cmd(message, chat, user, strings):
             return
     else:
         # Add reason
-        if len(args := message.get_args().split()) > 0:
+        if len(args := args.split()) > 0:
             text += strings['reason'] % args[0]
 
     # Check if silent
