@@ -23,7 +23,7 @@ from datetime import datetime
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.utils.exceptions import MessageNotModified
+from aiogram.utils.exceptions import MessageNotModified, MessageCantBeDeleted
 from babel.dates import format_datetime
 from contextlib import suppress
 from pymongo import ReplaceOne
@@ -363,7 +363,8 @@ async def note_btn(event, strings, regexp=None, **kwargs):
         await event.answer(strings['no_note'])
         return
 
-    await event.message.delete()
+    with suppress(MessageCantBeDeleted):
+        await event.message.delete()
     await get_note(event.message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None, event=event)
 
 
