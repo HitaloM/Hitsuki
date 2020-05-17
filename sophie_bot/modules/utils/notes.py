@@ -24,7 +24,7 @@ from datetime import datetime
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
 from babel.dates import format_date, format_time, format_datetime
-from telethon.errors import ButtonUrlInvalidError
+from telethon.errors import ButtonUrlInvalidError, MessageEmptyError
 from telethon.tl.custom import Button
 
 import sophie_bot.modules.utils.tmarkdown as tmarkdown
@@ -307,8 +307,8 @@ async def send_note(send_id, text, **kwargs):
         kwargs['parse_mode'] = tmarkdown
     try:
         return await tbot.send_message(send_id, text, **kwargs)
-    except (ButtonUrlInvalidError, ValueError):
-        text = 'I found this note is not valid! Please update it (read Wiki).'
+    except (ButtonUrlInvalidError, MessageEmptyError, ValueError):
+        text = 'I found this note invalid! Please update it (read Wiki).'
         return await tbot.send_message(send_id, text)
 
 
