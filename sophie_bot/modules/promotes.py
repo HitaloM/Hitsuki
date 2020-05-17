@@ -37,6 +37,9 @@ async def promote(message, chat, user, strings):
         chat_name=chat['chat_title']
     )
 
+    if user['user_id'] == BOT_ID:
+        return
+
     title = None
 
     if len(arg := get_args(message)) > 1:
