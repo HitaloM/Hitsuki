@@ -117,9 +117,9 @@ async def mute_user_cmd(message, chat, user, strings):
     # Check if temprotary
     until_date = None
     if curr_cmd == 'tmute' or curr_cmd == 'stmute':
-        if len(args := message.get_args().split(' ', 2)) > 1:
+        if len(args := message.get_args().split()) > 0:
             try:
-                until_date = convert_time(args[1])
+                until_date = convert_time(args[0])
             except InvalidTimeUnit:
                 await message.reply(strings['invalid_time'])
                 return
@@ -127,15 +127,15 @@ async def mute_user_cmd(message, chat, user, strings):
             text += strings['on_time'] % format_timedelta(until_date, locale=strings['language_info']['babel'])
 
             # Add reason
-            if len(args) > 2:
-                text += strings['reason'] % args[2]
+            if len(args) > 1:
+                text += strings['reason'] % args[1]
         else:
             await message.reply(strings['enter_time'])
             return
     else:
         # Add reason
-        if len(args := message.get_args().split(' ', 1)) > 1:
-            text += strings['reason'] % args[1]
+        if len(args := message.get_args().split()) > 0:
+            text += strings['reason'] % args[0]
 
     # Check if silent
     silent = False
