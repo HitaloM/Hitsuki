@@ -48,7 +48,7 @@ def get_cmd(message):
 
 
 def convert_time(time_val):
-    if not any(time_val.endswith(unit) for unit in ('m', 'h', 'd')):
+    if not any(time_val.endswith(unit) for unit in ('m', 'h', 'd')) or not time_val.startswith(int()):
         raise TypeError
 
     time_num = int(time_val[:-1])
