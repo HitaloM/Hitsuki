@@ -339,8 +339,11 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
             elif cb.endswith('start'):
                 btn = start_btn
             elif cb.startswith('url'):
+                # Workaround to make URLs case-sensitive TODO: make better
+                argument = raw_button[3][1:].replace('`', '') if raw_button[3] else ''
                 btn = Button.url(name, argument)
         elif action == 'url':
+            argument = raw_button[3][1:].replace('`', '') if raw_button[3] else ''
             if argument[0] == '/' and argument[1] == '/':
                 argument = argument[2:]
             btn = InlineKeyboardButton(name, url=argument) if aio else Button.url(name, argument)
