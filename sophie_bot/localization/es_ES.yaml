@@ -543,6 +543,9 @@ STRINGS:
     not_admin_wm: No puedo restringir gente aquí, ¡así que no usaré silencio de bienvenida!
     not_admin_ws: No puedo restringir gente aquí, así que no usaré seguridad de bienvenida!
     not_admin_wsr: No puedo borrar mensajes aquí, así que no borraré los mensajes del servicio!
+    #/resetwelcome
+    deleted: '¡Saludos reiniciados con éxito en <b>{chat}</b>!'
+    not_found: '¡No hay nada que resetear!'
   locks:
     locks_header: "Aquí está la configuración actual de bloqueo en {chat_title} \n\n"
     no_lock_args: '¡Dame algunos argumentos para bloquear!'
