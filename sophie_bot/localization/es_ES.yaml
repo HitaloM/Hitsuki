@@ -167,12 +167,12 @@ STRINGS:
     enable_all_btn_no: "¡No!"
     enable_all_done: "¡Todos los comandos (<code>{num}</code>) fueron habilitados en el {chat_name}!"
   bot_rights:
-    change_info: "No tengo derechos para cambiar la información del grupo, por favor hazme administradora con ese permiso."
+    change_info: "No tengo derechos para cambiar la información del grupo, por favor hazme administrador con ese permiso."
     edit_messages: "¡No tengo permisos para editar los mensajes del canal!"
     delete_messages: "No tengo permisos para borrar mensajes aquí."
-    ban_user: "No tengo derechos para banear a los usuarios, por favor hazme administradora con ese permiso."
-    pin_messages: "No tengo permisos para anclar mensajes, por favor hazme administradora con ese permiso."
-    add_admins: "No tengo permisos para añadir administradores, por favor hazme administradora con ese permiso."
+    ban_user: "No tengo derechos para banear a los usuarios, por favor hazme administrador con ese permiso."
+    pin_messages: "No tengo permisos para anclar mensajes, por favor hazme administrador con ese permiso."
+    add_admins: "No tengo permisos para añadir administradores, por favor hazme administrador con ese permiso."
   feds:
     #decorators
     need_fed_admin: "No eres un administrador en <b>{name}</b> Federación"
