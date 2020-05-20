@@ -181,7 +181,7 @@ STRINGS:
     #/fnew
     fed_name_long: "¡El nombre de la Federación no puede tener más de 60 símbolos!"
     can_only_1_fed: "1 usuario puede crear sólo 1 Federación, por favor elimine uno."
-    name_not_avaible: "¡La Federación con el nombre <code>{name}</code> ya se ha salido! Por favor, usa otro nombre."
+    name_not_avaible: "¡La Federación con el nombre <code>{name}</code> ya existe! Por favor, usa otro nombre."
     created_fed: |
       Felicidades, ha creado con éxito la Federación.
       <b>Nombre:</b> {name}
@@ -354,7 +354,7 @@ STRINGS:
     cant_find_chat: "No puedo encontrar este chat."
     cant_find_chat_use_id: "No puedo encontrar este chat. Usa el ID del chat."
     bad_arg_bool: "Elección incorrecta: solo soportado <code>en</code>/<code>off</code> <code>habilitar</code>/<code>desactivar</code>"
-    enabled: activado
+    enabled: habilitado
     disabled: deshabilitado
     chat_users_connections_info: "Las conexiones para usuarios normales actualmente es <b>{status}</b> para <b>{chat_name}</b>"
     chat_users_connections_cng: "Conexiones para usuarios normales cambiadas a <b>{status}</b> para <b>{chat_name}</b>"
