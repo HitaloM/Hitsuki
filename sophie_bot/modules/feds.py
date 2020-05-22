@@ -99,7 +99,7 @@ def get_fed_user_text(func):
         data = message.get_args().split(' ')
         if not user and len(data) > 0 and data[0].isdigit() and int(data[0]) <= 2147483647:
             user = {'user_id': int(data[0])}
-            text = data[1] if len(data) > 1 else None
+            text = ' '.join(data[1]) if len(data) > 1 else None
         elif not user:
             await message.reply(strings['cant_get_user'])
             # Passing 'None' user will throw err
