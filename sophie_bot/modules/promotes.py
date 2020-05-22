@@ -42,8 +42,8 @@ async def promote(message, chat, user, strings):
 
     title = None
 
-    if len(arg := get_args(message)) > 1:
-        arg = arg[1]
+    if len(arg := get_args(message)) > 0:
+        arg = arg[0]
         if len(arg) > 16:
             await message.reply(strings['rank_to_loong'])
             return
