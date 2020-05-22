@@ -361,8 +361,13 @@ STRINGS:
       To cancel this process ; use /cancel
     rpl_to_file: Please reply to a file!
     importfbans_locked: Importing fbans is locked for %s in this federation.
-    big_file: Only supports import files less 50 Megabytes!
-    started_importing: Started importing fbans!
+    big_file_csv: Only supports import csv files less {num} Megabytes!
+    big_file_json: |
+      Currently json files is limited to {num} Megabytes!
+      Use a csv format if you want to import bigger files.
+    wrong_file_ext: "Wrong file format! Currently support are: json, csv"
+    importing_queue: Downloading a file and making a queue...
+    importing_write: Writing changes to the database...
     import_done: Importing fbans finished!
 
 
@@ -498,7 +503,7 @@ STRINGS:
 
     invalid_time: Invalid time!
     enter_time: Please add time!
-    on_time: "\nOn <code>%s</code>"
+    on_time: "\nFor <code>%s</code>"
     reason: "\nReason: <code>%s</code>"
     purge: "\nIn 5 seconds messages will be purged!"
 

@@ -28,6 +28,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
+from apscheduler.jobstores.base import JobLookupError
 from captcha.image import ImageCaptcha
 from telethon.tl.custom import Button
 
@@ -134,7 +135,7 @@ async def set_welcome(message, chat, strings):
         await message.reply(strings['turnwelcome_disabled'] % chat['chat_title'])
         return
     else:
-        note = await get_parsed_note_list(message, split_args=0)
+        note = await get_parsed_note_list(message, split_args=-1)
 
         if (await db.greetings.update_one(
                 {'chat_id': chat_id},
@@ -322,7 +323,7 @@ async def set_security_note(message, chat, strings):
         await send_note(chat_id, text, **kwargs)
         return
 
-    note = await get_parsed_note_list(message, split_args=0)
+    note = await get_parsed_note_list(message, split_args=-1)
 
     if (await db.greetings.update_one({'chat_id': chat_id}, {'$set': {'chat_id': chat_id, 'security_note': note}},
                                       upsert=True)).modified_count > 0:
@@ -639,11 +640,13 @@ async def welcome_security_passed(message, state, strings):
         verify_msg_id = data['verify_msg_id']
 
     await unmute_user(chat_id, user_id)
-    await bot.delete_message(chat_id, msg_id)
-    await bot.delete_message(user_id, verify_msg_id)
+    with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
+        await bot.delete_message(chat_id, msg_id)
+        await bot.delete_message(user_id, verify_msg_id)
     await state.finish()
 
-    scheduler.remove_job(f"wc_expire:{chat_id}:{user_id}")
+    with suppress(JobLookupError):
+        scheduler.remove_job(f"wc_expire:{chat_id}:{user_id}")
 
     title = (await db.chat_list.find_one({'chat_id': chat_id}))['chat_title']
 
@@ -687,6 +690,9 @@ async def welcome_trigger(message, strings):
 
     if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
         db_item = {}
+
+    if 'welcome_disabled' in db_item and db_item['welcome_disabled'] is True:
+        return
 
     if 'welcome_security' in db_item and db_item['welcome_security']['enabled']:
         return
@@ -740,7 +746,8 @@ async def clean_service_trigger(message, strings):
         await bot.send_message(chat_id, strings['not_admin_wsr'])
         return
 
-    await message.delete()
+    with suppress(MessageToDeleteNotFound):
+        await message.delete()
 
 
 async def __export__(chat_id):

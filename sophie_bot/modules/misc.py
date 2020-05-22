@@ -19,6 +19,7 @@
 
 import random
 
+from aiogram.utils.exceptions import BadRequest
 from aiogram.utils.exceptions import MessageNotModified
 from contextlib import suppress
 
@@ -32,7 +33,7 @@ from .utils.language import get_strings_dec
 @get_strings_dec("RUNS", mas_name="RANDOM_STRINGS")
 @disableable_dec('runs')
 async def runs(message, strings):
-    await message.reply(random.choice(list(strings)))
+    await message.reply(random.choice(list(strings)), parse_mode='markdown')
 
 
 @register(cmds='cancel', state='*', allow_kwargs=True)
@@ -48,7 +49,8 @@ async def delmsg_filter_handle(message, chat, data):
 
 
 async def replymsg_filter_handler(message, chat, data):
-    await message.reply(data['reply_text'])
+    with suppress(BadRequest):
+        await message.reply(data['reply_text'])
 
 
 @get_strings_dec('misc')

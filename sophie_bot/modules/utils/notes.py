@@ -24,6 +24,7 @@ from datetime import datetime
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
 from babel.dates import format_date, format_time, format_datetime
+from telethon.errors import ButtonUrlInvalidError, MessageEmptyError,MediaEmptyError
 from telethon.tl.custom import Button
 
 import sophie_bot.modules.utils.tmarkdown as tmarkdown
@@ -239,10 +240,7 @@ async def get_parsed_note_list(message, split_args=1):
             note['file'] = msg_file
     else:
         text, note['parse_mode'] = get_parsed_msg(message)
-        to_split = ''.join([" " + q for q in get_args(message)[:split_args]])
-        if not to_split:
-            to_split = ' '
-        text = text.partition(message.get_command() + to_split)[2]
+        text = re.sub(r'(\w+[-]\w+|\w+)', '', message.get_args(), split_args)
 
         # Check on attachment
         if msg_file := await get_msg_file(message):
@@ -307,8 +305,11 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
 async def send_note(send_id, text, **kwargs):
     if 'parse_mode' in kwargs and kwargs['parse_mode'] == 'md':
         kwargs['parse_mode'] = tmarkdown
-
-    return await tbot.send_message(send_id, text, **kwargs)
+    try:
+        return await tbot.send_message(send_id, text, **kwargs)
+    except (ButtonUrlInvalidError, MessageEmptyError, MediaEmptyError, ValueError):
+        text = 'I found this note invalid! Please update it (read Wiki).'
+        return await tbot.send_message(send_id, text)
 
 
 def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
@@ -338,8 +339,11 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
             elif cb.endswith('start'):
                 btn = start_btn
             elif cb.startswith('url'):
+                # Workaround to make URLs case-sensitive TODO: make better
+                argument = raw_button[3][1:].replace('`', '') if raw_button[3] else ''
                 btn = Button.url(name, argument)
         elif action == 'url':
+            argument = raw_button[3][1:].replace('`', '') if raw_button[3] else ''
             if argument[0] == '/' and argument[1] == '/':
                 argument = argument[2:]
             btn = InlineKeyboardButton(name, url=argument) if aio else Button.url(name, argument)
@@ -363,7 +367,7 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     if not aio and len(buttons) == 0:
         buttons = None
 
-    if not text or text == ' ':  # TODO: Sometimes we can return text == ' '
+    if not text or text == ' ' or text.isspace():  # TODO: Sometimes we can return text == ' '
         text = None
 
     return text, buttons
@@ -382,10 +386,11 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
     first_name = html.escape(event.from_user.first_name)
     last_name = html.escape(event.from_user.last_name or "")
     user_id = ([user.id for user in event.new_chat_members][0]
-               if event.new_chat_members != [] else event.from_user.id)
+               if 'new_chat_members' in event and event.new_chat_members != [] else event.from_user.id)
     mention = await get_user_link(user_id, md=md)
     username = ('@' + str(event.new_chat_members[0].username)
-                if event.new_chat_members != [] and event.new_chat_members[0].username is not None
+                if 'new_chat_members' in event and event.new_chat_members != [] and event.new_chat_members[0].username
+                   is not None
                 else '@' + event.from_user.username
                 if event.from_user.username is not None else mention)
     chat_id = message.chat.id

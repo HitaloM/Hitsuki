@@ -19,6 +19,7 @@
 
 import pickle
 
+from aiogram.utils.exceptions import BadRequest
 from telethon.tl.functions.users import GetFullUserRequest
 
 from sophie_bot import OPERATORS, bot
@@ -159,11 +160,15 @@ async def is_user_admin(chat_id, user_id):
     if user_id in OPERATORS:
         return True
 
-    admins = await get_admins_rights(chat_id)
-    if user_id in admins:
-        return True
-    else:
+    try:
+        admins = await get_admins_rights(chat_id)
+    except BadRequest:
         return False
+    else:
+        if user_id in admins:
+            return True
+        else:
+            return False
 
 
 async def check_admin_rights(chat_id, user_id, rights):

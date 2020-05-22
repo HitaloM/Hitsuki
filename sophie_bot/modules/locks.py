@@ -56,7 +56,7 @@ async def lock_cmd(message, chat, strings):
         if args[0] == lock[0]:
             if status is True:
                 await message.reply(strings['already_locked'])
-                break
+                continue
 
             to_lock = {lock[1]: False}
             new_perm = ChatPermissions(
@@ -81,7 +81,7 @@ async def unlock_cmd(message, chat, strings):
         if args[0] == lock[0]:
             if status is False:
                 await message.reply(strings['not_locked'])
-                break
+                continue
 
             to_unlock = {lock[1]: True}
             new_perm = ChatPermissions(

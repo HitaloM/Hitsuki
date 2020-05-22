@@ -26,7 +26,7 @@ from bson.objectid import ObjectId
 from datetime import datetime, timedelta
 from pymongo import UpdateOne
 
-from .utils.message import need_args_dec, get_arg
+from .utils.message import need_args_dec, get_args_str
 from .utils.user_details import is_user_admin
 from .utils.language import get_strings_dec, get_string
 from .utils.connections import chat_connection, get_connected_chat
@@ -68,6 +68,9 @@ async def update_handlers_cache(chat_id):
 async def check_msg(message):
     log.debug("Running check msg for filters function.")
     chat = await get_connected_chat(message)
+    if 'err_msg' in chat:
+        return
+
     chat_id = chat['chat_id']
     if not (filters := redis.lrange(f'filters_cache_{chat_id}', 0, -1)):
         filters = await update_handlers_cache(chat_id)
@@ -99,7 +102,7 @@ async def check_msg(message):
 @chat_connection(only_groups=True, admin=True)
 @get_strings_dec('filters')
 async def add_handler(message, chat, strings):
-    handler = get_arg(message).lower()
+    handler = get_args_str(message).lower()
     text = strings['adding_filter'].format(handler=handler, chat_name=chat['chat_title'])
 
     buttons = InlineKeyboardMarkup(row_width=2)
@@ -199,7 +202,7 @@ async def list_filters(message, chat, strings):
 @chat_connection(only_groups=True, admin=True)
 @get_strings_dec('filters')
 async def del_filter(message, chat, strings):
-    handler = get_arg(message).lower()
+    handler = get_args_str(message).lower()
     chat_id = chat['chat_id']
     filters = await db.filters.find({'chat_id': chat_id, 'handler': handler}).to_list(9999)
     if not filters:

@@ -32,11 +32,18 @@ class InvalidTimeUnit(Exception):
 
 
 def get_arg(message):
-    return message.get_args().split(' ')[0]
+    try:
+        return message.get_args().split()[0]
+    except IndexError:
+        return ''
 
 
 def get_args(message):
     return message.get_args().split(' ')
+
+
+def get_args_str(message):
+    return ' '.join(get_args(message))
 
 
 def get_cmd(message):
