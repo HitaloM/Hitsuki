@@ -808,6 +808,9 @@ async def welcomerestrict_handler(message):
     chat_id = message.chat.id
 
     database = await db.greetings.find_one({'chat_id': chat_id})
+    if not database:
+        return
+
     if 'welcome_restrict' in database and database['welcome_restrict']['enabled'] is True:
         if not await is_user_admin(chat_id, user_id):
             if await new_joinee(user_id, chat_id):
