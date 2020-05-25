@@ -65,6 +65,12 @@ STRINGS:
     enabled: 'Enabled'
     disabled: 'Disabled'
 
+    # /cleannotes
+    clean_notes_enable: "Cleaning notes successfully enabled in <b>{chat_name}</b>"
+    clean_notes_disable: "Cleaning notes successfully disabled in <b>{chat_name}</b>"
+    clean_notes_enabled: "Cleaning notes currently is <b>enabled</b> in <b>{chat_name}</b>"
+    clean_notes_disabled: "Cleaning notes currently is <b>disabled</b> in <b>{chat_name}</b>"
+
     # Filter
     filters_title: 'Send a note'
     filters_setup_start: 'Please send a note name.'
