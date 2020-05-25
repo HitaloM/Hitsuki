@@ -24,6 +24,9 @@ from datetime import datetime
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.exceptions import MessageNotModified, MessageCantBeDeleted
+
+from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
+
 from babel.dates import format_datetime
 from contextlib import suppress
 from pymongo import ReplaceOne
@@ -32,6 +35,7 @@ from sophie_bot import bot
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
+from sophie_bot.services.telethon import tbot
 from .utils.connections import chat_connection
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec, get_string
@@ -53,6 +57,39 @@ async def get_simmilar_note(chat_id, note_name):
             return check[0]
 
     return None
+
+
+def clean_notes(func):
+    async def wrapped_1(*args, **kwargs):
+        message = args[0]
+
+        note = await func(*args, **kwargs)
+
+        if message.chat.type == 'private':
+            return
+
+        chat_id = message.chat.id
+
+        data = await db.clean_notes.find_one({'chat_id': chat_id})
+        if not data:
+            return
+
+        if data['enabled'] is not True:
+            return
+
+        if 'msgs' in data:
+            with suppress(MessageDeleteForbiddenError):
+                await tbot.delete_messages(chat_id, data['msgs'])
+
+        msgs = []
+        if hasattr(note, 'id'):
+            msgs.append(note.id)
+
+        msgs.append(message.message_id)
+
+        await db.clean_notes.update_one({'chat_id': chat_id}, {'$set': {'msgs': msgs}})
+
+    return wrapped_1
 
 
 @register(cmds='save', user_admin=True)
@@ -129,7 +166,7 @@ async def get_note(message, strings, note_name=None, db_item=None,
     text, kwargs = await t_unparse_note_item(message, db_item, chat_id, noformat=noformat, event=event)
     kwargs['reply_to'] = rpl_id
 
-    await send_note(send_id, text, **kwargs)
+    return await send_note(send_id, text, **kwargs)
 
 
 @register(cmds='get')
@@ -137,6 +174,7 @@ async def get_note(message, strings, note_name=None, db_item=None,
 @need_args_dec()
 @chat_connection()
 @get_strings_dec('notes')
+@clean_notes
 async def get_note_cmd(message, chat, strings):
     chat_id = chat['chat_id']
     chat_name = chat['chat_title']
@@ -161,13 +199,21 @@ async def get_note_cmd(message, chat, strings):
         arg2 = args[1][1:].lower()
         noformat = True if 'noformat' == arg2 or 'raw' == arg2 else False
 
-    await get_note(message, db_item=note, rpl_id=rpl_id, noformat=noformat)
+    return await get_note(
+        message,
+        db_item=note,
+        rpl_id=rpl_id,
+        noformat=noformat,
+        chat_id=int(chat_id)
+    )
+
 
 
 @register(regexp=r'^#(\w+[-]\w+|\w+)', allow_kwargs=True)
 @disableable_dec('get')
 @chat_connection()
 @get_strings_dec('notes')
+@clean_notes
 async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
     chat_id = chat['chat_id']
     note_name = regexp.group(1).lower()
@@ -179,7 +225,12 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
     else:
         rpl_id = message.message_id
 
-    await get_note(message, db_item=note, rpl_id=rpl_id)
+    return await get_note(
+        message,
+        db_item=note,
+        rpl_id=rpl_id,
+        chat_id=int(chat_id)
+    )
 
 
 @register(cmds=['notes', 'saved'])
@@ -398,6 +449,32 @@ async def btn_note_start_state(message, strings):
     await get_note(message, db_item=note, chat_id=chat_id, send_id=user_id, rpl_id=None)
 
     redis.delete(key)
+
+
+@register(cmds='cleannotes', is_admin=True)
+@chat_connection(admin=True)
+@get_strings_dec('notes')
+async def clean_notes(message, chat, strings):
+    disable = ['no', 'off', '0', 'false', 'disable']
+    enable = ['yes', 'on', '1', 'true', 'enable']
+
+    chat_id = chat['chat_id']
+
+    arg = get_arg(message)
+    if arg and arg.lower() in enable:
+        await db.clean_notes.update_one({'chat_id': chat_id}, {'$set': {'enabled': True}}, upsert=True)
+        text = strings['clean_notes_enable'].format(chat_name=chat['chat_title'])
+    elif arg and arg.lower() in disable:
+        await db.clean_notes.update_one({'chat_id': chat_id}, {'$set': {'enabled': False}}, upsert=True)
+        text = strings['clean_notes_disable'].format(chat_name=chat['chat_title'])
+    else:
+        data = await db.clean_notes.find_one({'chat_id': chat_id})
+        if data and data['enabled'] is True:
+            text = strings['clean_notes_enabled'].format(chat_name=chat['chat_title'])
+        else:
+            text = strings['clean_notes_disabled'].format(chat_name=chat['chat_title'])
+
+    await message.reply(text)
 
 
 async def __stats__():
