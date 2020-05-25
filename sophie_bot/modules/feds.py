@@ -978,7 +978,6 @@ async def importfbans_func(message, fed, strings, document=None):
                 all=len(queue)
             ))
 
-
     await msg.edit_text(strings['import_done'].format(num=len(queue)))
 
 
