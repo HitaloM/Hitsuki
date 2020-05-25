@@ -31,13 +31,13 @@ log.info("Loading localizations...")
 
 for filename in os.listdir('sophie_bot/localization'):
     log.debug('Loading language file ' + filename)
-    f = open('sophie_bot/localization/' + filename, "r", encoding='utf8')
-    lang = yaml.load(f, Loader=yaml.CLoader)
+    with open('sophie_bot/localization/' + filename, "r", encoding='utf8') as f:
+        lang = yaml.load(f, Loader=yaml.CLoader)
 
-    lang_code = lang['language_info']['code']
-    lang['language_info']['babel'] = Locale(lang_code)
+        lang_code = lang['language_info']['code']
+        lang['language_info']['babel'] = Locale(lang_code)
 
-    LANGUAGES[lang_code] = lang
+        LANGUAGES[lang_code] = lang
 
 log.info("Languages loaded: {}".format(
     [language['language_info']['babel'].display_name for language in LANGUAGES.values()]))

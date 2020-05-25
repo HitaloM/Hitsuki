@@ -221,7 +221,7 @@ async def reset_warn(message, chat, user, strings):
         await message.reply(strings['purged_warns'].format(
             admin=admin_link, num=purged, user=user_link, chat_title=chat_title))
     else:
-        await message.reply(strings['usr_no_wrn'].format(user=user))
+        await message.reply(strings['usr_no_wrn'].format(user=user_link))
 
 
 @register(cmds=['warnmode', 'warnaction'], user_admin=True, bot_can_restrict_members=True)

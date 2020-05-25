@@ -42,6 +42,10 @@ def get_args(message):
     return message.get_args().split(' ')
 
 
+def get_args_str(message):
+    return ' '.join(get_args(message))
+
+
 def get_cmd(message):
     cmd = message.get_command().lower()[1:].split('@')[0]
     return cmd

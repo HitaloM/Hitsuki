@@ -145,22 +145,22 @@ async def upload_file(message):
         return
     await message.reply("Processing ...")
     caption_rts = os.path.basename(input_str)
-    myfile = open(input_str, 'rb')
-    await tbot.send_file(
-        message.chat.id,
-        myfile,
-        caption=caption_rts,
-        force_document=False,
-        allow_cache=False,
-        reply_to=message.message_id
-    )
+    with open(input_str, 'rb') as f:
+        await tbot.send_file(
+            message.chat.id,
+            f,
+            caption=caption_rts,
+            force_document=False,
+            allow_cache=False,
+            reply_to=message.message_id
+        )
 
 
 @register(cmds="logs", is_owner=True)
 async def upload_logs(message):
     input_str = 'logs/sophie.log'
-    myfile = open(input_str, 'rb')
-    await tbot.send_file(message.chat.id, myfile, reply_to=message.message_id)
+    with open(input_str, 'rb') as f:
+        await tbot.send_file(message.chat.id, f, reply_to=message.message_id)
 
 
 @register(cmds="crash", is_owner=True)

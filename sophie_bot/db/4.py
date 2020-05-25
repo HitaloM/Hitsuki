@@ -19,7 +19,7 @@
 from sophie_bot.services.mongo import mongodb
 from sophie_bot.utils.logger import log
 
-log.info('Sophie Database v3')
+log.info('Sophie Database v4')
 log.info("Filters: move 'note' to 'note_name'")
 log.info('Starting updating all filters...')
 

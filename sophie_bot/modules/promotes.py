@@ -14,6 +14,7 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from aiogram.utils.exceptions import ChatAdminRequired
 
 from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
@@ -36,10 +37,13 @@ async def promote(message, chat, user, strings):
         chat_name=chat['chat_title']
     )
 
+    if user['user_id'] == BOT_ID:
+        return
+
     title = None
 
-    if len(arg := get_args(message)) > 1:
-        arg = arg[1]
+    if len(arg := get_args(message)) > 0:
+        arg = arg[0]
         if len(arg) > 16:
             await message.reply(strings['rank_to_loong'])
             return
@@ -70,10 +74,13 @@ async def demote(message, chat, user, strings):
     if user['user_id'] == BOT_ID:
         return
 
-    await bot.promote_chat_member(
-        chat_id,
-        user['user_id']
-    )
+    try:
+        await bot.promote_chat_member(
+            chat_id,
+            user['user_id']
+        )
+    except ChatAdminRequired:
+        return await message.reply(strings['demote_failed'])
 
     await get_admins_rights(chat_id, force_update=True)  # Reset a cache
     await message.reply(strings['demote_success'].format(
