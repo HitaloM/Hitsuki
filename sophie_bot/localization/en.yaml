@@ -314,6 +314,8 @@ STRINGS:
     fbanned_process: "\n<b>Status:</b> Banning in <code>{num}</code> fed chats..."
     fbanned_done: "\n<b>Status:</b> Done! banned in <code>{num}</code> chats!"
 
+    fbanned_silence: "This message will be purged in 5 seconds"
+
     fbanned_subs_process: "\n<b>Status:</b> Banning in <code>{feds}</code> subscribed feds..."
     fbanned_subs_done: "\n<b>Status:</b> Done! banned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
     fban_usr_rmvd: |
