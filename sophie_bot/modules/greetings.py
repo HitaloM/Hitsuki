@@ -763,7 +763,6 @@ ban_cb = CallbackData('ban_cb', 'chat_id', 'user_id')
 @chat_connection(admin=True)
 @get_strings_dec('greetings')
 async def welcomerestrict_cmd(message, chat, strings):
-    print(strings)
     chat_id = chat['chat_id']
     disable = ['no', 'off', '0', 'false', 'disable']
     enable = ['yes', 'on', '1', 'true', 'enable']
