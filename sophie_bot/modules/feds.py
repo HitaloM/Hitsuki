@@ -41,10 +41,11 @@ from datetime import datetime, timedelta
 from sophie_bot import OWNER_ID, BOT_ID, OPERATORS, decorator, bot
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
+from sophie_bot.services.telethon import tbot
 
 from .utils.connections import get_connected_chat, chat_connection
 from .utils.language import get_strings_dec, get_strings, get_string
-from .utils.message import need_args_dec
+from .utils.message import need_args_dec, get_cmd
 from .utils.restrictions import ban_user, unban_user
 from .utils.user_details import is_chat_creator, get_user_link, get_user_and_text, is_user_admin
 
@@ -497,7 +498,7 @@ async def get_all_subs_feds_r(fed_id, new):
     return new
 
 
-@decorator.register(cmds='fban')
+@decorator.register(cmds=['fban', 'sfban'])
 @get_fed_user_text
 @is_fed_admin
 @get_strings_dec("feds")
@@ -580,6 +581,15 @@ async def fed_ban_user(message, fed, user, reason, strings):
     if reason:
         channel_text += strings['fban_reason_fed_log'].format(reason=reason)
 
+    # Check if silent
+    silent = False
+    if get_cmd(message) == 'sfban':
+        silent = True
+        key = 'leave_silent:' + str(message.chat.id)
+        redis.set(key, user_id)
+        redis.expire(key, 30)
+        text += strings['fbanned_silence']
+
     # SubsFeds process
     if len(sfeds_list := await get_all_subs_feds_r(fed['fed_id'], [])) > 1:
         sfeds_list.remove(fed['fed_id'])
@@ -641,6 +651,13 @@ async def fed_ban_user(message, fed, user, reason, strings):
 
     await fed_post_log(fed, channel_text)
 
+    if silent:
+        to_del = [msg.message_id, message.message_id]
+        if 'reply_to_message' in message and message.reply_to_message.from_user.id == user_id:
+            to_del.append(message.reply_to_message.message_id)
+        await asyncio.sleep(5)
+        await tbot.delete_messages(message.chat.id, to_del)
+
 
 @decorator.register(cmds=['unfban', 'funban'])
 @get_fed_user_text
@@ -653,7 +670,7 @@ async def unfed_ban_user(message, fed, user, text, strings):
         await message.reply(strings['unfban_self'])
         return
 
-    elif banned := await db.fed_bans.find_one({'fed_id': fed['fed_id'], 'user_id': user_id}):
+    elif not (banned := await db.fed_bans.find_one({'fed_id': fed['fed_id'], 'user_id': user_id})):
         await message.reply(strings['user_not_fbanned'].format(user=await get_user_link(user_id)))
         return
 
@@ -665,7 +682,9 @@ async def unfed_ban_user(message, fed, user, text, strings):
         user_id=user['user_id']
     )
 
-    banned_chats = banned['banned_chats']
+    banned_chats = []
+    if 'banned_chats' in banned:
+        banned_chats = banned['banned_chats']
 
     # unfban processing msg
     msg = await message.reply(text + strings['un_fbanned_process'].format(num=len(banned_chats)))
