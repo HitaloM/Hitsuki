@@ -17,4 +17,4 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SOPHIE_VERSION = "v2.0.3"
-DB_STRUCTURE_VER = 4
+DB_STRUCTURE_VER = 5

@@ -367,8 +367,15 @@ STRINGS:
       Use a csv format if you want to import bigger files.
     wrong_file_ext: "Wrong file format! Currently support are: json, csv"
     importing_queue: Downloading a file and making a queue...
-    importing_write: Writing changes to the database...
-    import_done: Importing fbans finished!
+    importing_write: <b>Writing changes to the database...</b>
+    importing_big_file: "\nYour file is really big, it can take a long time!"
+    importing_thousand: "\nImported {current} of {all} bans"
+    import_done: Importing fed bans finished! Was imported {num} bans.
+
+    # def
+    automatic_ban: User {user} is banned in current federation <b>{fed_name}</b>. So has been removed!
+    automatic_ban_sfed: User {user} is banned in sub federation <b>{fed_name}</b>. So has been removed!
+    automatic_ban_reason: "\nReason: <code>{text}</code>"
 
 
   reports:
