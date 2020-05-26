@@ -203,8 +203,7 @@ async def get_note_cmd(message, chat, strings):
         message,
         db_item=note,
         rpl_id=rpl_id,
-        noformat=noformat,
-        chat_id=int(chat_id)
+        noformat=noformat
     )
 
 
@@ -227,8 +226,7 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
     return await get_note(
         message,
         db_item=note,
-        rpl_id=rpl_id,
-        chat_id=int(chat_id)
+        rpl_id=rpl_id
     )
 
 
