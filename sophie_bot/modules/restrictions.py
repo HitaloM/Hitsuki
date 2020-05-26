@@ -117,7 +117,7 @@ async def mute_user_cmd(message, chat, user, args, strings):
     # Check if temprotary
     until_date = None
     if curr_cmd == 'tmute' or curr_cmd == 'stmute':
-        if len(args := args.split()) > 0:
+        if args is not None and len(args := args.split()) > 0:
             try:
                 until_date = convert_time(args[0])
             except (InvalidTimeUnit, TypeError):
@@ -134,7 +134,7 @@ async def mute_user_cmd(message, chat, user, args, strings):
             return
     else:
         # Add reason
-        if len(args := args.split()) > 0:
+        if args is not None and len(args := args.split()) > 0:
             text += strings['reason'] % ' '.join(args[0:])
 
     # Check if silent
@@ -221,7 +221,7 @@ async def ban_user_cmd(message, chat, user, args, strings):
     # Check if temprotary
     until_date = None
     if curr_cmd == 'tban' or curr_cmd == 'stban':
-        if len(args := args.split()) > 0:
+        if args is not None and len(args := args.split()) > 0:
             try:
                 until_date, unit = convert_time(args[0])
             except (InvalidTimeUnit, TypeError):
@@ -238,7 +238,7 @@ async def ban_user_cmd(message, chat, user, args, strings):
             return
     else:
         # Add reason
-        if len(args := args.split()) > 0:
+        if args is not None and len(args := args.split()) > 0:
             text += strings['reason'] % ' '.join(args[0:])
 
     # Check if silent
