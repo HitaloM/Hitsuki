@@ -140,7 +140,7 @@ STRINGS:
     muted: muted
 
     filters_title: Warn the user
-    filter_handle_rsn: Automated filter action on '%s'
+    filter_handle_rsn: Automated filter action!
 
   msg_deleting:
     no_rights_purge: "You don't have enough rights to purge in this group!"
@@ -534,7 +534,7 @@ STRINGS:
     purge: "\nIn 5 seconds messages will be purged!"
 
     filter_title_ban: Ban the user
-    filter_action_rsn: <code>Automated filter action on '%s'</code>
+    filter_action_rsn: <code>Automated filter action!</code>
     filtr_ban_success: '%s banned %s for %s'
     filtr_mute_success: '%s muted %s for %s'
     filtr_tmute_success: |

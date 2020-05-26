@@ -308,11 +308,10 @@ async def filter_handle_ban(message, chat, data, strings=None):
     if await is_user_admin(chat['chat_id'], message.from_user.id):
         return
     if await ban_user(chat['chat_id'], message.from_user.id):
-        reason = strings['filter_action_rsn'] % data['handler']
+        reason = strings['filter_action_rsn']
         text = strings['filtr_ban_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
                                                reason)
         await bot.send_message(chat['chat_id'], text)
-        await message.delete()
 
 
 @get_strings_dec('restrictions')
@@ -320,7 +319,7 @@ async def filter_handle_mute(message, chat, data, strings=None):
     if await is_user_admin(chat['chat_id'], message.from_user.id):
         return
     if await mute_user(chat['chat_id'], message.from_user.id):
-        reason = strings['filter_action_rsn'] % data['handler']
+        reason = strings['filter_action_rsn']
         text = strings['filtr_mute_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
                                                 reason)
         await bot.send_message(chat['chat_id'], text)
@@ -332,7 +331,7 @@ async def filter_handle_tmute(message, chat, data, strings=None):
     if await is_user_admin(chat['chat_id'], message.from_user.id):
         return
     if await mute_user(chat['chat_id'], message.from_user.id, until_date=data['time']):
-        reason = strings['filter_action_rsn'] % data['handler']
+        reason = strings['filter_action_rsn']
         time = format_timedelta(data['time'], locale=strings['language_info']['babel'])
         text = strings['filtr_tmute_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
                                                  time, reason)
@@ -345,7 +344,7 @@ async def filter_handle_tban(message, chat, data, strings=None):
     if await is_user_admin(chat['chat_id'], message.from_user.id):
         return
     if await ban_user(chat['chat_id'], message.from_user.id, until_date=data['time']):
-        reason = strings['filter_action_rsn'] % data['handler']
+        reason = strings['filter_action_rsn']
         time = format_timedelta(data['time'], locale=strings['language_info']['babel'])
         text = strings['filtr_tban_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
                                                 time, reason)
