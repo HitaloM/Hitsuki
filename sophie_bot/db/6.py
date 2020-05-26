@@ -41,5 +41,3 @@ mongodb.fed_bans.bulk_write(queue)
 
 log.info('Update done!')
 log.info('Modified feds - ' + str(changed_feds))
-
-
