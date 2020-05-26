@@ -128,14 +128,14 @@ async def mute_user_cmd(message, chat, user, args, strings):
 
             # Add reason
             if len(args) > 1:
-                text += strings['reason'] % args[1]
+                text += strings['reason'] % ' '.join(args[1:])
         else:
             await message.reply(strings['enter_time'])
             return
     else:
         # Add reason
         if len(args := args.split()) > 0:
-            text += strings['reason'] % args[0]
+            text += strings['reason'] % ' '.join(args[0:])
 
     # Check if silent
     silent = False
@@ -192,9 +192,9 @@ async def unmute_user_cmd(message, chat, user, strings):
 
 @register(cmds=['ban', 'sban', 'tban', 'stban'], bot_can_restrict_members=True, user_can_restrict_members=True)
 @chat_connection(admin=True, only_groups=True)
-@get_user_dec()
+@get_user_and_text_dec()
 @get_strings_dec('restrictions')
-async def ban_user_cmd(message, chat, user, strings):
+async def ban_user_cmd(message, chat, user, args, strings):
     chat_id = chat['chat_id']
     user_id = user['user_id']
 
@@ -221,9 +221,9 @@ async def ban_user_cmd(message, chat, user, strings):
     # Check if temprotary
     until_date = None
     if curr_cmd == 'tban' or curr_cmd == 'stban':
-        if len(args := message.get_args().split(' ', 2)) > 1:
+        if len(args := args.split()) > 0:
             try:
-                until_date, unit = convert_time(args[1])
+                until_date, unit = convert_time(args[0])
             except (InvalidTimeUnit, TypeError):
                 await message.reply(strings['invalid_time'])
                 return
@@ -231,15 +231,15 @@ async def ban_user_cmd(message, chat, user, strings):
             text += strings['on_time'] % format_datetime(until_date, locale=strings['language_info']['babel'])
 
             # Add reason
-            if len(args) > 2:
-                text += strings['reason'] % args[2]
+            if len(args) > 1:
+                text += strings['reason'] % ' '.join(args[1:])
         else:
             await message.reply(strings['enter_time'])
             return
     else:
         # Add reason
-        if len(args := message.get_args().split(' ', 1)) > 1:
-            text += strings['reason'] % args[1]
+        if len(args := args.split()) > 0:
+            text += strings['reason'] % ' '.join(args[0:])
 
     # Check if silent
     silent = False
