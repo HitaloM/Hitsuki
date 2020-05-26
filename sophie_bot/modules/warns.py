@@ -332,7 +332,6 @@ async def filter_handle(message, chat, data, string=None):
     target_user = message.from_user.id
     text = string['filter_handle_rsn']
     await warn_func(message, chat, target_user, text, filter_action=True)
-    await message.delete()
 
 
 __filters__ = {

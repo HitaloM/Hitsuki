@@ -323,7 +323,6 @@ async def filter_handle_mute(message, chat, data, strings=None):
         text = strings['filtr_mute_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
                                                 reason)
         await bot.send_message(chat['chat_id'], text)
-        await message.delete()
 
 
 @get_strings_dec('restrictions')
@@ -336,7 +335,6 @@ async def filter_handle_tmute(message, chat, data, strings=None):
         text = strings['filtr_tmute_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
                                                  time, reason)
         await bot.send_message(chat['chat_id'], text)
-        await message.delete()
 
 
 @get_strings_dec('restrictions')
@@ -349,7 +347,6 @@ async def filter_handle_tban(message, chat, data, strings=None):
         text = strings['filtr_tban_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
                                                 time, reason)
         await bot.send_message(chat['chat_id'], text)
-        await message.delete()
 
 
 @get_strings_dec('restrictions')
