@@ -1006,6 +1006,7 @@ async def check_fbanned(message, chat, strings):
         return
 
     sfeds_list = await get_all_subs_feds_r(fed['fed_id'], [])
+    sfeds_list = []
 
     if ban := await db.fed_bans.find_one({'fed_id': {'$in': sfeds_list}, 'user_id': user_id}):
         s_fed = await db.feds.find_one({'fed_id': ban['fed_id']})
