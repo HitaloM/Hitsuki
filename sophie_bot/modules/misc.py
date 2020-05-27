@@ -16,10 +16,10 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+import html
 import random
 
-from aiogram.utils.exceptions import BadRequest
+from aiogram.utils.exceptions import BadRequest, CantParseEntities
 from aiogram.utils.exceptions import MessageNotModified
 from contextlib import suppress
 
@@ -33,7 +33,11 @@ from .utils.language import get_strings_dec
 @get_strings_dec("RUNS", mas_name="RANDOM_STRINGS")
 @disableable_dec('runs')
 async def runs(message, strings):
-    await message.reply(random.choice(list(strings)), parse_mode='markdown')
+    text = random.choice(list(strings))
+    try:
+        await message.reply(text)
+    except CantParseEntities:
+        await message.reply(html.escape(text))
 
 
 @register(cmds='cancel', state='*', allow_kwargs=True)
