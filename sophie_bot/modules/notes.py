@@ -220,7 +220,7 @@ async def get_note_cmd(message, chat, strings):
     )
 
 
-@register(regexp=r'^#(\w+[-]\w+|\w+)', allow_kwargs=True)
+@register(regexp=r'^#([\w-]+)', allow_kwargs=True)
 @disableable_dec('get')
 @chat_connection()
 @get_strings_dec('notes')
