@@ -493,6 +493,8 @@ async def get_all_subs_feds_r(fed_id, new):
 
     fed = await db.feds.find_one({'fed_id': fed_id})
     async for item in db.feds.find({'subscribed': {'$in': [fed['fed_id']]}}):
+        if item['fed_id'] in new:
+            continue
         new = await get_all_subs_feds_r(item['fed_id'], new)
 
     return new
