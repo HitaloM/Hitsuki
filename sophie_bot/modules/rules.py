@@ -63,7 +63,7 @@ async def rules(message, chat, strings):
     else:
         rpl_id = message.message_id
 
-    if args := len(message.get_args().split()) > 0:
+    if len(args := message.get_args().split()) > 0:
         arg1 = args[0].lower()
     else:
         arg1 = None
