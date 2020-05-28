@@ -372,7 +372,7 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     if not aio and len(buttons) == 0:
         buttons = None
 
-    if not text or text == ' ' or text.isspace():  # TODO: Sometimes we can return text == ' '
+    if not text or text.isspace():  # TODO: Sometimes we can return text == ' '
         text = None
 
     return text, buttons
