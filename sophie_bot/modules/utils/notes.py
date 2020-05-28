@@ -24,7 +24,8 @@ from datetime import datetime
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
 from babel.dates import format_date, format_time, format_datetime
-from telethon.errors import ButtonUrlInvalidError, MessageEmptyError,MediaEmptyError
+from telethon.errors import (ButtonUrlInvalidError, MessageEmptyError,
+                             MediaEmptyError, BadRequestError, ChatWriteForbiddenError)
 from telethon.tl.custom import Button
 
 import sophie_bot.modules.utils.tmarkdown as tmarkdown
@@ -32,7 +33,7 @@ from sophie_bot import BOT_USERNAME
 from sophie_bot.services.telethon import tbot
 from sophie_bot.services.redis import redis
 from .language import get_chat_lang
-from .message import get_args
+from .message import get_args, get_args_str
 from .tmarkdown import tbold, titalic, tpre, tcode, tlink, tstrikethrough, tunderline
 from .user_details import get_user_link
 
@@ -239,7 +240,7 @@ async def get_parsed_note_list(message, split_args=1):
             note['file'] = msg_file
     else:
         text, note['parse_mode'] = get_parsed_msg(message)
-        text = re.sub(r'[\w-]+', '', message.get_args(), split_args)
+        text = re.sub(r'[\w-]+', '', get_args_str(message), split_args)
 
         # Check on attachment
         if msg_file := await get_msg_file(message):
@@ -281,7 +282,7 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
         pm = True if message.chat.type == 'private' else False
         text, markup = button_parser(chat_id, text, pm=pm)
         if not text and not file_id:
-            text = '#' + db_item['names'][0]
+            text = ('#' + db_item['names'][0]) if 'names' in db_item else '404'
 
         if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
             db_item['parse_mode'] = None
@@ -307,7 +308,7 @@ async def send_note(send_id, text, **kwargs):
     try:
         return await tbot.send_message(send_id, text, **kwargs)
     except (ButtonUrlInvalidError, MessageEmptyError, MediaEmptyError, ValueError):
-        text = 'I found this note invalid! Please update it (read Wiki).'
+        text = 'I found this note/filter invalid! Please update it (read Wiki).'
         return await tbot.send_message(send_id, text)
 
 

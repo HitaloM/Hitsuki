@@ -160,7 +160,7 @@ async def register_action(event, chat, callback_data=None, state=None, **kwargs)
     await save_filter(event.message, data)
 
 
-@register(state=NewFilter.setup, is_admin=True, allow_kwargs=True)
+@register(state=NewFilter.setup, f='any', is_admin=True, allow_kwargs=True)
 @chat_connection(only_groups=True, admin=True)
 async def setup_end(message, chat, state=None, **kwargs):
     async with state.proxy() as proxy:

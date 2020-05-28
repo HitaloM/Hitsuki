@@ -24,6 +24,7 @@ from aiogram.utils.exceptions import MessageNotModified
 from contextlib import suppress
 
 from sophie_bot.decorator import register
+from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
@@ -49,8 +50,10 @@ async def delmsg_filter_handle(message, chat, data):
 
 
 async def replymsg_filter_handler(message, chat, data):
+    text, kwargs = await t_unparse_note_item(message, data['reply_text'], chat['chat_id'])
+    kwargs['reply_to'] = message.message_id
     with suppress(BadRequest):
-        await message.reply(data['reply_text'])
+        await send_note(chat['chat_id'], text, **kwargs)
 
 
 @get_strings_dec('misc')
@@ -60,7 +63,7 @@ async def replymsg_setup_start(message, strings):
 
 
 async def replymsg_setup_finish(message, data):
-    reply_text = message.text
+    reply_text = await get_parsed_note_list(message, split_args=-1)
     return {'reply_text': reply_text}
 
 

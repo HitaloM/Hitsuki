@@ -161,7 +161,7 @@ STRINGS:
     paste_no_text: "You didn't supply text to paste!"
 
     delmsg_filter_title: 'Delete the message'
-    send_text: Please send the reply word/sentence !
+    send_text: Please send the reply message!
     replymsg_filter_title: 'Reply to message'
 
   promotes:
