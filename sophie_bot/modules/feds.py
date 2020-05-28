@@ -715,11 +715,14 @@ async def unfed_ban_user(message, fed, user, text, strings):
 
         all_unbanned_chats_count = 0
         for sfed_id in sfeds_list:
-            banned_chats = fed['banned'][str(user_id)]['banned_chats']
+            ban = await db.fed_bans.find_one({'fed_id': sfed_id})
+            banned_chats = []
+            if 'banned_chats' in ban:
+                banned_chats = ban['banned_chats']
+
             for chat_id in banned_chats:
                 await asyncio.sleep(0.2)  # Do not slow down other updates
                 if await unban_user(chat_id, user_id):
-                    banned_chats.append(chat_id)
                     all_unbanned_chats_count += 1
 
                     await db.fed_bans.delete_one({'fed_id': sfed_id, 'user_id': user_id})
@@ -1002,9 +1005,12 @@ async def check_fbanned(message, chat, strings):
     elif await is_user_admin(chat_id, user_id):
         return
 
-    sfeds_list = await get_all_subs_feds_r(fed['fed_id'], [])
+    feds_list = [fed['fed_id']]
 
-    if ban := await db.fed_bans.find_one({'fed_id': {'$in': sfeds_list}, 'user_id': user_id}):
+    if 'subscribed' in fed:
+        feds_list.extend(fed['subscribed'])
+
+    if ban := await db.fed_bans.find_one({'fed_id': {'$in': feds_list}, 'user_id': user_id}):
         s_fed = await db.feds.find_one({'fed_id': ban['fed_id']})
 
         if 'origin_fed' not in ban:

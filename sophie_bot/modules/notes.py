@@ -26,9 +26,6 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.deep_linking import get_start_link
 from aiogram.utils.exceptions import MessageNotModified, MessageCantBeDeleted
-
-from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
-
 from babel.dates import format_datetime
 from contextlib import suppress
 from pymongo import ReplaceOne
@@ -38,6 +35,8 @@ from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from sophie_bot.services.telethon import tbot
+
+from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
 
 from .utils.connections import chat_connection, set_connected_chat
 from .utils.disable import disableable_dec
@@ -214,9 +213,7 @@ async def get_note_cmd(message, chat, strings):
         message,
         db_item=note,
         rpl_id=rpl_id,
-        noformat=noformat,
-        chat_id=int(chat_id),
-        send_id=send_id
+        noformat=noformat
     )
 
 
@@ -246,9 +243,7 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
     return await get_note(
         message,
         db_item=note,
-        rpl_id=rpl_id,
-        chat_id=int(chat_id),
-        send_id=send_id
+        rpl_id=rpl_id
     )
 
 
