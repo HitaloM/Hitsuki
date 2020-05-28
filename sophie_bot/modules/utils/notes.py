@@ -310,6 +310,11 @@ async def send_note(send_id, text, **kwargs):
     except (ButtonUrlInvalidError, MessageEmptyError, MediaEmptyError, ValueError):
         text = 'I found this note/filter invalid! Please update it (read Wiki).'
         return await tbot.send_message(send_id, text)
+    except BadRequestError:  # if reply message deleted
+        del kwargs['reply_to']
+        return await tbot.send_message(send_id, text, **kwargs)
+    except ChatWriteForbiddenError:
+        pass
 
 
 def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
