@@ -108,8 +108,8 @@ STRINGS:
     max_warn_exceeded:tmute: Warnings has been exceeded! %s has been tmuted for %s!
 
     # warn rmv callback
-    warn_no_admin_alert: "⚠ You are NOT 👷‍♂️ admin to remove warn!"
-    warn_btn_rmvl_success: "✔ Warn removed by {admin} !"
+    warn_no_admin_alert: "⚠ You are NOT admin to remove warn!"
+    warn_btn_rmvl_success: "✅ Warn removed by {admin} !"
 
     # /warns
     warns_header: "Here are your warns in this chat \n\n"
@@ -120,7 +120,7 @@ STRINGS:
     warn_limit: "Warn limit in <b>{chat_name}</b> is currently: <code>{num}</code>"
     warnlimit_short: 'Warnlimit should be at least 2!'
     warnlimit_long: 'Warnlimit should be shorter than 1 000!'
-    warnlimit_updated: '✔ Warnlimit has successfully updated to {num}'
+    warnlimit_updated: '✅ Warnlimit has successfully updated to {num}'
 
     # /delwarns
     purged_warns: "{admin} reset <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
