@@ -62,6 +62,7 @@ STRINGS:
     enabled_successfully: "Private notes are <b>Enabled</b> in %s successfully!"
     disabled_successfully: "Private notes are <b>Disabled</b> in %s successfully!"
     not_enabled: "Private notes are not enabled to disable."
+    privatenotes_notif: "You have been successfully connected to <b>{chat}</b> notes! To disconnect please use command <code>/disconnect</code> !"
     enabled: 'Enabled'
     disabled: 'Disabled'
 

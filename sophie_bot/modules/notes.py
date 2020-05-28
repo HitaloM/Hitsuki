@@ -38,7 +38,7 @@ from sophie_bot.services.telethon import tbot
 
 from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
 
-from .utils.connections import chat_connection, set_connected_chat
+from .utils.connections import chat_connection, set_connected_command
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec, get_string
 from .utils.message import get_arg, need_args_dec
@@ -174,19 +174,12 @@ async def get_note(message, strings, note_name=None, db_item=None,
 @register(cmds='get')
 @disableable_dec('get')
 @need_args_dec()
-@chat_connection()
+@chat_connection(command='get')
 @get_strings_dec('notes')
 @clean_notes
 async def get_note_cmd(message, chat, strings):
     chat_id = chat['chat_id']
     chat_name = chat['chat_title']
-    send_id = None
-
-    if message.from_user.id == chat_id:
-        if redis.exists(f'notes_{message.from_user.id}'):
-            chat_id = redis.get(f'notes_{message.from_user.id}')
-            send_id = int(message.from_user.id)
-            chat_name = (await db.chat_list.find_one({'chat_id': int(chat_id)}))['chat_title']
 
     note_name = get_arg(message).lower()
     if note_name[0] == '#':
@@ -219,17 +212,11 @@ async def get_note_cmd(message, chat, strings):
 
 @register(regexp=r'^#([\w-]+)', allow_kwargs=True)
 @disableable_dec('get')
-@chat_connection()
+@chat_connection(command='get')
 @get_strings_dec('notes')
 @clean_notes
 async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
     chat_id = chat['chat_id']
-    send_id = None
-
-    if message.from_user.id == chat_id:
-        if redis.exists(f'notes_{message.from_user.id}'):
-            chat_id = redis.get(f'notes_{message.from_user.id}')
-            send_id = int(message.from_user.id)
 
     note_name = regexp.group(1).lower()
     if not (note := await db.notes.find_one({'chat_id': int(chat_id), 'names': {'$in': [note_name]}})):
@@ -249,7 +236,7 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
 
 @register(cmds=['notes', 'saved'])
 @disableable_dec('notes')
-@chat_connection()
+@chat_connection(command='notes')
 @get_strings_dec('notes')
 async def get_notes_list_cmd(message, chat, strings):
 
@@ -269,7 +256,7 @@ async def get_notes_list_cmd(message, chat, strings):
 
 
 @get_strings_dec('notes')
-async def get_notes_list(message, strings, chat, pm=False):
+async def get_notes_list(message, strings, chat, keyword=None, pm=False):
     text = strings["notelist_header"].format(chat_name=chat['chat_title'])
 
     notes = await db.notes.find({'chat_id': chat['chat_id']}).sort("names", 1).to_list(length=300)
@@ -291,17 +278,10 @@ async def get_notes_list(message, strings, chat, pm=False):
             return
 
     # Search
+    if keyword:
+        await search_notes(keyword)
     if len(keyword := message.get_args()) > 0 and pm is False:
         await search_notes(keyword)
-    if pm is True:
-        if redis.exists(f'notes_{message.from_user.id}') == 1:
-            if int(redis.get(f'notes_{message.from_user.id}')) != chat['chat_id']:
-                redis.delete(f'notes_{message.from_user.id}')
-                redis.set(f'notes_{message.from_user.id}', chat['chat_id'])
-        else:
-            redis.set(f'notes_{message.from_user.id}', chat['chat_id'])
-        if (keyword := (re.search(r'notes_(.*)_(\w+)', message.get_args())).group(2)) != 'None':
-            await search_notes(keyword)
 
     if len(notes) > 0:
         for note in notes:
@@ -561,11 +541,15 @@ async def clean_notes(message, chat, strings):
 
 
 @register(CommandStart(re.compile('notes')))
-async def private_notes_func(message):
-    await set_connected_chat(message.from_user.id, None)
-    chat_id = (message.get_args().split('_'))[1]
+@get_strings_dec('notes')
+async def private_notes_func(message, strings):
+    args = message.get_args().split('_')
+    chat_id = args[1]
+    keyword = args[2] if args[2] != 'None' else None
+    await set_connected_command(message.from_user.id, int(chat_id), ['get', 'notes'])
     chat = (await db.chat_list.find_one({'chat_id': int(chat_id)}))
-    await get_notes_list(message, chat=chat, pm=True)
+    await message.answer(strings['privatenotes_notif'].format(chat=chat['chat_title']))
+    await get_notes_list(message, chat=chat, keyword=keyword, pm=True)
 
 
 async def __stats__():

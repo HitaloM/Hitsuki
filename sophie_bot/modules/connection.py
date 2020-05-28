@@ -126,7 +126,7 @@ async def connect_to_chat_from_arg(message, chat, strings):
 
 @register(cmds='disconnect', only_pm=True)
 @get_strings_dec('connections')
-@chat_connection()
+@chat_connection(command='disconnect')
 async def disconnect_from_chat_direct(message, strings, chat):
     if chat['status'] == 'private':
         await message.reply(strings['u_wasnt_connected'])

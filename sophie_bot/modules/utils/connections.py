@@ -21,7 +21,7 @@ from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 
 
-async def get_connected_chat(message, admin=False, only_groups=False, from_id=None):
+async def get_connected_chat(message, admin=False, only_groups=False, from_id=None, command=None):
     # admin - Require admin rights in connected chat
     # only_in_groups - disable command when bot's pm not connected to any chat
     real_chat_id = message.chat.id
@@ -62,6 +62,13 @@ async def get_connected_chat(message, admin=False, only_groups=False, from_id=No
     user_admin = await is_user_admin(chat_id, user_id)
     if admin is True and not user_admin:
         return {'status': None, 'err_msg': 'u_should_be_admin'}
+
+    if 'command' in connected:
+        if command in connected['command']:
+            return {'status': True, 'chat_id': chat_id, 'chat_title': chat_title}
+        else:
+            # Return local chat if user is accessing non connected command
+            return {'status': 'private', 'chat_id': user_id, 'chat_title': 'Local chat'}
 
     # Check on /allowusersconnect enabled
     if settings := await db.chat_connection_settings.find_one({'chat_id': chat_id}):
@@ -116,6 +123,17 @@ async def set_connected_chat(user_id, chat_id):
         {
             "$set": {'user_id': user_id, 'chat_id': chat_id},
             "$addToSet": {'history': {'$each': [chat_id]}}
+        },
+        upsert=True
+    )
+
+
+async def set_connected_command(user_id, chat_id, command):
+    command.append('disconnect')
+    return await db.connections.update_one(
+        {'user_id': user_id},
+        {
+            '$set': {'user_id': user_id, 'chat_id': chat_id, 'command': list(command)}
         },
         upsert=True
     )
