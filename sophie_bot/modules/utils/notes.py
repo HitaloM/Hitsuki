@@ -31,7 +31,6 @@ from telethon.tl.custom import Button
 import sophie_bot.modules.utils.tmarkdown as tmarkdown
 from sophie_bot import BOT_USERNAME
 from sophie_bot.services.telethon import tbot
-from sophie_bot.services.redis import redis
 from .language import get_chat_lang
 from .message import get_args, get_args_str
 from .tmarkdown import tbold, titalic, tpre, tcode, tlink, tstrikethrough, tunderline
@@ -422,8 +421,3 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
         .replace('{time}', str(current_time)) \
         .replace('{timedate}', str(current_timedate))
     return text
-
-
-async def disconnect_privatenotes(user_id):
-    redis.delete(f'notes_{user_id}')
-    return True
