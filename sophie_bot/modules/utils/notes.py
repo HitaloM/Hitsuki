@@ -347,6 +347,8 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
                 # Workaround to make URLs case-sensitive TODO: make better
                 argument = raw_button[3][1:].replace('`', '') if raw_button[3] else ''
                 btn = Button.url(name, argument)
+            elif cb.endswith('rules'):
+                btn = cb_btn
         elif action == 'url':
             argument = raw_button[3][1:].replace('`', '') if raw_button[3] else ''
             if argument[0] == '/' and argument[1] == '/':

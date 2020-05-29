@@ -95,7 +95,7 @@ async def reset_rules(message, chat, strings):
 BUTTONS.update({'rules': 'btn_rules'})
 
 
-@register(regexp=r'btn_rules:(.*)', f='cb', allow_kwargs=True)
+@register(regexp=r'btn_rules_(.*)', f='cb', allow_kwargs=True)
 @get_strings_dec('rules')
 async def rules_btn(event, strings, regexp=None, **kwargs):
     chat_id = int(regexp.group(1))
