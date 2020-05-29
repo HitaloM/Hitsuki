@@ -47,6 +47,11 @@ STRINGS:
     note_info_created: "Fue creado en: <code>{date}</code> por {user}\n"
     note_info_updated: "Última actualización en: <code>{date}</code> por {user}\n"
     user_blocked: "¡Escríbeme /start por mensaje privado!"
+    #/cleannotes
+    clean_notes_enable: "Se ha activado correctamente la limpieza de notas en <b>{chat_name}</b>"
+    clean_notes_disable: "Limpieza de notas deshabilitada con éxito en <b>{chat_name}</b>"
+    clean_notes_enabled: "La limpieza de notas están <b>habilitadas</b> en <b>{chat_name}</b>"
+    clean_notes_disabled: "La limpieza de notas actualmente están <b>deshabilitadas</b> en <b>{chat_name}</b>"
     #Filter
     filters_title: 'Enviar una nota'
     filters_setup_start: 'Por favor, envía un nombre de nota.'
@@ -265,6 +270,7 @@ STRINGS:
     fbanned_reason: "<b>Razón:</b> <code>{reason}</code>"
     fbanned_process: "\n<b>Estado:</b> Baneando en <code>{num}</code> chats de federación..."
     fbanned_done: "\n<b>Estado:</b> ¡Hecho! baneado en <code>{num}</code> chats!"
+    fbanned_silence: "Este mensaje será purgado en 5 segundos"
     fbanned_subs_process: "\n<b>Estado:</b> Baneando en <code>{feds}</code> federaciones suscritas..."
     fbanned_subs_done: "\n<b>Estado:</b> Hecho! baneado en <code>{chats}</code> chats de esta federación y <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones suscritas"
     fban_usr_rmvd: |
@@ -312,9 +318,20 @@ STRINGS:
       Para cancelar este proceso; usa /cancel
     rpl_to_file: '¡Por favor, responde a un archivo!'
     importfbans_locked: La importación de fbans está bloqueada para %s en esta federación.
-    big_file: Sólo soporta archivos de importación menos de 50 Megabytes!
-    started_importing: '¡Se ha iniciado la importación de fbans!'
+    big_file_csv: '¡Solo soporta archivos csv importados de menos de {num} Megabytes!'
+    big_file_json: |
+      ¡Actualmente los archivos json están limitados a {num} Megabytes!
+      Utilice un formato csv si desea importar archivos más grandes.
+    wrong_file_ext: "¡Formato de archivo incorrecto! El soporte actualmente es: json, csv"
+    importing_queue: Descargando un archivo y haciendo una cola...
+    importing_write: <b>Haciendo cambios en la base de datos...</b>
+    importing_big_file: "\n¡Tu archivo es muy grande, puede tardar mucho tiempo!"
+    importing_thousand: "\nSe importaron {current} de {all} baneos"
     import_done: Importación de fbans finalizada!
+    #def
+    automatic_ban: El usuario {user} está baneado en la federación actual <b>{fed_name}</b>. ¡Ha sido eliminado!
+    automatic_ban_sfed: El usuario {user} está baneado en la subfederación <b>{fed_name}</b>. ¡Se ha eliminado!
+    automatic_ban_reason: "\nRazón: <code>{text}</code>"
   reports:
     user_user_admin: "Eres un administrador aquí, ¿por qué necesitarías reportar a alguien?.."
     user_is_whitelisted: "Eres un usuario en la lista blanca, ¿por qué necesitarías reportar a alguien?.."
@@ -567,7 +584,7 @@ RANDOM_STRINGS:
     - "Plox, sr, sar"
     - "Espera, oh, para... No puedo enviar stickers ;_;"
     - "/runs"
-    - "Meow! 😺"
+    - "¡Miau! 😺"
     - "Prueba /cat"
     - "Corre de Rose"
     - "Corre de Yana"
