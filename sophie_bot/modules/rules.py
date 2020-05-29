@@ -67,7 +67,7 @@ async def rules(message, chat, strings):
         arg1 = args[0].lower()
     else:
         arg1 = None
-    noformat = True if 'noformat' == arg1 or 'raw' == arg1 else False
+    noformat = arg1 in ('noformat', 'raw')
 
     if not (db_item := await db.rules.find_one({'chat_id': chat_id})):
         await message.reply(strings['not_found'])
