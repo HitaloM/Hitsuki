@@ -322,12 +322,13 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     pattern = r'\[(.+?)\]\((button|btn)(.+?)(:.+?|)(:same|)\)(\n|)'
     raw_buttons = re.findall(pattern, texts)
     text = re.sub(pattern, '', texts)
+    btn = None
     for raw_button in raw_buttons:
         name = raw_button[0]
         action = raw_button[2]
         argument = raw_button[3][1:].lower().replace('`', '') if raw_button[3] else ''
 
-        if action in BUTTONS:
+        if action in BUTTONS.keys():
             cb = BUTTONS[action]
             string = f'{cb}_{argument}_{chat_id}' if argument else f'{cb}_{chat_id}'
             if aio:
