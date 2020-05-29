@@ -17,11 +17,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from telethon.errors.rpcerrorlist import PeerIdInvalidError, UserIsBlockedError
+import re
+
+from aiogram.dispatcher.filters import CommandStart
 
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
-from sophie_bot.services.redis import redis
+
 from .utils.connections import chat_connection
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
@@ -95,30 +97,17 @@ async def reset_rules(message, chat, strings):
 BUTTONS.update({'rules': 'btn_rules'})
 
 
-@register(regexp=r'btn_rules_(.*)', f='cb', allow_kwargs=True)
+@register(CommandStart(re.compile('btn_rules')))
 @get_strings_dec('rules')
-async def rules_btn(event, strings, regexp=None, **kwargs):
-    chat_id = int(regexp.group(1))
-    user_id = event.from_user.id
-    # smthg = regexp.group(2).lower()
-
-    if not (db_item := await db.rules.find_one({'chat_id': chat_id})):
-        await event.answer(strings['not_found'])
+async def rules_btn(message, strings):
+    chat_id = (message.get_args().split('_'))[2]
+    user_id = message.chat.id
+    if not (db_item := await db.rules.find_one({'chat_id': int(chat_id)})):
+        await message.answer(strings['not_found'])
         return
 
-    text, kwargs = await t_unparse_note_item(event.message, db_item, chat_id, event=event)
-
-    if user_id == event.message.chat.id:
-        await event.message.delete()
-
-    try:
-        await send_note(user_id, text, **kwargs)
-        await event.answer(strings['rules_was_pmed'])
-    except (UserIsBlockedError, PeerIdInvalidError):
-        await event.answer(strings['user_blocked'], show_alert=True)
-        key = 'btn_rules_start_state:' + str(user_id)
-        redis.set(key, chat_id)
-        redis.expire(key, 900)
+    text, kwargs = await t_unparse_note_item(message, db_item, chat_id)
+    await send_note(user_id, text, **kwargs)
 
 
 async def __export__(chat_id):

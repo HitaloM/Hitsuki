@@ -23,6 +23,7 @@ from aiogram.types.inline_keyboard import (
     InlineKeyboardButton,
     InlineKeyboardMarkup
 )
+from aiogram.utils.deep_linking import get_start_link
 from aiogram.utils.exceptions import MessageNotModified
 from babel.dates import format_timedelta
 from bson.objectid import ObjectId
@@ -93,7 +94,7 @@ async def warn_func(message, chat, user, text, strings, filter_action=False):
 
     if await db.rules.find_one({'chat_id': chat_id}):
         buttons.insert(InlineKeyboardButton(
-            "📝 Rules", callback_data='btn_rules_{}'.format(chat_id)
+            "📝 Rules", url=await get_start_link(f'btn_rules_{chat_id}')
         ))
 
     if warn_limit := await db.warnlimit.find_one({'chat_id': chat_id}):
