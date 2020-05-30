@@ -20,6 +20,7 @@ STRINGS:
     #/notes
     notelist_no_notes: "¡No hay notas en <b>{chat_title}</b>!"
     notelist_header: "<b>Notas en {chat_name}</b>:"
+    notes_in_private: "Haga clic en el botón inferior para obtener la lista de notas."
     notelist_search: |
       <b>Patrón:</b> <code>{request}</code>
       <b>Notas coincidentes:</b>
@@ -47,6 +48,21 @@ STRINGS:
     note_info_created: "Fue creado en: <code>{date}</code> por {user}\n"
     note_info_updated: "Última actualización en: <code>{date}</code> por {user}\n"
     user_blocked: "¡Escríbeme /start por mensaje privado!"
+    #/privatenotes
+    private_notes_false_args: "Tienes 2 opciones <code>Desactivar</code> y <code>Activar</code>!"
+    already_enabled: "Las notas privadas ya están habilitadas en %s"
+    current_state_info: "¡Actualmente la nota privada es {state} en {chat}! "
+    enabled_successfully: "¡Las notas privadas están <b>habilitadas</b> en %s con éxito!"
+    disabled_successfully: "¡Las notas privadas están <b>Desactivadas</b> en %s con éxito!"
+    not_enabled: "Las notas privadas no están habilitadas para desactivar."
+    privatenotes_notif: "Ha sido conectado correctamente a <b>{chat}</b> notas! Para desconectar, utilice el comando <code>/disconnect</code>!"
+    enabled: 'Activado'
+    disabled: 'Deshabilitado'
+    #/cleannotes
+    clean_notes_enable: "Se ha activado correctamente la limpieza de notas en <b>{chat_name}</b>"
+    clean_notes_disable: "Se ha desactivado correctamente la limpieza de notas en <b>{chat_name}</b>"
+    clean_notes_enabled: "La limpieza de notas actualmente están <b>deshabilitadas</b> en <b>{chat_name}</b>"
+    clean_notes_disabled: "La limpieza de notas actualmente están <b>deshabilitadas</b> en <b>{chat_name}</b>"
     #Filter
     filters_title: 'Enviar una nota'
     filters_setup_start: 'Por favor, envía un nombre de nota.'
@@ -265,6 +281,7 @@ STRINGS:
     fbanned_reason: "<b>Razón:</b> <code>{reason}</code>"
     fbanned_process: "\n<b>Estado:</b> Baneando en <code>{num}</code> chats de federación..."
     fbanned_done: "\n<b>Estado:</b> ¡Hecho! baneado en <code>{num}</code> chats!"
+    fbanned_silence: "Este mensaje será purgado en 5 segundos"
     fbanned_subs_process: "\n<b>Estado:</b> Baneando en <code>{feds}</code> federaciones suscritas..."
     fbanned_subs_done: "\n<b>Estado:</b> Hecho! baneado en <code>{chats}</code> chats de esta federación y <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones suscritas"
     fban_usr_rmvd: |
@@ -312,9 +329,20 @@ STRINGS:
       Para cancelar este proceso; usa /cancel
     rpl_to_file: '¡Por favor, responde a un archivo!'
     importfbans_locked: La importación de fbans está bloqueada para %s en esta federación.
-    big_file: Sólo soporta archivos de importación menos de 50 Megabytes!
-    started_importing: '¡Se ha iniciado la importación de fbans!'
+    big_file_csv: '¡Solo soporta archivos csv importados de menos de {num} Megabytes!'
+    big_file_json: |
+      ¡Actualmente los archivos json están limitados a {num} Megabytes!
+      Utilice un formato csv si desea importar archivos más grandes.
+    wrong_file_ext: "¡Formato de archivo incorrecto! El soporte actualmente es: json, csv"
+    importing_queue: Descargando un archivo y haciendo una cola...
+    importing_write: <b>Haciendo cambios en la base de datos...</b>
+    importing_big_file: "\n¡Tu archivo es muy grande, puede tardar mucho tiempo!"
+    importing_thousand: "\nSe importaron {current} de {all} baneos"
     import_done: Importación de fbans finalizada!
+    #def
+    automatic_ban: El usuario {user} está baneado en la federación actual <b>{fed_name}</b>. ¡Ha sido eliminado!
+    automatic_ban_sfed: El usuario {user} está baneado en la subfederación <b>{fed_name}</b>. ¡Se ha eliminado!
+    automatic_ban_reason: "\nRazón: <code>{text}</code>"
   reports:
     user_user_admin: "Eres un administrador aquí, ¿por qué necesitarías reportar a alguien?.."
     user_is_whitelisted: "Eres un usuario en la lista blanca, ¿por qué necesitarías reportar a alguien?.."
@@ -546,6 +574,19 @@ STRINGS:
     #/resetwelcome
     deleted: '¡Saludos reiniciados con éxito en <b>{chat}</b>!'
     not_found: '¡No hay nada que resetear!'
+    #/welcomerestrict
+    del_url: '¡El mensaje que contiene la URL de {user} fue eliminado!'
+    del_fwd: '¡El mensaje reenviado desde {user} ha sido eliminado!'
+    del_media: '¡El mensaje conteniendo media de {user} ha sido eliminado!'
+    banned: '¡{by} ha baneado a {user}!'
+    whitelisted: '¡{by} ha incluido {user} en la lista blanca!'
+    enabled_sucessfully: Seguridad en el chat activada con éxito en <b>{chat}</b>
+    disabled_sucessfully: Seguridad en el chat deshabilitada correctamente en <b>{chat}</b>
+    already_enabled: '¡La seguridad del chat ya está activada!'
+    already_disabled: '¡La seguridad del chat ya está deshabilitada!'
+    restrict_status: '¡La bienvenida de restricción es <b>{state}</b> en <b>{chat}</b>!'
+    whitelist: '🏳️ Whitelist'
+    ban: '❌ Ban'
   locks:
     locks_header: "Aquí está la configuración actual de bloqueo en {chat_title} \n\n"
     no_lock_args: '¡Dame algunos argumentos para bloquear!'
@@ -567,7 +608,7 @@ RANDOM_STRINGS:
     - "Plox, sr, sar"
     - "Espera, oh, para... No puedo enviar stickers ;_;"
     - "/runs"
-    - "Meow! 😺"
+    - "¡Miau! 😺"
     - "Prueba /cat"
     - "Corre de Rose"
     - "Corre de Yana"
