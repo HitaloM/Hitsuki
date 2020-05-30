@@ -20,7 +20,7 @@ import html
 import random
 
 from aiogram.utils.exceptions import BadRequest, CantParseEntities
-from aiogram.utils.exceptions import MessageNotModified
+from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
 from contextlib import suppress
 
 from sophie_bot.decorator import register
@@ -49,7 +49,8 @@ async def cancel_handle(message, state, **kwargs):
 async def delmsg_filter_handle(message, chat, data):
     if await is_user_admin(data['chat_id'], message.from_user.id):
         return
-    await message.delete()
+    with suppress(MessageToDeleteNotFound):
+        await message.delete()
 
 
 async def replymsg_filter_handler(message, chat, data):
