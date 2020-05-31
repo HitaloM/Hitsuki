@@ -26,7 +26,7 @@ from .utils.language import get_strings_dec
 from .utils.user_details import get_admins_rights, get_user_link, is_user_admin
 
 
-@register(regexp='^@admins')
+@register(regexp='^@admin$')
 @chat_connection(only_groups=True)
 @get_strings_dec('reports')
 async def report1_cmd(message, chat, strings):
