@@ -32,7 +32,7 @@ import sophie_bot.modules.utils.tmarkdown as tmarkdown
 from sophie_bot import BOT_USERNAME
 from sophie_bot.services.telethon import tbot
 from .language import get_chat_lang
-from .message import get_args, get_args_str
+from .message import get_args
 from .tmarkdown import tbold, titalic, tpre, tcode, tlink, tstrikethrough, tunderline
 from .user_details import get_user_link
 
