@@ -22,6 +22,8 @@ import csv
 import asyncio
 import io
 import re
+
+import babel
 import ujson
 import uuid
 import os
@@ -47,7 +49,10 @@ from .utils.connections import get_connected_chat, chat_connection
 from .utils.language import get_strings_dec, get_strings, get_string
 from .utils.message import need_args_dec, get_cmd
 from .utils.restrictions import ban_user, unban_user
-from .utils.user_details import is_chat_creator, get_user_link, get_user_and_text, is_user_admin
+from .utils.user_details import (
+    is_chat_creator, get_user_link, get_user_and_text,
+    is_user_admin, get_user_by_username, get_user_by_id
+)
 
 
 class ImportFbansFileWait(StatesGroup):
@@ -1035,6 +1040,95 @@ async def check_fbanned(message, chat, strings):
         await message.reply(text)
 
         await db.fed_bans.update_one({'_id': ban['_id']}, {"$addToSet": {'banned_chats': chat_id}})
+
+
+@decorator.register(cmds='fcheck')
+@chat_connection()
+@get_strings_dec('feds')
+async def fedban_check(message, chat, strings):
+    text = message.get_args().split(' ')
+    fed = None
+    uid = None
+    if text != ['']:
+        if text[0].count('-') == 4:
+            if data := await db.feds.find_one({'fed_id': text[0]}):
+                fed = data
+                if len(text) > 1:
+                    uid = text[1]
+        else:
+            uid = text[0]
+
+    # Getting user
+
+    user = None
+    entities = filter(lambda ent: ent['type'] == 'text_mention' or ent['type'] == 'mention', message.entities)
+    for item in entities:
+        mention = item.get_text(message.text)
+        if mention:
+            user = await get_user_by_username(mention) if item.type != 'text_mention' \
+                else await get_user_by_id(int(item.user.id))
+    if user is None:
+        if uid:
+            user = await get_user_by_id(int(uid))
+        if not user and "reply_to_message" in message:
+            user = await get_user_by_id(message.reply_to_message.from_user.id)
+    if user is None:
+        user = await get_user_by_id(message.from_user.id)
+
+    fbanned_fed = False  # A variable to find if user is banned in current fed of chat
+    fban_data = None
+    total_count = await db.fed_bans.count_documents({'user_id': user['user_id']})
+    if message.chat.type != 'private':
+        fed = await db.feds.find_one({'chats': [int(chat['chat_id'])]})
+    if fed is not None:
+        if fban_data := await db.fed_bans.find_one({'user_id': user['user_id'], 'fed_id': fed['fed_id']}):
+            fbanned_fed = True
+
+    # create text
+    text = strings['fcheck_header']
+    if message.chat.type == 'private' and message.from_user.id == user['user_id']:
+        if fed is not None:
+            if 'reason' not in fban_data:
+                text += strings['fban_info:fcheck'].format(
+                    fed=fed['fed_name'],
+                    date=babel.dates.format_date(fban_data['time'], 'long', locale=strings['language_info']['babel']),
+                )
+            else:
+                text += strings['fban_info:fcheck:reason'].format(
+                    fed=fed['fed_name'],
+                    date=babel.dates.format_date(fban_data['time'], 'long', locale=strings['language_info']['babel']),
+                    reason=fban_data['reason']
+                )
+        else:
+            text += strings['fbanned_count_pm'].format(count=total_count)
+            if total_count > 0:
+                count = 0
+                async for fban in db.fed_bans.find({'user_id': user['user_id']}):
+                    count += 1
+                    fed_name = (await db.feds.find_one({'fed_id': fban['fed_id']}))['fed_name']
+                    text += f'{count}: <code>{fban["fed_id"]}</code>: {fed_name}\n'
+    else:
+        if total_count > 0:
+            text += strings['fbanned_data'].format(user=await get_user_link(user['user_id']), count=total_count)
+        else:
+            text += strings['fbanned_nowhere'].format(user=await get_user_link(user['user_id']))
+
+        if fbanned_fed is True:
+            if 'reason' in fban_data:
+                text += strings['fbanned_in_fed:reason'].format(fed=fed['fed_name'], reason=fban_data['reason'])
+            else:
+                text += strings['fbanned_in_fed'].format(fed=fed['fed_name'])
+
+        if total_count > 0:
+            if message.from_user.id == user['user_id']:
+                text += strings['contact_in_pm']
+    if len(text) > 4096:
+        return await message.answer_document(
+            InputFile(io.StringIO(text), filename="fban_info.txt"),
+            strings['too_long_fbaninfo'],
+            reply=message.message_id
+        )
+    await message.reply(text)
 
 
 async def __export__(chat_id):

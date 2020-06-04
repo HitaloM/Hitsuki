@@ -397,6 +397,18 @@ STRINGS:
     automatic_ban_sfed: User {user} is banned in sub federation <b>{fed_name}</b>. So has been removed!
     automatic_ban_reason: "\nReason: <code>{text}</code>"
 
+    # /fcheck
+    fcheck_header: "<b>Federation ban info:</b>\n"
+    fbanned_count_pm: "You are fbanned in {count} federation(s)!\n"
+    fban_info:fcheck: "You have been fbanned in {fed} federation on {date}, No reason where given!"
+    fban_info:fcheck:reason: "You have been fbanned in {fed} federation on {date} because of reason -\n {reason}\n"
+    fbanned_data: "{user} has been fbanned in {count} federation(s)\n"
+    fbanned_nowhere: "{user} isn't fbanned anywhere!"
+    fbanned_in_fed: "Including this <b>{fed}</b> federation!\n"
+    fbanned_in_fed:reason: "Including this <b>{fed}</b> federation for reason of -\n <code>{reason}</code>"
+    contact_in_pm: "\n\nFor more info on your fbans, please direct message me thus your privacy is secured!"
+    too_long_fbaninfo: "Well! your fbaninfo requires a file!"
+
 
   reports:
     user_user_admin: "You're an admin here, why'd you need to report someone?.."
