@@ -1024,7 +1024,7 @@ async def check_fbanned(message, chat, strings):
                 fed_name=s_fed['fed_name']
             )
 
-        if ban['reason']:
+        if 'reason' in ban:
             text += strings['automatic_ban_reason'].format(text=ban['reason'])
 
         if not await ban_user(chat_id, user_id):
