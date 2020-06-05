@@ -18,8 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pickle
+from contextlib import suppress
 
-from aiogram.utils.exceptions import BadRequest
+from aiogram.utils.exceptions import BadRequest, Unauthorized
 from telethon.tl.functions.users import GetFullUserRequest
 
 from sophie_bot import OPERATORS, bot
@@ -146,6 +147,9 @@ async def get_admins_rights(chat_id, force_update=False):
                 'can_pin_messages': admin['can_pin_messages'],
                 'can_promote_members': admin['can_promote_members']
             }
+
+            with suppress(KeyError):  # Optional permissions
+                alist[user_id]['can_post_messages'] = admin['can_post_messages']
 
         bredis.set(key, pickle.dumps(alist))
         bredis.expire(key, 900)
@@ -306,25 +310,39 @@ def get_user_dec(**dec_kwargs):
     return wrapped
 
 
-def get_chat_dec(func):
-    async def wrapped_1(*args, **kwargs):
-        message = args[0]
-        if hasattr(message, 'message'):
-            message = message.message
-        arg = get_arg(message)
+def get_chat_dec(**dec_kwargs):
+    def wrapped(func):
+        async def wrapped_1(*args, **kwargs):
+            message = args[0]
+            if hasattr(message, 'message'):
+                message = message.message
 
-        if arg.startswith('-') or arg.isdigit():
-            chat = await db.chat_list.find_one({'chat_id': int(arg)})
-        elif arg.startswith('@'):
-            chat = await db.chat_list.find_one({'chat_nick': arg.lower()})
-        else:
-            await message.reply("Please give me valid chat ID/username")
-            return
+            arg = get_arg(message)
+            if dec_kwargs['fed'] is True:
+                if len(text := message.get_args().split()) > 1:
+                    if text[0].count('-') == 4:
+                        arg = text[1]
+                    else:
+                        arg = text[0]
 
-        if not chat:
-            await message.reply("I can't find any chats on given information!")
-            return
+            if arg.startswith('-') or arg.isdigit():
+                chat = await db.chat_list.find_one({'chat_id': int(arg)})
+                if not chat:
+                    with suppress(Unauthorized):
+                        chat = await bot.get_chat(arg)
+            elif arg.startswith('@'):
+                chat = await db.chat_list.find_one({'chat_nick': arg.lower()})
+            elif dec_kwargs['allow_self'] is True:
+                chat = await db.chat_list.find_one({'chat_id': message.chat.id})
+            else:
+                await message.reply("Please give me valid chat ID/username")
+                return
 
-        return await func(*args, chat, **kwargs)
+            if not chat:
+                await message.reply("I can't find any chats on given information!")
+                return
 
-    return wrapped_1
+            return await func(*args, chat, **kwargs)
+
+        return wrapped_1
+    return wrapped

@@ -29,6 +29,7 @@ import uuid
 import os
 import time
 
+from contextlib import suppress
 from pymongo import ReplaceOne
 
 from aiogram import types
@@ -36,6 +37,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import InputFile
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
+from aiogram.utils.exceptions import Unauthorized, NeedAdministratorRightsInTheChannel
 
 from babel.dates import format_timedelta
 from datetime import datetime, timedelta
@@ -50,8 +52,8 @@ from .utils.language import get_strings_dec, get_strings, get_string
 from .utils.message import need_args_dec, get_cmd
 from .utils.restrictions import ban_user, unban_user
 from .utils.user_details import (
-    is_chat_creator, get_user_link, get_user_and_text,
-    is_user_admin, get_user_by_username, get_user_by_id
+    is_chat_creator, get_user_link, get_user_and_text, check_admin_rights,
+    is_user_admin, get_user_by_username, get_user_by_id, get_chat_dec
 )
 
 
@@ -76,7 +78,8 @@ async def fed_post_log(fed, text):
     if 'log_chat_id' not in fed:
         return
     chat_id = fed['log_chat_id']
-    await bot.send_message(chat_id, text)
+    with suppress(Unauthorized, NeedAdministratorRightsInTheChannel):
+        await bot.send_message(chat_id, text)
 
 
 # decorators
@@ -393,16 +396,22 @@ async def demote_from_fed(message, fed, user, text, strings):
 
 @decorator.register(cmds=['fsetlog', 'setfedlog'], only_groups=True)
 @get_fed_dec
+@get_chat_dec(allow_self=True, fed=True)
 @is_fed_owner
 @get_strings_dec("feds")
-async def set_fed_log_chat(message, fed, strings):
+async def set_fed_log_chat(message, fed, chat, strings):
+    chat_id = chat['chat_id'] if 'chat_id' in chat else chat['id']
+    if chat['type'] == 'channel':
+        if await check_admin_rights(chat_id, BOT_ID, ['can_post_messages']) is not True:
+            return await message.reply(strings['no_right_to_post'])
+
     if 'log_chat_id' in fed and fed['log_chat_id']:
         await message.reply(strings['already_have_chatlog'].format(name=fed['fed_name']))
         return
 
     await db.feds.update_one(
         {'_id': fed['_id']},
-        {'$set': {'log_chat_id': message.chat.id}}
+        {'$set': {'log_chat_id': chat_id}}
     )
 
     text = strings['set_chat_log'].format(name=fed['fed_name'])

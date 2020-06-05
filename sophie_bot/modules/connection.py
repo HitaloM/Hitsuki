@@ -103,7 +103,7 @@ async def connect_chat_keyboard_cb(message, callback_data=False, **kwargs):
 
 # In pm with args - connect to chat by arg
 @register(cmds='connect', has_args=True, only_pm=True)
-@get_chat_dec
+@get_chat_dec()
 @get_strings_dec('connections')
 async def connect_to_chat_from_arg(message, chat, strings):
     user_id = message.from_user.id

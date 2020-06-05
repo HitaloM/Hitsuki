@@ -283,6 +283,7 @@ STRINGS:
     set_log_fed_log: |
       <b>Enabled logging</b> #LoggingEnabled
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+    no_right_to_post: I don't have rights to post messages in that channel!
 
     # /funsetlog
     not_logging: "<b>{name}</b> Federation isn't logging to any chat/channel!"
