@@ -20,7 +20,7 @@
 import pickle
 from contextlib import suppress
 
-from aiogram.utils.exceptions import BadRequest, Unauthorized
+from aiogram.utils.exceptions import BadRequest, Unauthorized, ChatNotFound
 from telethon.tl.functions.users import GetFullUserRequest
 
 from sophie_bot import OPERATORS, bot
@@ -328,8 +328,12 @@ def get_chat_dec(**dec_kwargs):
             if arg.startswith('-') or arg.isdigit():
                 chat = await db.chat_list.find_one({'chat_id': int(arg)})
                 if not chat:
-                    with suppress(Unauthorized):
+                    try:
                         chat = await bot.get_chat(arg)
+                    except ChatNotFound:
+                        return await message.reply("I couldn't find the chat/channel! Maybe I am not there!")
+                    except Unauthorized:
+                        return await message.reply("I couldn't access chat/channel! Maybe I was kicked from there!")
             elif arg.startswith('@'):
                 chat = await db.chat_list.find_one({'chat_nick': arg.lower()})
             elif dec_kwargs['allow_self'] is True:
