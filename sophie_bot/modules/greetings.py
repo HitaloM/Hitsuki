@@ -399,7 +399,7 @@ async def welcome_security_handler(message, strings):
     kwargs['buttons'] = [] if not kwargs['buttons'] else kwargs['buttons']
     kwargs['buttons'] += [Button.url(
         strings['click_here'],
-        f'https://t.me/{BOT_USERNAME}?start=welcome_security_{chat_id}_{user_id}_{msg.id}'
+        f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{user_id}_{msg.id}'
     )]
 
     del kwargs['reply_to']
@@ -434,18 +434,18 @@ async def join_expired(chat_id, user_id, message_id, wlkm_msg_id):
     await tbot.delete_messages(chat_id, [message_id, wlkm_msg_id])
 
 
-@register(CommandStart(re.compile(r'welcome_security')), allow_kwargs=True)
+@register(CommandStart(re.compile(r'ws_')), allow_kwargs=True)
 @get_strings_dec('greetings')
 async def welcome_security_handler_pm(message, strings, regexp=None, state=None, **kwargs):
     args = message.get_args().split('_')
-    chat_id = int(args[2])
+    chat_id = int(args[1])
     user_id = message.from_user.id
 
     async with state.proxy() as data:
         data['chat_id'] = chat_id
-        data['msg_id'] = int(args[4])
+        data['msg_id'] = int(args[3])
 
-    if not message.from_user.id == int(args[3]):
+    if not message.from_user.id == int(args[2]):
         if not (rkey := redis.get(f'welcome_security_users:{user_id}')) and not chat_id == rkey:
             await message.reply(strings['not_allowed'])  # TODO
             return
