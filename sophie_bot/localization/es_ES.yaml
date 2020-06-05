@@ -48,6 +48,7 @@ STRINGS:
     note_info_created: "Fue creado en: <code>{date}</code> por {user}\n"
     note_info_updated: "Última actualización en: <code>{date}</code> por {user}\n"
     user_blocked: "¡Escríbeme /start por mensaje privado!"
+
     #/privatenotes
     private_notes_false_args: "Tienes 2 opciones <code>Desactivar</code> y <code>Activar</code>!"
     already_enabled: "Las notas privadas ya están habilitadas en %s"
@@ -62,6 +63,7 @@ STRINGS:
     clean_notes_enable: "Se ha activado correctamente la limpieza de notas en <b>{chat_name}</b>"
     clean_notes_disable: "Se ha desactivado correctamente la limpieza de notas en <b>{chat_name}</b>"
     clean_notes_enabled: "La limpieza de notas actualmente están <b>deshabilitadas</b> en <b>{chat_name}</b>"
+
     clean_notes_disabled: "La limpieza de notas actualmente están <b>deshabilitadas</b> en <b>{chat_name}</b>"
     #Filter
     filters_title: 'Enviar una nota'

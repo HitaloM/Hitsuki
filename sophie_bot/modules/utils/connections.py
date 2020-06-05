@@ -39,7 +39,7 @@ async def get_connected_chat(message, admin=False, only_groups=False, from_id=No
     if cached := redis.hgetall(key):
         cached['status'] = True
         cached['chat_id'] = int(cached['chat_id'])
-        return cached
+        # return cached
 
     # if pm and not connected
     if not (connected := await db.connections.find_one({'user_id': user_id})) or 'chat_id' not in connected:
@@ -60,8 +60,9 @@ async def get_connected_chat(message, admin=False, only_groups=False, from_id=No
 
     # Admin rights check if admin=True
     user_admin = await is_user_admin(chat_id, user_id)
-    if admin is True and not user_admin:
-        return {'status': None, 'err_msg': 'u_should_be_admin'}
+    if admin:
+        if not user_admin:
+            return {'status': None, 'err_msg': 'u_should_be_admin'}
 
     if 'command' in connected:
         if command in connected['command']:
