@@ -733,7 +733,7 @@ async def unfed_ban_user(message, fed, user, text, strings):
         for sfed_id in sfeds_list:
             ban = await db.fed_bans.find_one({'fed_id': sfed_id})
             banned_chats = []
-            if 'banned_chats' in ban:
+            if ban is not None and 'banned_chats' in ban:
                 banned_chats = ban['banned_chats']
 
             for chat_id in banned_chats:
