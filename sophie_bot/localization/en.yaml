@@ -684,6 +684,7 @@ STRINGS:
     already_enabled: Chat security is already enabled!
     already_disabled: Chat security is already disabled!
     restrict_status: Welcome restrict is <b>{state}</b> in <b>{chat}</b>!
+    unkown_option: Please give me valid option! (<code>enable</code> or <code>disable</code>)
 
     whitelist: '🏳️ Whitelist'
     ban: '❌ Ban'

@@ -769,29 +769,35 @@ async def welcomerestrict_cmd(message, chat, strings):
 
     database = await db.greetings.find_one({'chat_id': chat_id})
     if len(args := message.get_args().split()) < 1:
-        if 'welcome_restrict' in database and database['welcome_restrict']['enabled'] is True:
+        if database is not None and 'welcome_restrict' in database and database['welcome_restrict']['enabled'] is True:
             state = strings['enabled']
         else:
             state = strings['disabled']
         await message.reply(strings['restrict_status'].format(state=state, chat=chat['chat_title']))
     else:
         if args[0] in disable:
-            if 'welcome_restrict' not in database or database['welcome_restrict']['enabled'] is False:
-                return await message.reply(strings['already_disabled'])
+            if database is not None:
+                if 'welcome_restrict' not in database or database['welcome_restrict']['enabled'] is False:
+                    return await message.reply(strings['already_disabled'])
             await db.greetings.update_one(
                 {'chat_id': chat_id},
-                {'$unset': {'welcome_restrict': 1}}
+                {'$unset': {'welcome_restrict': 1}},
+                upsert=True
             )
             await message.reply(strings['disabled_sucessfully'].format(chat=chat['chat_title']))
-        if args[0] in enable:
-            if 'welcome_restrict' in database and database['welcome_restrict']['enabled'] is True:
-                await message.reply(strings['already_enabled'])
+        elif args[0] in enable:
+            if database is not None:
+                if 'welcome_restrict' in database and database['welcome_restrict']['enabled'] is True:
+                    await message.reply(strings['already_enabled'])
             else:
                 await db.greetings.update_one(
                     {'chat_id': chat_id},
-                    {'$set': {'chat_id': chat_id, 'welcome_restrict': {'enabled': True}}}
+                    {'$set': {'chat_id': chat_id, 'welcome_restrict': {'enabled': True}}},
+                    upsert=True
                 )
                 await message.reply(strings['enabled_sucessfully'].format(chat=chat['chat_title']))
+        else:
+            return await message.reply(strings['unkown_option'])
 
 
 @register(f='welcome')
