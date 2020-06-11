@@ -663,7 +663,7 @@ async def welcome_security_passed(message, state, strings):
     # Welcome
     if 'note' in db_item:
         text, kwargs = await t_unparse_note_item(
-            message,
+            message.reply_to_message,
             db_item['note'],
             chat_id
         )
