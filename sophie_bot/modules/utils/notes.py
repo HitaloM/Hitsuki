@@ -239,8 +239,9 @@ async def get_parsed_note_list(message, split_args=1):
             note['file'] = msg_file
     else:
         text, note['parse_mode'] = get_parsed_msg(message)
-        text = re.sub(r'(/\w+ )([\w-]+ )', '', text, split_args)
-
+        if message.get_command():
+            text = re.sub(message.get_command(), '', text, 1)  # remove command from text
+        text = re.sub(r'([\w-]+ )', '', text, split_args)
         # Check on attachment
         if msg_file := await get_msg_file(message):
             note['file'] = msg_file
@@ -307,7 +308,7 @@ async def send_note(send_id, text, **kwargs):
     try:
         return await tbot.send_message(send_id, text, **kwargs)
     except (ButtonUrlInvalidError, MessageEmptyError, MediaEmptyError, ValueError):
-        text = 'I found this note/filter invalid! Please update it (read Wiki).'
+        text = 'I found this note invalid! Please update it (read Wiki).'
         return await tbot.send_message(send_id, text)
     except BadRequestError:  # if reply message deleted
         del kwargs['reply_to']
