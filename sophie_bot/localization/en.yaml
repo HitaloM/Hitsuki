@@ -241,7 +241,7 @@ STRINGS:
     joined_fed_already: "This chat has already joined a Federation! Please use /fleave to leave that federation"
     join_fed_success: "Great! Chat <b>{chat}</b> is now a part of <b>{fed}</b> Federation!"
     join_chat_fed_log: |
-      <b>New chat joined to the Fed</b> #ChatJoined
+      <b>Chat joined Federation</b> #ChatJoined
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
 
@@ -249,7 +249,7 @@ STRINGS:
     chat_not_in_fed: "This chat is not in any federation yet."
     leave_fed_success: "Chat <b>{chat}</b> left the <b>{fed}</b> federation."
     leave_chat_fed_log: |
-      <b>Chat leaved from the Fed</b> #ChatLeaved
+      <b>Chat left Federation</b> #ChatLeaved
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
 
@@ -319,7 +319,7 @@ STRINGS:
     fban_fed_admin: "I'm not going to ban a fed admin from their own fed!"
     already_fbanned: "{user} already banned in this federation."
     fbanned_header: "<b>New FedBan</b>\n"
-    fban_info: |
+    fban_info: |#ChatLeaved
       <b>Federation:</b> {fed}
       <b>Fed admin:</b> {fadmin}
       <b>User:</b> {user} (<code>{user_id}</code>)
