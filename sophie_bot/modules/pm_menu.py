@@ -79,6 +79,7 @@ async def back_btn(event):
 
 
 @register(cmds='help')
+@disableable_dec('help')
 @get_strings_dec('pm_menu')
 async def help_cmd(message, strings):
     button = InlineKeyboardMarkup().add(InlineKeyboardButton(
