@@ -751,7 +751,7 @@ async def clean_service_trigger(message, strings):
         await bot.send_message(chat_id, strings['not_admin_wsr'])
         return
 
-    with suppress(MessageToDeleteNotFound):
+    with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
         await message.delete()
 
 # WelcomeRestrict
