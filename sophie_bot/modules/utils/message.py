@@ -39,11 +39,11 @@ def get_arg(message):
 
 
 def get_args(message):
-    args = message.get_args()
+    args = message.get_args().split()
     if args is None:
         # getting args from non-command
-        args = message.text
-    return args.split(' ')
+        args = message.text.split()
+    return args
 
 
 def get_args_str(message):

@@ -19,7 +19,7 @@ from aiogram.utils.exceptions import ChatAdminRequired
 from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 from .utils.user_details import get_user_dec, get_user_link, get_admins_rights
-from .utils.message import get_args
+from .utils.message import get_args_str
 
 from sophie_bot.decorator import register
 from sophie_bot.services.telethon import tbot
@@ -42,8 +42,7 @@ async def promote(message, chat, user, strings):
 
     title = None
 
-    if len(arg := get_args(message)) > 0:
-        arg = arg[0]
+    if len(arg := get_args_str(message)) > 0:
         if len(arg) > 16:
             await message.reply(strings['rank_to_loong'])
             return
