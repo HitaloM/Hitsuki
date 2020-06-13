@@ -107,8 +107,7 @@ async def connect_chat_keyboard_cb(message, callback_data=False, **kwargs):
 @get_strings_dec('connections')
 async def connect_to_chat_from_arg(message, chat, strings):
     user_id = message.from_user.id
-
-    chat_id = None
+    chat_id = chat['chat_id']
 
     arg = get_arg(message)
     if arg.startswith('-'):

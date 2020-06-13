@@ -310,7 +310,7 @@ def get_user_dec(**dec_kwargs):
     return wrapped
 
 
-def get_chat_dec(**dec_kwargs):
+def get_chat_dec(allow_self=False, fed=False):
     def wrapped(func):
         async def wrapped_1(*args, **kwargs):
             message = args[0]
@@ -318,7 +318,7 @@ def get_chat_dec(**dec_kwargs):
                 message = message.message
 
             arg = get_arg(message)
-            if dec_kwargs['fed'] is True:
+            if fed is True:
                 if len(text := message.get_args().split()) > 1:
                     if text[0].count('-') == 4:
                         arg = text[1]
@@ -335,8 +335,8 @@ def get_chat_dec(**dec_kwargs):
                     except Unauthorized:
                         return await message.reply("I couldn't access chat/channel! Maybe I was kicked from there!")
             elif arg.startswith('@'):
-                chat = await db.chat_list.find_one({'chat_nick': arg.lower()})
-            elif dec_kwargs['allow_self'] is True:
+                chat = await db.chat_list.find_one({'chat_nick': arg.strip('@').lower()})
+            elif allow_self is True:
                 chat = await db.chat_list.find_one({'chat_id': message.chat.id})
             else:
                 await message.reply("Please give me valid chat ID/username")
