@@ -1077,7 +1077,7 @@ async def fedban_check(message, chat, strings):
             user = await get_user_by_username(mention) if item.type != 'text_mention' \
                 else await get_user_by_id(int(item.user.id))
     if user is None:
-        if uid.isdigit():
+        if uid is not None and uid.isdigit():
             user = await get_user_by_id(int(uid))
         if not user and "reply_to_message" in message:
             user = await get_user_by_id(message.reply_to_message.from_user.id)
