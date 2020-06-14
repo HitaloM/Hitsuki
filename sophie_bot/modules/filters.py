@@ -117,7 +117,8 @@ async def add_handler(message, chat, strings):
     user_id = message.from_user.id
     chat_id = chat['chat_id']
     redis.set(f'add_filter:{user_id}:{chat_id}', handler)
-    await message.reply(text, reply_markup=buttons)
+    if handler is not None:
+        await message.reply(text, reply_markup=buttons)
 
 
 async def save_filter(message, data):
