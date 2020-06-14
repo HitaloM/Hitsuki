@@ -1077,7 +1077,7 @@ async def fedban_check(message, chat, strings):
             user = await get_user_by_username(mention) if item.type != 'text_mention' \
                 else await get_user_by_id(int(item.user.id))
     if user is None:
-        if uid:
+        if uid.isdigit():
             user = await get_user_by_id(int(uid))
         if not user and "reply_to_message" in message:
             user = await get_user_by_id(message.reply_to_message.from_user.id)
@@ -1087,8 +1087,8 @@ async def fedban_check(message, chat, strings):
     fbanned_fed = False  # A variable to find if user is banned in current fed of chat
     fban_data = None
     total_count = await db.fed_bans.count_documents({'user_id': user['user_id']})
-    if message.chat.type != 'private':
-        fed = await db.feds.find_one({'chats': [int(chat['chat_id'])]})
+    if fed is None and message.chat.type != 'private':
+        fed = await db.feds.find_one({'chats': int(chat['chat_id'])})
     if fed is not None:
         if fban_data := await db.fed_bans.find_one({'user_id': user['user_id'], 'fed_id': fed['fed_id']}):
             fbanned_fed = True
