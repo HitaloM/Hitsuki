@@ -19,6 +19,7 @@
 from dataclasses import dataclass
 
 from aiogram.dispatcher.filters import Filter
+from aiogram.types.callback_query import CallbackQuery
 
 from sophie_bot import BOT_ID, dp
 from sophie_bot.modules.utils.language import get_strings
@@ -107,6 +108,7 @@ class BotHasPermissions(UserRestricting):
         return BOT_ID
 
     async def no_rights_msg(self, message, required_permissions):
+        message = message.message if isinstance(message, CallbackQuery) else message
         strings = await get_strings(message.chat.id, 'global')
         if not isinstance(required_permissions, bool):
             await message.reply(strings['bot_no_right'] % required_permissions)
