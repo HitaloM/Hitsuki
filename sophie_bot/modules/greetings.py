@@ -26,7 +26,7 @@ from datetime import datetime
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils.callback_data import CallbackData
-from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted
+from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted, BadRequest
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
 from apscheduler.jobstores.base import JobLookupError
@@ -379,7 +379,10 @@ async def welcome_security_handler(message, strings):
         return
 
     # Mute user
-    await mute_user(chat_id, user_id)
+    try:
+        await mute_user(chat_id, user_id)
+    except BadRequest as error:
+        return await message.reply(f'welcome security failed due to {error.args[0]}')
 
     if 'security_note' not in db_item:
         db_item = {'security_note': {}}
