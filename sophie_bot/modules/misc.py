@@ -68,7 +68,7 @@ async def replymsg_setup_start(message, strings):
 
 
 async def replymsg_setup_finish(message, data):
-    reply_text = await get_parsed_note_list(message, split_args=-1)
+    reply_text = await get_parsed_note_list(message, allow_reply_message=False, split_args=-1)
     return {'reply_text': reply_text}
 
 

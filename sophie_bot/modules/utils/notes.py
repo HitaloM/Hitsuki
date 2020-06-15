@@ -215,9 +215,9 @@ async def get_msg_file(message):
     return None
 
 
-async def get_parsed_note_list(message, split_args=1):
+async def get_parsed_note_list(message, allow_reply_message=True, split_args=1):
     note = {}
-    if "reply_to_message" in message:
+    if "reply_to_message" in message and allow_reply_message:
         # Get parsed reply msg text
         text, note['parse_mode'] = get_parsed_msg(message.reply_to_message)
         # Get parsed origin msg text
