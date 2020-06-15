@@ -15,6 +15,7 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from aiogram.utils.exceptions import Unauthorized
 
 from sophie_bot.modules.utils.user_details import is_user_admin
 from sophie_bot.services.mongo import db
@@ -59,7 +60,11 @@ async def get_connected_chat(message, admin=False, only_groups=False, from_id=No
     chat_title = (await db.chat_list.find_one({'chat_id': chat_id}))['chat_title']
 
     # Admin rights check if admin=True
-    user_admin = await is_user_admin(chat_id, user_id)
+    try:
+        user_admin = await is_user_admin(chat_id, user_id)
+    except Unauthorized:
+        return {'status': None, 'err_msg': 'bot_not_in_chat, please /disconnect'}
+
     if admin:
         if not user_admin:
             return {'status': None, 'err_msg': 'u_should_be_admin'}

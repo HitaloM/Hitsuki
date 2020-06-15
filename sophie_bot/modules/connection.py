@@ -122,15 +122,12 @@ async def connect_to_chat_from_arg(message, chat, strings):
 
 @register(cmds='disconnect', only_pm=True)
 @get_strings_dec('connections')
-@chat_connection(command='disconnect')
-async def disconnect_from_chat_direct(message, strings, chat):
-    if chat['status'] == 'private':
-        await message.reply(strings['u_wasnt_connected'])
-        return
-
-    user_id = message.from_user.id
-    await set_connected_chat(user_id, None)
-    await message.reply(strings['disconnected'].format(chat_name=chat['chat_title']))
+async def disconnect_from_chat_direct(message, strings):
+    if (data := await db.connections.find_one({'user_id': message.from_user.id})) and 'chat_id' in data:
+        chat = await db.chat_list.find_one({'chat_id': data['chat_id']})
+        user_id = message.from_user.id
+        await set_connected_chat(user_id, None)
+        await message.reply(strings['disconnected'].format(chat_name=chat['chat_title']))
 
 
 @register(cmds='allowusersconnect')
