@@ -37,7 +37,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import InputFile
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
-from aiogram.utils.exceptions import Unauthorized, NeedAdministratorRightsInTheChannel
+from aiogram.utils.exceptions import Unauthorized, NeedAdministratorRightsInTheChannel, ChatNotFound
 
 from babel.dates import format_timedelta
 from datetime import datetime, timedelta
@@ -78,7 +78,7 @@ async def fed_post_log(fed, text):
     if 'log_chat_id' not in fed:
         return
     chat_id = fed['log_chat_id']
-    with suppress(Unauthorized, NeedAdministratorRightsInTheChannel):
+    with suppress(Unauthorized, NeedAdministratorRightsInTheChannel, ChatNotFound):
         await bot.send_message(chat_id, text)
 
 
