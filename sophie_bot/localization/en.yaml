@@ -173,6 +173,7 @@ STRINGS:
     demote_success: "{user} was successfully demoted in {chat_name}!"
     demote_not_admin: "That user isn't admin."
     demote_failed: "Demotion failed. Maybe I can't demote or the person is promoted by someone else"
+    cant_get_user: "I couldn't get the user! If you mind, please reply to his message and try again."
 
   pm_menu:
     start_hi_group: 'Hey there! My name is Sophie'
