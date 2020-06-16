@@ -132,9 +132,11 @@ async def save_filter(message, data):
     await message.reply('Saved!')
 
 
-@register(filter_action_cp.filter(), f='cb', is_admin=True, allow_kwargs=True)
+@register(filter_action_cp.filter(), f='cb', allow_kwargs=True)
 @chat_connection(only_groups=True, admin=True)
 async def register_action(event, chat, callback_data=None, state=None, **kwargs):
+    if not await is_user_admin(event.message.chat.id, event.from_user.id):
+        return await event.answer('You are not admin to do this')
     filter_id = callback_data['filter_id']
     action = FILTERS_ACTIONS[filter_id]
 
@@ -232,10 +234,12 @@ async def del_filter(message, chat, strings):
     await message.reply(text, reply_markup=buttons)
 
 
-@register(filter_remove_cp.filter(), f='cb', is_admin=True, allow_kwargs=True)
+@register(filter_remove_cp.filter(), f='cb', allow_kwargs=True)
 @chat_connection(only_groups=True, admin=True)
 @get_strings_dec('filters')
 async def del_filter_cb(event, chat, strings, callback_data=None, **kwargs):
+    if not await is_user_admin(event.message.chat.id, event.from_user.id):
+        return await event.answer('You are not admin to do this')
     filter_id = ObjectId(callback_data['id'])
     filter = await db.filters.find_one({'_id': filter_id})
     await db.filters.delete_one({'_id': filter_id})

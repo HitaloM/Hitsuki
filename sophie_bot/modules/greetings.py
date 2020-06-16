@@ -395,18 +395,10 @@ async def welcome_security_handler(message, strings):
     kwargs['reply_to'] = (None if 'clean_service' in db_item and db_item['clean_service']['enabled'] is True
                           else message.message_id)
 
-    kwargs['buttons'] = None if not kwargs['buttons'] else kwargs['buttons']
-    msg = await send_note(chat_id, text, **kwargs)
-
-    # Edit msg to apply button
     kwargs['buttons'] = [] if not kwargs['buttons'] else kwargs['buttons']
-    kwargs['buttons'] += [Button.url(
-        strings['click_here'],
-        f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{user_id}_{msg.id}'
-    )]
+    kwargs['buttons'] += [Button.inline(strings['click_here'], f'ws_{chat_id}_{user_id}')]
 
-    del kwargs['reply_to']
-    await msg.edit(text, **kwargs)
+    msg = await send_note(chat_id, text, **kwargs)
 
     redis.set(f'welcome_security_users:{user_id}', chat_id)
 
@@ -437,21 +429,32 @@ async def join_expired(chat_id, user_id, message_id, wlkm_msg_id):
     await tbot.delete_messages(chat_id, [message_id, wlkm_msg_id])
 
 
+@register(regexp=re.compile(r'ws_'), f='cb')
+@get_strings_dec('greetings')
+async def ws_redirecter(message, strings):
+    payload = message.data.split('_')[1:]
+    chat_id = int(payload[0])
+    real_user_id = int(payload[1])
+    called_user_id = message.from_user.id
+
+    if not called_user_id == real_user_id:
+        if not (rkey := redis.get(f'welcome_security_users:{called_user_id}')) and not chat_id == rkey:
+            await message.answer(strings['not_allowed'], show_alert=True)
+            return
+
+    await message.answer(url=f'https://t.me/{BOT_USERNAME}?start='
+                             f'ws_{chat_id}_{called_user_id}_{message.message.message_id}')
+
+
 @register(CommandStart(re.compile(r'ws_')), allow_kwargs=True)
 @get_strings_dec('greetings')
 async def welcome_security_handler_pm(message, strings, regexp=None, state=None, **kwargs):
     args = message.get_args().split('_')
     chat_id = int(args[1])
-    user_id = message.from_user.id
 
     async with state.proxy() as data:
         data['chat_id'] = chat_id
         data['msg_id'] = int(args[3])
-
-    if not message.from_user.id == int(args[2]):
-        if not (rkey := redis.get(f'welcome_security_users:{user_id}')) and not chat_id == rkey:
-            await message.reply(strings['not_allowed'])  # TODO
-            return
 
     db_item = await db.greetings.find_one({'chat_id': chat_id})
 
