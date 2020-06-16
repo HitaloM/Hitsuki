@@ -590,6 +590,7 @@ async def fed_ban_user(message, fed, user, reason, strings):
         fed_id=fed['fed_id'],
         user=await get_user_link(user_id),
         user_id=user_id,
+        by=await get_user_link(message.from_user.id),
         chat_count=len(banned_chats),
         all_chats=len(fed['chats'])
     )
@@ -718,6 +719,7 @@ async def unfed_ban_user(message, fed, user, text, strings):
         fed_id=fed['fed_id'],
         user=await get_user_link(user['user_id']),
         user_id=user['user_id'],
+        by=await get_user_link(message.from_user.id),
         chat_count=len(banned_chats),
         all_chats=len(fed['chats'])
     )

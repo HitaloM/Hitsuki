@@ -280,7 +280,11 @@ STRINGS:
 
     # /fsetlog
     already_have_chatlog: "<b>{name}</b> Federation already have enabled logging in other chat/channel!"
-    set_chat_log: "This chat now logging all actions in <b>{name}</b> Federation"
+    set_chat_log: |
+     This chat now logging all actions in <b>{name}</b> Federation
+
+     Federation logging is used for internal assessment of federation and its performance.
+     it should NOT be used as a show wall to public thereby respecting user data and our privacy guidelines.
     set_log_fed_log: |
       <b>Enabled logging</b> #LoggingEnabled
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
@@ -338,7 +342,9 @@ STRINGS:
     fban_log_fed_log: |
       <b>Ban user in the fed</b> #FedBan
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>Chats:</b> user banned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
+      <b>User:</b> {user} ({user_id})
+      <b>By:</b> {by}
+      <b>Chats banned:</b> user banned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
     fban_reason_fed_log: "<b>Reason:</b> <code>{reason}</code>\n"
     fban_subs_fed_log: "\n<b>Subscribed feds:</b> banned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
 
@@ -354,6 +360,8 @@ STRINGS:
     un_fban_log_fed_log: |
       <b>Unban user in the fed</b> #FedUnBan
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>User:</b> {user} ({user_id})
+      <b>By:</b> {admin}
       <b>Chats:</b> user unbanned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
     un_fban_subs_fed_log: "\n<b>Subscribed feds:</b> unbanned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
 
