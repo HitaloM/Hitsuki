@@ -418,6 +418,7 @@ STRINGS:
     fbanned_in_fed:reason: "Including this <b>{fed}</b> federation for reason of -\n <code>{reason}</code>"
     contact_in_pm: "\n\nFor more info on your fbans, please direct message me thus your privacy is secured!"
     too_long_fbaninfo: "Well! your fbaninfo requires a file!"
+    didnt_fbanned: "You ain't fbanned in this fed."
 
 
   reports:

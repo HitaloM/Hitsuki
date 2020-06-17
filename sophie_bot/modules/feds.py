@@ -1098,18 +1098,23 @@ async def fedban_check(message, chat, strings):
     # create text
     text = strings['fcheck_header']
     if message.chat.type == 'private' and message.from_user.id == user['user_id']:
-        if fed is not None:
-            if 'reason' not in fban_data:
-                text += strings['fban_info:fcheck'].format(
-                    fed=fed['fed_name'],
-                    date=babel.dates.format_date(fban_data['time'], 'long', locale=strings['language_info']['babel']),
-                )
+        if bool(fed):
+            if bool(fban_data):
+                if 'reason' not in fban_data:
+                    text += strings['fban_info:fcheck'].format(
+                        fed=fed['fed_name'],
+                        date=babel.dates.format_date(fban_data['time'], 'long',
+                                                     locale=strings['language_info']['babel']),
+                    )
+                else:
+                    text += strings['fban_info:fcheck:reason'].format(
+                        fed=fed['fed_name'],
+                        date=babel.dates.format_date(fban_data['time'], 'long',
+                                                     locale=strings['language_info']['babel']),
+                        reason=fban_data['reason']
+                    )
             else:
-                text += strings['fban_info:fcheck:reason'].format(
-                    fed=fed['fed_name'],
-                    date=babel.dates.format_date(fban_data['time'], 'long', locale=strings['language_info']['babel']),
-                    reason=fban_data['reason']
-                )
+                return await message.reply(strings['didnt_fbanned'])
         else:
             text += strings['fbanned_count_pm'].format(count=total_count)
             if total_count > 0:
