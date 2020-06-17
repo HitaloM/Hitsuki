@@ -41,4 +41,5 @@ for i in all_filters:
         ))
 
 log.info('Updating Database ...')
-mongodb.filters.bulk_write(updated_list)
+if updated_list:
+    mongodb.filters.bulk_write(updated_list)
