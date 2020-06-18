@@ -61,12 +61,12 @@ async def warn_func(message, chat, user, text, strings, filter_action=False):
         await message.reply(strings['warn_sofi'])
         return
 
-    elif not filter_action:
+    if not filter_action:
         if user_id == message.from_user.id:
             await message.reply(strings['warn_self'])
             return
 
-    elif await is_user_admin(chat_id, user_id):
+    if await is_user_admin(chat_id, user_id):
         if not filter_action:
             await message.reply(strings['warn_admin'])
         return
