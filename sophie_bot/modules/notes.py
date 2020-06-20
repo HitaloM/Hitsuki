@@ -328,7 +328,7 @@ async def clear_note(message, chat, strings):
             note_name = note_name[1:]
 
         if not (note := await db.notes.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
-            if len(note_names) < 1:
+            if len(note_names) <= 1:
                 text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
                 if alleged_note_name := await get_similar_note(chat['chat_id'], note_name):
                     text += strings['u_mean'].format(note_name=alleged_note_name)
