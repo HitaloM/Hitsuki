@@ -476,7 +476,7 @@ async def fed_admins_list(message, fed, strings):
     if 'admins' in fed:
         for user_id in fed['admins']:
             text += '* {} (<code>{}</code>)\n'.format(await get_user_link(user_id), user_id)
-    await message.reply(text)
+    await message.reply(text, disable_notification=True)
 
 
 @decorator.register(cmds='finfo')
