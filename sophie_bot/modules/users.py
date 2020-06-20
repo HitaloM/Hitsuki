@@ -224,7 +224,7 @@ async def adminlist(message, chat, strings):
         if user := await db.user_list.find_one({'user_id': admin}):
             text += '- {} ({})\n'.format(await get_user_link(user['user_id']), user['user_id'])
 
-    await message.reply(text)
+    await message.reply(text, disable_notification=True)
 
 
 class SaveUser(BaseMiddleware):
