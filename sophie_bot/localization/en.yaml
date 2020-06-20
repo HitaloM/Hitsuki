@@ -361,7 +361,7 @@ STRINGS:
       <b>Unban user in the fed</b> #FedUnBan
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
       <b>User:</b> {user} ({user_id})
-      <b>By:</b> {admin}
+      <b>By:</b> {by}
       <b>Chats:</b> user unbanned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
     un_fban_subs_fed_log: "\n<b>Subscribed feds:</b> unbanned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
 
