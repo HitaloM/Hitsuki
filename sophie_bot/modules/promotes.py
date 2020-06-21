@@ -21,6 +21,8 @@ from .utils.language import get_strings_dec
 from .utils.user_details import (get_user_dec, get_user_and_text_dec,
                                  get_user_link, get_admins_rights)
 
+from telethon.errors import AdminRankEmojiNotAllowedError
+
 from sophie_bot.decorator import register
 from sophie_bot.services.telethon import tbot
 from sophie_bot import BOT_ID, bot
@@ -63,6 +65,8 @@ async def promote(message, chat, user, args, strings):
         )
     except ValueError:
         return await message.reply(strings['cant_get_user'])
+    except AdminRankEmojiNotAllowedError:
+        return await message.reply(strings['emoji_not_allowed'])
     await get_admins_rights(chat_id, force_update=True)  # Reset a cache
     await message.reply(text)
 

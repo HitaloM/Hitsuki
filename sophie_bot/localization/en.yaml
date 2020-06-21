@@ -174,6 +174,7 @@ STRINGS:
     demote_not_admin: "That user isn't admin."
     demote_failed: "Demotion failed. Maybe I can't demote or the person is promoted by someone else"
     cant_get_user: "I couldn't get the user! If you mind, please reply to his message and try again."
+    emoji_not_allowed: "I'm sorry, but admin roles can't have emojis 😞"
 
   pm_menu:
     start_hi_group: 'Hey there! My name is Sophie'
@@ -510,7 +511,7 @@ STRINGS:
   imports_exports:
     # Exporting
     started_exporting: Exporting started! Please wait...
-    export_done: Export from <b>%s</b> done!
+    export_done: Export from <b>{chat_name}</b> done!cant_get_user
     exports_locked: Please wait %s till using exports again!
 
     # Importing
