@@ -198,8 +198,9 @@ async def get_note_cmd(message, chat, strings):
         return
 
     noformat = False
-    if len(args := message.text.split(note_name)) > 1:
-        arg2 = args[1][1:].lower()
+    if len(args := message.text.split(' ')) > 2:
+        arg2 = args[2].lower()
+        print(arg2)
         noformat = arg2 in ('noformat', 'raw')
 
     return await get_note(
@@ -448,10 +449,11 @@ async def note_btn(event, strings, regexp=None, **kwargs):
 @register(CommandStart(re.compile(r'btnnotesm')), allow_kwargs=True)
 @get_strings_dec('notes')
 async def note_start(message, strings, regexp=None, **kwargs):
-    args = message.get_args().split('_')
-    chat_id = int(args[2])
+    # Don't even ask what it means, mostly it workaround to support note names with _
+    args = re.search('^([a-zA-Z0-9]+)_([^\-]*?)(\-\d+)$', message.get_args())
+    chat_id = int(args.group(3))
     user_id = message.from_user.id
-    note_name = args[1].lower()
+    note_name = args.group(2).strip("_")
 
     if not (note := await db.notes.find_one({'chat_id': chat_id, 'names': {'$in': [note_name]}})):
         await message.reply(strings['no_note'])
