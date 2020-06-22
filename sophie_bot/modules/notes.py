@@ -453,7 +453,7 @@ async def note_btn(event, strings, regexp=None, **kwargs):
 @get_strings_dec('notes')
 async def note_start(message, strings, regexp=None, **kwargs):
     # Don't even ask what it means, mostly it workaround to support note names with _
-    args = re.search('^([a-zA-Z0-9]+)_(.*?)(\-\d+)$', message.get_args())
+    args = re.search(r'^([a-zA-Z0-9]+)_(.*?)(-\d+)$', message.get_args())
     chat_id = int(args.group(3))
     user_id = message.from_user.id
     note_name = args.group(2).strip("_")
