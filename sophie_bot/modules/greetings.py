@@ -257,12 +257,24 @@ async def welcome_mute(message, chat, strings):
             {'$set': {'chat_id': chat_id, 'welcome_mute': {'enabled': True, 'time': args[0]}}},
             upsert=True
         )
-        await message.reply(strings['welcomemute_enabled'] % chat['chat_title'])
+        text = strings['welcomemute_enabled'] % chat['chat_title']
+        try:
+            await message.reply(text)
+        except BadRequest:
+            await message.answer(text)
     elif args[0] in no:
+        text = strings['welcomemute_disabled']
         await db.greetings.update_one({'chat_id': chat_id}, {'$unset': {'welcome_mute': 1}}, upsert=True)
-        await message.reply(strings['welcomemute_disabled'] % chat['chat_title'])
+        try:
+            await message.reply(text)
+        except BadRequest:
+            await message.answer(text)
     else:
-        await message.reply(strings['welcomemute_invalid_arg'])
+        text = strings['welcomemute_invalid_arg']
+        try:
+            await message.reply(text)
+        except BadRequest:
+            await message.answer(text)
 
 
 # Welcome Security

@@ -20,6 +20,7 @@ from dataclasses import dataclass
 
 from aiogram.dispatcher.filters import Filter
 from aiogram.types.callback_query import CallbackQuery
+from aiogram.utils.exceptions import BadRequest
 
 from sophie_bot import BOT_ID, dp
 from sophie_bot.modules.utils.language import get_strings
@@ -85,9 +86,17 @@ class UserRestricting(Filter):
                                     else message.chat.id, 'global')
         task = message.answer if hasattr(message, 'message') else message.reply
         if not isinstance(required_permissions, bool):  # Check if check_admin_rights func returned missing perm
-            await task(strings['user_no_right'] % required_permissions)
+            try:
+                await task(strings['user_no_right'] % required_permissions)
+            except BadRequest as error:
+                if error.args == 'Reply message not found':
+                    return await message.answer(strings['user_no_right'])
         else:
-            await task(strings['user_no_right:not_admin'])
+            try:
+                await task(strings['user_no_right:not_admin'])
+            except BadRequest as error:
+                if error.args == 'Reply message not found':
+                    return await message.answer(strings['user_no_right:not_admin'])
 
 
 class BotHasPermissions(UserRestricting):
@@ -111,9 +120,17 @@ class BotHasPermissions(UserRestricting):
         message = message.message if isinstance(message, CallbackQuery) else message
         strings = await get_strings(message.chat.id, 'global')
         if not isinstance(required_permissions, bool):
-            await message.reply(strings['bot_no_right'] % required_permissions)
+            try:
+                await message.reply(strings['bot_no_right'] % required_permissions)
+            except BadRequest as error:
+                if error.args == 'Reply message not found':
+                    return await message.answer(strings['bot_no_right'])
         else:
-            await message.reply(strings['bot_no_right:not_admin'])
+            try:
+                await message.reply(strings['bot_no_right:not_admin'])
+            except BadRequest as error:
+                if error.args == 'Reply message not found':
+                    return await message.answer(strings['bot_no_right:not_admin'])
 
 
 dp.filters_factory.bind(UserRestricting)

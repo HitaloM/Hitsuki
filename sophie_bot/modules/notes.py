@@ -25,7 +25,7 @@ from datetime import datetime
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.deep_linking import get_start_link
-from aiogram.utils.exceptions import MessageNotModified, MessageCantBeDeleted
+from aiogram.utils.exceptions import MessageNotModified, MessageCantBeDeleted, BadRequest
 from babel.dates import format_datetime
 from contextlib import suppress
 from pymongo import ReplaceOne
@@ -289,7 +289,11 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
             for note_name in note['names']:
                 text += f" <code>#{note_name}</code>"
         text += strings['you_can_get_note']
-        await message.reply(text)
+
+        try:
+            await message.reply(text)
+        except BadRequest:
+            await message.answer(text)
 
 
 @register(cmds='search')
