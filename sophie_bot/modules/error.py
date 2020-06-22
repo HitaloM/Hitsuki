@@ -20,6 +20,7 @@
 import html
 import sys
 
+from aiogram.types import Update
 from redis.exceptions import RedisError
 
 from sophie_bot import dp, bot, OWNER_ID
@@ -35,9 +36,17 @@ def catch_redis_error(**dec_kwargs):
             global SENT
             # We can't use redis here
             # So we save data - 'message sent to' in a list variable
-            update = args[0]
-            message = (update.message if update.message is not None else update.callback_query.message
-                       if update.callback_query is not None else update)
+            update: Update = args[0]
+
+            if update.message is not None:
+                message = update.message
+            elif update.callback_query is not None:
+                message = update.callback_query.message
+            elif update.edited_message is not None:
+                message = update.edited_message
+            else:
+                return
+
             chat_id = message.chat.id if 'chat' in message else None
             try:
                 return await func(*args, **kwargs)
@@ -60,9 +69,17 @@ def catch_redis_error(**dec_kwargs):
 
 @dp.errors_handler()
 @catch_redis_error()
-async def all_errors_handler(message, error):
-    message = (message.message if message.message is not None else message.callback_query.message
-               if message.callback_query is not None else message)
+async def all_errors_handler(update: Update, error):
+
+    if update.message is not None:
+        message = update.message
+    elif update.callback_query is not None:
+        message = update.callback_query.message
+    elif update.edited_message is not None:
+        message = update.edited_message
+    else:
+        return  # we don't want other guys in playground
+
     chat_id = message.chat.id
     err_tlt = sys.exc_info()[0].__name__
     err_msg = str(sys.exc_info()[1])
@@ -87,9 +104,16 @@ async def all_errors_handler(message, error):
 
 def parse_update(update):
     # The parser to hide sensitive informations in the update (for logging)
-    update = (update['message'] if 'message' in update and update['message'] is not None else
-              update['callback_query']['message'] if 'callback_query' in update and update['callback_query']
-              is not None else update)
+
+    if isinstance(update, Update):  # Hacc
+        if update.message is not None:
+            update = update.message
+        elif update.callback_query is not None:
+            update = update.callback_query.message
+        elif update.edited_message is not None:
+            update = update.edited_message
+        else:
+            return
 
     if 'chat' in update:
         chat = update['chat']
