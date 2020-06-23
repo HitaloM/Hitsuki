@@ -7,7 +7,7 @@ STRINGS:
     #/save
     note_saved: "🗒 Nota <code>{note_name}</code> guardada en <b>{chat_title}</b>!"
     note_updated: "🗒 Nota <code>{note_name}</code> actualizada en <b>{chat_title}</b>!"
-    you_can_get_note: "Puedes recuperar esta nota usando <code>/get {note_name}</code>, ó <code>#{note_name}</code>"
+    you_can_get_note: "\nPuedes recuperar esta nota usando <code>/get {note_name}</code>, ó <code>#{note_name}</code>"
     #Translator note: please keep sure that you don't have space in the end of string
     note_aliases: "\nAlias de la nota:"
     blank_note: "¡No se permite guardar notas en blanco!"
@@ -25,7 +25,7 @@ STRINGS:
       <b>Patrón:</b> <code>{request}</code>
       <b>Notas coincidentes:</b>
     #/clear
-    note_removed: "Nota <code>{note_name}</code> eliminada en <b>{chat_name}</b>!"
+    note_removed: "Nota <code>#{note_name}</code> eliminada en <b>{chat_name}</b>!"
     note_removed_multiple: |
       Múltiples notas eliminadas en <b>{chat_name}</b>
       <b>Eliminado:</b><code>{removed}</code>
@@ -48,7 +48,6 @@ STRINGS:
     note_info_created: "Fue creado en: <code>{date}</code> por {user}\n"
     note_info_updated: "Última actualización en: <code>{date}</code> por {user}\n"
     user_blocked: "¡Escríbeme /start por mensaje privado!"
-
     #/privatenotes
     private_notes_false_args: "Tienes 2 opciones <code>Desactivar</code> y <code>Activar</code>!"
     already_enabled: "Las notas privadas ya están habilitadas en %s"
@@ -63,7 +62,6 @@ STRINGS:
     clean_notes_enable: "Se ha activado correctamente la limpieza de notas en <b>{chat_name}</b>"
     clean_notes_disable: "Se ha desactivado correctamente la limpieza de notas en <b>{chat_name}</b>"
     clean_notes_enabled: "La limpieza de notas actualmente están <b>deshabilitadas</b> en <b>{chat_name}</b>"
-
     clean_notes_disabled: "La limpieza de notas actualmente están <b>deshabilitadas</b> en <b>{chat_name}</b>"
     #Filter
     filters_title: 'Enviar una nota'
@@ -153,10 +151,12 @@ STRINGS:
     demote_success: "¡{user} fue degradado con éxito en {chat_name}!"
     demote_not_admin: "Ese usuario no es administrador."
     demote_failed: "La democión falló. Tal vez no puedo degradar o la persona es promovida por otra persona"
+    cant_get_user: "No pude obtener el usuario! Si le importa, responda a su mensaje e inténtelo nuevamente."
+    emoji_not_allowed: "Lo siento, pero los roles de administrador no pueden contener emojis 😞"
   pm_menu:
     start_hi_group: '¡Hola! Mi nombre es Sophie'
     start_hi: "¡Hola! ¡Mi nombre es Sophie, te ayudo a gestionar tu grupo de una manera eficiente!"
-    btn_help: "Ayuda"
+    btn_help: "❔ Ayuda"
     btn_lang: "🇷🇺 Lenguaje"
     btn_chat: "👥 Grupo Sophie"
     btn_channel: "📡 Noticias de Sophie"
@@ -244,10 +244,12 @@ STRINGS:
       <b>Usuario:</b> {user} (<code>{user_id}</code>)
     #/fsetlog
     already_have_chatlog: "<b>{name}</b> ¡La Federación ya ha habilitado el registro en otro chat/canal!"
-    set_chat_log: "Este chat ahora registra todas las acciones en <b>{name}</b> Federación"
+    set_chat_log: |
+      Este chat ahora registra todas las acciones en <b>{name}</b> Federación
     set_log_fed_log: |
       <b>Activado registro</b> #LoggingEnabled
       <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
+    no_right_to_post: '¡No tengo permisos para publicar mensajes en ese canal!'
     #/funsetlog
     not_logging: "<b>{name}</b> ¡La Federación no ha iniciado sesión en ningún chat/canal!"
     logging_removed: "Se ha eliminado correctamente el registro de <b>{name}</b> Federación."
@@ -276,10 +278,7 @@ STRINGS:
     fban_fed_admin: "¡No voy a banear a un administrador de su propia federación!"
     already_fbanned: "{user} ya está baneado en esta federación."
     fbanned_header: "<b>Nuevo FedBan</b>\n"
-    fban_info: |
-      <b>Federación:</b> {fed}
-      <b>Administrador de la Federación:</b> {fadmin}
-      <b>Usuario:</b> {user} (<code>{user_id}</code>)
+    fban_info: "<b>Federación:</b> {fed}\n<b>Administrador de la Federación:</b> {fadmin}\n<b>Usuario:</b> {user} (<code>{user_id}</code>)"
     fbanned_reason: "<b>Razón:</b> <code>{reason}</code>"
     fbanned_process: "\n<b>Estado:</b> Baneando en <code>{num}</code> chats de federación..."
     fbanned_done: "\n<b>Estado:</b> ¡Hecho! baneado en <code>{num}</code> chats!"
@@ -345,6 +344,18 @@ STRINGS:
     automatic_ban: El usuario {user} está baneado en la federación actual <b>{fed_name}</b>. ¡Ha sido eliminado!
     automatic_ban_sfed: El usuario {user} está baneado en la subfederación <b>{fed_name}</b>. ¡Se ha eliminado!
     automatic_ban_reason: "\nRazón: <code>{text}</code>"
+    #/fcheck
+    fcheck_header: "<b>Información del ban de la Federación:</b>\n"
+    fbanned_count_pm: "¡Estás baneado en {count} federación(s)!\n"
+    "fban_info:fcheck": "Has sido baneado en la federación {fed} el {date}. ¡No hay razón dada!"
+    "fban_info:fcheck:reason": "Has sido baneado en la federación de {fed} el {date} por razón -\n {reason}\n"
+    fbanned_data: "{user} ha sido baneado en {count} federación(es)\n"
+    fbanned_nowhere: "¡{user} no está baneado en ningún sitio!"
+    fbanned_in_fed: "¡Incluye esta federación de <b>{fed}</b>!\n"
+    "fbanned_in_fed:reason": "Incluyendo esta federación <b>{fed}</b> por motivo de -\n <code>{reason}</code>"
+    contact_in_pm: "\n\nPara más información sobre tus fbans, por favor envíame un mensaje para que tu privacidad esté asegurada!"
+    too_long_fbaninfo: "¡Bien! ¡Tu fbaninfo requiere un archivo!"
+    didnt_fbanned: "No estás baneado en esta fed."
   reports:
     user_user_admin: "Eres un administrador aquí, ¿por qué necesitarías reportar a alguien?.."
     user_is_whitelisted: "Eres un usuario en la lista blanca, ¿por qué necesitarías reportar a alguien?.."
@@ -430,7 +441,7 @@ STRINGS:
   imports_exports:
     #Exporting
     started_exporting: '¡Exportación iniciada! Por favor espere...'
-    export_done: Exportación de <b>%s</b> hecho!
+    export_done: Exportar desde <b>{chat_name}</b> realizado!cant_get_user
     exports_locked: '¡Por favor, espera %s para volver a usar exportaciones!'
     #Importing
     send_import_file: '¡Por favor, envía un archivo de importación!'
@@ -546,7 +557,7 @@ STRINGS:
     welcomemute_invalid_arg: Argumento inválido, tiempo esperado.
     welcomemute_enabled: Silencio de bienvenida activado en <b>%s</b>
     welcomemute_disabled: Silencio de bienvenida deshabilitado en <b>%s</b>
-    welcomemute_status: El silencio de bienvenida es <code>{status}</code> en <b>{chat_name}</b>
+    welcomemute_status: El silencio de bienvenida esta <code>{status}</code> en <b>{chat_name}</b>
     #/welcomesecurity
     welcomesecurity_enabled: Seguridad de bienvenida activada en <b>{chat_name}</b> al nivel <code>{level}</code>.
     welcomesecurity_enabled_word: habilitado, establecido al nivel {level}
@@ -561,8 +572,8 @@ STRINGS:
     num_is_not_digit: '¡Por favor, introduzca sólo números!'
     bad_num: '¡Número incorrecto! Por favor, inténtalo de nuevo.'
     passed: '¡Verificación pasada, has sido desmuteado en <b>%s</b>!'
-    passed_no_frm: La verificación ha pasado, ¡Has sido desmuteado en %s!
-    last_chance: '¡Tienes una última oportunidad para ingresar el captcha!'
+    passed_no_frm: La verificación obtenida, ¡Has sido desmuteado en %s!
+    last_chance: '¡Tienes una última oportunidad para enviar el captcha!'
     btn_button_text: "Por favor, pulsa el botón de abajo para verificarte."
     btn_wc_text: |
       Por favor, pulsa a la derecha si coincide con esta expresión:
@@ -587,6 +598,7 @@ STRINGS:
     already_enabled: '¡La seguridad del chat ya está activada!'
     already_disabled: '¡La seguridad del chat ya está deshabilitada!'
     restrict_status: '¡La bienvenida de restricción es <b>{state}</b> en <b>{chat}</b>!'
+    unkown_option: '¡Por favor dame una opción válida! (<code>habilitar</code> o <code>desactivar</code>)'
     whitelist: '🏳️ Whitelist'
     ban: '❌ Ban'
   locks:
