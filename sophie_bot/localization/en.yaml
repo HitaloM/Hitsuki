@@ -38,7 +38,7 @@ STRINGS:
     clear_all_text: "This will remove all notes from {chat_name}. Are you sure?"
     clearall_btn_yes: "Yes. Remove all my notes!"
     clearall_btn_no: "No!"
-    clearall_done: "All (<code>{num}</code>) notes in {chat_name} was removed!"
+    clearall_done: "All (<code>{num}</code>) notes in {chat_name} were removed!"
 
     # /search
     search_header: |
