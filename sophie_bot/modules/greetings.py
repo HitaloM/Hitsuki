@@ -25,6 +25,7 @@ from datetime import datetime
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.types import Message
 from aiogram.utils.callback_data import CallbackData
 from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted, BadRequest
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
@@ -365,63 +366,73 @@ async def reset_security_note(message, chat, strings):
 
 @register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
-async def welcome_security_handler(message, strings):
-    user_id = int(str([user.id for user in message.new_chat_members])[1:-1])
+async def welcome_security_handler(message: Message, strings):
+    new_users = [user for user in message.new_chat_members]
     chat_id = message.chat.id
 
-    if user_id == BOT_ID:
-        return
+    for user in new_users:
+        user_id = user.id
 
-    db_item = await db.greetings.find_one({'chat_id': chat_id})
-    if not db_item or 'welcome_security' not in db_item:
-        return
+        if user_id == BOT_ID:
+            return
 
-    if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
-        await message.reply(strings['not_admin_ws'])
-        return
+        db_item = await db.greetings.find_one({'chat_id': chat_id})
+        if not db_item or 'welcome_security' not in db_item:
+            return
 
-    user = await message.chat.get_member(user_id)
+        if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+            await message.reply(strings['not_admin_ws'])
+            return
 
-    # Check if user was muted before
-    if 'can_send_messages' in user and user['can_send_messages'] is False:
-        return
+        user_data = await message.chat.get_member(user_id)
 
-    # Check on OPs and chat owner
-    if await is_user_admin(chat_id, user_id):
-        return
+        # Check if user was muted before
+        if 'can_send_messages' in user_data and user_data['can_send_messages'] is False:
+            return
 
-    # Mute user
-    try:
-        await mute_user(chat_id, user_id)
-    except BadRequest as error:
-        return await message.reply(f'welcome security failed due to {error.args[0]}')
+        # Check on OPs and chat owner
+        if await is_user_admin(chat_id, user_id):
+            return
 
-    if 'security_note' not in db_item:
-        db_item = {'security_note': {}}
-        db_item['security_note']['text'] = strings['default_security_note']
-        db_item['security_note']['parse_mode'] = 'md'
+        # check if user added is a bot
+        if user.is_bot and await is_user_admin(chat_id, message.from_user.id):
+            return
 
-    text, kwargs = await t_unparse_note_item(message, db_item['security_note'], chat_id)
+        # Mute user
+        try:
+            await mute_user(chat_id, user_id)
+        except BadRequest as error:
+            return await message.reply(f'welcome security failed due to {error.args[0]}')
 
-    db_item = await db.greetings.find_one({'chat_id': chat_id})
-    kwargs['reply_to'] = (None if 'clean_service' in db_item and db_item['clean_service']['enabled'] is True
-                          else message.message_id)
+        if 'security_note' not in db_item:
+            db_item = {'security_note': {}}
+            db_item['security_note']['text'] = strings['default_security_note']
+            db_item['security_note']['parse_mode'] = 'md'
 
-    kwargs['buttons'] = [] if not kwargs['buttons'] else kwargs['buttons']
-    kwargs['buttons'] += [Button.inline(strings['click_here'], f'ws_{chat_id}_{user_id}')]
+        kwargs = {'user_id': user_id, 'username': user.username}
+        text, kwargs = await t_unparse_note_item(message, db_item['security_note'], chat_id, **kwargs)
 
-    msg = await send_note(chat_id, text, **kwargs)
+        db_item = await db.greetings.find_one({'chat_id': chat_id})
 
-    redis.set(f'welcome_security_users:{user_id}', chat_id)
+        kwargs['reply_to'] = message.message_id
+        if 'clean_service' in db_item and db_item['clean_service']['enabled'] is True:
+            del kwargs['reply_to']
 
-    scheduler.add_job(
-        join_expired,
-        "date",
-        id=f"wc_expire:{chat_id}:{user_id}",
-        run_date=datetime.utcnow() + convert_time(get_str_key('JOIN_CONFIRM_DURATION')),
-        kwargs={'chat_id': chat_id, 'user_id': user_id, 'message_id': msg.id, 'wlkm_msg_id': message.message_id},
-        replace_existing=True
-    )
+        kwargs['buttons'] = [] if not kwargs['buttons'] else kwargs['buttons']
+        kwargs['buttons'] += [Button.inline(strings['click_here'], f'ws_{chat_id}_{user_id}')]
+
+        msg = await send_note(chat_id, text, **kwargs)
+
+        redis.set(f'welcome_security_users:{user_id}', chat_id)
+
+        scheduler.add_job(
+            join_expired,
+            "date",
+            id=f"wc_expire:{chat_id}:{user_id}",
+            run_date=datetime.utcnow() + convert_time(get_str_key('JOIN_CONFIRM_DURATION')),
+            kwargs={'chat_id': chat_id, 'user_id': user_id, 'message_id': msg.id, 'wlkm_msg_id': message.message_id},
+            replace_existing=True
+        )
 
 
 async def join_expired(chat_id, user_id, message_id, wlkm_msg_id):
@@ -685,7 +696,7 @@ async def welcome_security_passed(message, state, strings):
     # Welcome
     if 'note' in db_item:
         text, kwargs = await t_unparse_note_item(
-            message.reply_to_message if message.reply_to_message is not None else message,
+            message.reply_to_message if bool(message.reply_to_message) else message,
             db_item['note'],
             chat_id
         )
@@ -703,51 +714,58 @@ async def welcome_security_passed(message, state, strings):
 # Welcomes
 @register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
-async def welcome_trigger(message, strings):
+async def welcome_trigger(message: Message, strings):
     chat_id = message.chat.id
-    user_id = int(str([user.id for user in message.new_chat_members])[1:-1])
+    new_users = [user for user in message.new_chat_members]
 
-    if user_id == BOT_ID:
-        return
+    for user in new_users:
+        user_id = user.id
 
-    if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
-        db_item = {}
+        if user_id == BOT_ID:
+            return
 
-    if 'welcome_disabled' in db_item and db_item['welcome_disabled'] is True:
-        return
+        if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
+            db_item = {}
 
-    if 'welcome_security' in db_item and db_item['welcome_security']['enabled']:
-        return
+        if 'welcome_disabled' in db_item and db_item['welcome_disabled'] is True:
+            return
 
-    # Welcome
-    if 'note' not in db_item:
-        db_item['note'] = {
-            'text': strings['default_welcome'],
-            'parse_mode': 'md'
-        }
-    reply_to = (message.message_id if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False
-                else None)
-    text, kwargs = await t_unparse_note_item(message, db_item['note'], chat_id)
-    msg = await send_note(chat_id, text, reply_to=reply_to, **kwargs)
-    # Clean welcome
-    if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False:
-        if 'last_msg' in db_item['clean_welcome']:
-            with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
-                await bot.delete_message(chat_id, db_item['clean_welcome']['last_msg'])
-        await db.greetings.update_one({'_id': db_item['_id']}, {'$set': {'clean_welcome.last_msg': msg.id}},
-                                      upsert=True)
+        if 'welcome_security' in db_item and db_item['welcome_security']['enabled']:
+            return
 
-    # Welcome mute
-    if user_id == BOT_ID:
-        return
-    if 'welcome_mute' in db_item and db_item['welcome_mute']['enabled'] is not False:
-        user = await bot.get_chat_member(chat_id, user_id)
-        if 'can_send_messages' not in user or user['can_send_messages'] is True:
-            if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
-                await message.reply(strings['not_admin_wm'])
-                return
+        # Welcome
+        if 'note' not in db_item:
+            db_item['note'] = {
+                'text': strings['default_welcome'],
+                'parse_mode': 'md'
+            }
 
-            await restrict_user(chat_id, user_id, until_date=convert_time(db_item['welcome_mute']['time']))
+        reply_to = message.message_id
+        if 'clean_service' in db_item and db_item['clean_service']['enabled'] is True:
+            reply_to = None
+
+        kwargs = {'user_id': user_id, 'username': user.username}
+        text, kwargs = await t_unparse_note_item(message, db_item['note'], chat_id, **kwargs)
+        msg = await send_note(chat_id, text, reply_to=reply_to, **kwargs)
+        # Clean welcome
+        if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False:
+            if 'last_msg' in db_item['clean_welcome']:
+                with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
+                    await bot.delete_message(chat_id, db_item['clean_welcome']['last_msg'])
+            await db.greetings.update_one({'_id': db_item['_id']}, {'$set': {'clean_welcome.last_msg': msg.id}},
+                                          upsert=True)
+
+        # Welcome mute
+        if user_id == BOT_ID:
+            return
+        if 'welcome_mute' in db_item and db_item['welcome_mute']['enabled'] is not False:
+            user = await bot.get_chat_member(chat_id, user_id)
+            if 'can_send_messages' not in user or user['can_send_messages'] is True:
+                if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+                    await message.reply(strings['not_admin_wm'])
+                    return
+
+                await restrict_user(chat_id, user_id, until_date=convert_time(db_item['welcome_mute']['time']))
 
 
 # Clean service trigger
