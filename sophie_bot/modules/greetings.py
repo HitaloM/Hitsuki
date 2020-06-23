@@ -388,6 +388,10 @@ async def welcome_security_handler(message, strings):
     if await is_user_admin(chat_id, user_id):
         return
 
+    # check if user added is a bot
+    if user.is_bot and await is_user_admin(chat_id, message.from_user.id):
+        return
+
     # Mute user
     try:
         await mute_user(chat_id, user_id)
