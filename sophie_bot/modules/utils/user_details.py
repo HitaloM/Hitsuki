@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pickle
+import re
 from contextlib import suppress
 
 from aiogram.utils.exceptions import BadRequest, Unauthorized, ChatNotFound
@@ -335,7 +336,7 @@ def get_chat_dec(allow_self=False, fed=False):
                     except Unauthorized:
                         return await message.reply("I couldn't access chat/channel! Maybe I was kicked from there!")
             elif arg.startswith('@'):
-                chat = await db.chat_list.find_one({'chat_nick': arg.strip('@').lower()})
+                chat = await db.chat_list.find_one({'chat_nick': re.compile(arg.strip('@'), re.IGNORECASE)})
             elif allow_self is True:
                 chat = await db.chat_list.find_one({'chat_id': message.chat.id})
             else:
