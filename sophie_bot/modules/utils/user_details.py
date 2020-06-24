@@ -337,8 +337,8 @@ def get_user_dec(**dec_kwargs):
             if hasattr(message, 'message'):
                 message = message.message
 
-            user, text = await get_user_and_text(message, send_text=False, **dec_kwargs)
-            if not user:
+            user, text = await get_user_and_text(message, **dec_kwargs)
+            if not bool(user):
                 await message.reply("I can't get the user!")
                 return
             else:
