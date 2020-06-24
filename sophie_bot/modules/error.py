@@ -30,7 +30,7 @@ from sophie_bot.utils.logger import log
 SENT = []
 
 
-def catch_redis_error(**dec_kwargs):
+def catch_redis_error():
     def wrapped(func):
         async def wrapped_1(*args, **kwargs):
             global SENT
@@ -91,6 +91,9 @@ async def all_errors_handler(update: Update, error):
         return
 
     if err_tlt == 'BadRequest' and err_msg == 'Have no rights to send a message':
+        return True
+
+    if err_msg == 'Reply message not found':
         return True
 
     if err_tlt in ('FloodWaitError', 'RetryAfter', 'SlowModeWaitError'):
