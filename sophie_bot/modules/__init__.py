@@ -52,6 +52,5 @@ def list_all_modules() -> list:
     return all_modules
 
 
-
 ALL_MODULES = sorted(list_all_modules())
 __all__ = ALL_MODULES + ["ALL_MODULES"]
