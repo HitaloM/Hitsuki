@@ -17,21 +17,38 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+from sophie_bot.utils.logger import log
+
 
 LOADED_MODULES = []
 
 
-def list_all_modules():
-    from os.path import dirname, basename, isfile
-    import glob
+def list_all_modules() -> list:
+    modules_directory = 'sophie_bot/modules'
 
-    mod_paths = glob.glob(dirname(__file__) + "/*.py")
-    all_modules = [
-        basename(f)[:-3]
-        for f in mod_paths
-        if isfile(f) and f.endswith(".py") and not f.endswith("__init__.py")
-    ]
+    all_modules = []
+    for module_name in os.listdir(modules_directory):
+        path = modules_directory + '/' + module_name
+        if not os.path.isdir(path):
+            continue
+
+        if '__pycache__' in path:
+            continue
+
+        if path in all_modules:
+            log.path("Modules with same name can't exists!")
+            exit(5)
+
+        # One file module type
+        if path.endswith('.py'):
+            all_modules.append(module_name)
+
+        # Module directory
+        if os.path.isdir(path) and os.path.exists(path + '/__init__.py'):
+            all_modules.append(module_name)
     return all_modules
+
 
 
 ALL_MODULES = sorted(list_all_modules())
