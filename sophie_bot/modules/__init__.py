@@ -30,10 +30,10 @@ def list_all_modules() -> list:
     all_modules = []
     for module_name in os.listdir(modules_directory):
         path = modules_directory + '/' + module_name
-        if not os.path.isdir(path):
-            continue
 
         if '__pycache__' in path:
+            continue
+        if '__init__' in path:
             continue
 
         if path in all_modules:
@@ -42,11 +42,13 @@ def list_all_modules() -> list:
 
         # One file module type
         if path.endswith('.py'):
-            all_modules.append(module_name)
+            # TODO: removesuffix
+            all_modules.append(module_name.split('.py')[0])
 
         # Module directory
         if os.path.isdir(path) and os.path.exists(path + '/__init__.py'):
             all_modules.append(module_name)
+
     return all_modules
 
 
