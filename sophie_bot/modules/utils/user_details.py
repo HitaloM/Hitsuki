@@ -248,15 +248,17 @@ async def get_user_by_text(message, text: str):
 
 async def get_user(message, allow_self=False):
     args = message.text.split(None, 2)
+    user = None
 
     # Only 1 way
     if len(args) < 2 and "reply_to_message" in message:
         return await get_user_by_id(message.reply_to_message.from_user.id)
 
     # Use default function to get user
-    user = await get_user_by_text(message, args[1])
+    if len(args) > 1:
+        user = await get_user_by_text(message, args[1])
 
-    if not user:
+    if not user and bool(message.reply_to_message):
         user = await get_user_by_id(message.reply_to_message.from_user.id)
 
     # No args and no way to get user
@@ -316,7 +318,7 @@ def get_user_and_text_dec(**dec_kwargs):
             if hasattr(message, 'message'):
                 message = message.message
 
-            user, text = await get_user_and_text(message, **dec_kwargs, send_text=False)
+            user, text = await get_user_and_text(message, **dec_kwargs)
             if not user:
                 await message.reply("I can't get the user!")
                 return
