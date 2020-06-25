@@ -72,7 +72,7 @@ async def export_chat_data(message, chat, strings):
             data.update(k)
 
     jfile = InputFile(io.StringIO(ujson.dumps(data, indent=2)), filename=f'{chat_id}_export.json')
-    text = strings['export_done'] % chat['chat_title']
+    text = strings['export_done'].format(chat_name=chat['chat_title'])
     await message.answer_document(jfile, text, reply=message.message_id)
     await msg.delete()
 

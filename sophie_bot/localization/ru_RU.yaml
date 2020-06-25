@@ -441,7 +441,7 @@ STRINGS:
   imports_exports:
     #Exporting
     started_exporting: Экспорт начался! Пожалуйста, подождите...
-    export_done: Экспорт из <b>%s</b> завершён!
+    export_done: Экспорт из <b>{chat_name}</b> завершён!
     exports_locked: Пожалуйста, подождите %s до повторного использования экспорта!
     #Importing
     send_import_file: Пожалуйста, отправьте файл импорта!
