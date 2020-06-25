@@ -26,7 +26,7 @@ from datetime import datetime
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils.callback_data import CallbackData
-from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted, BadRequest
+from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted, BadRequest, ChatAdminRequired
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
 from apscheduler.jobstores.base import JobLookupError
@@ -661,7 +661,9 @@ async def welcome_security_passed(message, state, strings):
         msg_id = data['msg_id']
         verify_msg_id = data['verify_msg_id']
 
-    await unmute_user(chat_id, user_id)
+    with suppress(ChatAdminRequired):
+        await unmute_user(chat_id, user_id)
+
     with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
         await bot.delete_message(chat_id, msg_id)
         await bot.delete_message(user_id, verify_msg_id)
