@@ -48,14 +48,21 @@ class FormatListText:
         return text
 
     def build_data_text(self, data, text="", space='  ') -> str:
-        for key, value in data.items():
-            text += '\n'
-            text += space
-            text += self.get_sub_title(key)
-            if isinstance(value, dict):
-                text = self.build_data_text(value, text, space + space)
-            else:
-                text += str(value)
+        if type(data) is list:
+            for value in data:
+                text += '\n'
+                text += space
+                text += f'- {value}'
+        else:
+            for key, value in data.items():
+                text += '\n'
+                text += space
+                text += self.get_sub_title(key)
+
+                if isinstance(value, dict) or type(value) == list:
+                    text = self.build_data_text(value, text, space + space)
+                else:
+                    text += str(value)
         return text
 
     @property
