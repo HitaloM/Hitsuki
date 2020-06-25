@@ -27,7 +27,6 @@ from sophie_bot import OWNER_ID, OPERATORS, SOPHIE_VERSION
 from sophie_bot.decorator import REGISTRED_COMMANDS, COMMANDS_ALIASES, register
 from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db, mongodb
-from sophie_bot.services.quart import quart
 from sophie_bot.services.redis import redis
 from sophie_bot.services.telethon import tbot
 from .utils.api import html_white_text
@@ -184,17 +183,6 @@ async def stats(message):
         text += await module.__stats__()
 
     await message.reply(text)
-
-
-@quart.route('/stats')
-async def api_stats():
-    text = f"<b>Sophie {SOPHIE_VERSION} stats</b>\n"
-
-    for module in [m for m in LOADED_MODULES if hasattr(m, '__stats__')]:
-        if txt := await module.__stats__():
-            text += txt
-
-    return html_white_text(text)
 
 
 async def __stats__():

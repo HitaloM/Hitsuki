@@ -14,18 +14,12 @@ aiohttp[speedups]
 cryptg
 cryptography
 
-# Build uvloop from source, current pip version not compability with python3.8
-#git+https://github.com/python/cpython
-#git+https://github.com/MagicStack/uvloop
-
 # Other
 envparse
 hypercorn
 aiocron
 apscheduler
 requests
-#git+https://github.com/casics/nostril
-quart
 ujson
 PyYAML>5.0
 coloredlogs
