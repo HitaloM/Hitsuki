@@ -296,7 +296,8 @@ async def get_users(message):
     users = []
 
     for text in text.split('|'):
-        users.append(await get_user_by_text(message, text))
+        if user := await get_user_by_text(message, text):
+            users.append(user)
 
     return users
 
@@ -305,8 +306,8 @@ async def get_users_and_text(message):
     users = await get_users(message)
     args = message.text.split(None, 2)
 
-    if len(args) > 2:
-        return users, args[2]
+    if len(args) > 1:
+        return users, args[1]
     else:
         return users, ''
 
