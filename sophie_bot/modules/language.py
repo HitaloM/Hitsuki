@@ -24,7 +24,6 @@ from contextlib import suppress
 
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
-from .utils.api import html_white_text
 from .utils.language import LANGUAGES, get_strings_dec, change_chat_lang, get_chat_lang_info, get_strings
 from .utils.message import get_arg
 

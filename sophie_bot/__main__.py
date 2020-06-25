@@ -23,7 +23,7 @@ from aiogram import executor
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 
 from sophie_bot import dp
-from sophie_bot.config import get_bool_key, get_list_key, get_int_key
+from sophie_bot.config import get_bool_key, get_list_key
 from sophie_bot.modules import ALL_MODULES, LOADED_MODULES
 from sophie_bot.utils.logger import log
 
@@ -81,4 +81,3 @@ log.info("Starting loop..")
 log.info("Aiogram: Using polling method")
 
 executor.start_polling(dp, loop=loop, on_shutdown=start())
-
