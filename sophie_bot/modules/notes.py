@@ -63,14 +63,16 @@ async def get_similar_note(chat_id, note_name):
 
 def clean_notes(func):
     async def wrapped_1(*args, **kwargs):
-        message = args[0]
+        event = args[0]
 
-        note = await func(*args, **kwargs)
-
-        if message.chat.type == 'private':
+        message = await func(*args, **kwargs)
+        if not message:
             return
 
-        chat_id = message.chat.id
+        if event.chat.type == 'private':
+            return
+
+        chat_id = event.chat.id
 
         data = await db.clean_notes.find_one({'chat_id': chat_id})
         if not data:
@@ -84,10 +86,10 @@ def clean_notes(func):
                 await tbot.delete_messages(chat_id, data['msgs'])
 
         msgs = []
-        if hasattr(note, 'id'):
-            msgs.append(note.id)
+        if hasattr(message, 'id'):
+            msgs.append(message.id)
 
-        msgs.append(message.message_id)
+        msgs.append(event.message_id)
 
         await db.clean_notes.update_one({'chat_id': chat_id}, {'$set': {'msgs': msgs}})
 
