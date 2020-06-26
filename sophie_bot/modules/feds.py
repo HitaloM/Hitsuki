@@ -979,7 +979,7 @@ async def importfbans_func(message, fed, strings, document=None):
             real_counter += len(queue_insert)
 
             # Make delete operation ordered before inserting.
-            if bool(queue_del):
+            if queue_del:
                 await db.fed_bans.bulk_write(queue_del, ordered=False)
             await db.fed_bans.bulk_write(queue_insert, ordered=False)
 
@@ -988,10 +988,10 @@ async def importfbans_func(message, fed, strings, document=None):
 
     # Process last bans
     real_counter += len(queue_insert)
-    if bool(queue_del):
+    if queue_del:
         await db.fed_bans.bulk_write(queue_del, ordered=False)
-
-    await db.fed_bans.bulk_write(queue_insert, ordered=False)
+    if queue_insert:
+        await db.fed_bans.bulk_write(queue_insert, ordered=False)
 
     await msg.edit_text(strings['import_done'].format(num=real_counter))
 
