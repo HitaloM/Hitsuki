@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import asyncio
 import csv
 import asyncio
 import io
@@ -30,7 +31,7 @@ import os
 import time
 
 from contextlib import suppress
-from pymongo import ReplaceOne
+from pymongo import DeleteMany, InsertOne
 
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -968,11 +969,8 @@ async def importfbans_func(message, fed, strings, document=None):
         if 'banned_chats' in row and type(row['banned_chats']) == list:
             new['banned_chats'] = row['banned_chats']
 
-        queue.append(ReplaceOne(
-            {'fed_id': fed['fed_id'], 'user_id': user_id},
-            new,
-            upsert=True
-        ))
+        queue.append(DeleteMany({'fed_id': fed['fed_id'], 'user_id': user_id}))
+        queue.append(InsertOne(new))
 
     text = strings['importing_write']
 
@@ -987,17 +985,17 @@ async def importfbans_func(message, fed, strings, document=None):
         update_msg_counter += 1
 
         m_queue.append(item)
-        if len(m_queue) == 30:
+        if len(queue) >= 100 and len(m_queue) == 100:
             await asyncio.sleep(0)
             await db.fed_bans.bulk_write(m_queue)
             m_queue = []
 
-        if update_msg_counter == 1000:
+        if update_msg_counter >= 1000:
             update_msg_counter = 0
-            await msg.edit_text(text + strings['importing_thousand'].format(
+            await asyncio.gather(msg.edit_text(text + strings['importing_thousand'].format(
                 current=real_counter,
                 all=len(queue)
-            ))
+            )))
 
     await msg.edit_text(strings['import_done'].format(num=len(queue)))
 
