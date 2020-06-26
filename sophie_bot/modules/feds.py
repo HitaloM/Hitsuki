@@ -840,7 +840,7 @@ async def fban_export(message, fed, strings):
         return
 
     redis.set(key, 1)
-    redis.expire(key, 7200)
+    redis.expire(key, 600)
 
     msg = await message.reply(strings['creating_fbanlist'])
     fields = ['user_id', 'reason', 'by', 'time', 'banned_chats']
@@ -888,7 +888,7 @@ async def importfbans_cmd(message, fed, strings):
         return
 
     redis.set(key, 1)
-    redis.expire(key, 7200)
+    redis.expire(key, 600)
 
     if 'document' in message:
         document = message.document
