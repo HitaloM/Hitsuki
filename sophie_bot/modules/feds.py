@@ -974,7 +974,9 @@ async def importfbans_func(message, fed, strings, document=None):
 
     text = strings['importing_write']
 
-    if len(queue) > 2000:
+    bans_count = round(len(queue) / 2)
+
+    if bans_count > 2000:
         text += strings['importing_big_file']
 
     m_queue = []
@@ -985,16 +987,16 @@ async def importfbans_func(message, fed, strings, document=None):
         update_msg_counter += 1
 
         m_queue.append(item)
-        if len(queue) >= 100 and len(m_queue) == 100:
-            await asyncio.sleep(0)
-            await db.fed_bans.bulk_write(m_queue)
+        if bans_count <= 50 or len(m_queue) == 50:
+            # await asyncio.sleep(0)
+            await db.fed_bans.bulk_write(m_queue, ordered=False)
             m_queue = []
 
         if update_msg_counter >= 1000:
             update_msg_counter = 0
             await asyncio.gather(msg.edit_text(text + strings['importing_thousand'].format(
                 current=real_counter,
-                all=len(queue)
+                all=bans_count
             )))
 
     await msg.edit_text(strings['import_done'].format(num=len(queue)))
