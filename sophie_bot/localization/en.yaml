@@ -397,10 +397,7 @@ STRINGS:
       Currently json files is limited to {num} Megabytes!
       Use a csv format if you want to import bigger files.
     wrong_file_ext: "Wrong file format! Currently support are: json, csv"
-    importing_queue: Downloading a file and making a queue...
-    importing_write: <b>Writing changes to the database...</b>
-    importing_big_file: "\nYour file is really big, it can take a long time!"
-    importing_thousand: "\nImported {current} of {all} bans"
+    importing_process: <b>Importing federation bans...</b>
     import_done: Importing fed bans finished! Was imported {num} bans.
 
     # def

@@ -924,7 +924,7 @@ async def importfbans_func(message, fed, strings, document=None):
         return
 
     f = await bot.download_file_by_id(document.file_id, io.BytesIO())
-    msg = await message.reply(strings['importing_queue'])
+    msg = await message.reply(strings['importing_process'])
 
     data = None
     if file_type == 'json':
@@ -932,7 +932,10 @@ async def importfbans_func(message, fed, strings, document=None):
     elif file_type == 'csv':
         data = csv.DictReader(io.TextIOWrapper(f))
 
-    queue = []
+    real_counter = 0
+
+    queue_del = []
+    queue_insert = []
     current_time = datetime.now()
     for row in data:
         if file_type == 'json':
@@ -940,9 +943,9 @@ async def importfbans_func(message, fed, strings, document=None):
             data = row[1]
         elif file_type == 'csv':
             if 'user_id' in row:
-                user_id = row['user_id']
+                user_id = int(row['user_id'])
             elif 'id' in row:
-                user_id = row['id']
+                user_id = int(row['id'])
             else:
                 continue
         else:
@@ -950,14 +953,14 @@ async def importfbans_func(message, fed, strings, document=None):
 
         new = {
             'fed_id': fed['fed_id'],
-            'user_id': int(user_id)
+            'user_id': user_id
         }
 
         if 'reason' in row:
             new['reason'] = row['reason']
 
         if 'by' in row:
-            new['by'] = row['by']
+            new['by'] = int(row['by'])
         else:
             new['by'] = message.from_user.id
 
@@ -969,37 +972,25 @@ async def importfbans_func(message, fed, strings, document=None):
         if 'banned_chats' in row and type(row['banned_chats']) == list:
             new['banned_chats'] = row['banned_chats']
 
-        queue.append(DeleteMany({'fed_id': fed['fed_id'], 'user_id': user_id}))
-        queue.append(InsertOne(new))
+        queue_del.append(DeleteMany({'fed_id': fed['fed_id'], 'user_id': user_id}))
+        queue_insert.append(InsertOne(new))
 
-    text = strings['importing_write']
+        if len(queue_insert) == 1000:
+            real_counter += len(queue_insert)
 
-    bans_count = round(len(queue) / 2)
+            # Make delete operation ordered before inserting.
+            await db.fed_bans.bulk_write(queue_del, ordered=False)
+            await db.fed_bans.bulk_write(queue_insert, ordered=False)
 
-    if bans_count > 2000:
-        text += strings['importing_big_file']
+            queue_del = []
+            queue_insert = []
 
-    m_queue = []
-    real_counter = 0
-    update_msg_counter = 0
-    for item in queue:
-        real_counter += 1
-        update_msg_counter += 1
+    # Process last bans
+    real_counter += len(queue_insert)
+    await db.fed_bans.bulk_write(queue_del, ordered=False)
+    await db.fed_bans.bulk_write(queue_insert, ordered=False)
 
-        m_queue.append(item)
-        if bans_count <= 50 or len(m_queue) == 50:
-            # await asyncio.sleep(0)
-            await db.fed_bans.bulk_write(m_queue, ordered=False)
-            m_queue = []
-
-        if update_msg_counter >= 1000:
-            update_msg_counter = 0
-            await asyncio.gather(msg.edit_text(text + strings['importing_thousand'].format(
-                current=real_counter,
-                all=bans_count
-            )))
-
-    await msg.edit_text(strings['import_done'].format(num=len(queue)))
+    await msg.edit_text(strings['import_done'].format(num=real_counter))
 
 
 @decorator.register(state=ImportFbansFileWait.waiting, content_types=types.ContentTypes.DOCUMENT, allow_kwargs=True)
