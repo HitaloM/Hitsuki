@@ -30,7 +30,6 @@ import os
 import time
 
 from contextlib import suppress
-from pymongo import DeleteMany, InsertOne
 
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -41,6 +40,8 @@ from aiogram.utils.exceptions import Unauthorized, NeedAdministratorRightsInTheC
 
 from babel.dates import format_timedelta
 from datetime import datetime, timedelta
+
+from pymongo.errors import BulkWriteError
 
 from sophie_bot import OWNER_ID, BOT_ID, OPERATORS, decorator, bot
 from sophie_bot.services.mongo import db
@@ -933,7 +934,6 @@ async def importfbans_func(message, fed, strings, document=None):
 
     real_counter = 0
 
-    queue_del = []
     queue_insert = []
     current_time = datetime.now()
     for row in data:
@@ -971,26 +971,20 @@ async def importfbans_func(message, fed, strings, document=None):
         if 'banned_chats' in row and type(row['banned_chats']) == list:
             new['banned_chats'] = row['banned_chats']
 
-        queue_del.append(DeleteMany({'fed_id': fed['fed_id'], 'user_id': user_id}))
-        queue_insert.append(InsertOne(new))
-
-        if len(queue_insert) == 1000:
+        queue_insert.append(new)
+        if len(queue_insert) == 5000:
             real_counter += len(queue_insert)
 
-            # Make delete operation ordered before inserting.
-            if queue_del:
-                await db.fed_bans.bulk_write(queue_del, ordered=False)
-            await db.fed_bans.bulk_write(queue_insert, ordered=False)
+            with suppress(BulkWriteError):
+                await db.fed_bans.insert_many(queue_insert, ordered=False)
 
-            queue_del = []
             queue_insert = []
 
     # Process last bans
     real_counter += len(queue_insert)
-    if queue_del:
-        await db.fed_bans.bulk_write(queue_del, ordered=False)
     if queue_insert:
-        await db.fed_bans.bulk_write(queue_insert, ordered=False)
+        with suppress(BulkWriteError):
+            await db.fed_bans.insert_many(queue_insert, ordered=False)
 
     await msg.edit_text(strings['import_done'].format(num=real_counter))
 
