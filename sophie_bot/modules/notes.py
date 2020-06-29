@@ -124,8 +124,9 @@ async def save_note(message, chat, strings):
 
     if old_note := await db.notes.find_one({'chat_id': chat_id, 'names': {'$in': note_names}}):
         text = strings['note_updated']
-        note['created_date'] = old_note['created_date']
-        note['created_user'] = old_note['created_user']
+        if 'created_date' in old_note:
+            note['created_date'] = old_note['created_date']
+            note['created_user'] = old_note['created_user']
         note['edited_date'] = datetime.now()
         note['edited_user'] = message.from_user.id
     else:
@@ -418,10 +419,11 @@ async def note_info(message, chat, strings):
 
     text += strings['note_info_parsing'] % parse_mode
 
-    text += strings['note_info_created'].format(
-        date=format_datetime(note['created_date'], locale=strings['language_info']['babel']),
-        user=await get_user_link(note['created_user'])
-    )
+    if 'created_date' in note:
+        text += strings['note_info_created'].format(
+            date=format_datetime(note['created_date'], locale=strings['language_info']['babel']),
+            user=await get_user_link(note['created_user'])
+        )
 
     if 'edited_date' in note:
         text += strings['note_info_updated'].format(
