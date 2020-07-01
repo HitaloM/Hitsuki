@@ -36,9 +36,9 @@ from .utils.user_details import get_user_dec, get_user_link, is_user_admin, get_
 
 @register(cmds=['kick', 'skick'], bot_can_restrict_members=True, user_can_restrict_members=True)
 @chat_connection(admin=True, only_groups=True)
-@get_user_dec()
+@get_user_and_text_dec()
 @get_strings_dec('restrictions')
-async def kick_user_cmd(message, chat, user, strings):
+async def kick_user_cmd(message, chat, user, args, strings):
     chat_id = chat['chat_id']
     user_id = user['user_id']
 
@@ -61,8 +61,8 @@ async def kick_user_cmd(message, chat, user, strings):
     )
 
     # Add reason
-    if len(args := message.get_args().split(' ', 1)) > 1:
-        text += strings['reason'] % args[1]
+    if args:
+        text += strings['reason'] % args
 
     # Check if silent
     silent = False
