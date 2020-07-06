@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from aiogram.types.chat_permissions import ChatPermissions
-from aiogram.utils.exceptions import BadRequest, MigrateToChat
+from aiogram.utils.exceptions import BadRequest, MigrateToChat, Unauthorized
 
 from sophie_bot import bot
 
@@ -25,7 +25,7 @@ from sophie_bot import bot
 async def ban_user(chat_id, user_id, until_date=None):
     try:
         await bot.kick_chat_member(chat_id, user_id, until_date=until_date)
-    except (BadRequest, MigrateToChat):
+    except (BadRequest, MigrateToChat, Unauthorized):
         return False
     return True
 
@@ -80,6 +80,6 @@ async def unmute_user(chat_id, user_id):
 async def unban_user(chat_id, user_id):
     try:
         await bot.unban_chat_member(chat_id, user_id)
-    except BadRequest:
+    except (BadRequest, Unauthorized):
         return False
     return True
