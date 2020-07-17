@@ -72,6 +72,6 @@ async def report(message, chat, strings):
         pass
 
     for admin in admins:
-        text += await get_user_link(admin, custom_name="﻿​‎")
+        text += await get_user_link(admin, custom_name="​")
 
     await message.reply(text)
