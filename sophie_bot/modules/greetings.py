@@ -381,10 +381,10 @@ async def welcome_security_handler(message, strings):
         return
 
     user = await message.chat.get_member(user_id)
-
     # Check if user was muted before
-    if 'can_send_messages' in user and user['can_send_messages'] is False:
-        return
+    if user['status'] == 'restricted':
+        if user['can_send_messages'] is False:
+            return
 
     # Check on OPs and chat owner
     if await is_user_admin(chat_id, user_id):
