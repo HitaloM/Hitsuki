@@ -342,10 +342,7 @@ STRINGS:
       Şu anda json dosyaları {num} Megabyte ile sınırlıdır!
       Daha büyük dosyaları içe aktarmak istiyorsanız bir csv biçimi kullanın.
     wrong_file_ext: "Hatalı dosya biçimi! Şu anda destek verilen dosya türleri: json, csv"
-    importing_queue: Dosya indirme ve kuyruk oluşturma...
-    importing_write: <b>Veritabanında değişiklikler yazılıyor...</b>
-    importing_big_file: "Dosyanız gerçekten büyük, uzun sürebilir!"
-    importing_thousand: "{current} içindeki tüm {all} yasaklar içe aktarıldı"
+    importing_process: <b>Federasyon yasakları içe aktarılıyor...</b>
     import_done: Federasyon yasaklarının içe aktarılması tamamlandı! {num} yasak içe aktarıldı.
     #def
     automatic_ban: '{user} kullanıcısı grupta geçerli olan <b>{fed_name}</b> federasyonundan yasaklandı. Bu sebeple kullanıcı gruptan yasaklandı!'
@@ -449,7 +446,7 @@ STRINGS:
   imports_exports:
     #Exporting
     started_exporting: Dışa aktarma başladı! Lütfen bekle...
-    export_done: <b>{chat_name}</b> 'den dışa aktarma bitti! cant_get_user
+    export_done: <b>{chat_name}</b> 'den dışa aktarma bitti!
     exports_locked: Lütfen dışa aktarmayı tekrar kullanabilmek için %s süre zarfında bekleyin!
     #Importing
     send_import_file: Lütfen bir içe aktarma dosyası gönderin!
