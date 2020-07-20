@@ -323,6 +323,7 @@ STRINGS:
     fban_self: "That's a nice show!"
     fban_creator: "How can I ban Federation creator?! I don't think it's gonna be funny."
     fban_fed_admin: "I'm not going to ban a fed admin from their own fed!"
+    update_fban: "This user was fbanned earlier therefore I am updating reason to <code>{reason}</code>"
     already_fbanned: "{user} already banned in this federation."
     fbanned_header: "<b>New FedBan</b>\n"
     fban_info: |#ChatLeaved
