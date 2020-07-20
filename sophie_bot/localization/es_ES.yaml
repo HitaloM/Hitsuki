@@ -32,7 +32,7 @@ STRINGS:
     not_removed_multiple: "<b>No eliminado:</b><code>{not_removed}</code>"
     #/clearall
     clear_all_text: "Esto eliminará todas las notas de {chat_name}. ¿Estás seguro?"
-    clearall_btn_yes: "¡Sí. Quita todas mis notas!"
+    clearall_btn_yes: "¡Sí, quita todas mis notas!"
     clearall_btn_no: "¡No!"
     clearall_done: "¡Todas las notas (<code>{num}</code>) en {chat_name} han sido eliminadas!"
     #/search
@@ -61,10 +61,10 @@ STRINGS:
     #/cleannotes
     clean_notes_enable: "Se ha activado correctamente la limpieza de notas en <b>{chat_name}</b>"
     clean_notes_disable: "Se ha desactivado correctamente la limpieza de notas en <b>{chat_name}</b>"
-    clean_notes_enabled: "La limpieza de notas actualmente están <b>deshabilitadas</b> en <b>{chat_name}</b>"
+    clean_notes_enabled: "La limpieza de notas actualmente está <b>activada</b> en <b>{chat_name}</b>"
     clean_notes_disabled: "La limpieza de notas actualmente están <b>deshabilitadas</b> en <b>{chat_name}</b>"
     #Filter
-    filters_title: 'Enviar una nota'
+    filters_title: 'Envía una nota'
     filters_setup_start: 'Por favor, envía un nombre de nota.'
   #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
   #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
@@ -84,11 +84,11 @@ STRINGS:
       Por favor, seleccione uno para eliminar:
   warns:
     #/warn
-    warn_sofi: "¡Jaja no hay manera de advertirme a mí misma!"
+    warn_sofi: "¡Jaja! ¡No hay manera de advertirme a mí misma!"
     warn_self: "¿Quieres darte una advertencia a ti mismo? Sólo abandona el chat entonces."
     warn_admin: "Bueno... estás equivocado. No puedes advertir a un administrador."
     warn: "{admin} ha advertido a {user} en {chat_name}\n"
-    warn_bun: "¡Las advertencias se han excedido! {user} ha sido baneado!"
+    warn_bun: "¡Las advertencias se han excedido! ¡{user} ha sido baneado!"
     warn_num: "Avisos: {curr_warns}/{max_warns}\n"
     warn_rsn: "Razón: <code>{reason}</code>\n"
     max_warn_exceeded: '¡Advertencias superadas! ¡ %s ha sido %s!'
@@ -101,13 +101,13 @@ STRINGS:
     warns: "{count} : <code>{reason}</code> de {admin}\n"
     no_warns: "Bueno, {user} no tiene ninguna advertencia."
     #/warnlimit
-    warn_limit: "El límite de advertencia en <b>{chat_name}</b> es actualmente: <code>{num}</code>"
+    warn_limit: "El límite de advertencias en <b>{chat_name}</b> es actualmente: <code>{num}</code>"
     warnlimit_short: '¡El límite de advertencias debe ser al menos de 2!'
     warnlimit_long: '¡El límite de advertencias debe ser menor de 1000!'
     warnlimit_updated: '✔ El límite de advertencias ha sido actualizado correctamente a {num}'
     #/delwarns
-    purged_warns: "{admin} restablecer <code>{number}</code> advertencias {user} en <b>{chat_name}</b>!"
-    usr_no_wrn: "¡{user} aún no tiene ninguna advertencia!"
+    purged_warns: "{admin} restableció <code>{num}</code> advertencias a {user} en <b>{chat_title}</b>!"
+    usr_no_wrn: "{user} aún no tiene ninguna advertencia."
     rst_wrn_sofi: 'Sophie nunca ha tenido advertencias para reiniciar.'
     not_digit: '¡El límite de advertencias deben ser dígitos!'
     #/warnmode
@@ -335,10 +335,7 @@ STRINGS:
       ¡Actualmente los archivos json están limitados a {num} Megabytes!
       Utilice un formato csv si desea importar archivos más grandes.
     wrong_file_ext: "¡Formato de archivo incorrecto! El soporte actualmente es: json, csv"
-    importing_queue: Descargando un archivo y haciendo una cola...
-    importing_write: <b>Haciendo cambios en la base de datos...</b>
-    importing_big_file: "\n¡Tu archivo es muy grande, puede tardar mucho tiempo!"
-    importing_thousand: "\nSe importaron {current} de {all} baneos"
+    importing_process: <b>Importando bloqueos de la federación...</b>
     import_done: Importación de fbans finalizada!
     #def
     automatic_ban: El usuario {user} está baneado en la federación actual <b>{fed_name}</b>. ¡Ha sido eliminado!
@@ -441,7 +438,7 @@ STRINGS:
   imports_exports:
     #Exporting
     started_exporting: '¡Exportación iniciada! Por favor espere...'
-    export_done: Exportar desde <b>{chat_name}</b> realizado!cant_get_user
+    export_done: Exportación de <b>{chat_name}</b> realizada!
     exports_locked: '¡Por favor, espera %s para volver a usar exportaciones!'
     #Importing
     send_import_file: '¡Por favor, envía un archivo de importación!'
@@ -506,7 +503,7 @@ STRINGS:
     not_found: '¡Reglas no encontradas!'
     #Callback
     user_blocked: "Escríbeme /start por mensaje privado!"
-    rules_was_pmed: '¡Reglas enviadas por mensaje privado!'
+    rules_was_pmed: '¡Las reglas han sido enviadas por mensaje privado!'
   #cannot_find_note: "I can't find the note <code>{}</code>"
   #set_note: "Successfully set the rules note to <code>{}</code>"
   #didnt_set_note: "This group doesn't have rules note set."
@@ -576,7 +573,7 @@ STRINGS:
     last_chance: '¡Tienes una última oportunidad para enviar el captcha!'
     btn_button_text: "Por favor, pulsa el botón de abajo para verificarte."
     btn_wc_text: |
-      Por favor, pulsa a la derecha si coincide con esta expresión:
+      Por favor, pulse abajo, en el resultado correcto de la operación matemática:
       %s
     math_wc_rtr_text: "¡Tienes la última oportunidad! Ten cuidado.\n"
     math_wc_wrong: '¡Error, por favor inténtalo de nuevo!'
