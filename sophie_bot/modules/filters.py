@@ -145,6 +145,9 @@ async def register_action(event, chat, callback_data=None, state=None, **kwargs)
 
     handler = redis.get(f'add_filter:{user_id}:{chat_id}')
 
+    if not handler:
+        return await event.answer("Something went wrong! Please try again!", show_alert=True)
+
     data = {
         'chat_id': chat_id,
         'handler': handler,
