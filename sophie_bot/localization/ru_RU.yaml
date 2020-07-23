@@ -290,7 +290,7 @@ STRINGS:
       Пользователь {user} забанен в текущей федерации <b>{fed}</b>. Поэтому был удалён!
       Причина: <code>{rsn}</code>
     fban_log_fed_log: |
-      <b>Заблокировать пользователя в федерации</b> #FedBan
+      <b>Блокировка в федерации</b> #FedBan
       <b>Федерация:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Чаты:</b> пользователь забанен в <code>{chat_count}</code>/<code>{all_chats}</code> чатах
     fban_reason_fed_log: "<b>Причина:</b> <code>{reason}</code>\n"
