@@ -314,7 +314,7 @@ async def search_in_note(message, chat, strings):
         text += '\n-'
         for note_name in note['names']:
             text += f" <code>#{note_name}</code>"
-    text += strings['you_get_note']
+    text += strings['you_can_get_note']
     if not check:
         await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
         return
