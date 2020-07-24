@@ -450,8 +450,9 @@ async def ws_redirecter(message, strings):
     called_user_id = message.from_user.id
 
     if not called_user_id == real_user_id:
-        await message.answer(strings['not_allowed'], show_alert=True)
-        return
+        if not (rkey := redis.get(f'welcome_security_users:{called_user_id}')) and not chat_id == rkey:
+            await message.answer(strings['not_allowed'], show_alert=True)
+            return
 
     await message.answer(url=f'https://t.me/{BOT_USERNAME}?start='
                              f'ws_{chat_id}_{called_user_id}_{message.message.message_id}')
