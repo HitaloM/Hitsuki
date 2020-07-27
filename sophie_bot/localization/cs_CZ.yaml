@@ -1,6 +1,6 @@
 ---
 language_info:
-  flag: "cs"
+  flag: "🇨🇿"
   code: cz
 STRINGS:
   notes:
@@ -279,6 +279,7 @@ STRINGS:
     fban_self: "To je pěkná show!"
     fban_creator: "Jak mohu zabanovat tvůrce federace?! Nemyslím si, že by to bylo nějak velice vtipné."
     fban_fed_admin: "Nebudu banovat federačního admina z jeho vlastní federace!"
+    update_fban: "Tento uživatel byl již federačně zabanován již předtím a proto aktualizuji důvod banu na <code>{reason}</code>"
     already_fbanned: "{user} je již v této federaci zabanován."
     fbanned_header: "<b>Nový Federační Ban</b>\n"
     fban_info: '|#ChatLeaved <b>Federace:</b> {fed} <b>Federační admin:</b> {fadmin} <b>Uživatel:</b> {user} (<code>{user_id}</code>)'
