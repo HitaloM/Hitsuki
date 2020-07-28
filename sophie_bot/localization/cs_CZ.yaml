@@ -6,7 +6,7 @@ STRINGS:
   notes:
     #/save
     note_saved: "🗒️Poznámka<code> {note_name} </code>uložena do <b> {chat_title} </b>!"
-    note_updated: "🗒️Poznámka<code> {note_name} </code> upraveno v <b> {chat_title} </b>!"
+    note_updated: "🗒️Poznámka<code> {note_name} </code> upravena v <b> {chat_title} </b>!"
     you_can_get_note: "\nMůžete získat tuto poznámku použitím <code>/get {note_name} </code> <code> #{note_name} </code>"
     #Translator note: please keep sure that you don't have space in the end of string
     note_aliases: "\nAliasy poznámek:"
