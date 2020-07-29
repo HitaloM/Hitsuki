@@ -148,12 +148,15 @@ async def save_note(message, chat, strings):
 
 @get_strings_dec('notes')
 async def get_note(message, strings, note_name=None, db_item=None,
-                   chat_id=None, send_id=None, rpl_id=None, noformat=False, event=None):
+                   chat_id=None, send_id=None, rpl_id=None, noformat=False, event=None, user=None):
     if not chat_id:
         chat_id = message.chat.id
 
     if not send_id:
         send_id = message.chat.id
+
+    if not user:
+        user = message.from_user
 
     if rpl_id is False:
         rpl_id = None
@@ -168,7 +171,7 @@ async def get_note(message, strings, note_name=None, db_item=None,
         )
         return
 
-    text, kwargs = await t_unparse_note_item(message, db_item, chat_id, noformat=noformat, event=event)
+    text, kwargs = await t_unparse_note_item(message, db_item, chat_id, noformat=noformat, event=event, user=user)
     kwargs['reply_to'] = rpl_id
 
     return await send_note(send_id, text, **kwargs)
@@ -190,8 +193,10 @@ async def get_note_cmd(message, chat, strings):
 
     if 'reply_to_message' in message:
         rpl_id = message.reply_to_message.message_id
+        user = message.reply_to_message.from_user
     else:
         rpl_id = message.message_id
+        user = message.from_user
 
     if not (note := await db.notes.find_one({'chat_id': int(chat_id), 'names': {'$in': [note_name]}})):
         text = strings['cant_find_note'].format(chat_name=chat_name)
@@ -209,16 +214,16 @@ async def get_note_cmd(message, chat, strings):
         message,
         db_item=note,
         rpl_id=rpl_id,
-        noformat=noformat
+        noformat=noformat,
+        user=user
     )
 
 
 @register(regexp=r'^#([\w-]+)', allow_kwargs=True)
 @disableable_dec('get')
 @chat_connection(command='get')
-@get_strings_dec('notes')
 @clean_notes
-async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
+async def get_note_hashtag(message, chat, regexp=None, **kwargs):
     chat_id = chat['chat_id']
 
     note_name = regexp.group(1).lower()

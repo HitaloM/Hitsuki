@@ -257,7 +257,7 @@ async def get_parsed_note_list(message, allow_reply_message=True, split_args=1):
     return note
 
 
-async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=None):
+async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=None, user=None):
     text = db_item['text'] if 'text' in db_item else ""
 
     file_id = None
@@ -287,9 +287,9 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
         if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
             db_item['parse_mode'] = None
         elif db_item['parse_mode'] == 'md':
-            text = await vars_parser(text, message, chat_id, md=True, event=event)
+            text = await vars_parser(text, message, chat_id, md=True, event=event, user=user)
         elif db_item['parse_mode'] == 'html':
-            text = await vars_parser(text, message, chat_id, md=False, event=event)
+            text = await vars_parser(text, message, chat_id, md=False, event=event, user=user)
 
         if 'preview' in db_item and db_item['preview']:
             preview = True
@@ -381,7 +381,7 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     return text, buttons
 
 
-async def vars_parser(text, message, chat_id, md=False, event=None):
+async def vars_parser(text, message, chat_id, md=False, event=None, user=None):
     if event is None:
         event = message
 
@@ -391,16 +391,16 @@ async def vars_parser(text, message, chat_id, md=False, event=None):
     language_code = await get_chat_lang(chat_id)
     current_datetime = datetime.now()
 
-    first_name = html.escape(event.from_user.first_name)
-    last_name = html.escape(event.from_user.last_name or "")
+    first_name = html.escape(user.first_name)
+    last_name = html.escape(user.last_name or "")
     user_id = ([user.id for user in event.new_chat_members][0]
-               if 'new_chat_members' in event and event.new_chat_members != [] else event.from_user.id)
+               if 'new_chat_members' in event and event.new_chat_members != [] else user.id)
     mention = await get_user_link(user_id, md=md)
     username = ('@' + str(event.new_chat_members[0].username)
                 if 'new_chat_members' in event and event.new_chat_members != [] and event.new_chat_members[0].username
                    is not None
-                else '@' + event.from_user.username
-                if event.from_user.username is not None else mention)
+                else '@' + user.username
+                if user.username is not None else mention)
     chat_id = message.chat.id
     chat_name = html.escape(message.chat.title or 'Local')
     chat_nick = message.chat.username or chat_name
