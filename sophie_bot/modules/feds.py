@@ -543,9 +543,10 @@ async def fed_ban_user(message, fed, user, reason, strings):
         return
 
     elif data := await db.fed_bans.find_one({'fed_id': fed['fed_id'], 'user_id': user_id}):
-        if data['reason'] != reason:
-            await db.fed_bans.update_one({'_id': data['_id']}, {'$set': {'reason': reason}})
-            return await message.reply(strings['update_fban'].format(reason=reason))
+        if reason:  # Check if reason is given
+            if 'reason' not in data or data["reason"] != reason:
+                await db.fed_bans.update_one({'_id': data['_id']}, {'$set': {'reason': reason}})
+                return await message.reply(strings['update_fban'].format(reason=reason))
         await message.reply(strings['already_fbanned'].format(user=await get_user_link(user_id)))
         return
 
