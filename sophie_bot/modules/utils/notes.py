@@ -246,13 +246,13 @@ async def get_parsed_note_list(message, allow_reply_message=True, split_args=1):
         if msg_file := await get_msg_file(message):
             note['file'] = msg_file
 
-    # Preview
-    if 'text' in note and '$PREVIEW' in note['text']:
-        note['preview'] = True
-    text = re.sub(r'%PREVIEW', '', text)
-
     if text.replace(' ', ''):
         note['text'] = text
+
+    # Preview
+    if 'text' in note and re.search(r'[$|%]PREVIEW', note["text"]):
+        note["text"] = re.sub(r'[$|%]PREVIEW', '', note['text'])
+        note['preview'] = True
 
     return note
 
