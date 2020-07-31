@@ -25,7 +25,6 @@ from datetime import datetime
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.utils.callback_data import CallbackData
 from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted, BadRequest, ChatAdminRequired
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
@@ -45,7 +44,6 @@ from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 from .utils.message import need_args_dec, convert_time
 from .utils.notes import get_parsed_note_list, t_unparse_note_item, send_note
-from .utils.restrictions import ban_user
 from .utils.restrictions import mute_user, restrict_user, unmute_user, kick_user
 from .utils.user_details import is_user_admin, get_user_link, check_admin_rights
 
