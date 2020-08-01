@@ -85,6 +85,6 @@ __filters__ = {
             'start': replymsg_setup_start,
             'finish': replymsg_setup_finish
         },
-        'del_btn_name': lambda msg, data: f"Reply to {data['handler']}: {data['reply_text']}"
+        'del_btn_name': lambda msg, data: f"Reply to {data['handler']}: \"{data['reply_text']['text']}\" "
     }
 }
