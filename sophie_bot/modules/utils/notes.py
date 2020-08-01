@@ -263,6 +263,9 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
     file_id = None
     preview = None
 
+    if not user:
+        user = message.from_user
+
     if 'file' in db_item:
         file_id = db_item['file']['id']
 
