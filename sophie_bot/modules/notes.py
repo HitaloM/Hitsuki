@@ -155,9 +155,6 @@ async def get_note(message, strings, note_name=None, db_item=None,
     if not send_id:
         send_id = message.chat.id
 
-    if not user:
-        user = message.from_user
-
     if rpl_id is False:
         rpl_id = None
     elif not rpl_id:
