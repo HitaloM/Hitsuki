@@ -772,6 +772,7 @@ async def clean_service_trigger(message, strings):
     with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
         await message.delete()
 
+
 async def __export__(chat_id):
     if greetings := await db.greetings.find_one({'chat_id': chat_id}):
         del greetings['_id']
