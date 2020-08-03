@@ -166,7 +166,7 @@ async def warns(message, chat, user, strings):
         await message.reply(strings['no_warns'].format(user=user_link))
         return
 
-    await message.reply(text)
+    await message.reply(text, disable_notification=True)
 
 
 @register(cmds='warnlimit', user_admin=True)
