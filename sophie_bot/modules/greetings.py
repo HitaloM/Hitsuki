@@ -452,7 +452,7 @@ async def ws_redirecter(message, strings):
     real_user_id = int(payload[1])
     called_user_id = message.from_user.id
 
-    url=f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}'
+    url = f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}'
     if not called_user_id == real_user_id:
         # The persons which are muted before wont have their signatures registered on cache
         if not redis.exists(f"welcome_security_users:{called_user_id}:{chat_id}"):
@@ -460,7 +460,7 @@ async def ws_redirecter(message, strings):
             return
         else:
             # For those who lost their buttons
-            url=f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}_0'
+            url = f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}_0'
     await message.answer(url=url)
 
 
