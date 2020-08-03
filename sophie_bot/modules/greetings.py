@@ -415,7 +415,7 @@ async def welcome_security_handler(message, strings):
 
     msg = await send_note(chat_id, text, **kwargs)
 
-    redis.set(f'welcome_security_users:{user_id}', chat_id)
+    redis.set(f'welcome_security_users:{user_id}:{chat_id}', msg.id)
 
     scheduler.add_job(
         join_expired,
@@ -452,13 +452,16 @@ async def ws_redirecter(message, strings):
     real_user_id = int(payload[1])
     called_user_id = message.from_user.id
 
+    url=f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}'
     if not called_user_id == real_user_id:
-        if not (rkey := redis.get(f'welcome_security_users:{called_user_id}')) and not chat_id == rkey:
+        # The persons which are muted before wont have their signatures registered on cache
+        if not redis.exists(f"welcome_security_users:{called_user_id}:{chat_id}"):
             await message.answer(strings['not_allowed'], show_alert=True)
             return
-
-    await message.answer(url=f'https://t.me/{BOT_USERNAME}?start='
-                             f'ws_{chat_id}_{called_user_id}_{message.message.message_id}')
+        else:
+            # For those who lost their buttons
+            url=f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}_0'
+    await message.answer(url=url)
 
 
 @register(CommandStart(re.compile(r'ws_')), allow_kwargs=True)
@@ -470,6 +473,7 @@ async def welcome_security_handler_pm(message, strings, regexp=None, state=None,
     async with state.proxy() as data:
         data['chat_id'] = chat_id
         data['msg_id'] = int(args[3])
+        data['to_delete'] = bool(int(args[4])) if len(args) > 4 else True
 
     db_item = await db.greetings.find_one({'chat_id': chat_id})
 
@@ -663,14 +667,23 @@ async def welcome_security_passed(message, state, strings):
         chat_id = data['chat_id']
         msg_id = data['msg_id']
         verify_msg_id = data['verify_msg_id']
+        to_delete = data['to_delete']
 
     with suppress(ChatAdminRequired):
         await unmute_user(chat_id, user_id)
 
     with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
-        await bot.delete_message(chat_id, msg_id)
+        if to_delete:
+            await bot.delete_message(chat_id, msg_id)
         await bot.delete_message(user_id, verify_msg_id)
     await state.finish()
+
+    with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
+        message_id = redis.get(f"welcome_security_users:{user_id}:{chat_id}")
+        # Delete the person's real security button if exists!
+        await bot.delete_message(chat_id, message_id)
+
+    redis.delete(f"welcome_security_users:{user_id}:{chat_id}")
 
     with suppress(JobLookupError):
         scheduler.remove_job(f"wc_expire:{chat_id}:{user_id}")
