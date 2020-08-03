@@ -364,8 +364,9 @@ async def reset_security_note(message, chat, strings):
 @register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
 async def welcome_security_handler(message, strings):
-    user_id = int(str([user.id for user in message.new_chat_members])[1:-1])
+    new_user = message.new_chat_members[0]
     chat_id = message.chat.id
+    user_id = new_user.id
 
     if user_id == BOT_ID:
         return
@@ -389,7 +390,7 @@ async def welcome_security_handler(message, strings):
         return
 
     # check if user added is a bot
-    if user.is_bot and await is_user_admin(chat_id, message.from_user.id):
+    if new_user.is_bot and await is_user_admin(chat_id, message.from_user.id):
         return
 
     # Mute user
