@@ -252,7 +252,7 @@ async def warnmode(message, chat, strings):
                     # For better UX we have to show until time of tmute when action is done.
                     # We can't store timedelta class in mongodb; Here we check validity of given time.
                     time = convert_time(time)
-                except (InvalidTimeUnit, TypeError):
+                except (InvalidTimeUnit, TypeError, ValueError):
                     return await message.reply(strings['invalid_time'])
                 else:
                     new['mode'] = option

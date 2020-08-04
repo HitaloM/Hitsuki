@@ -121,7 +121,7 @@ async def mute_user_cmd(message, chat, user, args, strings):
         if args is not None and len(args := args.split()) > 0:
             try:
                 until_date = convert_time(args[0])
-            except (InvalidTimeUnit, TypeError):
+            except (InvalidTimeUnit, TypeError, ValueError):
                 await message.reply(strings['invalid_time'])
                 return
 
@@ -225,7 +225,7 @@ async def ban_user_cmd(message, chat, user, args, strings):
         if args is not None and len(args := args.split()) > 0:
             try:
                 until_date, unit = convert_time(args[0])
-            except (InvalidTimeUnit, TypeError):
+            except (InvalidTimeUnit, TypeError, ValueError):
                 await message.reply(strings['invalid_time'])
                 return
 
@@ -360,7 +360,7 @@ async def time_setup_start(message, strings):
 async def time_setup_finish(message, data, strings):
     try:
         time = convert_time(message.text)
-    except (InvalidTimeUnit, TypeError):
+    except (InvalidTimeUnit, TypeError, ValueError):
         return await message.reply(strings['invalid_time'])
     else:
         return {'time': repr(time)}
