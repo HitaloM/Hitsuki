@@ -229,13 +229,16 @@ async def get_note_hashtag(message, chat, regexp=None, **kwargs):
 
     if 'reply_to_message' in message:
         rpl_id = message.reply_to_message.message_id
+        user = message.reply_to_message.from_user
     else:
         rpl_id = message.message_id
+        user = message.from_user
 
     return await get_note(
         message,
         db_item=note,
-        rpl_id=rpl_id
+        rpl_id=rpl_id,
+        user=user
     )
 
 
