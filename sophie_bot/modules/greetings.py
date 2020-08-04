@@ -681,7 +681,8 @@ async def welcome_security_passed(message, state, strings):
     with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
         message_id = redis.get(f"welcome_security_users:{user_id}:{chat_id}")
         # Delete the person's real security button if exists!
-        await bot.delete_message(chat_id, message_id)
+        if message_id:
+            await bot.delete_message(chat_id, message_id)
 
     redis.delete(f"welcome_security_users:{user_id}:{chat_id}")
 
