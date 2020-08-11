@@ -500,7 +500,7 @@ STRINGS:
     info_last: "\nLast name: {last_name}"
     info_username: "\nUsername: {username}"
     info_link: "\nUser link: {user_link}"
-    info_saw: "\nI saw they in <code>{num}</code> groups"
+    info_saw: "\nI saw them in <code>{num}</code> groups"
     info_fbanned: "\nBanned in current Federation: "
     info_admeme: "\nUser has admin rights in this chat."
     upd_cache: "Updating cache now..."
