@@ -157,7 +157,7 @@ STRINGS:
     start_hi_group: '¡Hola! Mi nombre es Sophie'
     start_hi: "¡Hola! ¡Mi nombre es Sophie, te ayudo a gestionar tu grupo de una manera eficiente!"
     btn_help: "❔ Ayuda"
-    btn_lang: "🇷🇺 Lenguaje"
+    btn_lang: "🇷🇺 Idioma"
     btn_chat: "👥 Grupo Sophie"
     btn_channel: "📡 Noticias de Sophie"
     back: Atrás
@@ -276,6 +276,7 @@ STRINGS:
     fban_self: "¡Eso es un buen espectáculo!"
     fban_creator: "¿Cómo puedo banearr al creador de la Federación?! No creo que sea divertido."
     fban_fed_admin: "¡No voy a banear a un administrador de su propia federación!"
+    update_fban: "Este usuario fue baneado antes, por lo que estoy actualizando la razón a <code>{reason}</code>"
     already_fbanned: "{user} ya está baneado en esta federación."
     fbanned_header: "<b>Nuevo FedBan</b>\n"
     fban_info: "<b>Federación:</b> {fed}\n<b>Administrador de la Federación:</b> {fadmin}\n<b>Usuario:</b> {user} (<code>{user_id}</code>)"
