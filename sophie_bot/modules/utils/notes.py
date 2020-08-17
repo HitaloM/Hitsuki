@@ -240,8 +240,9 @@ async def get_parsed_note_list(message, allow_reply_message=True, split_args=1):
     else:
         text, note['parse_mode'] = get_parsed_msg(message)
         if message.get_command() and message.get_args():
-            text = re.sub(message.get_command(), '', text, 1)  # remove command from text
-        text = re.sub(r'([\w-]+ )', '', text, split_args)
+            # Remove cmd and arg from message's text
+            text = text.replace(message.get_command() + ' ', '', 1)
+            text = text.replace(get_args(message)[0], '', 1)
         # Check on attachment
         if msg_file := await get_msg_file(message):
             note['file'] = msg_file
