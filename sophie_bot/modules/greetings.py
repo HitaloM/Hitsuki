@@ -364,6 +364,11 @@ async def reset_security_note(message, chat, strings):
 @register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
 async def welcome_security_handler(message, strings):
+
+    if len(message.new_chat_members) > 1:
+        # FIXME: Sophie doesnt support adding multiple users currently
+        return
+
     new_user = message.new_chat_members[0]
     chat_id = message.chat.id
     user_id = new_user.id
@@ -723,8 +728,13 @@ async def welcome_security_passed(message, state, strings):
 @register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
 async def welcome_trigger(message, strings):
+
+    if len(message.new_chat_members) > 1:
+        # FIXME: Sophie doesnt support adding multiple users currently
+        return
+
     chat_id = message.chat.id
-    user_id = int(str([user.id for user in message.new_chat_members])[1:-1])
+    user_id = message.new_chat_members[0]
 
     if user_id == BOT_ID:
         return
