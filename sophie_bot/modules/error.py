@@ -93,7 +93,11 @@ async def all_errors_handler(update: Update, error):
     if err_tlt == 'BadRequest' and err_msg == 'Have no rights to send a message':
         return True
 
-    if err_tlt in ('FloodWaitError', 'RetryAfter', 'SlowModeWaitError'):
+    ignored_errors = (
+        'FloodWaitError', 'RetryAfter', 'SlowModeWaitError', 'InvalidQueryID'
+        'NetworkError', 'TelegramAPIError', 'RestartingTelegram'
+    )
+    if err_tlt in ignored_errors:
         return True
 
     text = "<b>Sorry, I encountered a error!</b>\n"
