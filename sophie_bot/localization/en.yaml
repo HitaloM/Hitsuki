@@ -397,6 +397,7 @@ STRINGS:
     big_file_json: |
       Currently json files is limited to {num} Megabytes!
       Use a csv format if you want to import bigger files.
+    invalid_file: "The file is invalid"
     wrong_file_ext: "Wrong file format! Currently support are: json, csv"
     importing_process: <b>Importing federation bans...</b>
     import_done: Importing fed bans finished! Was imported {num} bans.
@@ -513,6 +514,7 @@ STRINGS:
     exports_locked: Please wait %s till using exports again!
 
     # Importing
+    invalid_file: "The file is invalid"
     send_import_file: Please send a import file!
     rpl_to_file: Please reply to a file!
     big_file: Supported importing files only under 50 MB!
