@@ -1028,7 +1028,9 @@ async def check_fbanned(message, chat, strings):
     if ban := await db.fed_bans.find_one({'fed_id': {'$in': feds_list}, 'user_id': user_id}):
         s_fed = await db.feds.find_one({'fed_id': ban['fed_id']})
 
-        if 'origin_fed' not in ban:
+        # check whether banned fed_id is chat's fed id else
+        # user is banned in sub fed
+        if fed['fed_id'] == ban['fed_id']:
             text = strings['automatic_ban'].format(
                 user=await get_user_link(user_id),
                 fed_name=fed['fed_name']
