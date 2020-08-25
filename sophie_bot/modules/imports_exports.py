@@ -120,7 +120,10 @@ async def import_fun(message, document, chat, strings):
         await message.reply(strings['big_file'])
         return
     data = await bot.download_file_by_id(document.file_id, io.BytesIO())
-    data = ujson.load(data)
+    try:
+        data = ujson.load(data)
+    except ValueError:
+        return await message.reply(strings['invalid_file'])
 
     if 'general' not in data:
         await message.reply(strings['bad_file'])

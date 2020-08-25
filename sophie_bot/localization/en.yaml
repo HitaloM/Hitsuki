@@ -513,6 +513,7 @@ STRINGS:
     exports_locked: Please wait %s till using exports again!
 
     # Importing
+    invalid_file: "The file is invalid"
     send_import_file: Please send a import file!
     rpl_to_file: Please reply to a file!
     big_file: Supported importing files only under 50 MB!
