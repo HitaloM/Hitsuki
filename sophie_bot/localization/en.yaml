@@ -397,6 +397,7 @@ STRINGS:
     big_file_json: |
       Currently json files is limited to {num} Megabytes!
       Use a csv format if you want to import bigger files.
+    invalid_file: "The file is invalid"
     wrong_file_ext: "Wrong file format! Currently support are: json, csv"
     importing_process: <b>Importing federation bans...</b>
     import_done: Importing fed bans finished! Was imported {num} bans.

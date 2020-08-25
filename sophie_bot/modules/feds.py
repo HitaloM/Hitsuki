@@ -931,7 +931,10 @@ async def importfbans_func(message, fed, strings, document=None):
 
     data = None
     if file_type == 'json':
-        data = ujson.load(f).items()
+        try:
+            data = ujson.load(f).items()
+        except ValueError:
+            return await message.reply(strings['invalid_file'])
     elif file_type == 'csv':
         data = csv.DictReader(io.TextIOWrapper(f))
 
