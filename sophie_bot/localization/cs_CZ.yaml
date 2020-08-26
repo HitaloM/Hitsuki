@@ -342,6 +342,7 @@ STRINGS:
     big_file_json: |
       Momentálně jsou soubory JSON omezeny na {num} megabajtů!
       Chcete-li importovat větší soubory, použijte formát csv.
+    invalid_file: "Tento soubor je neplatný"
     wrong_file_ext: "Špatný formát souboru! Podporované jsou: json, csv"
     importing_process: <b>Importuji federační bany...</b>
     import_done: Importování federačních banů dokončeno! Bylo importováno {num} banů.
@@ -450,6 +451,7 @@ STRINGS:
     export_done: Export z <b>{chat_name}</b> dokončen!
     exports_locked: Počkejte prosím %s než budete export moci použít znovu!
     #Importing
+    invalid_file: "Tento soubor je neplatný"
     send_import_file: Vložte prosím soubor importu!
     rpl_to_file: Odpovězte prosím na soubor!
     big_file: Podporován import souborů pouze pod 50 MB!
