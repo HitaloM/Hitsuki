@@ -434,7 +434,7 @@ async def welcome_security_handler(message, strings):
 
 async def join_expired(chat_id, user_id, message_id, wlkm_msg_id):
     user = await bot.get_chat_member(chat_id, user_id)
-    if user.can_send_messages is True:
+    if user.status != 'restricted':
         return
 
     bot_user = await bot.get_chat_member(chat_id, BOT_ID)
