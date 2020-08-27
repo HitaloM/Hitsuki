@@ -361,7 +361,8 @@ async def time_setup_finish(message, data, strings):
     try:
         time = convert_time(message.text)
     except (InvalidTimeUnit, TypeError, ValueError):
-        return await message.reply(strings['invalid_time'])
+        await message.reply(strings['invalid_time'])
+        return None
     else:
         return {'time': repr(time)}
 

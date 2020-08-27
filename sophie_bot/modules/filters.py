@@ -174,7 +174,7 @@ async def setup_end(message, chat, state=None, **kwargs):
 
     action = FILTERS_ACTIONS[filter_id]
 
-    if not (a := await action['setup']['finish'](message, data)):
+    if not bool(a := await action['setup']['finish'](message, data)):
         await state.finish()
         return
 
