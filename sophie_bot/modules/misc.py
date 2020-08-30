@@ -38,7 +38,7 @@ async def runs(message, strings):
     try:
         await message.reply(text)
     except CantParseEntities:
-        await message.reply(html.escape(text))
+        await message.reply(html.escape(text, quote=False))
 
 
 @register(cmds='cancel', state='*', allow_kwargs=True)

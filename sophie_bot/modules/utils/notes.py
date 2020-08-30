@@ -410,7 +410,7 @@ async def vars_parser(text, message, chat_id, md=False, event=None, user=None):
     chat_nick = message.chat.username or chat_name
 
     current_date = html.escape(format_date(date=current_datetime, locale=language_code), quote=False)
-    current_time = html.escape(format_time(time=current_datetime, locale=language_code))
+    current_time = html.escape(format_time(time=current_datetime, locale=language_code), quote=False)
     current_timedate = html.escape(format_datetime(datetime=current_datetime, locale=language_code), quote=False)
 
     text = text.replace('{first}', first_name) \
