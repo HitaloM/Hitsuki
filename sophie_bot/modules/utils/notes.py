@@ -395,8 +395,8 @@ async def vars_parser(text, message, chat_id, md=False, event=None, user=None):
     language_code = await get_chat_lang(chat_id)
     current_datetime = datetime.now()
 
-    first_name = html.escape(user.first_name)
-    last_name = html.escape(user.last_name or "")
+    first_name = html.escape(user.first_name, quote=False)
+    last_name = html.escape(user.last_name or "", quote=False)
     user_id = ([user.id for user in event.new_chat_members][0]
                if 'new_chat_members' in event and event.new_chat_members != [] else user.id)
     mention = await get_user_link(user_id, md=md)
@@ -406,12 +406,12 @@ async def vars_parser(text, message, chat_id, md=False, event=None, user=None):
                 else '@' + user.username
                 if user.username is not None else mention)
     chat_id = message.chat.id
-    chat_name = html.escape(message.chat.title or 'Local')
+    chat_name = html.escape(message.chat.title or 'Local', quote=False)
     chat_nick = message.chat.username or chat_name
 
-    current_date = html.escape(format_date(date=current_datetime, locale=language_code))
+    current_date = html.escape(format_date(date=current_datetime, locale=language_code), quote=False)
     current_time = html.escape(format_time(time=current_datetime, locale=language_code))
-    current_timedate = html.escape(format_datetime(datetime=current_datetime, locale=language_code))
+    current_timedate = html.escape(format_datetime(datetime=current_datetime, locale=language_code), quote=False)
 
     text = text.replace('{first}', first_name) \
         .replace('{last}', last_name) \

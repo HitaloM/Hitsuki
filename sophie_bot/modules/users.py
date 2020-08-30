@@ -112,7 +112,7 @@ async def update_user(chat_id, new_user):
     else:
         last_name = None
 
-    first_name = html.escape(new_user.first_name)
+    first_name = html.escape(new_user.first_name, quote=False)
 
     user_new = {
         'user_id': new_user.id,
