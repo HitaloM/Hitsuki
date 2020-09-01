@@ -53,7 +53,7 @@ from .utils.message import need_args_dec, get_cmd
 from .utils.restrictions import ban_user, unban_user
 from .utils.user_details import (
     is_chat_creator, get_user_link, get_user_and_text, check_admin_rights,
-    is_user_admin, get_user_by_username, get_user_by_id, get_chat_dec
+    is_user_admin, get_chat_dec
 )
 
 
@@ -66,9 +66,13 @@ delfed_cb = CallbackData('delfed_cb', 'fed_id', 'creator_id')
 
 
 async def get_fed_f(message):
-    chat = await get_connected_chat(message, admin=True, only_groups=True)
+    chat = await get_connected_chat(message, admin=True)
     if 'err_msg' not in chat:
-        fed = await db.feds.find_one({'chats': {'$in': [chat['chat_id']]}})
+        if chat['status'] == 'private':
+            # return fed which user is created
+            fed = await db.feds.find_one({'creator': chat['chat_id']})
+        else:
+            fed = await db.feds.find_one({'chats': {'$in': [chat['chat_id']]}})
         if not fed:
             return False
         return fed
