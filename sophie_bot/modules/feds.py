@@ -97,44 +97,48 @@ def get_current_chat_fed(func):
     return wrapped_1
 
 
-def get_fed_user_text(func):
-    async def wrapped_1(*args, **kwargs):
-        fed = None
-        message = args[0]
-        real_chat_id = message.chat.id
-        user, text = await get_user_and_text(message, send_text=False)
-        strings = await get_strings(real_chat_id, 'feds')
+def get_fed_user_text(skip_no_fed=False):
+    def wrapped(func):
+        async def wrapped_1(*args, **kwargs):
+            fed = None
+            message = args[0]
+            real_chat_id = message.chat.id
+            user, text = await get_user_and_text(message, send_text=False)
+            strings = await get_strings(real_chat_id, 'feds')
 
-        # Check non exits user
-        data = message.get_args().split(' ')
-        if not user and len(data) > 0 and data[0].isdigit() and int(data[0]) <= 2147483647:
-            user = {'user_id': int(data[0])}
-            text = ' '.join(data[1:]) if len(data) > 1 else None
-        elif not user:
-            await message.reply(strings['cant_get_user'])
-            # Passing 'None' user will throw err
-            return
-
-        # Check fed_id in args
-        if text:
-            text_args = text.split(" ", 1)
-            if len(text_args) >= 1:
-                if text_args[0].count('-') == 4:
-                    text = text_args[1] if len(text_args) > 1 else ''
-                    if not (fed := await db.feds.find_one({'fed_id': text_args[0]})):
-                        await message.reply(strings['fed_id_invalid'])
-                        return
-                else:
-                    text = " ".join(text_args)
-
-        if not fed:
-            if not (fed := await get_fed_f(message)):
-                await message.reply(strings['chat_not_in_fed'])
+            # Check non exits user
+            data = message.get_args().split(' ')
+            if not user and len(data) > 0 and data[0].isdigit() and int(data[0]) <= 2147483647:
+                user = {'user_id': int(data[0])}
+                text = ' '.join(data[1:]) if len(data) > 1 else None
+            elif not user:
+                await message.reply(strings['cant_get_user'])
+                # Passing 'None' user will throw err
                 return
 
-        return await func(*args, fed, user, text, **kwargs)
+            # Check fed_id in args
+            if text:
+                text_args = text.split(" ", 1)
+                if len(text_args) >= 1:
+                    if text_args[0].count('-') == 4:
+                        text = text_args[1] if len(text_args) > 1 else ''
+                        if not (fed := await db.feds.find_one({'fed_id': text_args[0]})):
+                            await message.reply(strings['fed_id_invalid'])
+                            return
+                    else:
+                        text = " ".join(text_args)
 
-    return wrapped_1
+            if not fed:
+                if not (fed := await get_fed_f(message)):
+                    if not skip_no_fed:
+                        await message.reply(strings['chat_not_in_fed'])
+                        return
+                    else:
+                        fed = None
+
+            return await func(*args, fed, user, text, **kwargs)
+        return wrapped_1
+    return wrapped
 
 
 def get_fed_dec(func):
@@ -352,7 +356,7 @@ async def fed_unsub(message, fed, strings):
 
 
 @decorator.register(cmds='fpromote')
-@get_fed_user_text
+@get_fed_user_text()
 @is_fed_owner
 @get_strings_dec("feds")
 async def promote_to_fed(message, fed, user, text, strings):
@@ -373,7 +377,7 @@ async def promote_to_fed(message, fed, user, text, strings):
 
 
 @decorator.register(cmds='fdemote')
-@get_fed_user_text
+@get_fed_user_text()
 @is_fed_owner
 @get_strings_dec("feds")
 async def demote_from_fed(message, fed, user, text, strings):
@@ -515,7 +519,7 @@ async def get_all_subs_feds_r(fed_id, new):
 
 
 @decorator.register(cmds=['fban', 'sfban'])
-@get_fed_user_text
+@get_fed_user_text()
 @is_fed_admin
 @get_strings_dec("feds")
 async def fed_ban_user(message, fed, user, reason, strings):
@@ -681,7 +685,7 @@ async def fed_ban_user(message, fed, user, reason, strings):
 
 
 @decorator.register(cmds=['unfban', 'funban'])
-@get_fed_user_text
+@get_fed_user_text()
 @is_fed_admin
 @get_strings_dec("feds")
 async def unfed_ban_user(message, fed, user, text, strings):
@@ -1056,46 +1060,25 @@ async def check_fbanned(message, chat, strings):
 
 
 @decorator.register(cmds='fcheck')
-@chat_connection()
+@get_fed_user_text(skip_no_fed=True)
 @get_strings_dec('feds')
-async def fedban_check(message, chat, strings):
-    text = message.get_args().split(' ')
-    fed = None
-    uid = None
-    if text != ['']:
-        if text[0].count('-') == 4:
-            if data := await db.feds.find_one({'fed_id': text[0]}):
-                fed = data
-                if len(text) > 1:
-                    uid = text[1]
-        else:
-            uid = text[0]
-
-    # Getting user
-
-    user = None
-    entities = filter(lambda ent: ent['type'] == 'text_mention' or ent['type'] == 'mention', message.entities)
-    for item in entities:
-        mention = item.get_text(message.text)
-        if mention:
-            user = await get_user_by_username(mention) if item.type != 'text_mention' \
-                else await get_user_by_id(int(item.user.id))
-    if user is None:
-        if uid is not None and uid.isdigit():
-            user = await get_user_by_id(int(uid))
-        if not user and "reply_to_message" in message:
-            user = await get_user_by_id(message.reply_to_message.from_user.id)
-    if user is None:
-        user = await get_user_by_id(message.from_user.id)
-
+async def fedban_check(message, fed, user, _, strings):
     fbanned_fed = False  # A variable to find if user is banned in current fed of chat
     fban_data = None
+
     total_count = await db.fed_bans.count_documents({'user_id': user['user_id']})
-    if fed is None and message.chat.type != 'private':
-        fed = await db.feds.find_one({'chats': int(chat['chat_id'])})
-    if fed is not None:
-        if fban_data := await db.fed_bans.find_one({'user_id': user['user_id'], 'fed_id': fed['fed_id']}):
+    if fed:
+        fed_list = [fed['fed_id']]
+        # check fbanned in subscribed
+        if 'subscribed' in fed:
+            fed_list.extend(fed['subscribed'])
+
+        if fban_data := await db.fed_bans.find_one({'user_id': user['user_id'], 'fed_id': {'$in': fed_list}}):
             fbanned_fed = True
+
+        # re-assign fed if user is banned in sub-fed
+        if fban_data['fed_id'] != fed['fed_id']:
+            fed = await db.feds.find_one({'fed_id': fban_data['fed_id']})
 
     # create text
     text = strings['fcheck_header']
