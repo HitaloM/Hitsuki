@@ -19,26 +19,14 @@
 import html
 import random
 
-from aiogram.utils.exceptions import BadRequest, CantParseEntities
+from aiogram.utils.exceptions import BadRequest
 from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
 from contextlib import suppress
 
 from sophie_bot.decorator import register
 from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
-from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
-
-
-@register(cmds="runs")
-@get_strings_dec("RUNS", mas_name="RANDOM_STRINGS")
-@disableable_dec('runs')
-async def runs(message, strings):
-    text = random.choice(list(strings))
-    try:
-        await message.reply(text)
-    except CantParseEntities:
-        await message.reply(html.escape(text, quote=False))
 
 
 @register(cmds='cancel', state='*', allow_kwargs=True)
