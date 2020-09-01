@@ -734,7 +734,7 @@ async def welcome_trigger(message, strings):
         return
 
     chat_id = message.chat.id
-    user_id = message.new_chat_members[0]
+    user_id = message.new_chat_members[0].id
 
     if user_id == BOT_ID:
         return
