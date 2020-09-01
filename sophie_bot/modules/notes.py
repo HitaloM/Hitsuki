@@ -86,7 +86,9 @@ def clean_notes(func):
                 await tbot.delete_messages(chat_id, data['msgs'])
 
         msgs = []
-        if hasattr(message, 'id'):
+        if hasattr(message, 'message_id'):
+            msgs.append(message.message_id)
+        else:
             msgs.append(message.id)
 
         msgs.append(event.message_id)
@@ -246,6 +248,7 @@ async def get_note_hashtag(message, chat, regexp=None, **kwargs):
 @disableable_dec('notes')
 @chat_connection(command='notes')
 @get_strings_dec('notes')
+@clean_notes
 async def get_notes_list_cmd(message, chat, strings):
 
     if await db.privatenotes.find_one({'chat_id': chat['chat_id']})\
@@ -257,10 +260,9 @@ async def get_notes_list_cmd(message, chat, strings):
             text='Click here',
             url=await get_start_link(f"notes_{chat['chat_id']}_{keyword}")
         ))
-        await message.reply(text, reply_markup=button, disable_web_page_preview=True)
-        return
+        return await message.reply(text, reply_markup=button, disable_web_page_preview=True)
     else:
-        await get_notes_list(message, chat=chat)
+        return await get_notes_list(message, chat=chat)
 
 
 @get_strings_dec('notes')
@@ -269,8 +271,7 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
 
     notes = await db.notes.find({'chat_id': chat['chat_id']}).sort("names", 1).to_list(length=300)
     if not notes:
-        await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
-        return
+        return await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
 
     async def search_notes(request):
         nonlocal notes, text, note, note_name
@@ -282,8 +283,7 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
                 if re.search(request, note_name):
                     notes.append(note)
         if not len(notes) > 0:
-            await message.reply(strings['no_notes_pattern'] % request)
-            return
+            return await message.reply(strings['no_notes_pattern'] % request)
 
     # Search
     if keyword:
@@ -299,7 +299,7 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
         text += strings['you_can_get_note']
 
         try:
-            await message.reply(text)
+            return await message.reply(text)
         except BadRequest:
             await message.answer(text)
 
@@ -307,6 +307,7 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
 @register(cmds='search')
 @chat_connection()
 @get_strings_dec('notes')
+@clean_notes
 async def search_in_note(message, chat, strings):
     request = message.get_args()
     text = strings["search_header"].format(chat_name=chat['chat_title'], request=request)
@@ -321,9 +322,8 @@ async def search_in_note(message, chat, strings):
             text += f" <code>#{note_name}</code>"
     text += strings['you_can_get_note']
     if not check:
-        await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
-        return
-    await message.reply(text)
+        return await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
+    return await message.reply(text)
 
 
 @register(cmds=['clear', 'delnote'])
@@ -392,6 +392,7 @@ async def clear_all_notes_cb(event, chat, strings):
 @chat_connection()
 @need_args_dec()
 @get_strings_dec('notes')
+@clean_notes
 async def note_info(message, chat, strings):
     note_name = get_arg(message).lower()
     if note_name[0] == '#':
@@ -401,8 +402,7 @@ async def note_info(message, chat, strings):
         text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
         if alleged_note_name := await get_similar_note(chat['chat_id'], note_name):
             text += strings['u_mean'].format(note_name=alleged_note_name)
-        await message.reply(text)
-        return
+        return await message.reply(text)
 
     text = strings['note_info_title']
 
@@ -436,7 +436,7 @@ async def note_info(message, chat, strings):
             user=await get_user_link(note['edited_user'])
         )
 
-    await message.reply(text)
+    return await message.reply(text)
 
 
 BUTTONS.update({'note': 'btnnotesm'})
