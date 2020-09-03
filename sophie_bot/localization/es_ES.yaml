@@ -72,7 +72,7 @@ STRINGS:
     no_filters_found: "¡No se encontraron filtros en <b>{chat_name}</b>!"
     #/addfilter
     adding_filter: |
-      Añadiendo filtro <code>{handler}</code> en <b>{chat_name}</b>
+      Adicionando filtro <code>{handler}</code> en <b>{chat_name}</b>
       Seleccione la siguiente acción:
     #/filters
     list_filters: "Filtros en <b>{chat_name}</b>:\n"
