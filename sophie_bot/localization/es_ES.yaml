@@ -16,33 +16,33 @@ STRINGS:
     cant_find_note: '¡No puedo encontrar esta nota en <b>{chat_name}</b>!'
     no_note: "No pude encontrar esa nota."
     no_notes_pattern: "No se encontró ninguna nota por patrón <code>%s</code>"
-    u_mean: "\n¿Quisiste decir <code>#{note_name}</code>?"
+    u_mean: "\n¿Querías decir <code>#{note_name}</code>?"
     #/notes
-    notelist_no_notes: "¡No hay notas en <b>{chat_title}</b>!"
+    notelist_no_notes: "¡No existen notas en <b>{chat_title}</b>!"
     notelist_header: "<b>Notas en {chat_name}</b>:"
-    notes_in_private: "Haga clic en el botón inferior para obtener la lista de notas."
+    notes_in_private: "Haga clic en el botón a continuación para obtener la lista de notas."
     notelist_search: |
       <b>Patrón:</b> <code>{request}</code>
-      <b>Notas coincidentes:</b>
+      <b>Notas que coinciden:</b>
     #/clear
-    note_removed: "Nota <code>#{note_name}</code> eliminada en <b>{chat_name}</b>!"
+    note_removed: "¡Nota <code>#{note_name}</code> removida en <b>{chat_name}</b>!"
     note_removed_multiple: |
-      Múltiples notas eliminadas en <b>{chat_name}</b>
-      <b>Eliminado:</b><code>{removed}</code>
-    not_removed_multiple: "<b>No eliminado:</b><code>{not_removed}</code>"
+      Múltiples notas removidas en <b>{chat_name}</b>
+      <b>Removido:</b><code>{removed}</code>
+    not_removed_multiple: "<b>No removido:</b> <code>{not_removed}</code>"
     #/clearall
-    clear_all_text: "Esto eliminará todas las notas de {chat_name}. ¿Estás seguro?"
-    clearall_btn_yes: "¡Sí, quita todas mis notas!"
+    clear_all_text: "Esto removerá todas las notas de {chat_name}. ¿Estás seguro?"
+    clearall_btn_yes: "Sí. ¡Remueve todas mis notas!"
     clearall_btn_no: "¡No!"
-    clearall_done: "¡Todas las notas (<code>{num}</code>) en {chat_name} han sido eliminadas!"
+    clearall_done: "¡Todas las notas (<code>{num}</code>) en {chat_name} fueron removidas!"
     #/search
     search_header: |
-      <b>Solicitud de búsqueda en {chat_name}</b>:
+      <b>Petición de búsqueda en {chat_name}</b>:
       <b>Patrón:</b> <code>{request}</code>
-      <b>Notas coincidentes:</b>
+      <b>Notas que coinciden:</b>
     #/noteinfo
     note_info_title: "<b>Info de nota</b>\n"
-    note_info_note: "Nombres de las notas: %s\n"
+    note_info_note: "Nombres de la nota: %s\n"
     note_info_content: "Contenido de la nota: %s"
     note_info_parsing: "Modo de análisis: <code>%s</code>\n"
     note_info_created: "Fue creado en: <code>{date}</code> por {user}\n"
