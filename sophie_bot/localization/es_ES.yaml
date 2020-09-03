@@ -45,27 +45,27 @@ STRINGS:
     note_info_note: "Nombres de la nota: %s\n"
     note_info_content: "Contenido de la nota: %s"
     note_info_parsing: "Modo de análisis: <code>%s</code>\n"
-    note_info_created: "Fue creado en: <code>{date}</code> por {user}\n"
-    note_info_updated: "Última actualización en: <code>{date}</code> por {user}\n"
-    user_blocked: "¡Escríbeme /start por mensaje privado!"
+    note_info_created: "Creado: <code>{date}</code> por {user}\n"
+    note_info_updated: "Última actualización: <code>{date}</code> por {user}\n"
+    user_blocked: "¡Escriba /start en el chat privado!"
     #/privatenotes
-    private_notes_false_args: "Tienes 2 opciones <code>Desactivar</code> y <code>Activar</code>!"
-    already_enabled: "Las notas privadas ya están habilitadas en %s"
-    current_state_info: "¡Actualmente la nota privada es {state} en {chat}! "
-    enabled_successfully: "¡Las notas privadas están <b>habilitadas</b> en %s con éxito!"
-    disabled_successfully: "¡Las notas privadas están <b>Desactivadas</b> en %s con éxito!"
-    not_enabled: "Las notas privadas no están habilitadas para desactivar."
-    privatenotes_notif: "Ha sido conectado correctamente a <b>{chat}</b> notas! Para desconectar, utilice el comando <code>/disconnect</code>!"
+    private_notes_false_args: "¡Tienes 2 opciones <code>Desactivar</code> y <code>Activar</code>!"
+    already_enabled: "Las notas privadas ya están activadas en %s"
+    current_state_info: "¡Actualmente la nota privada está {state} en {chat}! "
+    enabled_successfully: "¡Las notas privadas están <b>Activadas</b> en %s de manera satisfactoria!"
+    disabled_successfully: "¡Las notas privadas están <b>Desactivadas</b> en %s de manera satisfactoria!"
+    not_enabled: "Las notas privadas no están habilitadas para desactivarse."
+    privatenotes_notif: "¡Usted se ha conectado con éxito a las notas del <b>{chat}</b>! Para desconectarse por favor ¡utilice el comando <code>/disconnect</code>!"
     enabled: 'Activado'
-    disabled: 'Deshabilitado'
+    disabled: 'Desactivado'
     #/cleannotes
-    clean_notes_enable: "Se ha activado correctamente la limpieza de notas en <b>{chat_name}</b>"
-    clean_notes_disable: "Se ha desactivado correctamente la limpieza de notas en <b>{chat_name}</b>"
-    clean_notes_enabled: "La limpieza de notas actualmente está <b>activada</b> en <b>{chat_name}</b>"
-    clean_notes_disabled: "La limpieza de notas actualmente están <b>deshabilitadas</b> en <b>{chat_name}</b>"
+    clean_notes_enable: "Se activó correctamente la limpieza de notas en <b>{chat_name}</b>"
+    clean_notes_disable: "Se desactivó correctamente la limpieza de notas en <b>{chat_name}</b>"
+    clean_notes_enabled: "La limpieza de notas está actualmente <b>activada</b> en <b>{chat_name}</b>"
+    clean_notes_disabled: "La limpieza de notas está actualmente <b>desactivada</b> en <b>{chat_name}</b>"
     #Filter
-    filters_title: 'Envía una nota'
-    filters_setup_start: 'Por favor, envía un nombre de nota.'
+    filters_title: 'Envíe una nota'
+    filters_setup_start: 'Por favor, envíe el nombre de la nota.'
   #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
   #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
   filters:
