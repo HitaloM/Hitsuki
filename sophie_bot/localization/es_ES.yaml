@@ -5,17 +5,17 @@ language_info:
 STRINGS:
   notes:
     #/save
-    note_saved: "🗒 Nota <code>{note_name}</code> guardada en <b>{chat_title}</b>!"
-    note_updated: "🗒 Nota <code>{note_name}</code> actualizada en <b>{chat_title}</b>!"
-    you_can_get_note: "\nPuedes recuperar esta nota usando <code>/get {note_name}</code>, ó <code>#{note_name}</code>"
+    note_saved: "🗒 ¡Nota <code>{note_name}</code> guardada en <b>{chat_title}</b>!"
+    note_updated: "🗒 ¡Nota <code>{note_name}</code> actualizada en <b>{chat_title}</b>!"
+    you_can_get_note: "\nPuedes consultar esta nota usando <code>/get {note_name}</code>, o <code>#{note_name}</code>"
     #Translator note: please keep sure that you don't have space in the end of string
     note_aliases: "\nAlias de la nota:"
-    blank_note: "¡No se permite guardar notas en blanco!"
-    notename_cant_contain: "El nombre de la nota no puede contener \"<code>{symbol}</code>\"!"
+    blank_note: "¡No está permitido guardar una nota en blanco!"
+    notename_cant_contain: "¡El nombre de la nota no puede contener \"<code>{symbol}</code>\"!"
     #/get
     cant_find_note: '¡No puedo encontrar esta nota en <b>{chat_name}</b>!'
-    no_note: "No se puede encontrar esa nota."
-    no_notes_pattern: "No se han encontrado notas por patrón <code>%s</code>"
+    no_note: "No pude encontrar esa nota."
+    no_notes_pattern: "No se encontró ninguna nota por patrón <code>%s</code>"
     u_mean: "\n¿Quisiste decir <code>#{note_name}</code>?"
     #/notes
     notelist_no_notes: "¡No hay notas en <b>{chat_title}</b>!"
@@ -335,6 +335,7 @@ STRINGS:
     big_file_json: |
       ¡Actualmente los archivos json están limitados a {num} Megabytes!
       Utilice un formato csv si desea importar archivos más grandes.
+    invalid_file: "El archivo es inválido"
     wrong_file_ext: "¡Formato de archivo incorrecto! El soporte actualmente es: json, csv"
     importing_process: <b>Importando bloqueos de la federación...</b>
     import_done: Importación de fbans finalizada!
@@ -442,6 +443,7 @@ STRINGS:
     export_done: Exportación de <b>{chat_name}</b> realizada!
     exports_locked: '¡Por favor, espera %s para volver a usar exportaciones!'
     #Importing
+    invalid_file: "El archivo es inválido"
     send_import_file: '¡Por favor, envía un archivo de importación!'
     rpl_to_file: '¡Por favor, responde a un archivo!'
     big_file: '¡Archivos de importación soportados solo por menos de 50 MB!'
@@ -608,43 +610,3 @@ STRINGS:
     no_unlock_args: '¡Dame algunos argumentos para desbloquear!'
     not_locked: Bruh, no está bloqueado para desbloquear.
     unlocked_successfully: '¡ {lock} desbloqueado en {chat} con éxito!'
-RANDOM_STRINGS:
-  RUNS:
-    - "¡Noooooooooooo!.."
-    - "M cri"
-    - "Señor, ¿por qué?"
-    - "¿Por qué haces esto? Estoy llorando."
-    - "Alguien realmente me escribió este hilo ;_;"
-    - "Alexa, ¡pon Despacito!"
-    - "TODO: ESCRIBE ESTE HILO."
-    - "Plox, sr, sar"
-    - "Espera, oh, para... No puedo enviar stickers ;_;"
-    - "/runs"
-    - "¡Miau! 😺"
-    - "Prueba /cat"
-    - "Corre de Rose"
-    - "Corre de Yana"
-    - "Si pensabas que te enviaré una nuevo de broma - estás equivocado, ¡no lo haré!"
-    - "SaNd NeW KrANUl LeNk"
-    - "?_?"
-    - "OwO"
-    - "¿Hay alguna raza!?"
-    - "Acceso denegado!!"
-    - "Ok, tu corre y déjame ver qué tanto puedes..."
-    - "Es épico"
-    - "Es tan malditamente épico!!"
-    - "Estoy tan pobre... :("
-    - "¿Si?"
-    - "Sí, presiona /runs más 😏"
-    - "U r smol"
-    - ">~<"
-    - "@admins plz <code>/disable /runs</code>"
-    - "Spam spam spam spam"
-    - "puerto bacup bro gsi ijo"
-    - "port fine sur plz make room bholit mustah Sir"
-    - "fax bacup bad englis bad englis trable workz fox bag dot"
-    - Soy una máquina
-    - Nunca duermo
-    - Mantengo mis ojos abiertos
-    - Soy una máquina
-    - Desearía al menos poder sentir algo
