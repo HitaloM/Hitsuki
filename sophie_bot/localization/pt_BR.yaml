@@ -318,52 +318,52 @@ STRINGS:
     delfed_btn_yes: Sim. Excluir federação
     delfed_btn_no: Não.
     delfed: |
-      Are you sure to delete this federation <b>%s</b>?
+      Você tem certeza de excluir esta federação <b>%s</b>?
 
-      <i>Disclaimer: Deleting federation will remove all datas associated with it from our Database!
-      This action cannot be reversed at any cost!</i>
-    delfed_success: Successfully deleted the federation!
+      <i>Aviso Legal: A exclusão da federação removerá todos os dados associados a ela de nosso banco de dados!
+      Esta ação não pode ser revertida de modo nenhum!</i>
+    delfed_success: A federação foi excluída com sucesso!
     #/frename
     frename_same_name: Por favor, digite um nome diferente do existente!
-    frename_success: A federação <b>{old_name}</b> renomeado para <b>{new_name}</b> com sucesso!
+    frename_success: A Federação <b>{old_name}</b> mudou de nome a <b>{new_name}</b> com sucesso!
     #/fbanlist
-    fbanlist_locked: Por favor, espere até %s para usar o fbanlist novamente.
-    creating_fbanlist: Criando lista fban!  Por favor, espere ..
-    fbanlist_done: Fbanlist da Federação <b>%s</b>!
+    fbanlist_locked: Por favor, aguarde até %s para usar o fbanlist novamente.
+    creating_fbanlist: Criando lista de fban! Por favor, espere ..
+    fbanlist_done: Lista de Fbans da Federação <b>%s</b>!
     #/importfbans
     send_import_file: |
       Envie o arquivo de importação!
 
-       Para cancelar este processo;  usar / cancelar
+       Para cancelar este processo; use /cancel
     rpl_to_file: Por favor, responda a um arquivo!
-    importfbans_locked: A importação de fbans está trancada para %s nesta federação.
+    importfbans_locked: A importação de fbans está bloqueada para %s nesta federação.
     big_file_csv: Só suporta a importação de arquivos csv menos de {num} Megabytes!
     big_file_json: |
-      Atualmente os arquivos json são limitados a {num} Megabytes!
+      Atualmente os arquivos json estão limitados a {num} Megabytes!
       Use um formato csv se quiser importar arquivos maiores.
     invalid_file: "O arquivo é inválido"
     wrong_file_ext: "Formato do arquivo errado! Atualmente o suporte é: json, csv"
-    importing_process: <b>Importando proibições de federação...</b>
-    import_done: Importação de banimentos da fed concluída! Foi importado {num} banidos.
+    importing_process: <b>Importando banidos da federação...</b>
+    import_done: Importação de banidos da federação concluída! Foi importado {num} banidos.
     #def
-    automatic_ban: O usuário {user} está banido na federação atual <b>{fed_name}</b>. Então foi removido!
-    automatic_ban_sfed: O usuário {user} está banido na sub-federação <b>{fed_name}</b>. Então foi removido!
+    automatic_ban: O usuário {user} está banido na federação atual <b>{fed_name}</b>. Portanto, foi removido!
+    automatic_ban_sfed: O usuário {user} está banido na sub-federação <b>{fed_name}</b>. Portanto, foi removido!
     automatic_ban_reason: "\nMotivo: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>Informações de banimento da federação:</b>\n"
     fbanned_count_pm: "Você está banido em {count} federação(ões)!\n"
-    "fban_info:fcheck": "Você foi banido na federação {fed} em {date}, Sem motivo!"
-    "fban_info:fcheck:reason": "Você foi banido na federação {fed} em {date} por causa do motivo -\n {reason}\n"
+    "fban_info:fcheck": "Você foi banido na federação {fed} o {date}. Sem motivo!"
+    "fban_info:fcheck:reason": "Você foi banido na federação {fed} o {date} pelo motivo -\n {reason}\n"
     fbanned_data: "{user} foi banido em {count} federação(ões)\n"
-    fbanned_nowhere: "{user} não é banido em lugar nenhum!"
-    fbanned_in_fed: "Incluindo esta <b>{fed}</b> federação!\n"
+    fbanned_nowhere: "{user} não está banido em lugar nenhum!"
+    fbanned_in_fed: "Incluindo esta federação <b>{fed}</b>!\n"
     "fbanned_in_fed:reason": "Incluindo esta federação <b>{fed}</b> pelo motivo de -\n <code>{reason}</code>"
     contact_in_pm: "\n\nPara mais informações sobre seus fbans, por favor, me envie uma mensagem no privado para garantir sua privacidade!"
     too_long_fbaninfo: "Muito bem! O seu fbaninfo requer um arquivo!"
     didnt_fbanned: "Você não está banido nesta federação."
   reports:
-    user_user_admin: "Você é um Admin aqui, por que precisaria informar alguém?.."
-    user_is_whitelisted: "Você é um usuário da whitelist, por que precisaria informar alguém?.."
+    user_user_admin: "Você é um Admin aqui, por que precisaria reportar alguém?.."
+    user_is_whitelisted: "Você é um usuário da whitelist, por que precisaria reportar alguém?.."
     reports_disabled: "Os reportes estão atualmente <b>desativados</b> neste grupo."
     no_user_to_report: "Qual usuário você deseja reportar?"
     report_admin: "Você <b>não pode</b> reportar aos administradores."
@@ -421,7 +421,7 @@ STRINGS:
     father: "\nEle é o meu criador."
     sudo_crown: "\nEi! Olha, aquele usuário tem uma coroa, deixe-me vê-la... Uau, tem uma gravura - <b>'sudo usuário'</b>!"
   stickers:
-    rpl_to_sticker: "Responda a um adesivo!"
+    rpl_to_sticker: "Responda a um sticker!"
     ur_sticker: |
       <b>Emoji:</b> <code>{emoji}</code>
       <b>ID do Sticker:</b> <code>{id}</code>
@@ -447,7 +447,7 @@ STRINGS:
   imports_exports:
     #Exporting
     started_exporting: Exportação iniciada!  Por favor, espere...
-    export_done: Exportar de <b>{chat_name}</b> feito!
+    export_done: Exportação de <b>{chat_name}</b> concluído!
     exports_locked: Por favor, espere %s até usar as exportações novamente!
     #Importing
     invalid_file: "O arquivo é inválido"
