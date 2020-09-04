@@ -300,13 +300,13 @@ STRINGS:
     fban_reason_fed_log: "<b>Motivo:</b> <code>{reason}</code>\n"
     fban_subs_fed_log: "\n<b>Federações subscritas:</b> banido em <code>{subs_chats}</code> chats de <code>{feds}</code> federações"
     #/unfban
-    unfban_self: "Think of something else to have fun instead of this."
-    user_not_fbanned: "{user} wasn't banned in this federation."
-    un_fbanned_header: "<b>New Un-FedBan</b>\n"
-    un_fbanned_process: "\n<b>Status:</b> Unbanning in <code>{num}</code> chats..."
-    un_fbanned_done: "\n<b>Status:</b> Done! Unbanned in <code>{num}</code> chats!"
-    un_fbanned_subs_process: "\n<b>Status:</b> Unbanning in <code>{feds}</code> subscribed feds..."
-    un_fbanned_subs_done: "\n<b>Status:</b> Done! Unbanned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
+    unfban_self: "Pense em outra coisa para se divertir em vez disso."
+    user_not_fbanned: "{user} não foi banido nesta federação."
+    un_fbanned_header: "<b>Novo Un-FedBan</b>\n"
+    un_fbanned_process: "\n<b>Estado:</b> Desbanimento em <code>{num}</code> chats..."
+    un_fbanned_done: "\n<b>Estado:</b> Feito! Desbanido em <code>{num}</code> chats!"
+    un_fbanned_subs_process: "\n<b>Estado:</b> Desbanimento em <code>{feds}</code> federações subscritas..."
+    un_fbanned_subs_done: "\n<b>Estado:</b> Feito! Desbanido em <code>{chats}</code> chats desta federação e <code>{subs_chats}</code> chats de <code>{feds}</code> federações subscritas"
     un_fban_log_fed_log: |
       <b>Unban user in the fed</b> #FedUnBan
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
