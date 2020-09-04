@@ -15,14 +15,14 @@ STRINGS:
     #/get
     cant_find_note: '¡No puedo encontrar esta nota en <b>{chat_name}</b>!'
     no_note: "No pude encontrar esa nota."
-    no_notes_pattern: "No se encontró ninguna nota por patrón <code>%s</code>"
+    no_notes_pattern: "No se encontró ninguna nota por búsqueda <code>%s</code>"
     u_mean: "\n¿Querías decir <code>#{note_name}</code>?"
     #/notes
     notelist_no_notes: "¡No existen notas en <b>{chat_title}</b>!"
     notelist_header: "<b>Notas en {chat_name}</b>:"
     notes_in_private: "Haga clic en el botón a continuación para obtener la lista de notas."
     notelist_search: |
-      <b>Patrón:</b> <code>{request}</code>
+      <b>Búsqueda:</b> <code>{request}</code>
       <b>Notas que coinciden:</b>
     #/clear
     note_removed: "¡Nota <code>#{note_name}</code> removida en <b>{chat_name}</b>!"
@@ -38,7 +38,7 @@ STRINGS:
     #/search
     search_header: |
       <b>Petición de búsqueda en {chat_name}</b>:
-      <b>Patrón:</b> <code>{request}</code>
+      <b>Búsqueda:</b> <code>{request}</code>
       <b>Notas que coinciden:</b>
     #/noteinfo
     note_info_title: "<b>Info de nota</b>\n"
@@ -292,6 +292,8 @@ STRINGS:
     fban_log_fed_log: |
       <b>Banear usuario en la federación</b> #FederBan
       <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Usuario:</b> {user} ({user_id})
+      <b>Por:</b> {by}
       <b>Chats:</b> usuario baneado en <code>{chat_count}</code>/<code>{all_chats}</code> chats
     fban_reason_fed_log: "<b>Razón:</b> <code>{reason}</code>\n"
     fban_subs_fed_log: "\n<b>federaciones suscritas:</b> baneado en <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones"
@@ -488,11 +490,11 @@ STRINGS:
     filtr_mute_success: '%s silenció a %s por %s'
     filtr_tmute_success: |
       %s silenciado %s por %s
-      razón es %s
+      razón: %s
     time_setup_start: '¡Por favor, envía el tiempo!'
     filtr_tban_success: |
       %s baneado %s por %s
-      razón es %s
+      razón: %s
     filter_title_tmute: tMute al usuario
     filter_title_mute: Silenciar al usuario
     filter_title_tban: tBan al usuario
