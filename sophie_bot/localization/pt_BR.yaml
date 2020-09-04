@@ -232,74 +232,73 @@ STRINGS:
     #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
     admin_added_to_fed: "Usuário {user} adicionado como administrador da Federação <b>{name}</b>."
     promote_user_fed_log: |
-      <b>Usuário promovido a fed dos administradores</b>#UserPromoted
-      <b> Fed: </b> {fed_name} (<code> {fed_id} </code>)
-      <b> Usuário: </b> {user} (<code> {user_id} </code>)
+      <b>Usuário promovido como administrador da Federação</b> #UserPromoted
+      <b>Federação:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Usuário:</b> {user} (<code>{user_id}</code>)
     #/fdemote
     #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
-    admin_demoted_from_fed: "Usuário {user} rebaixado de <b>{name}</b> administradores da Federação."
+    admin_demoted_from_fed: "Usuário {user} despromovido como administrador da Federação <b>{name}</b>."
     demote_user_fed_log: |
-      <b>Usuário rebaixado dos administradores do projeto</b> #Usuário Demoted
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Usuário despromovido como administrador da Federação</b> #UsuárioDemoted
+      <b>Federação:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Usuário:</b> {user} (<code>{user_id}</code>)
     #/fsetlog
-    already_have_chatlog: "<b>{name}</b> A Federação já ativou o login em outro chat/canal!"
+    already_have_chatlog: "A Federação <b>{name}</b> já ativou o login em outro chat/canal!"
     set_chat_log: |
-      Este chat agora faz log de todas as ações no log da Federação <b>{name}</b> Federação
+      Este chat agora cadastra todas as ações da Federación <b>{name}</b>
 
-      é usado para avaliação interna da federação e seu desempenho.
-      NÃO deve ser usado como um mural para o público, respeitando assim os dados do usuário e as nossas diretrizes de privacidade.
+      O cadastro da Federação é utilizada para avaliação interna da federação e do seu desempenho. NÃO deve ser utilizado como um painel publicitário para o público, respeitando assim os dados dos usuários e nossas diretrizes de privacidade.
     set_log_fed_log: |
       <b>Log habilitado</b> #LoggingEnabled
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Federação:</b> {fed_name} (<code>{fed_id}</code>)
     no_right_to_post: Eu não tenho permissão para postar mensagens neste canal!
     #/funsetlog
-    not_logging: "<b>{name}</b> A Federação não está fazendo login em nenhum chat/canal!"
-    logging_removed: "Successfully removed logging from <b>{name}</b> Federation."
+    not_logging: "A Federação <b>{name}</b> não está fazendo login em nenhum chat/canal!"
+    logging_removed: "Removido com sucesso o cadastro da Federação <b>{name}</b>."
     unset_log_fed_log: |
-      <b>Disabled logging</b> #LoggingDisabled
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Cadastro desabilitado</b> #LoggingDesabilitado
+      <b>Federação:</b> {fed_name} (<code>{fed_id}</code>)
     #/fchatlist
-    chats_in_fed: "<b>Chats connected to {name} Federation:</b>\n"
-    too_large: "Output too large, sending as file"
+    chats_in_fed: "<b>Chats conectados à Federação {name}:</b>\n"
+    too_large: "Saída muito grande, enviando como arquivo"
     #/finfo
     finfo_text: |
-      <b>Federation info</b>
-      <b>Name:</b> {name}
+      <b>Informação da Federação</b>
+      <b>Nome:</b> {name}
       <b>ID:</b> <code>{fed_id}</code>
-      <b>Creator:</b> {creator}
-      <b>Chats in the fed:</b> {chats}
-      <b>Banned users in the fed:</b> {fbanned}
-    finfo_subs_title: "<b>Federation is subscribed to this feds:</b>\n"
+      <b>Criador:</b> {creator}
+      <b>Chats na Federação:</b> {chats}
+      <b>Usuários banidos na Federação:</b> {fbanned}
+    finfo_subs_title: "<b>A Federação está subscrita a essas federações:</b>\n"
     #/fadminlist
-    fadmins_header: "Admins in <b>{fed_name}</b> Fed:\n"
+    fadmins_header: "Administradores na Federação <b>{fed_name}</b>:\n"
     #no_fbanned_in_fed: "There isn't any banned users in {fed_name} Federation!"
     #/fban
-    user_wl: "This user is whitelisted from banning."
-    fban_self: "That's a nice show!"
-    fban_creator: "How can I ban Federation creator?! I don't think it's gonna be funny."
-    fban_fed_admin: "I'm not going to ban a fed admin from their own fed!"
-    update_fban: "This user was fbanned earlier therefore I am updating reason to <code>{reason}</code>"
-    already_fbanned: "{user} already banned in this federation."
-    fbanned_header: "<b>New FedBan</b>\n"
-    fban_info: '|#ChatLeaved <b>Federation:</b> {fed} <b>Fed admin:</b> {fadmin} <b>User:</b> {user} (<code>{user_id}</code>)'
-    fbanned_reason: "<b>Reason:</b> <code>{reason}</code>"
-    fbanned_process: "\n<b>Status:</b> Banning in <code>{num}</code> fed chats..."
-    fbanned_done: "\n<b>Status:</b> Done! banned in <code>{num}</code> chats!"
-    fbanned_silence: "This message will be purged in 5 seconds"
-    fbanned_subs_process: "\n<b>Status:</b> Banning in <code>{feds}</code> subscribed feds..."
-    fbanned_subs_done: "\n<b>Status:</b> Done! banned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
+    user_wl: "Este usuário está na whitelist de banimento."
+    fban_self: "Que belo espetáculo!"
+    fban_creator: "Como posso banir o criador da Federação?! Eu não acredito que vai ser engraçado."
+    fban_fed_admin: "Eu não vou banir um administrador de sua própria federação!"
+    update_fban: "Este usuário foi fbanido antes, portanto estou atualizando a razão para <code>{reason}</code>"
+    already_fbanned: "{user} já banido nesta federação."
+    fbanned_header: "<b>Novo FedBan</b>\n"
+    fban_info: <b>Federação:</b> {fed} <b>Admin da Federação:</b> {fadmin} <b>Usuário:</b> {user} (<code>{user_id}</code>)
+    fbanned_reason: "<b>Motivo:</b> <code>{reason}</code>"
+    fbanned_process: "\n<b>Estado:</b> Banimento em <code>{num}</code> chats da federação..."
+    fbanned_done: "\n<b>Estado:</b> Feito! banido em <code>{num}</code> chats!"
+    fbanned_silence: "Esta mensagem será removida em 5 segundos"
+    fbanned_subs_process: "\n<b>Estado:</b> Banimento em <code>{feds}</code> federações subscritas..."
+    fbanned_subs_done: "\n<b>Estado:</b> Feito! banido em <code>{chats}</code> chats desta federação e <code>{subs_chats}</code> chats de <code>{feds}</code> federações subscritas"
     fban_usr_rmvd: |
-      User {user} is banned in current federation <b>{fed}</b>.So has been removed!
-      Reason: <code>{rsn}</code>
+      Usuário {user} está banido na atual federação <b>{fed}</b>. Portanto, foi removido!
+      Motivo: <code>{rsn}</code>
     fban_log_fed_log: |
-      <b>Ban user in the fed</b> #FedBan
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} ({user_id})
-      <b>By:</b> {by}
-      <b>Chats banned:</b> user banned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
-    fban_reason_fed_log: "<b>Reason:</b> <code>{reason}</code>\n"
-    fban_subs_fed_log: "\n<b>Subscribed feds:</b> banned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
+      <b>Banir usuário na Federação</b> #FedBan
+      <b>Federação:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Usuário:</b> {user} ({user_id})
+      <b>Por:</b> {by}
+      <b>Chats banidos:</b> usuário banido em <code>{chat_count}</code>/<code>{all_chats}</code> chats
+    fban_reason_fed_log: "<b>Motivo:</b> <code>{reason}</code>\n"
+    fban_subs_fed_log: "\n<b>Federações subscritas:</b> banido em <code>{subs_chats}</code> chats de <code>{feds}</code> federações"
     #/unfban
     unfban_self: "Think of something else to have fun instead of this."
     user_not_fbanned: "{user} wasn't banned in this federation."
