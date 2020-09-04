@@ -145,59 +145,59 @@ STRINGS:
     replymsg_filter_title: 'Responder a mensagem'
   promotes:
     promote_success: "{user} foi promovido com sucesso em {chat_name}!"
-    promote_title: "\nCom a função personalizada <code>{role}</code>!"
+    promote_title: "\nCom uma função personalizada <code>{role}</code>!"
     rank_to_loong: "O texto da função personalizada não pode ser superior a 16 símbolos."
     promote_failed: "A promoção falhou! Verifique se eu tenho permissões."
-    demote_success: "{user} foi rebaixado com sucesso em {chat_name}!"
+    demote_success: "{user} foi despromovido com sucesso em {chat_name}!"
     demote_not_admin: "Este usuário não é administrador."
-    demote_failed: "A rebaixamento falhou. Talvez eu não possa rebaixar ou a pessoa seja promovida por outra pessoa"
+    demote_failed: "O processo de despromover falhou. Talvez eu não possa despromover ou a pessoa seja promovida por outra pessoa"
     cant_get_user: "Eu não encontrei o usuário! Se você se importa, por favor responda à mensagem dele e tente novamente."
-    emoji_not_allowed: "Me desculpe, mas administradores não possuem emojis 😞"
+    emoji_not_allowed: "Me desculpe, mas administradores não podem ter emojis 😞"
   pm_menu:
     start_hi_group: 'Olá! Meu nome é Sophie'
     start_hi: "Olá! Meu nome é Sophie, eu ajudo você a gerenciar seu grupo de forma eficiente!"
     btn_help: "❔ Ajuda"
-    btn_lang: "🇷🇺 Idioma"
+    btn_lang: "pt-BR Idioma"
     btn_chat: "👥 Grupo da Sophie"
-    btn_channel: "📡 Sophie Notícias"
+    btn_channel: "📡 Notícias de Sophie"
     back: Voltar
     #/help
-    help_header: Ei! Confira nossa enciclopédia colaborativa para obter ajuda
+    help_header: Ei! Confira nossa wiki para obter ajuda
     click_btn: Clique aqui
   disable:
     #/disableable
-    disablable: "<b> comandos (des) habilitados:</b>\n"
+    disablable: "<b>Comandos desabilitados:</b>\n"
     #/disabled
-    no_disabled_cmds: Nenhum comando desabilitado no <b>{chat_name}</b>!
+    no_disabled_cmds: Nenhum comando desabilitado em <b>{chat_name}</b>!
     disabled_list: "<b>Comandos desabilitados em {chat_name}:</b>\n"
     #/disable
-    wot_to_disable: "O que você deseja desabilitar?"
+    wot_to_disable: "O que você deseja desativar?"
     already_disabled: "Este comando já está desabilitado!"
-    disabled: "O comando <code>{cmd}</code> foi desabilitado em <b>{chat_name}</b>!"
+    disabled: "O comando <code>{cmd}</code> foi desativado em <b>{chat_name}</b>!"
     #/enable
-    wot_to_enable: "O que você deseja habilitar?"
+    wot_to_enable: "O que você deseja ativar?"
     already_enabled: "Este comando não está desabilitado!"
-    enabled: "Comando <code>{cmd}</code> foi habilitado em <b>{chat_name}</b>!"
+    enabled: "O comando <code>{cmd}</code> foi ativado em <b>{chat_name}</b>!"
     #/enableall
     not_disabled_anything: "Nada foi desabilitado em <b>{chat_title}</b>!"
     enable_all_text: "Isso irá habilitar todos os comandos em <b>{chat_name}</b>. Você tem certeza?"
     enable_all_btn_yes: "Sim. Habilitar todos os comandos!"
     enable_all_btn_no: "Não!"
-    enable_all_done: "Todos os (<code>{num}</code>) comandos foram habilitados no <b>{chat_name}</b>!"
+    enable_all_done: "Todos os (<code>{num}</code>) comandos foram habilitados em <b>{chat_name}</b>!"
   bot_rights:
     change_info: "Eu não tenho permissões para mudar a descrição do grupo, por favor me torne um administrador com esta permissão."
     edit_messages: "Eu não tenho permissão para editar mensagens!"
     delete_messages: "Eu não tenho permissão para apagar mensagens aqui."
     ban_user: "Eu não tenho permissão para banir usuários, por favor me torne um administrador com esta permissão."
-    pin_messages: "Eu não tenho permissão para fixar mensagens, por favor me torno um administrador com esta permissão."
+    pin_messages: "Eu não tenho permissão para fixar mensagens, por favor me torne um administrador com esta permissão."
     add_admins: "Eu não tenho permissão para adicionar administradores, por favor me torne um administrador com esta permissão."
   feds:
     #decorators
     need_fed_admin: "Você não é um administrador na Federação <b>{name}</b>"
-    need_fed_owner: "Você não é um proprietário da Federação <b>{name}</b>"
+    need_fed_owner: "Você não é o proprietário da Federação <b>{name}</b>"
     cant_get_user: "Desculpe, eu não consigo encontrar esse usuário, tente usar seu ID"
     #/fnew
-    fed_name_long: "Nome da Federação não pode ultrapassar 60 caracteres!"
+    fed_name_long: "Nome da Federação não pode ultrapassar de 60 caracteres!"
     can_only_1_fed: "1 usuário pode criar apenas 1 federação, por favor apague uma."
     name_not_avaible: "Uma Federação com o nome <code>{name}</code> já existe! Por favor utilize outro nome."
     created_fed: |
@@ -205,14 +205,14 @@ STRINGS:
       <b>Nome:</b> {name}
       <b>ID:</b> <code>{id}</code>
       <b>Criador:</b> {creator}
-      Use <code> /fjoin {id}</code> para conectar a federação ao chat
+      Use <code>/fjoin {id}</code> para conectar a federação ao chat
     #/fjoin
     only_creators: "Você deve ser o criador do chat para ter permissão em conectar o chat à federação."
     fed_id_invalid: "O ID da Federação informado é inválido! Por favor, me dê um ID válido."
     joined_fed_already: "Este chat já entrou em uma Federação! Por favor, use /fleave para sair dessa federação"
-    join_fed_success: "Ótimo! O bate-papo <b>{chat}</b> agora é parte da Federação <b>{fed}</b>!"
+    join_fed_success: "Ótimo! O chat <b>{chat}</b> agora é parte da Federação <b>{fed}</b>!"
     join_chat_fed_log: |
-      <b>Chat se juntou à Federação</b> #ChatJoined
+      <b>O chat uniu-se à Federação</b> #ChatUnido
       <b>Federação:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
     #/leavefed
@@ -223,14 +223,14 @@ STRINGS:
       <b>Federação:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
     #/fsub
-    already_subsed: "Federação <b>{name}</b> já inscrito em <b>{name2}</b>"
-    subsed_success: "Federação <b>{name}</b> inscrita em <b>{name2}</b>!"
+    already_subsed: "Federação <b>{name}</b> já subscrita em <b>{name2}</b>"
+    subsed_success: "Federação <b>{name}</b> subscrita em <b>{name2}</b>!"
     #/funsub
-    not_subsed: "A Federação <b>{name}</b> não está inscrita em <b>{name2}</b> para cancelar a inscrição"
+    not_subsed: "A Federação <b>{name}</b> não está subscrita em <b>{name2}</b> para cancelar a inscrição"
     unsubsed_success: "Federação <b>{name}</b> desinscreveu <b>{name2}</b>!"
     #/fpromote
     #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
-    admin_added_to_fed: "Usuário {user} adicionado a <b>{name}</b> administradores da Federação."
+    admin_added_to_fed: "Usuário {user} adicionado como administrador da Federação <b>{name}</b>."
     promote_user_fed_log: |
       <b>Usuário promovido a fed dos administradores</b>#UserPromoted
       <b> Fed: </b> {fed_name} (<code> {fed_id} </code>)
