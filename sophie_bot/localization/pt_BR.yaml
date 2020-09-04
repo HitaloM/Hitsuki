@@ -91,53 +91,53 @@ STRINGS:
     warn_bun: "Advertências foram excedidas! {user} foi banido!"
     warn_num: "Advertências: {curr_warns}/{max_warns}\n"
     warn_rsn: "Motivo: <code>{reason}</code>\n"
-    max_warn_exceeded: Warnings has been exceeded! %s has been %s!
-    "max_warn_exceeded:tmute": Avisos foram excedidos! %s foi silenciado por %s!
+    max_warn_exceeded: As advertências foram excedidas! %s tem sido %s!
+    "max_warn_exceeded:tmute": As advertências foram excedidas! %s foi silenciado por %s!
     #warn rmv callback
     warn_no_admin_alert: "⚠ Você NÃO é administrador para remover a advertência!"
-    warn_btn_rmvl_success: "✅ Aviso removido por {admin} !"
+    warn_btn_rmvl_success: "✅ Advertência removida por {admin}!"
     #/warns
-    warns_header: "Aqui estão suas advertências nesse chat \n\n"
-    warns: "{count} : <code>{reason}</code> by {admin}\n"
-    no_warns: "Well, {user} doesn't have any warns."
+    warns_header: "Aqui estão suas advertências neste chat \n\n"
+    warns: "{count} : <code>{reason}</code> de {admin}\n"
+    no_warns: "Bom, {user} não tem nenhuma advertência."
     #/warnlimit
-    warn_limit: "Warn limit in <b>{chat_name}</b> is currently: <code>{num}</code>"
-    warnlimit_short: 'Limite de avisos deve ser pelo menos 2!'
-    warnlimit_long: 'Limite de alerta deve ser inferior a 1 000!'
-    warnlimit_updated: '✅ Warnlimit has successfully updated to {num}'
+    warn_limit: "O limite de advertência em <b>{chat_name}</b> é atualmente: <code>{num}</code>"
+    warnlimit_short: 'O limite de advertências deve ser pelo mínimo de 2!'
+    warnlimit_long: 'O limite de advertências deve ser inferior a 1000!'
+    warnlimit_updated: '✅ O limite de advertências foi atualizado com sucesso a {num}'
     #/delwarns
-    purged_warns: "{admin} reset <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
-    usr_no_wrn: "{user} não tem nenhuma advertência para redefinir."
-    rst_wrn_sofi: 'Sophie nunca teve avisos para redefinir.'
-    not_digit: Limites de alerta devem ser dígitos!
+    purged_warns: "{admin} restabeleceu <code>{num}</code> advertências a {user} em <b>{chat_title}</b>!"
+    usr_no_wrn: "{user} não tem nenhuma advertência para restabelecer."
+    rst_wrn_sofi: 'Sophie nunca teve advertências para restabelecer.'
+    not_digit: Os limites de advertência devem ser dígitos!
     #/warnmode
     same_mode: Este é o modo atual! Como posso mudá-lo?
     no_time: Para selecionar o modo 'tmute' você precisa mencionar o tempo!
-    invalid_time: Hora inválida !
-    warnmode_success: Modo de alerta de <b>%s</b> alterado com sucesso para <b>%s</b>!
+    invalid_time: Hora inválida!
+    warnmode_success: Modo de advertência de <b>%s</b> tem mudado com sucesso para <b>%s</b>!
     wrng_args: |
-      These are the available options:
+      Estas são as opções disponíveis:
       <code>%s</code>
-    mode_info: 'O modo atual neste bate-papo é <b>%s</b>.'
+    mode_info: 'O modo atual neste chat é <b>%s</b>.'
     banned: banido
-    muted: mutado
-    filters_title: Avise o usuário
-    filter_handle_rsn: Ação do filtro automatizado!
+    muted: silenciado
+    filters_title: Advertir o usuário
+    filter_handle_rsn: Ação de filtro automática!
   msg_deleting:
-    no_rights_purge: "Você não tem direitos suficientes para excluir este item!"
+    no_rights_purge: "Você não tem permissão para purgar ou remover mensagens neste grupo!"
     reply_to_msg: "Responda uma mensagem para excluir!"
-    purge_error: "Não posso continuar limpando, principalmente porque você começou a limpar uma mensagem que foi enviada a mais de 2 dias."
+    purge_error: "Não posso continuar limpando, principalmente porque você começou a limpar uma mensagem que foi enviada há mais de 2 dias."
     fast_purge_done: "<b>Limpeza rápida concluída!</b>\nEsta mensagem será removida em 5 segundos."
     purge_user_done: "Todas as mensagens de {user} foram excluídas com sucesso!"
   misc:
     your_id: "Seu ID: <code>{id}</code>\n"
     chat_id: "ID do Grupo: <code>{id}</code>\n"
-    user_id: "{user}'s ID: <code>{id}</code>\n"
+    user_id: "ID de {user}: <code>{id}</code>\n"
     conn_chat_id: "ID de chat atualmente conectado: <code>{id}</code>"
     help_btn: "Clique em mim para obter ajuda!"
     help_txt: "Clique no botão abaixo para ajuda!"
     paste_success_extra: "<b>Colado com sucesso!</b>\nURL encurtado: {}\nURL original do Dogbin: {}"
-    paste_success: "<b>Colado com sucesso!</b>\nDogbin URL: {}"
+    paste_success: "<b>Colado com sucesso!</b>\nURL do Dogbin: {}"
     paste_fail: "Falha ao alcançar Dogbin!"
     paste_no_text: "Você não forneceu texto para colar!"
     delmsg_filter_title: 'Excluir a mensagem'
