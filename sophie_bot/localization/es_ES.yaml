@@ -287,7 +287,7 @@ STRINGS:
     fbanned_subs_process: "\n<b>Estado:</b> Baneando en <code>{feds}</code> federaciones suscritas..."
     fbanned_subs_done: "\n<b>Estado:</b> Hecho! baneado en <code>{chats}</code> chats de esta federación y <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones suscritas"
     fban_usr_rmvd: |
-      El usuario {user} está baneado en la federación actual <b>{fed}</b>. ¡Se ha eliminado!
+      El usuario {user} está baneado en la federación actual <b>{fed}</b>. ¡Así que ha sido eliminado!
       Razón: <code>{rsn}</code>
     fban_log_fed_log: |
       <b>Banear usuario en la federación</b> #FederBan
