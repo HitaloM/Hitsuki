@@ -308,15 +308,15 @@ STRINGS:
     un_fbanned_subs_process: "\n<b>Estado:</b> Desbanimento em <code>{feds}</code> federações subscritas..."
     un_fbanned_subs_done: "\n<b>Estado:</b> Feito! Desbanido em <code>{chats}</code> chats desta federação e <code>{subs_chats}</code> chats de <code>{feds}</code> federações subscritas"
     un_fban_log_fed_log: |
-      <b>Unban user in the fed</b> #FedUnBan
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} ({user_id})
-      <b>By:</b> {by}
-      <b>Chats:</b> user unbanned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
-    un_fban_subs_fed_log: "\n<b>Subscribed feds:</b> unbanned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
+      <b>Desbanir usuário na Federação</b> #FedUnBan
+      <b>Federação:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Usuário:</b> {user} ({user_id})
+      <b>Por:</b> {by}
+      <b>Chats:</b> usuário desbanido em <code>{chat_count}</code>/<code>{all_chats}</code> chats
+    un_fban_subs_fed_log: "\n<b>Federações subscritas:</b> desbanido em <code>{subs_chats}</code> chats de <code>{feds}</code> federações"
     #/delfed
-    delfed_btn_yes: Yes. Delete federation
-    delfed_btn_no: No.
+    delfed_btn_yes: Sim. Excluir federação
+    delfed_btn_no: Não.
     delfed: |
       Are you sure to delete this federation <b>%s</b>?
 
