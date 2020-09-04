@@ -15,7 +15,7 @@ STRINGS:
     #/get
     cant_find_note: Não consigo encontrar esta nota em <b>{chat_name}</b>!
     no_note: "Não é possível encontrar essa nota."
-    no_notes_pattern: "Nenhuma nota encontrada pelo padrão <code>%s</code>"
+    no_notes_pattern: "Nenhuma nota encontrada segundo a busca <code>%s</code>"
     u_mean: "\nVocê queria dizer <code>#{note_name}</code>?"
     #/notes
     notelist_no_notes: "Não há nenhuma nota em <b>{chat_title}</b>!"
@@ -45,7 +45,7 @@ STRINGS:
     note_info_note: "Nomes das notas: %s\n"
     note_info_content: "Conteúdo da nota: %s\n"
     note_info_parsing: "Modo de análise: <code>%s</code>\n"
-    note_info_created: "Foi criado em: <code>{date}</code> por {user}\n"
+    note_info_created: "Criado: <code>{date}</code> por {user}\n"
     note_info_updated: "Ultima atualização em: <code>{date}</code> por {user}\n"
     user_blocked: "Escreva /start no meu chat privado!"
     #/privatenotes
@@ -85,7 +85,7 @@ STRINGS:
   warns:
     #/warn
     warn_sofi: "Haha sem chance de me advertir!"
-    warn_self: "Você quer advertir a si mesmo? Então saia do bate-papo."
+    warn_self: "Você quer advertir a si mesmo? Então saia do chat."
     warn_admin: "Bem... você está errado. Você não pode advertir um administrador."
     warn: "{admin} advertiu {user} em <b>{chat_name}</b>\n"
     warn_bun: "Advertências foram excedidas! {user} foi banido!"
