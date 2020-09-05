@@ -15,7 +15,7 @@ STRINGS:
     #/get
     cant_find_note: '¡No puedo encontrar esta nota en <b>{chat_name}</b>!'
     no_note: "No pude encontrar esa nota."
-    no_notes_pattern: "No se encontró ninguna nota por búsqueda <code>%s</code>"
+    no_notes_pattern: "No se encontró notas según búsqueda <code>%s</code>"
     u_mean: "\n¿Querías decir <code>#{note_name}</code>?"
     #/notes
     notelist_no_notes: "¡No existen notas en <b>{chat_title}</b>!"
@@ -41,7 +41,7 @@ STRINGS:
       <b>Búsqueda:</b> <code>{request}</code>
       <b>Notas que coinciden:</b>
     #/noteinfo
-    note_info_title: "<b>Info de nota</b>\n"
+    note_info_title: "<b>Información de la nota</b>\n"
     note_info_note: "Nombres de la nota: %s\n"
     note_info_content: "Contenido de la nota: %s"
     note_info_parsing: "Modo de análisis: <code>%s</code>\n"
@@ -55,7 +55,7 @@ STRINGS:
     enabled_successfully: "¡Las notas privadas están <b>Activadas</b> en %s de manera satisfactoria!"
     disabled_successfully: "¡Las notas privadas están <b>Desactivadas</b> en %s de manera satisfactoria!"
     not_enabled: "Las notas privadas no están habilitadas para desactivarse."
-    privatenotes_notif: "¡Usted se ha conectado con éxito a las notas del <b>{chat}</b>! Para desconectarse por favor ¡utilice el comando <code>/disconnect</code>!"
+    privatenotes_notif: "¡Usted se ha conectado con éxito a las notas de <b>{chat}</b>! Para desconectarse, por favor, ¡utilice el comando <code>/disconnect</code>!"
     enabled: 'Activado'
     disabled: 'Desactivado'
     #/cleannotes
@@ -77,10 +77,10 @@ STRINGS:
     #/filters
     list_filters: "Filtros en <b>{chat_name}</b>:\n"
     #/delfilter
-    no_such_filter: No puedo encontrar ese filtro en <b>{chat_name}</b>, comprueba los filtros habilitados por el comando <code>/filtros</code>.
-    del_filter: "¡El filtro con el manejador '<code>{handler}</code>' ha sido eliminado correctamente!"
+    no_such_filter: No puedo encontrar ese filtro en <b>{chat_name}</b>. Verifica los filtros habilitados con el comando <code>/filters</code>.
+    del_filter: "¡El filtro controlado '<code>{handler}</code>' fue eliminado con éxito!"
     select_filter_to_remove: |
-      He encontrado muchos filtros con el manejador '<code>{handler}</code>'.
+      Encontré muchos filtros con el controlador '<code>{handler}</code>'.
       Por favor, seleccione uno para eliminar:
   warns:
     #/warn
@@ -89,12 +89,12 @@ STRINGS:
     warn_admin: "Bueno... estás equivocado. No puedes advertir a un administrador."
     warn: "{admin} ha advertido a {user} en {chat_name}\n"
     warn_bun: "¡Las advertencias se han excedido! ¡{user} ha sido baneado!"
-    warn_num: "Avisos: {curr_warns}/{max_warns}\n"
+    warn_num: "Advertencias: {curr_warns}/{max_warns}\n"
     warn_rsn: "Razón: <code>{reason}</code>\n"
-    max_warn_exceeded: '¡Advertencias superadas! ¡ %s ha sido %s!'
-    "max_warn_exceeded:tmute": '¡Se han superado las advertencias! ¡ %s ha sido silenciado por %s!'
+    max_warn_exceeded: '¡Se han excedido las advertencias! ¡%s ha sido %s!'
+    "max_warn_exceeded:tmute": '¡Se han excedido las advertencias! ¡%s ha sido silenciado por %s!'
     #warn rmv callback
-    warn_no_admin_alert: "⚠ NO eres 👷‍♂️ administrador para eliminar la advertencia!"
+    warn_no_admin_alert: "⚠ ¡NO eres 👷‍♂️ administrador para eliminar la advertencia!"
     warn_btn_rmvl_success: "✔ ¡Advertencia eliminada por 👷‍♂️ {admin}!"
     #/warns
     warns_header: "Aquí están tus advertencias en este chat \n\n"
@@ -122,23 +122,23 @@ STRINGS:
     banned: baneado
     muted: silenciado
     filters_title: Advertir al usuario
-    filter_handle_rsn: Acción de filtro automática en '%s'
+    filter_handle_rsn: '¡Acción de filtro automática!'
   msg_deleting:
     no_rights_purge: "¡No tienes permisos suficientes para purgar en este grupo!"
-    reply_to_msg: "Responder a un mensaje para eliminar!"
-    purge_error: "No puedo continuar purgando, principalmente porque comenzaste a purgar de un mensaje que fue enviado más de 2 días."
-    fast_purge_done: "<b>¡Purga rápida completada!</b>\nEste mensaje se eliminará en 5 segundos."
+    reply_to_msg: "¡Responde a un mensaje para eliminar!"
+    purge_error: "No puedo continuar con la limpieza, sobre todo porque empezaste a limpiar un mensaje que fue enviado hace más de 2 días."
+    fast_purge_done: "<b>¡Limpieza rápida completada!</b>\nEste mensaje se eliminará en 5 segundos."
     purge_user_done: "Todos los mensajes de {user} fueron eliminados con éxito!"
   misc:
     your_id: "Tu ID: <code>{id}</code>\n"
-    chat_id: "ID del grupo: <code>{id}</code>\n"
-    user_id: "{user}'s ID: <code>{id}</code>\n"
+    chat_id: "ID del Grupo: <code>{id}</code>\n"
+    user_id: "ID de {user}: <code>{id}</code>\n"
     conn_chat_id: "ID de chat conectado actualmente: <code>{id}</code>"
     help_btn: "¡Haz clic para ayuda!"
     help_txt: "¡Haz clic en el botón de abajo para obtener ayuda!"
     paste_success_extra: "<b>¡Pegado con éxito!</b>\nURL acortada: {}\nURL original de Dogbin: {}"
     paste_success: "<b>¡Pegado con éxito!</b>\nURL de Dogbin: {}"
-    paste_fail: "¡No se pudo llegar al Dogbin!"
+    paste_fail: "¡Falló al llegar a Dogbin!"
     paste_no_text: "¡No proporcionaste texto para pegar!"
     delmsg_filter_title: 'Eliminar el mensaje'
     send_text: Por favor envíe la respuesta/frase !
