@@ -281,24 +281,24 @@ STRINGS:
     update_fban: "Este usuario fue baneado antes, así que estoy actualizando la razón a <code>{reason}</code>"
     already_fbanned: "{user} ya está baneado en esta federación."
     fbanned_header: "<b>Nuevo FedBan</b>\n"
-    fban_info: "<b>Federación:</b> {fed}\n<b>Administrador de la Federación:</b> {fadmin}\n<b>Usuario:</b> {user} (<code>{user_id}</code>)"
+    fban_info: "<b>Federación:</b> {fed}\n<b>Admin de la Federación:</b> {fadmin}\n<b>Usuario:</b> {user} (<code>{user_id}</code>)"
     fbanned_reason: "<b>Razón:</b> <code>{reason}</code>"
     fbanned_process: "\n<b>Estado:</b> Baneando en <code>{num}</code> chats de federación..."
     fbanned_done: "\n<b>Estado:</b> ¡Hecho! baneado en <code>{num}</code> chats!"
-    fbanned_silence: "Este mensaje será purgado en 5 segundos"
+    fbanned_silence: "Este mensaje será eliminado en 5 segundos"
     fbanned_subs_process: "\n<b>Estado:</b> Baneando en <code>{feds}</code> federaciones suscritas..."
     fbanned_subs_done: "\n<b>Estado:</b> Hecho! baneado en <code>{chats}</code> chats de esta federación y <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones suscritas"
     fban_usr_rmvd: |
       El usuario {user} está baneado en la federación actual <b>{fed}</b>. ¡Así que ha sido eliminado!
       Razón: <code>{rsn}</code>
     fban_log_fed_log: |
-      <b>Banear usuario en la federación</b> #FederBan
+      <b>Banear usuario en la Federación</b> #FedBan
       <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Usuario:</b> {user} ({user_id})
       <b>Por:</b> {by}
       <b>Chats:</b> usuario baneado en <code>{chat_count}</code>/<code>{all_chats}</code> chats
     fban_reason_fed_log: "<b>Razón:</b> <code>{reason}</code>\n"
-    fban_subs_fed_log: "\n<b>federaciones suscritas:</b> baneado en <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones"
+    fban_subs_fed_log: "\n<b>Federaciones suscritas:</b> baneado en <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones"
     #/unfban
     unfban_self: "Piensa en algo más para divertirte que esto."
     user_not_fbanned: "{user} no fue baneado en esta federación."
