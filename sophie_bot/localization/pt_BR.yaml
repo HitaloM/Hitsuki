@@ -138,7 +138,7 @@ STRINGS:
     help_txt: "Clique no botão abaixo para ajuda!"
     paste_success_extra: "<b>Colado com sucesso!</b>\nURL encurtado: {}\nURL original do Dogbin: {}"
     paste_success: "<b>Colado com sucesso!</b>\nURL do Dogbin: {}"
-    paste_fail: "Falha ao alcançar Dogbin!"
+    paste_fail: "Falhou em chegar ao Dogbin!"
     paste_no_text: "Você não forneceu texto para colar!"
     delmsg_filter_title: 'Excluir a mensagem'
     send_text: Por favor, envie a mensagem!
@@ -588,8 +588,8 @@ STRINGS:
     math_wc_rtr_text: "Você tem uma última chance! Tenha cuidado.\n"
     math_wc_wrong: Incorreto, por favor tente novamente!
     math_wc_sry: Lamentamos que você tenha usado a última tentativa. Pergunte aos administradores do chat.
-    not_admin_wm: Não posso restringir as pessoas aqui, portanto não vou usar o silencio de boas-vindas!
-    not_admin_ws: Não posso restringir as pessoas aqui, portanto não vou usar a segurança de boas-vindas!
+    not_admin_wm: Não posso restringir às pessoas aqui, portanto não vou usar o silencio de boas-vindas!
+    not_admin_ws: Não posso restringir às pessoas aqui, portanto não vou usar a segurança de boas-vindas!
     not_admin_wsr: Não posso apagar mensagens aqui, portanto não vou apagar as mensagens de serviço!
     #/resetwelcome
     deleted: Cumprimentos reestabelecidos com sucesso em <b>{chat}</b>!
@@ -605,7 +605,7 @@ STRINGS:
     already_enabled: A segurança do chat já está ativada!
     already_disabled: A segurança do chat já está desativada!
     restrict_status: Restrição de boas-vindas está <b>{state}</b> em <b>{chat}</b>!
-    unkown_option: Por favor, me dê uma opção válida! (<code>enable</code> or <code>disable</code>)
+    unkown_option: Por favor, me dê uma opção válida! (<code>enable</code> ou <code>disable</code>)
     whitelist: '🏳️ Whitelist'
     ban: '❌ Ban'
   locks:
