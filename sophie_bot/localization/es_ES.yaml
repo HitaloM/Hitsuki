@@ -308,21 +308,23 @@ STRINGS:
     un_fbanned_subs_process: "\n<b>Estado:</b> Desbaneando en <code>{feds}</code> federaciones suscritas..."
     un_fbanned_subs_done: "\n<b>Estado:</b> ¡Listo! Desbaneado en <code>{chats}</code> chats de esta federación y <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones suscritas"
     un_fban_log_fed_log: |
-      <b>Desbanear usuario en la federación</b> #FederUnBan
+      <b>Desbanear usuario en la Federación</b> #FedUnBan
       <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Usuario:</b> {user} ({user_id})
+      <b>Por:</b> {by}
       <b>Chats:</b> usuario desbaneado en <code>{chat_count}</code>/<code>{all_chats}</code> chats
-    un_fban_subs_fed_log: "\n<b>federaciones suscritas:</b> desbaneado en <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones"
+    un_fban_subs_fed_log: "\n<b>Federaciones suscritas:</b> desbaneado en <code>{subs_chats}</code> chats de <code>{feds}</code> federaciones"
     #/delfed
     delfed_btn_yes: Sí. Eliminar federación
     delfed_btn_no: No.
     delfed: |
       ¿Está seguro que desea eliminar esta federación <b>%s</b>?
 
-      <i>Descargo de responsabilidad: ¡Eliminar la federación eliminará todos los datos asociados a ella de nuestra base de datos!
+      <i>Aviso legal: ¡Eliminar la federación eliminará todos los datos asociados a ella de nuestra base de datos!
       ¡Esta acción no se puede revertir de ningún modo!</i>
     delfed_success: '¡Se ha eliminado la federación con éxito!'
     #/frename
-    frename_same_name: Por favor, introduzca un nombre diferente al existente!
+    frename_same_name: Por favor, ¡introduzca un nombre diferente al existente!
     frename_success: '¡La Federación <b>{old_name}</b> ha cambiado el nombre a <b>{new_name}</b> con éxito!'
     #/fbanlist
     fbanlist_locked: Por favor, espera hasta %s para usar fbanlist nuevamente.
