@@ -148,17 +148,17 @@ STRINGS:
     promote_title: "\nCon un rol personalizado <code>{role}</code>!"
     rank_to_loong: "El texto de rol personalizado no puede tener más de 16 símbolos."
     promote_failed: "¡Promoción fallida! Comprueba si tengo permisos."
-    demote_success: "¡{user} fue degradado con éxito en {chat_name}!"
+    demote_success: "¡{user} fue dispensado con éxito en {chat_name}!"
     demote_not_admin: "Ese usuario no es administrador."
-    demote_failed: "La democión falló. Tal vez no puedo degradar o la persona es promovida por otra persona"
-    cant_get_user: "No pude obtener el usuario! Si le importa, responda a su mensaje e inténtelo nuevamente."
+    demote_failed: "El proceso de dispensar falló. Tal vez no puedo dispensar o la persona está promovida por alguien más"
+    cant_get_user: "¡No pude obtener el usuario! Si le importa, responda a su mensaje e inténtelo nuevamente."
     emoji_not_allowed: "Lo siento, pero los roles de administrador no pueden contener emojis 😞"
   pm_menu:
     start_hi_group: '¡Hola! Mi nombre es Sophie'
     start_hi: "¡Hola! ¡Mi nombre es Sophie, te ayudo a gestionar tu grupo de una manera eficiente!"
     btn_help: "❔ Ayuda"
-    btn_lang: "🇷🇺 Idioma"
-    btn_chat: "👥 Grupo Sophie"
+    btn_lang: "es Idioma"
+    btn_chat: "👥 Grupo de Sophie"
     btn_channel: "📡 Noticias de Sophie"
     back: Atrás
     #/help
@@ -180,13 +180,13 @@ STRINGS:
     enabled: "¡El comando <code>{cmd}</code> ha sido activado en <b>{chat_name}</b>!"
     #/enableall
     not_disabled_anything: "¡No se ha desactivado nada en <b>{chat_title}</b>!"
-    enable_all_text: "Esto habilitará todos los comandos en el {chat_name}. ¿Estás seguro?"
+    enable_all_text: "Esto habilitará todos los comandos en <b>{chat_name} </b>. ¿Estás seguro?"
     enable_all_btn_yes: "Sí. ¡Habilitar todos los comandos!"
     enable_all_btn_no: "¡No!"
-    enable_all_done: "¡Todos los comandos (<code>{num}</code>) fueron habilitados en el {chat_name}!"
+    enable_all_done: "¡Todos los comandos (<code>{num}</code>) fueron habilitados en <b>{chat_name}</b>!"
   bot_rights:
-    change_info: "No tengo derechos para cambiar la información del grupo, por favor hazme administrador con ese permiso."
-    edit_messages: "¡No tengo permisos para editar los mensajes del canal!"
+    change_info: "No tengo autorización para cambiar la información del grupo, por favor hazme administrador con ese permiso."
+    edit_messages: "¡No tengo permiso para editar mensajes!"
     delete_messages: "No tengo permisos para borrar mensajes aquí."
     ban_user: "No tengo derechos para banear a los usuarios, por favor hazme administrador con ese permiso."
     pin_messages: "No tengo permisos para anclar mensajes, por favor hazme administrador con ese permiso."
