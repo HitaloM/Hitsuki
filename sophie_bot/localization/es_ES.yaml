@@ -187,14 +187,14 @@ STRINGS:
   bot_rights:
     change_info: "No tengo autorización para cambiar la información del grupo, por favor hazme administrador con ese permiso."
     edit_messages: "¡No tengo permiso para editar mensajes!"
-    delete_messages: "No tengo permisos para borrar mensajes aquí."
-    ban_user: "No tengo derechos para banear a los usuarios, por favor hazme administrador con ese permiso."
-    pin_messages: "No tengo permisos para anclar mensajes, por favor hazme administrador con ese permiso."
-    add_admins: "No tengo permisos para añadir administradores, por favor hazme administrador con ese permiso."
+    delete_messages: "No tengo permiso para borrar mensajes aquí."
+    ban_user: "No tengo autorización para banear a los usuarios, por favor hazme administrador con ese permiso."
+    pin_messages: "No tengo permiso para anclar mensajes, por favor hazme administrador con ese permiso."
+    add_admins: "No tengo permiso para añadir administradores, por favor hazme administrador con ese permiso."
   feds:
     #decorators
-    need_fed_admin: "No eres un administrador en <b>{name}</b> Federación"
-    need_fed_owner: "No eres dueño de <b>{name}</b> Federación"
+    need_fed_admin: "No eres un administrador en la Federación <b>{name}</b>"
+    need_fed_owner: "No eres propietario de la Federación <b>{name}</b>"
     cant_get_user: "Lo siento, no puedo obtener ese usuario, intente usar el ID de usuario"
     #/fnew
     fed_name_long: "¡El nombre de la Federación no puede tener más de 60 símbolos!"
@@ -205,59 +205,61 @@ STRINGS:
       <b>Nombre:</b> {name}
       <b>ID:</b> <code>{id}</code>
       <b>Creador:</b> {creator}
-      Usa <code>/fjoin {id}</code> para conectar federación al chat
+      Usa <code>/fjoin {id}</code> para conectar la federación al chat
     #/fjoin
-    only_creators: "Debes ser un creador de chat para poder conectar el chat a federación."
+    only_creators: "Debes ser el propietario del grupo para poder conectar el chat a la federación."
     fed_id_invalid: "¡El ID de la Federación no es válido! Por favor, dame un ID válido."
     joined_fed_already: "¡Este chat ya se ha unido a una Federación! Por favor, usa /fleave para dejar esa federación"
-    join_fed_success: "¡Genial! ¡El chat <b>{chat}</b> es ahora parte de <b>{fed}</b> Federación!"
+    join_fed_success: "¡Genial! ¡El chat <b>{chat}</b> es ahora parte de la Federación <b>{fed}</b>!"
     join_chat_fed_log: |
-      <b>El nuevo chat se unió a la Federación</b> #Chat se unió
-      <b>a la Federación:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>El nuevo chat se unió a la Federación</b> #ChatUnido
+      <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
     #/leavefed
     chat_not_in_fed: "Este chat no está en ninguna federación todavía."
-    leave_fed_success: "El chat <b>{chat}</b> dejó la federación <b>de{fed}</b>."
+    leave_fed_success: "El chat <b>{chat}</b> dejó la federación de <b>{fed}</b>."
     leave_chat_fed_log: |
-      <b>Chat ha salido de la Federación</b> #ChatLeaved
+      <b>El chat ha salido de la Federación</b> #ChatSalido
       <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
     #/fsub
     already_subsed: "La Federación <b>{name}</b> ya está suscrita a <b>{name2}</b>"
-    subsed_success: "Federación <b>{name}</b> suscrito a <b>{name2}</b>!"
+    subsed_success: "¡Federación <b>{name}</b> suscrito a <b>{name2}</b>!"
     #/funsub
     not_subsed: "La Federación <b>{name}</b> no está suscrita a <b>{name2}</b> para darse de baja"
     unsubsed_success: "¡La Federación <b>{name}</b> ha cancelado la suscripción a <b>{name2}</b>!"
     #/fpromote
     #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
-    admin_added_to_fed: "Usuario {user} añadido a <b>{name}</b> Administradores de la Federación."
+    admin_added_to_fed: "Usuario {user} añadido como administrador en la Federación <b>{name}</b>."
     promote_user_fed_log: |
-      <b>Usuario ascendido a los administradores de la federación</b> #UserPromoted
+      <b>Usuario promovido como Admin en la Federación</b> #UsuarioPromovido
       <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Usuario:</b> {user} (<code>{user_id}</code>)
     #/fdemote
     #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
-    admin_demoted_from_fed: "Usuario {user} degradado de <b>{name}</b> Administradores de la Federación."
+    admin_demoted_from_fed: "Usuario {user} dispensado como Admin de la Federación <b>{name}</b>."
     demote_user_fed_log: |
-      <b>Usuario degradado de los administradores de la federación</b> #Degradación de usuario
+      <b>Usuario dispensado como Admin de la Federación</b> #UsuarioDispensado
       <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Usuario:</b> {user} (<code>{user_id}</code>)
     #/fsetlog
-    already_have_chatlog: "<b>{name}</b> ¡La Federación ya ha habilitado el registro en otro chat/canal!"
+    already_have_chatlog: "¡La Federación <b>{name}</b> ya ha habilitado el registro en otro chat/canal!"
     set_chat_log: |
-      Este chat ahora registra todas las acciones en <b>{name}</b> Federación
+      Este chat ahora registra todas las acciones de la Federación <b>{name}</b>
+
+      El registro de la federación se utiliza para la evaluación interna de la federación y su desempeño. NO debe ser usado como un muro de exhibición al público, respetando así los datos de los usuarios y nuestras directrices de privacidad.
     set_log_fed_log: |
-      <b>Activado registro</b> #LoggingEnabled
+      <b>Registro activado</b> #RegistroActivado
       <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
     no_right_to_post: '¡No tengo permisos para publicar mensajes en ese canal!'
     #/funsetlog
-    not_logging: "<b>{name}</b> ¡La Federación no ha iniciado sesión en ningún chat/canal!"
-    logging_removed: "Se ha eliminado correctamente el registro de <b>{name}</b> Federación."
+    not_logging: "¡La Federación <b>{name}</b> no ha iniciado sesión en ningún chat/canal!"
+    logging_removed: "Se ha eliminado correctamente el registro de la Federación <b>{name}</b>."
     unset_log_fed_log: |
-      <b>Registro deshabilitado</b> #LoggingDisabled
+      <b>Registro desactivado</b> #RegistroDesactivado
       <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
     #/fchatlist
-    chats_in_fed: "<b>Chats conectados a {name} Federación:</b>\n"
+    chats_in_fed: "<b>Chats conectados a la Federación {name}:</b>\n"
     too_large: "Salida demasiado grande, enviando como archivo"
     #/finfo
     finfo_text: |
@@ -266,15 +268,15 @@ STRINGS:
       <b>ID:</b> <code>{fed_id}</code>
       <b>Creador:</b> {creator}
       <b>Chats en la federación:</b> {chats}
-      <b>Usuarios Baneados en la federación:</b> {fbanned}
+      <b>Usuarios baneados en la federación:</b> {fbanned}
     finfo_subs_title: "<b>La Federación está suscrita a estas federaciones:</b>\n"
     #/fadminlist
-    fadmins_header: "Administradores en <b>{fed_name}</b> Clan:\n"
+    fadmins_header: "Administradores en la Federación <b>{fed_name}</b>:\n"
     #no_fbanned_in_fed: "There isn't any banned users in {fed_name} Federation!"
     #/fban
-    user_wl: "Este usuario está en la lista blanca del baneo."
+    user_wl: "Este usuario está en la whitelist de baneos."
     fban_self: "¡Eso es un buen espectáculo!"
-    fban_creator: "¿Cómo puedo banearr al creador de la Federación?! No creo que sea divertido."
+    fban_creator: "¿Cómo puedo banear al creador de la Federación?! No creo que sea divertido."
     fban_fed_admin: "¡No voy a banear a un administrador de su propia federación!"
     update_fban: "Este usuario fue baneado antes, así que estoy actualizando la razón a <code>{reason}</code>"
     already_fbanned: "{user} ya está baneado en esta federación."
