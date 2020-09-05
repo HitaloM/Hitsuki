@@ -141,7 +141,7 @@ STRINGS:
     paste_fail: "¡Falló al llegar a Dogbin!"
     paste_no_text: "¡No proporcionaste texto para pegar!"
     delmsg_filter_title: 'Eliminar el mensaje'
-    send_text: Por favor envíe la respuesta/frase !
+    send_text: Por favor, ¡envíe el mensaje de respuesta!
     replymsg_filter_title: 'Responder al mensaje'
   promotes:
     promote_success: "¡{user} fue promovido con éxito en {chat_name}!"
