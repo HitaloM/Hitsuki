@@ -299,6 +299,7 @@ STRINGS:
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
 
     # /fchatlist
+    no_chats: "There's no chats joined this <b>{name}</b> Federation"
     chats_in_fed: "<b>Chats connected to {name} Federation:</b>\n"
     too_large: "Output too large, sending as file"
 

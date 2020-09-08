@@ -461,6 +461,9 @@ async def unset_fed_log_chat(message, fed, strings):
 @get_strings_dec("feds")
 async def fed_chat_list(message, fed, strings):
     text = strings['chats_in_fed'].format(name=fed['fed_name'])
+    if 'chats' not in fed:
+        return await message.reply(strings['no_chats'].format(name=fed['fed_name']))
+
     for chat_id in fed['chats']:
         chat = await db.chat_list.find_one({'chat_id': chat_id})
         text += '* {} (<code>{}</code>)\n'.format(chat["chat_title"], chat_id)
