@@ -1083,9 +1083,9 @@ async def fedban_check(message, fed, user, _, strings):
         if fban_data := await db.fed_bans.find_one({'user_id': user['user_id'], 'fed_id': {'$in': fed_list}}):
             fbanned_fed = True
 
-        # re-assign fed if user is banned in sub-fed
-        if fban_data['fed_id'] != fed['fed_id']:
-            fed = await db.feds.find_one({'fed_id': fban_data['fed_id']})
+            # re-assign fed if user is banned in sub-fed
+            if fban_data['fed_id'] != fed['fed_id']:
+                fed = await db.feds.find_one({'fed_id': fban_data['fed_id']})
 
     # create text
     text = strings['fcheck_header']
