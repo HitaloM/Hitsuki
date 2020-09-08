@@ -156,10 +156,6 @@ STRINGS:
     conn_chat_id: "Current connected chat ID: <code>{id}</code>"
     help_btn: "Click me for help!"
     help_txt: "Click the button below for help!"
-    paste_success_extra: "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}"
-    paste_success: "<b>Pasted successfully!</b>\nDogbin URL: {}"
-    paste_fail: "Failed to reach Dogbin!"
-    paste_no_text: "You didn't supply text to paste!"
 
     delmsg_filter_title: 'Delete the message'
     send_text: Please send the reply message!
