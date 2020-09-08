@@ -156,10 +156,6 @@ STRINGS:
     conn_chat_id: "Current connected chat ID: <code>{id}</code>"
     help_btn: "Click me for help!"
     help_txt: "Click the button below for help!"
-    paste_success_extra: "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}"
-    paste_success: "<b>Pasted successfully!</b>\nDogbin URL: {}"
-    paste_fail: "Failed to reach Dogbin!"
-    paste_no_text: "You didn't supply text to paste!"
 
     delmsg_filter_title: 'Delete the message'
     send_text: Please send the reply message!
@@ -299,6 +295,7 @@ STRINGS:
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
 
     # /fchatlist
+    no_chats: "There's no chats joined this <b>{name}</b> Federation"
     chats_in_fed: "<b>Chats connected to {name} Federation:</b>\n"
     too_large: "Output too large, sending as file"
 
@@ -326,7 +323,7 @@ STRINGS:
     update_fban: "This user was fbanned earlier therefore I am updating reason to <code>{reason}</code>"
     already_fbanned: "{user} already banned in this federation."
     fbanned_header: "<b>New FedBan</b>\n"
-    fban_info: |#ChatLeaved
+    fban_info: |
       <b>Federation:</b> {fed}
       <b>Fed admin:</b> {fadmin}
       <b>User:</b> {user} (<code>{user_id}</code>)
