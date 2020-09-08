@@ -136,10 +136,6 @@ STRINGS:
     conn_chat_id: "ID de chat atualmente conectado: <code>{id}</code>"
     help_btn: "Clique em mim para obter ajuda!"
     help_txt: "Clique no botão abaixo para ajuda!"
-    paste_success_extra: "<b>Colado com sucesso!</b>\nURL encurtado: {}\nURL original do Dogbin: {}"
-    paste_success: "<b>Colado com sucesso!</b>\nURL do Dogbin: {}"
-    paste_fail: "Falhou em chegar ao Dogbin!"
-    paste_no_text: "Você não forneceu texto para colar!"
     delmsg_filter_title: 'Excluir a mensagem'
     send_text: Por favor, envie a mensagem!
     replymsg_filter_title: 'Responder a mensagem'
@@ -259,6 +255,7 @@ STRINGS:
       <b>Cadastro desabilitado</b> #LoggingDesabilitado
       <b>Federação:</b> {fed_name} (<code>{fed_id}</code>)
     #/fchatlist
+    no_chats: "Não há chats unidos a esta Federação <b>{name}</b>"
     chats_in_fed: "<b>Chats conectados à Federação {name}:</b>\n"
     too_large: "Saída muito grande, enviando como arquivo"
     #/finfo
@@ -281,7 +278,10 @@ STRINGS:
     update_fban: "Este usuário foi fbanido antes, portanto estou atualizando a razão para <code>{reason}</code>"
     already_fbanned: "{user} já banido nesta federação."
     fbanned_header: "<b>Novo FedBan</b>\n"
-    fban_info: <b>Federação:</b> {fed} <b>Admin da Federação:</b> {fadmin} <b>Usuário:</b> {user} (<code>{user_id}</code>)
+    fban_info: |
+      <b>Federação:</b> {fed}
+      <b>Admin da Federação:</b> {fadmin}
+      <b>Usuário:</b> {user} (<code>{user_id}</code>)
     fbanned_reason: "<b>Motivo:</b> <code>{reason}</code>"
     fbanned_process: "\n<b>Estado:</b> Banimento em <code>{num}</code> chats da federação..."
     fbanned_done: "\n<b>Estado:</b> Feito! banido em <code>{num}</code> chats!"
