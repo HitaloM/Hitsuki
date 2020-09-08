@@ -16,8 +16,6 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import html
-import random
 
 from aiogram.utils.exceptions import BadRequest
 from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
