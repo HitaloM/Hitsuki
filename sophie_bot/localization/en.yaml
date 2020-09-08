@@ -327,7 +327,7 @@ STRINGS:
     update_fban: "This user was fbanned earlier therefore I am updating reason to <code>{reason}</code>"
     already_fbanned: "{user} already banned in this federation."
     fbanned_header: "<b>New FedBan</b>\n"
-    fban_info: |#ChatLeaved
+    fban_info: |
       <b>Federation:</b> {fed}
       <b>Fed admin:</b> {fadmin}
       <b>User:</b> {user} (<code>{user_id}</code>)
