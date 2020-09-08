@@ -337,7 +337,7 @@ STRINGS:
        Para cancelar este processo; use /cancel
     rpl_to_file: Por favor, responda a um arquivo!
     importfbans_locked: A importação de fbans está bloqueada para %s nesta federação.
-    big_file_csv: Só suporta a importação de arquivos csv menos de {num} Megabytes!
+    big_file_csv: Suporta apenas arquivos csv de importação com menos de {num} Megabytes!
     big_file_json: |
       Atualmente os arquivos json estão limitados a {num} Megabytes!
       Use um formato csv se quiser importar arquivos maiores.
@@ -446,7 +446,7 @@ STRINGS:
     admins: "<b>Administrador neste grupo:</b>\n"
   imports_exports:
     #Exporting
-    started_exporting: Exportação iniciada!  Por favor, espere...
+    started_exporting: Exportação iniciada! Por favor, espere...
     export_done: Exportação de <b>{chat_name}</b> concluído!
     exports_locked: Por favor, espere %s até usar as exportações novamente!
     #Importing
