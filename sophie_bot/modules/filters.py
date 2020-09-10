@@ -66,7 +66,7 @@ async def update_handlers_cache(chat_id):
 @register()
 async def check_msg(message):
     log.debug("Running check msg for filters function.")
-    chat = await get_connected_chat(message)
+    chat = await get_connected_chat(message, only_groups=True)
     if 'err_msg' in chat:
         return
 

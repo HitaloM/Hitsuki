@@ -461,6 +461,9 @@ async def unset_fed_log_chat(message, fed, strings):
 @get_strings_dec("feds")
 async def fed_chat_list(message, fed, strings):
     text = strings['chats_in_fed'].format(name=fed['fed_name'])
+    if 'chats' not in fed:
+        return await message.reply(strings['no_chats'].format(name=fed['fed_name']))
+
     for chat_id in fed['chats']:
         chat = await db.chat_list.find_one({'chat_id': chat_id})
         text += '* {} (<code>{}</code>)\n'.format(chat["chat_title"], chat_id)
@@ -569,20 +572,23 @@ async def fed_ban_user(message, fed, user, reason, strings):
         text += strings['fbanned_reason'].format(reason=reason)
 
     # fban processing msg
-    msg = await message.reply(text + strings['fbanned_process'].format(num=len(fed['chats'])))
+    num = len(fed['chats']) if 'chats' in fed else 0
+    msg = await message.reply(text + strings['fbanned_process'].format(num=num))
 
     user = await db.user_list.find_one({'user_id': user_id})
 
     banned_chats = []
-    for chat_id in fed['chats']:
-        # We not found the user or user wasn't detected
-        if not user or 'chats' not in user:
-            continue
 
-        if chat_id in user['chats']:
-            await asyncio.sleep(0)  # Do not slow down other updates
-            if await ban_user(chat_id, user_id):
-                banned_chats.append(chat_id)
+    if 'chats' in fed:
+        for chat_id in fed['chats']:
+            # We not found the user or user wasn't detected
+            if not user or 'chats' not in user:
+                continue
+
+            if chat_id in user['chats']:
+                await asyncio.sleep(0)  # Do not slow down other updates
+                if await ban_user(chat_id, user_id):
+                    banned_chats.append(chat_id)
 
     new = {
         'fed_id': fed['fed_id'],
@@ -604,7 +610,7 @@ async def fed_ban_user(message, fed, user, reason, strings):
         user_id=user_id,
         by=await get_user_link(message.from_user.id),
         chat_count=len(banned_chats),
-        all_chats=len(fed['chats'])
+        all_chats=num
     )
 
     if reason:
@@ -733,7 +739,7 @@ async def unfed_ban_user(message, fed, user, text, strings):
         user_id=user['user_id'],
         by=await get_user_link(message.from_user.id),
         chat_count=len(banned_chats),
-        all_chats=len(fed['chats'])
+        all_chats=len(fed['chats']) if 'chats' in fed else 0
     )
 
     # Subs feds
@@ -1080,9 +1086,9 @@ async def fedban_check(message, fed, user, _, strings):
         if fban_data := await db.fed_bans.find_one({'user_id': user['user_id'], 'fed_id': {'$in': fed_list}}):
             fbanned_fed = True
 
-        # re-assign fed if user is banned in sub-fed
-        if fban_data['fed_id'] != fed['fed_id']:
-            fed = await db.feds.find_one({'fed_id': fban_data['fed_id']})
+            # re-assign fed if user is banned in sub-fed
+            if fban_data['fed_id'] != fed['fed_id']:
+                fed = await db.feds.find_one({'fed_id': fban_data['fed_id']})
 
     # create text
     text = strings['fcheck_header']
