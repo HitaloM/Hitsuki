@@ -507,7 +507,7 @@ async def fed_info(message, fed, strings):
             sfed = await db.feds.find_one({'fed_id': sfed})
             text += f"* {sfed['fed_name']} (<code>{sfed['fed_id']}</code>)\n"
 
-    await message.reply(text)
+    await message.reply(text, disable_notification=True)
 
 
 async def get_all_subs_feds_r(fed_id, new):
