@@ -6,7 +6,7 @@ STRINGS:
   notes:
     #/save
     note_saved: "🗒️Poznámka<code> {note_name} </code>uložena do <b> {chat_title} </b>!"
-    note_updated: "🗒️Poznámka<code> {note_name} </code> upraveno v <b> {chat_title} </b>!"
+    note_updated: "🗒️Poznámka<code> {note_name} </code> upravena v <b> {chat_title} </b>!"
     you_can_get_note: "\nMůžete získat tuto poznámku použitím <code>/get {note_name} </code> <code> #{note_name} </code>"
     #Translator note: please keep sure that you don't have space in the end of string
     note_aliases: "\nAliasy poznámek:"
@@ -279,6 +279,7 @@ STRINGS:
     fban_self: "To je pěkná show!"
     fban_creator: "Jak mohu zabanovat tvůrce federace?! Nemyslím si, že by to bylo nějak velice vtipné."
     fban_fed_admin: "Nebudu banovat federačního admina z jeho vlastní federace!"
+    update_fban: "Tento uživatel byl již federačně zabanován již předtím a proto aktualizuji důvod banu na <code>{reason}</code>"
     already_fbanned: "{user} je již v této federaci zabanován."
     fbanned_header: "<b>Nový Federační Ban</b>\n"
     fban_info: '|#ChatLeaved <b>Federace:</b> {fed} <b>Federační admin:</b> {fadmin} <b>Uživatel:</b> {user} (<code>{user_id}</code>)'
@@ -341,6 +342,7 @@ STRINGS:
     big_file_json: |
       Momentálně jsou soubory JSON omezeny na {num} megabajtů!
       Chcete-li importovat větší soubory, použijte formát csv.
+    invalid_file: "Tento soubor je neplatný"
     wrong_file_ext: "Špatný formát souboru! Podporované jsou: json, csv"
     importing_process: <b>Importuji federační bany...</b>
     import_done: Importování federačních banů dokončeno! Bylo importováno {num} banů.
@@ -449,6 +451,7 @@ STRINGS:
     export_done: Export z <b>{chat_name}</b> dokončen!
     exports_locked: Počkejte prosím %s než budete export moci použít znovu!
     #Importing
+    invalid_file: "Tento soubor je neplatný"
     send_import_file: Vložte prosím soubor importu!
     rpl_to_file: Odpovězte prosím na soubor!
     big_file: Podporován import souborů pouze pod 50 MB!
@@ -613,43 +616,3 @@ STRINGS:
     no_unlock_args: Dejte mi nějaké argumenty k odemknutí!
     not_locked: Kámo, to není zamčené, nepotřebuješ to odemykat.
     unlocked_successfully: '{lock} v {chat} byl úspěšně odemčen!'
-RANDOM_STRINGS:
-  RUNS:
-    - "Neeeeeeeeeeee!.."
-    - "M cri"
-    - "Sir, proč?"
-    - "Proč mi to děláš? Kvůli tobě teď brečím."
-    - "Někdo pro mě opravdu napsal tento scénář ;_;"
-    - "Alexa, play Despacito!"
-    - "TODO: WRITE THIS STRING."
-    - "Hej hou Pane"
-    - "Počkat, ou, moment .. nemohu posílat nálepky ;_;"
-    - "/runs"
-    - "Mňau! 😺"
-    - "Zkus /cat"
-    - "Runs od Rose"
-    - "Runs od Yany"
-    - "Pokud si myslíš že ti pošlu novou vtipnou zprávičku - mýlíš se, neudělám to!"
-    - "Dobchý VeTčeR PaňE"
-    - "OwO"
-    - "?_?"
-    - "Tak neběhejte mi tady po chodbách, Děti!.."
-    - "Nemáš přístup!!"
-    - "Okay teď poběžíš ty a já se podívám jak dlouho vydržíš.."
-    - "Už mě to štve"
-    - "Toto mě ale zatraceně štve!!"
-    - "Jsem takový malý chudáček... :("
-    - "Jak je?"
-    - "Ohhh klikni na to /runs vícekrát 😏"
-    - "Ty jsi maliňkí"
-    - ">~<"
-    - "@admins prosím <code>/disable /runs</code>"
-    - "Spam spam spam spam spam spam"
-    - "jdi odsud Posuň se"
-    - "phosím pane uvolnětě mi místeško"
-    - "moc spatna sestina ja spatne zekla ja jen anglicky mluvila"
-    - Jsem stroj
-    - Nikdy nespím
-    - V noci mám své oči do široka otevřené
-    - Jsem stroj
-    - Přeji si taky mít nějaké pocity
