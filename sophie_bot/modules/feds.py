@@ -487,7 +487,7 @@ async def fed_admins_list(message, fed, strings):
     await message.reply(text, disable_notification=True)
 
 
-@decorator.register(cmds='finfo')
+@decorator.register(cmds=['finfo', 'fedinfo'])
 @get_fed_dec
 @get_strings_dec("feds")
 async def fed_info(message, fed, strings):
