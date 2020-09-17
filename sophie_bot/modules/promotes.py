@@ -44,6 +44,9 @@ async def promote(message, chat, user, args, strings):
     if user['user_id'] == BOT_ID:
         return
 
+    if user['user_id'] == message.from_user.id:
+        return await message.reply(strings['cant_promote_yourself'])
+
     title = None
 
     if args:

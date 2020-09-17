@@ -170,6 +170,7 @@ STRINGS:
     demote_not_admin: "That user isn't admin."
     demote_failed: "Demotion failed. Maybe I can't demote or the person is promoted by someone else"
     cant_get_user: "I couldn't get the user! If you mind, please reply to his message and try again."
+    cant_promote_yourself: "You can't promote yourself."
     emoji_not_allowed: "I'm sorry, but admin roles can't have emojis 😞"
 
   pm_menu:
