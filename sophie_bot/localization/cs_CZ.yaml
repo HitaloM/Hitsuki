@@ -136,10 +136,6 @@ STRINGS:
     conn_chat_id: "ID aktuálně připojeného chatu: <code>{id}</code>"
     help_btn: "Klikni na mě pro nápovědu!"
     help_txt: "Pro pomoc klikněte na tlačítko níže!"
-    paste_success_extra: "<b>Úspěšně vloženo!</b>\nZkrácená url: {}\nPůvodní Dogbin URL: {}"
-    paste_success: "<b>Úspěšně vloženo!</b>\nDogbin URL: {}"
-    paste_fail: "Nepodařilo se připojit k Dogbinu!"
-    paste_no_text: "Nedodali jste text pro vložení!"
     delmsg_filter_title: 'Odstraň zprávu'
     send_text: Pošli prosím odpověď!
     replymsg_filter_title: 'Odpověz na zprávu'
@@ -260,6 +256,7 @@ STRINGS:
       <b>sledování zakázáno</b> #LoggingDisabled
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
     #/fchatlist
+    no_chats: "K federaci <b>{name}</b> se nepřipojily žádné chaty"
     chats_in_fed: "<b>Chaty připojené k {name} Federaci:</b>\n"
     too_large: "Výstup je příliš velký, odesílám ho jako soubor"
     #/finfo
@@ -282,7 +279,10 @@ STRINGS:
     update_fban: "Tento uživatel byl již federačně zabanován již předtím a proto aktualizuji důvod banu na <code>{reason}</code>"
     already_fbanned: "{user} je již v této federaci zabanován."
     fbanned_header: "<b>Nový Federační Ban</b>\n"
-    fban_info: '|#ChatLeaved <b>Federace:</b> {fed} <b>Federační admin:</b> {fadmin} <b>Uživatel:</b> {user} (<code>{user_id}</code>)'
+    fban_info: |
+      <b>Federace:</b> {fed}
+      <b>Fed admin:</b> {fadmin}
+      <b>Uživatel:</b> {user} (<code>{user_id}</code>)
     fbanned_reason: "<b>Důvod:</b> <code>{reason}</code>"
     fbanned_process: "\n<b>Stav:</b> Banuji v <code>{num}</code> federačních chatech..."
     fbanned_done: "\n<b>Stav:</b> Hotovo! zabanován v <code>{num}</code> chatech!"
