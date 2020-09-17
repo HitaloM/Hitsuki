@@ -214,7 +214,7 @@ def is_fed_admin(func):
 @need_args_dec()
 @get_strings_dec("feds")
 async def new_fed(message, strings):
-    fed_name = message.get_args()
+    fed_name = html.escape(message.get_args())
     user_id = message.from_user.id
     if not fed_name:
         await message.reply(strings['no_args'])
@@ -274,7 +274,7 @@ async def join_fed(message, chat, strings):
         chat=chat['chat_title'], fed=html.escape(fed['fed_name'], False))
     )
     await fed_post_log(fed, strings['join_chat_fed_log'].format(
-        fed_name=html.escape(fed['fed_name'], False),
+        fed_name=fed['fed_name'],
         fed_id=fed['fed_id'],
         chat_name=chat['chat_title'],
         chat_id=chat_id
