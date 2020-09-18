@@ -67,7 +67,7 @@ async def update_handlers_cache(chat_id):
 async def check_msg(message):
     log.debug("Running check msg for filters function.")
     chat = await get_connected_chat(message, only_groups=True)
-    if 'err_msg' in chat:
+    if 'err_msg' in chat or message.chat.type == 'private':
         return
 
     chat_id = chat['chat_id']
