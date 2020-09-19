@@ -1,7 +1,7 @@
 ---
 language_info:
   flag: "🇨🇿"
-  code: cs
+  code: cz
 STRINGS:
   notes:
     #/save
@@ -148,6 +148,7 @@ STRINGS:
     demote_not_admin: "Tento uživatel není admin."
     demote_failed: "Degradace se nezdařila. Možná nemohu degradovat nebo ho povýšil někdo jiný"
     cant_get_user: "Nepodařilo se mi najít uživatele! Pokud chcete, prosím odpovězte na tuto zprávu a zkuste to znovu."
+    cant_promote_yourself: "Nemůžete povýšit sám sebe."
     emoji_not_allowed: "Je mi líto, ale role správce nemůže mít emoji 😢"
   pm_menu:
     start_hi_group: 'Ahoj! Mé jméno je Sophie'

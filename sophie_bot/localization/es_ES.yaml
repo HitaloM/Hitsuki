@@ -148,6 +148,7 @@ STRINGS:
     demote_not_admin: "Ese usuario no es administrador."
     demote_failed: "El proceso de dispensar falló. Tal vez no puedo dispensar o la persona está promovida por alguien más"
     cant_get_user: "¡No pude obtener el usuario! Si le importa, responda a su mensaje e inténtelo nuevamente."
+    cant_promote_yourself: "No puedes promoverte a ti mismo."
     emoji_not_allowed: "Lo siento, pero los roles de administrador no pueden contener emojis 😞"
   pm_menu:
     start_hi_group: '¡Hola! Mi nombre es Sophie'
