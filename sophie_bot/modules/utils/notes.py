@@ -19,12 +19,13 @@
 import html
 import re
 import sys
+import textwrap
 from datetime import datetime
 
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
 from babel.dates import format_date, format_time, format_datetime
-from telethon.errors import (ButtonUrlInvalidError, MessageEmptyError, UserIsBlockedError,
+from telethon.errors import (ButtonUrlInvalidError, MediaCaptionTooLongError, MessageEmptyError, UserIsBlockedError,
                              MediaEmptyError, BadRequestError, ChatWriteForbiddenError)
 from telethon.tl.custom import Button
 
@@ -315,6 +316,9 @@ async def send_note(send_id, text, **kwargs):
     except (ButtonUrlInvalidError, MessageEmptyError, MediaEmptyError, ValueError):
         text = 'I found this note invalid! Please update it (read Wiki).'
         return await tbot.send_message(send_id, text)
+    except MediaCaptionTooLongError:
+        text = textwrap.shorten(text, width=1000)
+        return await tbot.send_message(send_id, text, **kwargs)
     except BadRequestError:  # if reply message deleted
         del kwargs['reply_to']
         return await tbot.send_message(send_id, text, **kwargs)
