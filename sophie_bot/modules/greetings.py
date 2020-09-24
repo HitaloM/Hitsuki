@@ -261,7 +261,7 @@ async def welcome_mute(message, chat, strings):
         except BadRequest:
             await message.answer(text)
     elif args[0] in no:
-        text = strings['welcomemute_disabled']
+        text = strings['welcomemute_disabled'] % chat['chat_title']
         await db.greetings.update_one({'chat_id': chat_id}, {'$unset': {'welcome_mute': 1}}, upsert=True)
         try:
             await message.reply(text)
