@@ -313,7 +313,7 @@ async def send_note(send_id, text, **kwargs):
         kwargs['parse_mode'] = tmarkdown
     try:
         return await tbot.send_message(send_id, text, **kwargs)
-    except (ButtonUrlInvalidError, MessageEmptyError, MediaEmptyError, ValueError):
+    except (ButtonUrlInvalidError, MessageEmptyError, MediaEmptyError):
         text = 'I found this note invalid! Please update it (read Wiki).'
         return await tbot.send_message(send_id, text)
     except MediaCaptionTooLongError:
@@ -322,7 +322,7 @@ async def send_note(send_id, text, **kwargs):
     except BadRequestError:  # if reply message deleted
         del kwargs['reply_to']
         return await tbot.send_message(send_id, text, **kwargs)
-    except (ChatWriteForbiddenError, UserIsBlockedError):
+    except (ChatWriteForbiddenError, UserIsBlockedError, ValueError):
         pass
 
 
