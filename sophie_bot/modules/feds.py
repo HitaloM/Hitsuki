@@ -1127,8 +1127,10 @@ async def fedban_check(message, fed, user, _, strings):
                 count = 0
                 async for fban in db.fed_bans.find({'user_id': user['user_id']}):
                     count += 1
-                    fed_name = (await db.feds.find_one({'fed_id': fban['fed_id']}))['fed_name']
-                    text += f'{count}: <code>{fban["fed_id"]}</code>: {fed_name}\n'
+                    _fed = await db.feds.find_one({'fed_id': fban['fed_id']})
+                    if _fed:
+                        fed_name = _fed['fed_name']
+                        text += f'{count}: <code>{fban["fed_id"]}</code>: {fed_name}\n'
     else:
         if total_count > 0:
             text += strings['fbanned_data'].format(user=await get_user_link(user['user_id']), count=total_count)
