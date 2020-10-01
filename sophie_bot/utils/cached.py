@@ -52,7 +52,7 @@ class cached:
     async def _set(self, *args: dict, **kwargs: dict):
         key = self.__build_key(*args, **kwargs)
 
-        value = await bredis.get(key)
+        value = bredis.get(key)
         if value is not None:
             return value if value is not _NotSet else value.real_value
 
@@ -74,7 +74,7 @@ class cached:
 
         return new_key
 
-    async def reset_cache(self, *args, new_value = None, **kwargs):
+    async def reset_cache(self, *args, new_value=None, **kwargs):
         """
         >>> @cached()
         >>> def somefunction(arg):
@@ -89,8 +89,8 @@ class cached:
 
         key = self.__build_key(*args, **kwargs)
         if new_value:
-            return await set_value(key, new_value, ttl=self.ttl)
-        return await bredis.delete(key)
+            return set_value(key, new_value, ttl=self.ttl)
+        return bredis.delete(key)
 
 
 class _NotSet:
