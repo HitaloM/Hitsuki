@@ -821,6 +821,9 @@ async def del_fed_func(event, strings, callback_data=None, **kwargs):
             {'$pull': {'subscribed': fed_id}}
         )
 
+    # delete all fbans of it
+    await db.fed_bans.delete_many({'fed_id': fed_id})
+
     await event.message.edit_text(strings['delfed_success'])
 
 
