@@ -27,7 +27,6 @@ from sophie_bot.services.mongo import db
 from .utils.connections import chat_connection
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
-from .utils.message import need_args_dec
 from .utils.notes import (
     ALLOWED_COLUMNS, BUTTONS, get_parsed_note_list,
     send_note, t_unparse_note_item
@@ -35,13 +34,13 @@ from .utils.notes import (
 
 
 @register(cmds=['setrules', 'saverules'], user_admin=True)
-@need_args_dec()
 @chat_connection(admin=True, only_groups=True)
 @get_strings_dec('rules')
 async def set_rules(message, chat, strings):
     chat_id = chat['chat_id']
 
-    note = await get_parsed_note_list(message, split_args=-1)
+    # FIXME: documents are allow to saved (why?), check for args if no 'reply_to_message'
+    note = await get_parsed_note_list(message, allow_reply_message=True, split_args=1)
     note['chat_id'] = chat_id
 
     if (await db.rules.replace_one({'chat_id': chat_id}, note, upsert=True)).modified_count > 0:

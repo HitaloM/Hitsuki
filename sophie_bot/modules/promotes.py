@@ -44,6 +44,9 @@ async def promote(message, chat, user, args, strings):
     if user['user_id'] == BOT_ID:
         return
 
+    if user['user_id'] == message.from_user.id:
+        return await message.reply(strings['cant_promote_yourself'])
+
     title = None
 
     if args:
@@ -51,7 +54,7 @@ async def promote(message, chat, user, args, strings):
             await message.reply(strings['rank_to_loong'])
             return
         title = args
-        text += strings['promote_title'].format(role=html.escape(title))
+        text += strings['promote_title'].format(role=html.escape(title, quote=False))
 
     try:
         await tbot.edit_admin(

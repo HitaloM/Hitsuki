@@ -63,14 +63,16 @@ async def get_similar_note(chat_id, note_name):
 
 def clean_notes(func):
     async def wrapped_1(*args, **kwargs):
-        message = args[0]
+        event = args[0]
 
-        note = await func(*args, **kwargs)
-
-        if message.chat.type == 'private':
+        message = await func(*args, **kwargs)
+        if not message:
             return
 
-        chat_id = message.chat.id
+        if event.chat.type == 'private':
+            return
+
+        chat_id = event.chat.id
 
         data = await db.clean_notes.find_one({'chat_id': chat_id})
         if not data:
@@ -84,10 +86,12 @@ def clean_notes(func):
                 await tbot.delete_messages(chat_id, data['msgs'])
 
         msgs = []
-        if hasattr(note, 'id'):
-            msgs.append(note.id)
+        if hasattr(message, 'message_id'):
+            msgs.append(message.message_id)
+        else:
+            msgs.append(message.id)
 
-        msgs.append(message.message_id)
+        msgs.append(event.message_id)
 
         await db.clean_notes.update_one({'chat_id': chat_id}, {'$set': {'msgs': msgs}})
 
@@ -122,8 +126,9 @@ async def save_note(message, chat, strings):
 
     if old_note := await db.notes.find_one({'chat_id': chat_id, 'names': {'$in': note_names}}):
         text = strings['note_updated']
-        note['created_date'] = old_note['created_date']
-        note['created_user'] = old_note['created_user']
+        if 'created_date' in old_note:
+            note['created_date'] = old_note['created_date']
+            note['created_user'] = old_note['created_user']
         note['edited_date'] = datetime.now()
         note['edited_user'] = message.from_user.id
     else:
@@ -145,7 +150,7 @@ async def save_note(message, chat, strings):
 
 @get_strings_dec('notes')
 async def get_note(message, strings, note_name=None, db_item=None,
-                   chat_id=None, send_id=None, rpl_id=None, noformat=False, event=None):
+                   chat_id=None, send_id=None, rpl_id=None, noformat=False, event=None, user=None):
     if not chat_id:
         chat_id = message.chat.id
 
@@ -165,7 +170,7 @@ async def get_note(message, strings, note_name=None, db_item=None,
         )
         return
 
-    text, kwargs = await t_unparse_note_item(message, db_item, chat_id, noformat=noformat, event=event)
+    text, kwargs = await t_unparse_note_item(message, db_item, chat_id, noformat=noformat, event=event, user=user)
     kwargs['reply_to'] = rpl_id
 
     return await send_note(send_id, text, **kwargs)
@@ -187,8 +192,10 @@ async def get_note_cmd(message, chat, strings):
 
     if 'reply_to_message' in message:
         rpl_id = message.reply_to_message.message_id
+        user = message.reply_to_message.from_user
     else:
         rpl_id = message.message_id
+        user = message.from_user
 
     if not (note := await db.notes.find_one({'chat_id': int(chat_id), 'names': {'$in': [note_name]}})):
         text = strings['cant_find_note'].format(chat_name=chat_name)
@@ -206,16 +213,16 @@ async def get_note_cmd(message, chat, strings):
         message,
         db_item=note,
         rpl_id=rpl_id,
-        noformat=noformat
+        noformat=noformat,
+        user=user
     )
 
 
 @register(regexp=r'^#([\w-]+)', allow_kwargs=True)
 @disableable_dec('get')
 @chat_connection(command='get')
-@get_strings_dec('notes')
 @clean_notes
-async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
+async def get_note_hashtag(message, chat, regexp=None, **kwargs):
     chat_id = chat['chat_id']
 
     note_name = regexp.group(1).lower()
@@ -224,13 +231,16 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
 
     if 'reply_to_message' in message:
         rpl_id = message.reply_to_message.message_id
+        user = message.reply_to_message.from_user
     else:
         rpl_id = message.message_id
+        user = message.from_user
 
     return await get_note(
         message,
         db_item=note,
-        rpl_id=rpl_id
+        rpl_id=rpl_id,
+        user=user
     )
 
 
@@ -238,6 +248,7 @@ async def get_note_hashtag(message, chat, strings, regexp=None, **kwargs):
 @disableable_dec('notes')
 @chat_connection(command='notes')
 @get_strings_dec('notes')
+@clean_notes
 async def get_notes_list_cmd(message, chat, strings):
 
     if await db.privatenotes.find_one({'chat_id': chat['chat_id']})\
@@ -249,10 +260,9 @@ async def get_notes_list_cmd(message, chat, strings):
             text='Click here',
             url=await get_start_link(f"notes_{chat['chat_id']}_{keyword}")
         ))
-        await message.reply(text, reply_markup=button, disable_web_page_preview=True)
-        return
+        return await message.reply(text, reply_markup=button, disable_web_page_preview=True)
     else:
-        await get_notes_list(message, chat=chat)
+        return await get_notes_list(message, chat=chat)
 
 
 @get_strings_dec('notes')
@@ -261,8 +271,7 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
 
     notes = await db.notes.find({'chat_id': chat['chat_id']}).sort("names", 1).to_list(length=300)
     if not notes:
-        await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
-        return
+        return await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
 
     async def search_notes(request):
         nonlocal notes, text, note, note_name
@@ -274,8 +283,7 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
                 if re.search(request, note_name):
                     notes.append(note)
         if not len(notes) > 0:
-            await message.reply(strings['no_notes_pattern'] % request)
-            return
+            return await message.reply(strings['no_notes_pattern'] % request)
 
     # Search
     if keyword:
@@ -291,7 +299,7 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
         text += strings['you_can_get_note']
 
         try:
-            await message.reply(text)
+            return await message.reply(text)
         except BadRequest:
             await message.answer(text)
 
@@ -299,6 +307,7 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
 @register(cmds='search')
 @chat_connection()
 @get_strings_dec('notes')
+@clean_notes
 async def search_in_note(message, chat, strings):
     request = message.get_args()
     text = strings["search_header"].format(chat_name=chat['chat_title'], request=request)
@@ -311,11 +320,10 @@ async def search_in_note(message, chat, strings):
         text += '\n-'
         for note_name in note['names']:
             text += f" <code>#{note_name}</code>"
-    text += strings['you_get_note']
+    text += strings['you_can_get_note']
     if not check:
-        await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
-        return
-    await message.reply(text)
+        return await message.reply(strings["notelist_no_notes"].format(chat_title=chat['chat_title']))
+    return await message.reply(text)
 
 
 @register(cmds=['clear', 'delnote'])
@@ -384,6 +392,7 @@ async def clear_all_notes_cb(event, chat, strings):
 @chat_connection()
 @need_args_dec()
 @get_strings_dec('notes')
+@clean_notes
 async def note_info(message, chat, strings):
     note_name = get_arg(message).lower()
     if note_name[0] == '#':
@@ -393,8 +402,7 @@ async def note_info(message, chat, strings):
         text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
         if alleged_note_name := await get_similar_note(chat['chat_id'], note_name):
             text += strings['u_mean'].format(note_name=alleged_note_name)
-        await message.reply(text)
-        return
+        return await message.reply(text)
 
     text = strings['note_info_title']
 
@@ -416,10 +424,11 @@ async def note_info(message, chat, strings):
 
     text += strings['note_info_parsing'] % parse_mode
 
-    text += strings['note_info_created'].format(
-        date=format_datetime(note['created_date'], locale=strings['language_info']['babel']),
-        user=await get_user_link(note['created_user'])
-    )
+    if 'created_date' in note:
+        text += strings['note_info_created'].format(
+            date=format_datetime(note['created_date'], locale=strings['language_info']['babel']),
+            user=await get_user_link(note['created_user'])
+        )
 
     if 'edited_date' in note:
         text += strings['note_info_updated'].format(
@@ -427,7 +436,7 @@ async def note_info(message, chat, strings):
             user=await get_user_link(note['edited_user'])
         )
 
-    await message.reply(text)
+    return await message.reply(text)
 
 
 BUTTONS.update({'note': 'btnnotesm'})

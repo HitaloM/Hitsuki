@@ -77,7 +77,7 @@ async def cmd_term(message):
     msg = await message.reply("Running...")
     command = str(message.text.split(" ", 1)[1])
     text = "<b>Shell:</b>\n"
-    text += html.escape(await chat_term(message, command))
+    text += html.escape(await chat_term(message, command), quote=False)
     await msg.edit_text(text)
 
 

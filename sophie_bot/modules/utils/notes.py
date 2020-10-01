@@ -19,13 +19,13 @@
 import html
 import re
 import sys
+import textwrap
 from datetime import datetime
 
-from aiogram.types import Message
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
 from babel.dates import format_date, format_time, format_datetime
-from telethon.errors import (ButtonUrlInvalidError, MessageEmptyError,
+from telethon.errors import (ButtonUrlInvalidError, MediaCaptionTooLongError, MessageEmptyError, UserIsBlockedError,
                              MediaEmptyError, BadRequestError, ChatWriteForbiddenError)
 from telethon.tl.custom import Button
 
@@ -241,28 +241,33 @@ async def get_parsed_note_list(message, allow_reply_message=True, split_args=1):
     else:
         text, note['parse_mode'] = get_parsed_msg(message)
         if message.get_command() and message.get_args():
-            text = re.sub(message.get_command(), '', text, 1)  # remove command from text
-        text = re.sub(r'([\w-]+ )', '', text, split_args)
+            # Remove cmd and arg from message's text
+            text = re.sub(message.get_command() + r"\s?", '', text, 1)
+            if split_args > 0:
+                text = re.sub(re.escape(get_args(message)[0]) + r"\s?", '', text, 1)
         # Check on attachment
         if msg_file := await get_msg_file(message):
             note['file'] = msg_file
 
-    # Preview
-    if 'text' in note and '$PREVIEW' in note['text']:
-        note['preview'] = True
-    text = re.sub(r'%PREVIEW', '', text)
-
     if text.replace(' ', ''):
         note['text'] = text
+
+    # Preview
+    if 'text' in note and re.search(r'[$|%]PREVIEW', note["text"]):
+        note["text"] = re.sub(r'[$|%]PREVIEW', '', note['text'])
+        note['preview'] = True
 
     return note
 
 
-async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=None, **kwargs):
+async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=None, user=None):
     text = db_item['text'] if 'text' in db_item else ""
 
     file_id = None
     preview = None
+
+    if not user:
+        user = message.from_user
 
     if 'file' in db_item:
         file_id = db_item['file']['id']
@@ -288,9 +293,9 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
         if 'parse_mode' not in db_item or db_item['parse_mode'] == 'none':
             db_item['parse_mode'] = None
         elif db_item['parse_mode'] == 'md':
-            text = await vars_parser(text, message, chat_id, md=True, event=event, **kwargs)
+            text = await vars_parser(text, message, chat_id, md=True, event=event, user=user)
         elif db_item['parse_mode'] == 'html':
-            text = await vars_parser(text, message, chat_id, md=False, event=event, **kwargs)
+            text = await vars_parser(text, message, chat_id, md=False, event=event, user=user)
 
         if 'preview' in db_item and db_item['preview']:
             preview = True
@@ -308,13 +313,16 @@ async def send_note(send_id, text, **kwargs):
         kwargs['parse_mode'] = tmarkdown
     try:
         return await tbot.send_message(send_id, text, **kwargs)
-    except (ButtonUrlInvalidError, MessageEmptyError, MediaEmptyError, ValueError):
+    except (ButtonUrlInvalidError, MessageEmptyError, MediaEmptyError):
         text = 'I found this note invalid! Please update it (read Wiki).'
         return await tbot.send_message(send_id, text)
+    except MediaCaptionTooLongError:
+        text = textwrap.shorten(text, width=1000)
+        return await tbot.send_message(send_id, text, **kwargs)
     except BadRequestError:  # if reply message deleted
         del kwargs['reply_to']
         return await tbot.send_message(send_id, text, **kwargs)
-    except ChatWriteForbiddenError:
+    except (ChatWriteForbiddenError, UserIsBlockedError, ValueError):
         pass
 
 
@@ -382,7 +390,7 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     return text, buttons
 
 
-async def vars_parser(text, message: Message, chat_id, md=False, event=None, **kwargs):
+async def vars_parser(text, message, chat_id, md=False, event=None, user=None):
     if event is None:
         event = message
 
@@ -392,30 +400,23 @@ async def vars_parser(text, message: Message, chat_id, md=False, event=None, **k
     language_code = await get_chat_lang(chat_id)
     current_datetime = datetime.now()
 
-    first_name = html.escape(event.from_user.first_name)
-    last_name = html.escape(event.from_user.last_name or "")
-
-    if 'user_id' in kwargs:
-        user_id = kwargs['user_id']
-    else:
-        user_id = event.from_user.id
-
+    first_name = html.escape(user.first_name, quote=False)
+    last_name = html.escape(user.last_name or "", quote=False)
+    user_id = ([user.id for user in event.new_chat_members][0]
+               if 'new_chat_members' in event and event.new_chat_members != [] else user.id)
     mention = await get_user_link(user_id, md=md)
-
-    if 'username' in kwargs and bool(kwargs['username']):
-        username = kwargs['username']
-    elif bool(event.from_user.username):
-        username = event.from_user.username
-    else:
-        username = mention
-
+    username = ('@' + str(event.new_chat_members[0].username)
+                if 'new_chat_members' in event and event.new_chat_members != [] and event.new_chat_members[0].username
+                   is not None
+                else '@' + user.username
+                if user.username is not None else mention)
     chat_id = message.chat.id
-    chat_name = html.escape(message.chat.title or 'Local')
+    chat_name = html.escape(message.chat.title or 'Local', quote=False)
     chat_nick = message.chat.username or chat_name
 
-    current_date = html.escape(format_date(date=current_datetime, locale=language_code))
-    current_time = html.escape(format_time(time=current_datetime, locale=language_code))
-    current_timedate = html.escape(format_datetime(datetime=current_datetime, locale=language_code))
+    current_date = html.escape(format_date(date=current_datetime, locale=language_code), quote=False)
+    current_time = html.escape(format_time(time=current_datetime, locale=language_code), quote=False)
+    current_timedate = html.escape(format_datetime(datetime=current_datetime, locale=language_code), quote=False)
 
     text = text.replace('{first}', first_name) \
         .replace('{last}', last_name) \

@@ -28,4 +28,4 @@ async def channel_log(msg, info_log=True):
     if info_log:
         log.info(msg)
 
-    await bot.send_message(chat_id, html.escape(msg))
+    await bot.send_message(chat_id, html.escape(msg, quote=False))

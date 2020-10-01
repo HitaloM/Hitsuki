@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
+import datetime  # noqa: F401
 
 from aiogram.utils.exceptions import MessageNotModified
 from babel.dates import format_datetime, format_timedelta
@@ -36,9 +37,9 @@ from .utils.user_details import get_user_dec, get_user_link, is_user_admin, get_
 
 @register(cmds=['kick', 'skick'], bot_can_restrict_members=True, user_can_restrict_members=True)
 @chat_connection(admin=True, only_groups=True)
-@get_user_dec()
+@get_user_and_text_dec()
 @get_strings_dec('restrictions')
-async def kick_user_cmd(message, chat, user, strings):
+async def kick_user_cmd(message, chat, user, args, strings):
     chat_id = chat['chat_id']
     user_id = user['user_id']
 
@@ -61,8 +62,8 @@ async def kick_user_cmd(message, chat, user, strings):
     )
 
     # Add reason
-    if len(args := message.get_args().split(' ', 1)) > 1:
-        text += strings['reason'] % args[1]
+    if args:
+        text += strings['reason'] % args
 
     # Check if silent
     silent = False
@@ -120,7 +121,7 @@ async def mute_user_cmd(message, chat, user, args, strings):
         if args is not None and len(args := args.split()) > 0:
             try:
                 until_date = convert_time(args[0])
-            except (InvalidTimeUnit, TypeError):
+            except (InvalidTimeUnit, TypeError, ValueError):
                 await message.reply(strings['invalid_time'])
                 return
 
@@ -224,7 +225,7 @@ async def ban_user_cmd(message, chat, user, args, strings):
         if args is not None and len(args := args.split()) > 0:
             try:
                 until_date, unit = convert_time(args[0])
-            except (InvalidTimeUnit, TypeError):
+            except (InvalidTimeUnit, TypeError, ValueError):
                 await message.reply(strings['invalid_time'])
                 return
 
@@ -329,9 +330,9 @@ async def filter_handle_mute(message, chat, data, strings=None):
 async def filter_handle_tmute(message, chat, data, strings=None):
     if await is_user_admin(chat['chat_id'], message.from_user.id):
         return
-    if await mute_user(chat['chat_id'], message.from_user.id, until_date=data['time']):
+    if await mute_user(chat['chat_id'], message.from_user.id, until_date=eval(data['time'])):
         reason = strings['filter_action_rsn']
-        time = format_timedelta(data['time'], locale=strings['language_info']['babel'])
+        time = format_timedelta(eval(data['time']), locale=strings['language_info']['babel'])
         text = strings['filtr_tmute_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
                                                  time, reason)
         await bot.send_message(chat['chat_id'], text)
@@ -341,9 +342,9 @@ async def filter_handle_tmute(message, chat, data, strings=None):
 async def filter_handle_tban(message, chat, data, strings=None):
     if await is_user_admin(chat['chat_id'], message.from_user.id):
         return
-    if await ban_user(chat['chat_id'], message.from_user.id, until_date=data['time']):
+    if await ban_user(chat['chat_id'], message.from_user.id, until_date=eval(data['time'])):
         reason = strings['filter_action_rsn']
-        time = format_timedelta(data['time'], locale=strings['language_info']['babel'])
+        time = format_timedelta(eval(data['time']), locale=strings['language_info']['babel'])
         text = strings['filtr_tban_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
                                                 time, reason)
         await bot.send_message(chat['chat_id'], text)
@@ -359,10 +360,11 @@ async def time_setup_start(message, strings):
 async def time_setup_finish(message, data, strings):
     try:
         time = convert_time(message.text)
-    except (InvalidTimeUnit, TypeError):
-        return await message.reply(strings['invalid_time'])
+    except (InvalidTimeUnit, TypeError, ValueError):
+        await message.reply(strings['invalid_time'])
+        return None
     else:
-        return {'time': time}
+        return {'time': repr(time)}
 
 
 @get_strings_dec('restrictions')

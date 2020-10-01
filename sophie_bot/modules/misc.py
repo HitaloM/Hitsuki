@@ -16,29 +16,15 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import html
-import random
 
-from aiogram.utils.exceptions import BadRequest, CantParseEntities
+from aiogram.utils.exceptions import BadRequest
 from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
 from contextlib import suppress
 
 from sophie_bot.decorator import register
 from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
-from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
-
-
-@register(cmds="runs")
-@get_strings_dec("RUNS", mas_name="RANDOM_STRINGS")
-@disableable_dec('runs')
-async def runs(message, strings):
-    text = random.choice(list(strings))
-    try:
-        await message.reply(text)
-    except CantParseEntities:
-        await message.reply(html.escape(text))
 
 
 @register(cmds='cancel', state='*', allow_kwargs=True)
@@ -85,6 +71,6 @@ __filters__ = {
             'start': replymsg_setup_start,
             'finish': replymsg_setup_finish
         },
-        'del_btn_name': lambda msg, data: f"Reply to {data['handler']}: {data['reply_text']}"
+        'del_btn_name': lambda msg, data: f"Reply to {data['handler']}: \"{data['reply_text']['text']}\" "
     }
 }

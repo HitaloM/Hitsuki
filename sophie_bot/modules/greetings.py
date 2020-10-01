@@ -25,9 +25,7 @@ from datetime import datetime
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.types import Message
-from aiogram.utils.callback_data import CallbackData
-from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted, BadRequest
+from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted, BadRequest, ChatAdminRequired
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
 from apscheduler.jobstores.base import JobLookupError
@@ -46,7 +44,6 @@ from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 from .utils.message import need_args_dec, convert_time
 from .utils.notes import get_parsed_note_list, t_unparse_note_item, send_note
-from .utils.restrictions import ban_user
 from .utils.restrictions import mute_user, restrict_user, unmute_user, kick_user
 from .utils.user_details import is_user_admin, get_user_link, check_admin_rights
 
@@ -264,7 +261,7 @@ async def welcome_mute(message, chat, strings):
         except BadRequest:
             await message.answer(text)
     elif args[0] in no:
-        text = strings['welcomemute_disabled']
+        text = strings['welcomemute_disabled'] % chat['chat_title']
         await db.greetings.update_one({'chat_id': chat_id}, {'$unset': {'welcome_mute': 1}}, upsert=True)
         try:
             await message.reply(text)
@@ -366,78 +363,78 @@ async def reset_security_note(message, chat, strings):
 
 @register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
-async def welcome_security_handler(message: Message, strings):
-    new_users = [user for user in message.new_chat_members]
+async def welcome_security_handler(message, strings):
+
+    if len(message.new_chat_members) > 1:
+        # FIXME: Sophie doesnt support adding multiple users currently
+        return
+
+    new_user = message.new_chat_members[0]
     chat_id = message.chat.id
+    user_id = new_user.id
 
-    for user in new_users:
-        user_id = user.id
+    if user_id == BOT_ID:
+        return
 
-        if user_id == BOT_ID:
+    db_item = await db.greetings.find_one({'chat_id': chat_id})
+    if not db_item or 'welcome_security' not in db_item:
+        return
+
+    if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+        await message.reply(strings['not_admin_ws'])
+        return
+
+    user = await message.chat.get_member(user_id)
+    # Check if user was muted before
+    if user['status'] == 'restricted':
+        if user['can_send_messages'] is False:
             return
 
-        db_item = await db.greetings.find_one({'chat_id': chat_id})
-        if not db_item or 'welcome_security' not in db_item:
-            return
+    # Check on OPs and chat owner
+    if await is_user_admin(chat_id, user_id):
+        return
 
-        if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
-            await message.reply(strings['not_admin_ws'])
-            return
+    # check if user added is a bot
+    if new_user.is_bot and await is_user_admin(chat_id, message.from_user.id):
+        return
 
-        user_data = await message.chat.get_member(user_id)
+    # Mute user
+    try:
+        await mute_user(chat_id, user_id)
+    except BadRequest as error:
+        return await message.reply(f'welcome security failed due to {error.args[0]}')
 
-        # Check if user was muted before
-        if 'can_send_messages' in user_data and user_data['can_send_messages'] is False:
-            return
+    if 'security_note' not in db_item:
+        db_item = {'security_note': {}}
+        db_item['security_note']['text'] = strings['default_security_note']
+        db_item['security_note']['parse_mode'] = 'md'
 
-        # Check on OPs and chat owner
-        if await is_user_admin(chat_id, user_id):
-            return
+    text, kwargs = await t_unparse_note_item(message, db_item['security_note'], chat_id)
 
-        # check if user added is a bot
-        if user.is_bot and await is_user_admin(chat_id, message.from_user.id):
-            return
+    db_item = await db.greetings.find_one({'chat_id': chat_id})
+    kwargs['reply_to'] = (None if 'clean_service' in db_item and db_item['clean_service']['enabled'] is True
+                          else message.message_id)
 
-        # Mute user
-        try:
-            await mute_user(chat_id, user_id)
-        except BadRequest as error:
-            return await message.reply(f'welcome security failed due to {error.args[0]}')
+    kwargs['buttons'] = [] if not kwargs['buttons'] else kwargs['buttons']
+    kwargs['buttons'] += [Button.inline(strings['click_here'], f'ws_{chat_id}_{user_id}')]
 
-        if 'security_note' not in db_item:
-            db_item = {'security_note': {}}
-            db_item['security_note']['text'] = strings['default_security_note']
-            db_item['security_note']['parse_mode'] = 'md'
+    msg = await send_note(chat_id, text, **kwargs)
 
-        kwargs = {'user_id': user_id, 'username': user.username}
-        text, kwargs = await t_unparse_note_item(message, db_item['security_note'], chat_id, **kwargs)
+    redis.set(f'welcome_security_users:{user_id}:{chat_id}', msg.id)
 
-        db_item = await db.greetings.find_one({'chat_id': chat_id})
-
-        kwargs['reply_to'] = message.message_id
-        if 'clean_service' in db_item and db_item['clean_service']['enabled'] is True:
-            del kwargs['reply_to']
-
-        kwargs['buttons'] = [] if not kwargs['buttons'] else kwargs['buttons']
-        kwargs['buttons'] += [Button.inline(strings['click_here'], f'ws_{chat_id}_{user_id}')]
-
-        msg = await send_note(chat_id, text, **kwargs)
-
-        redis.set(f'welcome_security_users:{user_id}', chat_id)
-
-        scheduler.add_job(
-            join_expired,
-            "date",
-            id=f"wc_expire:{chat_id}:{user_id}",
-            run_date=datetime.utcnow() + convert_time(get_str_key('JOIN_CONFIRM_DURATION')),
-            kwargs={'chat_id': chat_id, 'user_id': user_id, 'message_id': msg.id, 'wlkm_msg_id': message.message_id},
-            replace_existing=True
-        )
+    scheduler.add_job(
+        join_expired,
+        "date",
+        id=f"wc_expire:{chat_id}:{user_id}",
+        run_date=datetime.utcnow() + convert_time(get_str_key('JOIN_CONFIRM_DURATION')),
+        kwargs={'chat_id': chat_id, 'user_id': user_id, 'message_id': msg.id, 'wlkm_msg_id': message.message_id},
+        replace_existing=True
+    )
 
 
 async def join_expired(chat_id, user_id, message_id, wlkm_msg_id):
     user = await bot.get_chat_member(chat_id, user_id)
-    if 'can_send_messages' not in user or user['can_send_messages'] is True:
+    if user.status != 'restricted':
         return
 
     bot_user = await bot.get_chat_member(chat_id, BOT_ID)
@@ -460,13 +457,16 @@ async def ws_redirecter(message, strings):
     real_user_id = int(payload[1])
     called_user_id = message.from_user.id
 
+    url = f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}'
     if not called_user_id == real_user_id:
-        if not (rkey := redis.get(f'welcome_security_users:{called_user_id}')) and not chat_id == rkey:
+        # The persons which are muted before wont have their signatures registered on cache
+        if not redis.exists(f"welcome_security_users:{called_user_id}:{chat_id}"):
             await message.answer(strings['not_allowed'], show_alert=True)
             return
-
-    await message.answer(url=f'https://t.me/{BOT_USERNAME}?start='
-                             f'ws_{chat_id}_{called_user_id}_{message.message.message_id}')
+        else:
+            # For those who lost their buttons
+            url = f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}_0'
+    await message.answer(url=url)
 
 
 @register(CommandStart(re.compile(r'ws_')), allow_kwargs=True)
@@ -478,6 +478,7 @@ async def welcome_security_handler_pm(message, strings, regexp=None, state=None,
     async with state.proxy() as data:
         data['chat_id'] = chat_id
         data['msg_id'] = int(args[3])
+        data['to_delete'] = bool(int(args[4])) if len(args) > 4 else True
 
     db_item = await db.greetings.find_one({'chat_id': chat_id})
 
@@ -671,12 +672,24 @@ async def welcome_security_passed(message, state, strings):
         chat_id = data['chat_id']
         msg_id = data['msg_id']
         verify_msg_id = data['verify_msg_id']
+        to_delete = data['to_delete']
 
-    await unmute_user(chat_id, user_id)
+    with suppress(ChatAdminRequired):
+        await unmute_user(chat_id, user_id)
+
     with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
-        await bot.delete_message(chat_id, msg_id)
+        if to_delete:
+            await bot.delete_message(chat_id, msg_id)
         await bot.delete_message(user_id, verify_msg_id)
     await state.finish()
+
+    with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
+        message_id = redis.get(f"welcome_security_users:{user_id}:{chat_id}")
+        # Delete the person's real security button if exists!
+        if message_id:
+            await bot.delete_message(chat_id, message_id)
+
+    redis.delete(f"welcome_security_users:{user_id}:{chat_id}")
 
     with suppress(JobLookupError):
         scheduler.remove_job(f"wc_expire:{chat_id}:{user_id}")
@@ -696,7 +709,7 @@ async def welcome_security_passed(message, state, strings):
     # Welcome
     if 'note' in db_item:
         text, kwargs = await t_unparse_note_item(
-            message.reply_to_message if bool(message.reply_to_message) else message,
+            message.reply_to_message if message.reply_to_message is not None else message,
             db_item['note'],
             chat_id
         )
@@ -714,58 +727,56 @@ async def welcome_security_passed(message, state, strings):
 # Welcomes
 @register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
-async def welcome_trigger(message: Message, strings):
+async def welcome_trigger(message, strings):
+
+    if len(message.new_chat_members) > 1:
+        # FIXME: Sophie doesnt support adding multiple users currently
+        return
+
     chat_id = message.chat.id
-    new_users = [user for user in message.new_chat_members]
+    user_id = message.new_chat_members[0].id
 
-    for user in new_users:
-        user_id = user.id
+    if user_id == BOT_ID:
+        return
 
-        if user_id == BOT_ID:
-            return
+    if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
+        db_item = {}
 
-        if not (db_item := await db.greetings.find_one({'chat_id': chat_id})):
-            db_item = {}
+    if 'welcome_disabled' in db_item and db_item['welcome_disabled'] is True:
+        return
 
-        if 'welcome_disabled' in db_item and db_item['welcome_disabled'] is True:
-            return
+    if 'welcome_security' in db_item and db_item['welcome_security']['enabled']:
+        return
 
-        if 'welcome_security' in db_item and db_item['welcome_security']['enabled']:
-            return
+    # Welcome
+    if 'note' not in db_item:
+        db_item['note'] = {
+            'text': strings['default_welcome'],
+            'parse_mode': 'md'
+        }
+    reply_to = (message.message_id if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False
+                else None)
+    text, kwargs = await t_unparse_note_item(message, db_item['note'], chat_id)
+    msg = await send_note(chat_id, text, reply_to=reply_to, **kwargs)
+    # Clean welcome
+    if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False:
+        if 'last_msg' in db_item['clean_welcome']:
+            with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
+                await bot.delete_message(chat_id, db_item['clean_welcome']['last_msg'])
+        await db.greetings.update_one({'_id': db_item['_id']}, {'$set': {'clean_welcome.last_msg': msg.id}},
+                                      upsert=True)
 
-        # Welcome
-        if 'note' not in db_item:
-            db_item['note'] = {
-                'text': strings['default_welcome'],
-                'parse_mode': 'md'
-            }
+    # Welcome mute
+    if user_id == BOT_ID:
+        return
+    if 'welcome_mute' in db_item and db_item['welcome_mute']['enabled'] is not False:
+        user = await bot.get_chat_member(chat_id, user_id)
+        if 'can_send_messages' not in user or user['can_send_messages'] is True:
+            if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+                await message.reply(strings['not_admin_wm'])
+                return
 
-        reply_to = message.message_id
-        if 'clean_service' in db_item and db_item['clean_service']['enabled'] is True:
-            reply_to = None
-
-        kwargs = {'user_id': user_id, 'username': user.username}
-        text, kwargs = await t_unparse_note_item(message, db_item['note'], chat_id, **kwargs)
-        msg = await send_note(chat_id, text, reply_to=reply_to, **kwargs)
-        # Clean welcome
-        if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False:
-            if 'last_msg' in db_item['clean_welcome']:
-                with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
-                    await bot.delete_message(chat_id, db_item['clean_welcome']['last_msg'])
-            await db.greetings.update_one({'_id': db_item['_id']}, {'$set': {'clean_welcome.last_msg': msg.id}},
-                                          upsert=True)
-
-        # Welcome mute
-        if user_id == BOT_ID:
-            return
-        if 'welcome_mute' in db_item and db_item['welcome_mute']['enabled'] is not False:
-            user = await bot.get_chat_member(chat_id, user_id)
-            if 'can_send_messages' not in user or user['can_send_messages'] is True:
-                if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
-                    await message.reply(strings['not_admin_wm'])
-                    return
-
-                await restrict_user(chat_id, user_id, until_date=convert_time(db_item['welcome_mute']['time']))
+            await restrict_user(chat_id, user_id, until_date=convert_time(db_item['welcome_mute']['time']))
 
 
 # Clean service trigger
@@ -789,144 +800,6 @@ async def clean_service_trigger(message, strings):
 
     with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
         await message.delete()
-
-# WelcomeRestrict
-whitelist_cb = CallbackData('whitelist_cb', 'chat_id', 'user_id')
-ban_cb = CallbackData('ban_cb', 'chat_id', 'user_id')
-
-
-@register(cmds='welcomerestrict', is_admin=True, bot_can_restrict_members=True, bot_can_delete_messages=True)
-@chat_connection(admin=True)
-@get_strings_dec('greetings')
-async def welcomerestrict_cmd(message, chat, strings):
-    chat_id = chat['chat_id']
-    disable = ['no', 'off', '0', 'false', 'disable']
-    enable = ['yes', 'on', '1', 'true', 'enable']
-
-    database = await db.greetings.find_one({'chat_id': chat_id})
-    if len(args := message.get_args().split()) < 1:
-        if database is not None and 'welcome_restrict' in database and database['welcome_restrict']['enabled'] is True:
-            state = strings['enabled']
-        else:
-            state = strings['disabled']
-        await message.reply(strings['restrict_status'].format(state=state, chat=chat['chat_title']))
-    else:
-        if args[0] in disable:
-            if database is not None:
-                if 'welcome_restrict' not in database or database['welcome_restrict']['enabled'] is False:
-                    return await message.reply(strings['already_disabled'])
-            await db.greetings.update_one(
-                {'chat_id': chat_id},
-                {'$unset': {'welcome_restrict': 1}},
-                upsert=True
-            )
-            await message.reply(strings['disabled_sucessfully'].format(chat=chat['chat_title']))
-        elif args[0] in enable:
-            if database is not None:
-                if 'welcome_restrict' in database and database['welcome_restrict']['enabled'] is True:
-                    await message.reply(strings['already_enabled'])
-            else:
-                await db.greetings.update_one(
-                    {'chat_id': chat_id},
-                    {'$set': {'chat_id': chat_id, 'welcome_restrict': {'enabled': True}}},
-                    upsert=True
-                )
-                await message.reply(strings['enabled_sucessfully'].format(chat=chat['chat_title']))
-        else:
-            return await message.reply(strings['unkown_option'])
-
-
-@register(f='welcome')
-async def welcome_restrict(message):
-    chat_id = message.chat.id
-    user_id = message.new_chat_members[0].id
-    if not await is_user_admin(chat_id, user_id):
-        redis.set(f'new_chatmember:{chat_id}:{user_id}', 1, ex=86400)
-
-
-@register(f='any', only_groups=True)
-async def welcomerestrict_handler(message):
-    user_id = message.from_user.id
-    chat_id = message.chat.id
-
-    database = await db.greetings.find_one({'chat_id': chat_id})
-    if not database:
-        return
-
-    if 'welcome_restrict' in database and database['welcome_restrict']['enabled'] is True:
-        if not await is_user_admin(chat_id, user_id):
-            if await new_joinee(user_id, chat_id):
-                if await check_forward(message):
-                    return await restrict_action(message, 'fwd')
-                if 'url' in [entities.type for entities in message.entities]:
-                    return await restrict_action(message, 'url')
-                if await check_media(message):
-                    return await restrict_action(message, 'media')
-
-
-@get_strings_dec('greetings')
-async def restrict_action(message, item, strings=None):
-    chat_id = message.chat.id
-    user_id = message.from_user.id
-
-    buttons = InlineKeyboardMarkup()
-    buttons.add(InlineKeyboardButton(strings['whitelist'],
-                                     callback_data=whitelist_cb.new(chat_id=chat_id, user_id=user_id)))
-    buttons.add(InlineKeyboardButton(strings['ban'],
-                                     callback_data=ban_cb.new(chat_id=chat_id, user_id=user_id)))
-    await message.delete()
-    await message.answer(strings[f'del_{item}'].format(user=await get_user_link(user_id)), reply_markup=buttons)
-
-
-@register(ban_cb.filter(), f='cb', user_can_restrict_members=True, bot_can_restrict_members=True, allow_kwargs=True)
-@get_strings_dec('greetings')
-async def ban_button_cb(messsage, strings, callback_data=None, **kwargs):
-    chat_id = callback_data['chat_id']
-    user_id = callback_data['user_id']
-    from_user = messsage.from_user.id
-
-    if await ban_user(chat_id, user_id):
-        await messsage.message.edit_text(strings['banned'].format(
-            user=await get_user_link(user_id),
-            by=await get_user_link(from_user)
-        ))
-
-
-@register(whitelist_cb.filter(), f='cb', allow_kwargs=True, is_admin=True)
-@get_strings_dec('greetings')
-async def whitlist_btn_cb(message, strings, callback_data=None, **kwargs):
-    chat_id = callback_data['chat_id']
-    user_id = callback_data['user_id']
-    from_user = message.from_user.id
-
-    redis.delete(f'new_chatmember:{chat_id}:{user_id}')
-    await message.message.edit_text(strings['whitelisted'].format(
-        user=await get_user_link(user_id),
-        by=await get_user_link(from_user)
-    ))
-
-
-async def new_joinee(user_id, chat_id):
-    if redis.exists(f'new_chatmember:{chat_id}:{user_id}'):
-        return True
-
-
-async def check_media(message):
-    media_types = ['audio', 'document', 'photo', 'sticker', 'video', 'video_note', 'voice']
-    for media in media_types:
-        if media not in message:
-            continue
-        return True
-    return False
-
-
-async def check_forward(message):
-    forwards = ['forward_from', 'forward_from_chat']
-    for forward in forwards:
-        if forward not in message:
-            continue
-        return True
-    return False
 
 
 async def __export__(chat_id):

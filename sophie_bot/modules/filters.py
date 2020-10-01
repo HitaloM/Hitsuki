@@ -23,7 +23,6 @@ from aiogram.types.inline_keyboard import InlineKeyboardButton, InlineKeyboardMa
 from aiogram.utils.callback_data import CallbackData
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from bson.objectid import ObjectId
-from datetime import datetime, timedelta
 from pymongo import UpdateOne
 
 from .utils.message import need_args_dec, get_args_str
@@ -67,8 +66,8 @@ async def update_handlers_cache(chat_id):
 @register()
 async def check_msg(message):
     log.debug("Running check msg for filters function.")
-    chat = await get_connected_chat(message)
-    if 'err_msg' in chat:
+    chat = await get_connected_chat(message, only_groups=True)
+    if 'err_msg' in chat or message.chat.type == 'private':
         return
 
     chat_id = chat['chat_id']
@@ -145,6 +144,9 @@ async def register_action(event, chat, callback_data=None, state=None, **kwargs)
 
     handler = redis.get(f'add_filter:{user_id}:{chat_id}')
 
+    if not handler:
+        return await event.answer("Something went wrong! Please try again!", show_alert=True)
+
     data = {
         'chat_id': chat_id,
         'handler': handler,
@@ -172,7 +174,7 @@ async def setup_end(message, chat, state=None, **kwargs):
 
     action = FILTERS_ACTIONS[filter_id]
 
-    if not (a := await action['setup']['finish'](message, data)):
+    if not bool(a := await action['setup']['finish'](message, data)):
         await state.finish()
         return
 
@@ -275,9 +277,6 @@ async def __export__(chat_id):
 async def __import__(chat_id, data):
     new = []
     for filter in data:
-        if 'time' in filter:
-            raw_time = datetime.strptime(filter['time'], '%H:%M:%S')
-            filter['time'] = timedelta(hours=raw_time.hour, minutes=raw_time.minute, seconds=raw_time.second)
         new.append(UpdateOne({'chat_id': chat_id, 'handler': filter['handler'], 'action': filter['action']},
                              {'$set': filter},
                              upsert=True))

@@ -30,7 +30,7 @@ from sophie_bot.utils.logger import log
 SENT = []
 
 
-def catch_redis_error():
+def catch_redis_error(**dec_kwargs):
     def wrapped(func):
         async def wrapped_1(*args, **kwargs):
             global SENT
@@ -84,7 +84,7 @@ async def all_errors_handler(update: Update, error):
     err_tlt = sys.exc_info()[0].__name__
     err_msg = str(sys.exc_info()[1])
 
-    log.warn('Error caused update is: \n' + html.escape(str(parse_update(message))))
+    log.warn('Error caused update is: \n' + html.escape(str(parse_update(message)), quote=False))
 
     if redis.get(chat_id) == str(error):
         # by err_tlt we assume that it is same error
@@ -93,14 +93,15 @@ async def all_errors_handler(update: Update, error):
     if err_tlt == 'BadRequest' and err_msg == 'Have no rights to send a message':
         return True
 
-    if err_msg == 'Reply message not found':
-        return True
-
-    if err_tlt in ('FloodWaitError', 'RetryAfter', 'SlowModeWaitError'):
+    ignored_errors = (
+        'FloodWaitError', 'RetryAfter', 'SlowModeWaitError', 'InvalidQueryID'
+        'NetworkError', 'TelegramAPIError', 'RestartingTelegram'
+    )
+    if err_tlt in ignored_errors:
         return True
 
     text = "<b>Sorry, I encountered a error!</b>\n"
-    text += f'<code>{html.escape(err_tlt)}: {html.escape(err_msg)}</code>'
+    text += f'<code>{html.escape(err_tlt, quote=False)}: {html.escape(err_msg, quote=False)}</code>'
     redis.set(chat_id, str(error), ex=600)
     await bot.send_message(chat_id, text)
 

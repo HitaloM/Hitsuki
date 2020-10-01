@@ -38,7 +38,7 @@ STRINGS:
     clear_all_text: "This will remove all notes from {chat_name}. Are you sure?"
     clearall_btn_yes: "Yes. Remove all my notes!"
     clearall_btn_no: "No!"
-    clearall_done: "All (<code>{num}</code>) notes in {chat_name} was removed!"
+    clearall_done: "All (<code>{num}</code>) notes in {chat_name} were removed!"
 
     # /search
     search_header: |
@@ -156,10 +156,6 @@ STRINGS:
     conn_chat_id: "Current connected chat ID: <code>{id}</code>"
     help_btn: "Click me for help!"
     help_txt: "Click the button below for help!"
-    paste_success_extra: "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}"
-    paste_success: "<b>Pasted successfully!</b>\nDogbin URL: {}"
-    paste_fail: "Failed to reach Dogbin!"
-    paste_no_text: "You didn't supply text to paste!"
 
     delmsg_filter_title: 'Delete the message'
     send_text: Please send the reply message!
@@ -174,6 +170,7 @@ STRINGS:
     demote_not_admin: "That user isn't admin."
     demote_failed: "Demotion failed. Maybe I can't demote or the person is promoted by someone else"
     cant_get_user: "I couldn't get the user! If you mind, please reply to his message and try again."
+    cant_promote_yourself: "You can't promote yourself."
     emoji_not_allowed: "I'm sorry, but admin roles can't have emojis 😞"
 
   pm_menu:
@@ -299,6 +296,7 @@ STRINGS:
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
 
     # /fchatlist
+    no_chats: "There's no chats joined this <b>{name}</b> Federation"
     chats_in_fed: "<b>Chats connected to {name} Federation:</b>\n"
     too_large: "Output too large, sending as file"
 
@@ -323,9 +321,10 @@ STRINGS:
     fban_self: "That's a nice show!"
     fban_creator: "How can I ban Federation creator?! I don't think it's gonna be funny."
     fban_fed_admin: "I'm not going to ban a fed admin from their own fed!"
+    update_fban: "This user was fbanned earlier therefore I am updating reason to <code>{reason}</code>"
     already_fbanned: "{user} already banned in this federation."
     fbanned_header: "<b>New FedBan</b>\n"
-    fban_info: |#ChatLeaved
+    fban_info: |
       <b>Federation:</b> {fed}
       <b>Fed admin:</b> {fadmin}
       <b>User:</b> {user} (<code>{user_id}</code>)
@@ -396,11 +395,9 @@ STRINGS:
     big_file_json: |
       Currently json files is limited to {num} Megabytes!
       Use a csv format if you want to import bigger files.
+    invalid_file: "The file is invalid"
     wrong_file_ext: "Wrong file format! Currently support are: json, csv"
-    importing_queue: Downloading a file and making a queue...
-    importing_write: <b>Writing changes to the database...</b>
-    importing_big_file: "\nYour file is really big, it can take a long time!"
-    importing_thousand: "\nImported {current} of {all} bans"
+    importing_process: <b>Importing federation bans...</b>
     import_done: Importing fed bans finished! Was imported {num} bans.
 
     # def
@@ -502,7 +499,7 @@ STRINGS:
     info_last: "\nLast name: {last_name}"
     info_username: "\nUsername: {username}"
     info_link: "\nUser link: {user_link}"
-    info_saw: "\nI saw they in <code>{num}</code> groups"
+    info_saw: "\nI saw them in <code>{num}</code> groups"
     info_fbanned: "\nBanned in current Federation: "
     info_admeme: "\nUser has admin rights in this chat."
     upd_cache: "Updating cache now..."
@@ -511,10 +508,11 @@ STRINGS:
   imports_exports:
     # Exporting
     started_exporting: Exporting started! Please wait...
-    export_done: Export from <b>{chat_name}</b> done!cant_get_user
+    export_done: Export from <b>{chat_name}</b> done!
     exports_locked: Please wait %s till using exports again!
 
     # Importing
+    invalid_file: "The file is invalid"
     send_import_file: Please send a import file!
     rpl_to_file: Please reply to a file!
     big_file: Supported importing files only under 50 MB!
@@ -708,43 +706,3 @@ STRINGS:
     no_unlock_args: Give me some args to unlock!
     not_locked: Bruh, its not locked to unlock.
     unlocked_successfully: Unlocked {lock} in {chat} successfully!
-RANDOM_STRINGS:
-  RUNS:
-    - "Noooooooo!.."
-    - "M cri"
-    - "Sir, why?"
-    - "Why you doing this? I'm crying."
-    - "Someone really wrote this strings for me ;_;"
-    - "Alexa, play Despacito!"
-    - "TODO: WRITE THIS STRING."
-    - "Plox, sir, sar"
-    - "Wait, oh, stop.. I can't send stickers ;_;"
-    - "/runs"
-    - "Meow! 😺"
-    - "Try /cat"
-    - "Runs from Rose"
-    - "Runs from Yana"
-    - "If you thought I will send you new joke string - you are wrong, I won't!"
-    - "SaNd NeW KrANUl LeNk"
-    - "OwO"
-    - "?_?"
-    - "Is there any race!?"
-    - "Access denied!!"
-    - "Okay you run and lemme see how long you can.."
-    - "It's Epuc"
-    - "It's so damn epuc!!"
-    - "I'm so poor... :("
-    - "Sup?"
-    - "Yeah, press /runs more 😏"
-    - "U r smol"
-    - ">~<"
-    - "@admins plz <code>/disable /runs</code>"
-    - "Spam spam spam spam spam"
-    - "port bacup bro bacup gsi ijo"
-    - "port fine sur plz make room bholit mustah Sir"
-    - "fax bacup bad englis bad englis trable workz fox bag dot"
-    - I am machine
-    - I never sleep
-    - I keep my eyes wide open
-    - I am machine
-    - Wishes I could just feel something

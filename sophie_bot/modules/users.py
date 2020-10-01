@@ -54,7 +54,7 @@ async def update_users_handler(message):
 
         chat_new = {
             "chat_id": chat_id,
-            "chat_title": html.escape(new_chat.title),
+            "chat_title": html.escape(new_chat.title, quote=False),
             "chat_nick": chatnick,
             "type": new_chat.type,
             "first_detected_date": first_detected_date
@@ -108,11 +108,11 @@ async def update_user(chat_id, new_user):
         username = None
 
     if hasattr(new_user, 'last_name') and new_user.last_name:
-        last_name = html.escape(new_user.last_name)
+        last_name = html.escape(new_user.last_name, quote=False)
     else:
         last_name = None
 
-    first_name = html.escape(new_user.first_name)
+    first_name = html.escape(new_user.first_name, quote=False)
 
     user_new = {
         'user_id': new_user.id,
