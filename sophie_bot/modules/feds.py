@@ -240,7 +240,7 @@ async def new_fed(message, strings):
     }
     await db.feds.insert_one(data)
     await get_fed_by_id.reset_cache(data['fed_id'])
-    await get_fed_by_creator.reset_cache(data['fed_id'])
+    await get_fed_by_creator.reset_cache(data['creator'])
     await message.reply(strings['created_fed'].format(
         name=fed_name, id=data['fed_id'], creator=await get_user_link(user_id)
     ))
