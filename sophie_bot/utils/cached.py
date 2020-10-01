@@ -18,6 +18,9 @@
 
 import asyncio
 import pickle
+from typing import Optional, Union
+
+import functools
 
 from sophie_bot.utils.logger import log
 from sophie_bot.services.redis import bredis
@@ -30,25 +33,68 @@ async def set_value(key, value, ttl):
         bredis.expire(key, ttl)
 
 
-def cached(ttl=600, key=None, noself=False):
-    def wrapped(func):
-        async def wrapped0(*args, **kwargs):
-            ordered_kwargs = sorted(kwargs.items())
-            new_key = key
-            if not new_key:
-                new_key = (func.__module__ or "") + func.__name__
-                new_key += str(args[1:] if noself else args)
-                new_key += str(ordered_kwargs)
+class cached:
 
-            value = bredis.get(new_key)
-            if value is not None:
-                return pickle.loads(value)
+    def __init__(self, ttl: Optional[Union[int, float]] = None, key: Optional[str] = None, no_self: bool = False):
+        self.ttl = ttl
+        self.key = key
+        self.no_self = no_self
 
-            result = await func(*args, **kwargs)
-            asyncio.ensure_future(set_value(new_key, result, ttl))
-            log.debug(f'Cached: writing new data for key - {new_key}')
-            return result
+    def __call__(self, *args, **kwargs):
+        if not hasattr(self, 'func'):
+            self.func = args[0]
+            # wrap
+            functools.update_wrapper(self, self.func)
+            # return ``cached`` object when function is not being called
+            return self
+        return self._set(*args, **kwargs)
 
-        return wrapped0
+    async def _set(self, *args: dict, **kwargs: dict):
+        key = self.__build_key(*args, **kwargs)
 
-    return wrapped
+        value = await bredis.get(key)
+        if value is not None:
+            return value if value is not _NotSet else value.real_value
+
+        result = await self.func(*args, **kwargs)
+        if result is None:
+            result = _NotSet
+        asyncio.ensure_future(set_value(key, result, ttl=self.ttl))
+        log.debug(f'Cached: writing new data for key - {key}')
+        return result
+
+    def __build_key(self, *args: dict, **kwargs: dict) -> str:
+        ordered_kwargs = sorted(kwargs.items())
+
+        new_key = self.key if self.key else (self.func.__module__ or "") + self.func.__name__
+        new_key += str(args[1:] if self.no_self else args)
+
+        if ordered_kwargs:
+            new_key += str(ordered_kwargs)
+
+        return new_key
+
+    async def reset_cache(self, *args, new_value = None, **kwargs):
+        """
+        >>> @cached()
+        >>> def somefunction(arg):
+        >>>     pass
+        >>>
+        >>> [...]
+        >>> arg = ... # same thing ^^
+        >>> await somefunction.reset_cache(arg, new_value='Something')
+
+        :param new_value: new/ updated value to be set [optional]
+        """
+
+        key = self.__build_key(*args, **kwargs)
+        if new_value:
+            return await set_value(key, new_value, ttl=self.ttl)
+        return await bredis.delete(key)
+
+
+class _NotSet:
+    real_value = None
+
+    def __repr__(self) -> str:
+        return 'NotSet'
