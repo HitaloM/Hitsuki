@@ -165,6 +165,10 @@ async def is_user_admin(chat_id, user_id):
     if user_id in OPERATORS:
         return True
 
+    # Workaround to support anonymous admins
+    if user_id == 1087968824:
+        return True
+
     try:
         admins = await get_admins_rights(chat_id)
     except BadRequest:
@@ -182,6 +186,11 @@ async def check_admin_rights(chat_id, user_id, rights):
         return True
 
     if user_id in OPERATORS:
+        return True
+
+    # Workaround to support anonymous admins
+    # TODO: Support for real admins rights check
+    if user_id == 1087968824:
         return True
 
     admin_rights = await get_admins_rights(chat_id)
