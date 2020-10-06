@@ -470,6 +470,10 @@ STRINGS:
     not_in_chat: "You're not in this chat anymore, I'll disconnect you."
     u_should_be_admin: "You should be an admin in {}!"
     usage_only_in_groups: "Usage limited only in groups!"
+
+    anon_admin_warn: |
+      You cant connect from chat as long as you are anonymous!
+      try connecting through PM, you wont have admin rights anyway.
   global:
     u_not_admin: You should be an admin to do this!
 
