@@ -144,9 +144,9 @@ STRINGS:
     promote_title: "\nCon un rol personalizado <code>{role}</code>!"
     rank_to_loong: "El texto de rol personalizado no puede tener más de 16 símbolos."
     promote_failed: "¡Promoción fallida! Comprueba si tengo permisos."
-    demote_success: "¡{user} fue dispensado con éxito en {chat_name}!"
+    demote_success: "¡{user} fue removido con éxito en {chat_name}!"
     demote_not_admin: "Ese usuario no es administrador."
-    demote_failed: "El proceso de dispensar falló. Tal vez no puedo dispensar o la persona está promovida por alguien más"
+    demote_failed: "El proceso de remover falló. Tal vez no pueda remover o la persona está promovida por alguien más"
     cant_get_user: "¡No pude obtener el usuario! Si le importa, responda a su mensaje e inténtelo nuevamente."
     cant_promote_yourself: "No puedes promoverte a ti mismo."
     emoji_not_allowed: "Lo siento, pero los roles de administrador no pueden contener emojis 😞"
@@ -234,9 +234,9 @@ STRINGS:
       <b>Usuario:</b> {user} (<code>{user_id}</code>)
     #/fdemote
     #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
-    admin_demoted_from_fed: "Usuario {user} dispensado como Admin de la Federación <b>{name}</b>."
+    admin_demoted_from_fed: "Usuario {user} removido como Admin de la Federación <b>{name}</b>."
     demote_user_fed_log: |
-      <b>Usuario dispensado como Admin de la Federación</b> #UsuarioDispensado
+      <b>Usuario removido como Admin de la Federación</b> #UsuarioRemovido
       <b>Federación:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Usuario:</b> {user} (<code>{user_id}</code>)
     #/fsetlog
@@ -411,6 +411,9 @@ STRINGS:
     not_in_chat: "Ya no estás en este chat. Te desconectaré."
     u_should_be_admin: "¡Debes ser un administrador en {}!"
     usage_only_in_groups: "¡El uso limitado sólo en grupos!"
+    anon_admin_warn: |
+      ¡No puedes conectarte desde el chat mientras estés en modo anónimo!
+      Intenta conectarte a través del chat privado; no tendrás permisos de administrador de todos modos.
   global:
     u_not_admin: '¡Deberías ser un administrador para hacer esto!'
     #Rights
@@ -449,19 +452,19 @@ STRINGS:
     #Exporting
     started_exporting: '¡Exportación iniciada! Por favor espere...'
     export_done: Exportación de <b>{chat_name}</b> realizada!
-    exports_locked: '¡Por favor, espera %s para volver a usar exportaciones!'
+    exports_locked: '¡Por favor, espera %s para volver a usar la exportación!'
     #Importing
     invalid_file: "El archivo es inválido"
-    send_import_file: '¡Por favor, envía un archivo de importación!'
+    send_import_file: '¡Por favor, envía un archivo importado!'
     rpl_to_file: '¡Por favor, responde a un archivo!'
     big_file: '¡Archivos de importación soportados solo por menos de 50 MB!'
     started_importing: '¡Importación iniciada! Por favor espere...'
     bad_file: '¡Archivo erróneo! Se esperaba <code>columna ''general''</code>.'
-    file_version_so_new: '¡La versión de archivo exportada es más reciente que la que soporta actualmente Sophie!'
-    imports_locked: '¡Por favor, espera %s para usar las importaciones de nuevo!'
+    file_version_so_new: '¡La versión del archivo exportado es más reciente que la que soporta actualmente Sophie!'
+    imports_locked: '¡Por favor, espera %s para volver a usar la importación!'
     import_done: '¡Importación hecha!'
   restrictions:
-    user_not_in_chat: '¡Usuario no está en este chat!'
+    user_not_in_chat: '¡El usuario no está en este chat!'
     #Kicks
     kick_sophie: En lugar de tratar de expulsarme podrías usar mejor tu tiempo. Eso es aburrido.
     kick_admin: Expulsar a los administradores no es la mejor idea.
@@ -486,7 +489,7 @@ STRINGS:
     unban_self: '¿Debería banearte por primera vez?'
     user_unband: "{user} fue desbaneado por {admin} en {chat_name}."
     invalid_time: Hora inválida!
-    enter_time: '¡Por favor, añade tiempo!'
+    enter_time: '¡Por favor, añade el tiempo!'
     on_time: "\nEn <code>%s</code>"
     reason: "\nRazón: <code>%s</code>"
     purge: "\n¡En 5 segundos se eliminarán los mensajes!"
@@ -529,49 +532,49 @@ STRINGS:
     saved: Mensaje de bienvenida guardado en <b>%s</b>
     updated: Mensaje de bienvenida actualizado en <b>%s</b>
     #/turnwelcome
-    turnwelcome_status: Bienvenidas es <code>{status}</code> en <b>{chat_name}</b>
-    turnwelcome_enabled: Bienvenidas habilitadas en <b>%s</b>
-    turnwelcome_disabled: Bienvenidas deshabilitadas en <b>%s</b>
+    turnwelcome_status: El mensaje de Bienvenida está <code>{status}</code> en <b>{chat_name}</b>
+    turnwelcome_enabled: Bienvenida habilitada en <b>%s</b>
+    turnwelcome_disabled: Bienvenida deshabilitada en <b>%s</b>
     #/welcome
     enabled: habilitado
     disabled: deshabilitado
     wlcm_security_enabled: "habilitado, establecido a {level}"
     wlcm_mutes_enabled: "habilitado, establecido a {time}"
     welcome_info: |
-      <b>Configuración de bienvenida en {chat_name}:</b>
-      Bienvenidas están <code>{welcomes_status}</code>
-      La seguridad de bienvenida es <code>{wlcm_security}</code>
-      Bienvenida mutes es <code>{wlcm_mutes}</code>
-      Eliminar la vieja bienvenida es <code>{clean_welcomes}</code>
-      Eliminar mensajes del servicio es <code>{clean_service}</code>
+      <b>Configuración de la Bienvenida en {chat_name}:</b>
+      La bienvenida está <code>{welcomes_status}</code>
+      La seguridad de la bienvenida está <code>{wlcm_security}</code>
+      El silencio de la bienvenida está <code>{wlcm_mutes}</code>
+      Eliminar la bienvenida antigua está <code>{clean_welcomes}</code>
+      Eliminar mensajes de servicio está <code>{clean_service}</code>
     wlcm_note: "\n\nLa nota de bienvenida es:"
-    raw_wlcm_note: "Nota de bienvenida rapida es:"
-    security_note: "El texto de seguridad de bienvenida es:"
+    raw_wlcm_note: "La nota de bienvenida rápida es:"
+    security_note: "El texto de seguridad de la bienvenida es:"
     #/setsecuritynote
-    security_note_saved: "Se guardó el texto de seguridad personalizado <b>%s</b>"
-    security_note_updated: "Texto de seguridad personalizado actualizado <b>%s</b>"
+    security_note_saved: "Fue guardado el texto de seguridad personalizado <b>%s</b>"
+    security_note_updated: "Fue actualizado el texto de seguridad personalizado <b>%s</b>"
     #/delsecuritynote
-    security_note_not_found: Texto de seguridad en <b>%s</b> no ha sido instalado antes
+    security_note_not_found: El texto de seguridad en <b>%s</b> no ha sido establecido antes
     del_security_note_ok: Texto de seguridad restablecido por defecto en <b>%s</b>
     #/cleanwelcome
     cleanwelcome_enabled: Limpieza de bienvenida activada en <b>%s</b>
     cleanwelcome_disabled: Limpieza de bienvenida desactivada en <b>%s</b>
-    cleanwelcome_status: La limpieza bienvenida es de <code>{status}</code> en <b>{chat_name}</b>
+    cleanwelcome_status: La limpieza de la bienvenida está <code>{status}</code> en <b>{chat_name}</b>
     #/cleanservice
     cleanservice_enabled: Limpieza de mensajes de servicio habilitada en <b>%s</b>
     cleanservice_disabled: Limpieza de mensajes de servicio deshabilitada en <b>%s</b>
-    cleanservice_status: Los mensajes de servicio de limpieza son <code>{status}</code> en <b>{chat_name}</b>
+    cleanservice_status: La limpieza de mensajes de servicio está <code>{status}</code> en <b>{chat_name}</b>
     #/welcomemute
     welcomemute_invalid_arg: Argumento inválido, tiempo esperado.
     welcomemute_enabled: Silencio de bienvenida activado en <b>%s</b>
     welcomemute_disabled: Silencio de bienvenida deshabilitado en <b>%s</b>
-    welcomemute_status: El silencio de bienvenida esta <code>{status}</code> en <b>{chat_name}</b>
+    welcomemute_status: El silencio de la bienvenida está <code>{status}</code> en <b>{chat_name}</b>
     #/welcomesecurity
     welcomesecurity_enabled: Seguridad de bienvenida activada en <b>{chat_name}</b> al nivel <code>{level}</code>.
     welcomesecurity_enabled_word: habilitado, establecido al nivel {level}
     welcomesecurity_disabled: Seguridad de bienvenida deshabilitada en <b>%s</b>.
     welcomesecurity_invalid_arg: Argumento inválido, se esperaba <code>button</code>/<code>captcha</code>.
-    welcomesecurity_status: La seguridad de bienvenida es <code>{status}</code> en <b>{chat_name}</b>
+    welcomesecurity_status: La seguridad de la bienvenida está <code>{status}</code> en <b>{chat_name}</b>
     #Welcomesecurity handler
     click_here: '¡Haz clic aquí!'
     not_allowed: '¡No tienes permiso para usar esto!'
@@ -579,42 +582,42 @@ STRINGS:
     regen_captcha_btn: '🔄 Cambiar captcha'
     num_is_not_digit: '¡Por favor, introduzca sólo números!'
     bad_num: '¡Número incorrecto! Por favor, inténtalo de nuevo.'
-    passed: '¡Verificación pasada, has sido desmuteado en <b>%s</b>!'
-    passed_no_frm: La verificación obtenida, ¡Has sido desmuteado en %s!
-    last_chance: '¡Tienes una última oportunidad para enviar el captcha!'
-    btn_button_text: "Por favor, pulsa el botón de abajo para verificarte."
+    passed: '¡Verificación aprobada, has sido desmuteado en <b>%s</b>!'
+    passed_no_frm: '¡Verificación aprobada! ¡Has sido desmuteado en %s!'
+    last_chance: '¡Tienes una última oportunidad para introducir el captcha!'
+    btn_button_text: "Por favor, haga clic en el botón de abajo para verificarse."
     btn_wc_text: |
-      Por favor, pulse abajo, en el resultado correcto de la operación matemática:
+      Por favor, presione el botón correcto que corresponde a esta expresión:
       %s
-    math_wc_rtr_text: "¡Tienes la última oportunidad! Ten cuidado.\n"
+    math_wc_rtr_text: "¡Tienes una última oportunidad! Ten cuidado.\n"
     math_wc_wrong: '¡Error, por favor inténtalo de nuevo!'
-    math_wc_sry: Lo sentimos, has usado el último intento. Pregunta a los administradores del chat.
-    not_admin_wm: No puedo restringir gente aquí, ¡así que no usaré silencio de bienvenida!
-    not_admin_ws: No puedo restringir gente aquí, así que no usaré seguridad de bienvenida!
-    not_admin_wsr: No puedo borrar mensajes aquí, así que no borraré los mensajes del servicio!
+    math_wc_sry: Lo sentimos, has realizado el último intento. Pregunta a los administradores del chat.
+    not_admin_wm: No puedo restringir gente aquí, ¡así que no usaré el silencio de bienvenida!
+    not_admin_ws: No puedo restringir gente aquí, ¡así que no usaré la seguridad de bienvenida!
+    not_admin_wsr: No puedo borrar mensajes aquí, ¡así que no borraré los mensajes de servicio!
     #/resetwelcome
-    deleted: '¡Saludos reiniciados con éxito en <b>{chat}</b>!'
-    not_found: '¡No hay nada que resetear!'
+    deleted: '¡Saludos restablecidos con éxito en <b>{chat}</b>!'
+    not_found: '¡No hay nada para restablecer!'
     #/welcomerestrict
-    del_url: '¡El mensaje que contiene la URL de {user} fue eliminado!'
-    del_fwd: '¡El mensaje reenviado desde {user} ha sido eliminado!'
-    del_media: '¡El mensaje conteniendo media de {user} ha sido eliminado!'
+    del_url: '¡El mensaje que contiene URL de {user} fue eliminado!'
+    del_fwd: '¡El mensaje reenviado de {user} ha sido eliminado!'
+    del_media: '¡El mensaje con multimedia de {user} ha sido eliminado!'
     banned: '¡{by} ha baneado a {user}!'
-    whitelisted: '¡{by} ha incluido {user} en la lista blanca!'
-    enabled_sucessfully: Seguridad en el chat activada con éxito en <b>{chat}</b>
-    disabled_sucessfully: Seguridad en el chat deshabilitada correctamente en <b>{chat}</b>
+    whitelisted: '¡{by} ha incluido a {user} en la whitelist!'
+    enabled_sucessfully: Seguridad del chat activada con éxito en <b>{chat}</b>
+    disabled_sucessfully: Seguridad del chat desactivada con éxito en <b>{chat}</b>
     already_enabled: '¡La seguridad del chat ya está activada!'
-    already_disabled: '¡La seguridad del chat ya está deshabilitada!'
-    restrict_status: '¡La bienvenida de restricción es <b>{state}</b> en <b>{chat}</b>!'
-    unkown_option: '¡Por favor dame una opción válida! (<code>habilitar</code> o <code>desactivar</code>)'
+    already_disabled: '¡La seguridad del chat ya está desactivada!'
+    restrict_status: '¡La restricción de la bienvenida está <b>{state}</b> en <b>{chat}</b>!'
+    unkown_option: '¡Por favor dame una opción válida! (<code>Habilitar</code> o <code>Deshabilitar</code>)'
     whitelist: '🏳️ Whitelist'
     ban: '❌ Ban'
   locks:
     locks_header: "Aquí está la configuración actual de bloqueo en {chat_title} \n\n"
     no_lock_args: '¡Dame algunos argumentos para bloquear!'
-    already_locked: Esto ya está bloqueado bruh
+    already_locked: Esto ya está bloqueado, bro
     no_such_lock: '¡Mira /locks para saber qué se puede bloquear y desbloquear!'
-    locked_successfully: '¡Has bloqueado {lock} en {chat} con éxito!'
+    locked_successfully: '¡{lock} bloqueado en {chat} con éxito!'
     no_unlock_args: '¡Dame algunos argumentos para desbloquear!'
-    not_locked: Bruh, no está bloqueado para desbloquear.
-    unlocked_successfully: '¡ {lock} desbloqueado en {chat} con éxito!'
+    not_locked: Bro, no está bloqueado para desbloquear.
+    unlocked_successfully: '¡{lock} desbloqueado en {chat} con éxito!'

@@ -148,7 +148,7 @@ STRINGS:
     demote_not_admin: "Este usuário não é administrador."
     demote_failed: "O processo de despromover falhou. Talvez eu não possa despromover ou a pessoa seja promovida por outra pessoa"
     cant_get_user: "Eu não encontrei o usuário! Se você se importa, por favor responda à mensagem dele e tente novamente."
-    cant_promote_yourself: "Você não pode se auto-promover."
+    cant_promote_yourself: "Você não pode se promover."
     emoji_not_allowed: "Me desculpe, mas administradores não podem ter emojis 😞"
   pm_menu:
     start_hi_group: 'Olá! Meu nome é Sophie'
@@ -227,9 +227,9 @@ STRINGS:
     unsubsed_success: "Federação <b>{name}</b> desinscreveu <b>{name2}</b>!"
     #/fpromote
     #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
-    admin_added_to_fed: "Usuário {user} adicionado como administrador da Federação <b>{name}</b>."
+    admin_added_to_fed: "Usuário {user} adicionado como administrador na Federação <b>{name}</b>."
     promote_user_fed_log: |
-      <b>Usuário promovido como administrador da Federação</b> #UserPromoted
+      <b>Usuário promovido como administrador na Federação</b> #UserPromoted
       <b>Federação:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Usuário:</b> {user} (<code>{user_id}</code>)
     #/fdemote
@@ -411,6 +411,8 @@ STRINGS:
     not_in_chat: "Você não está mais neste chat, eu vou te desconectar."
     u_should_be_admin: "Você deve ser um administrador em {}!"
     usage_only_in_groups: "Uso limitado apenas em grupos!"
+    anon_admin_warn: |
+      Você não pode se conectar desde o chat enquanto estiver em modo anônimo! Tente se conectar através do chat privado; você não terá permissões de administrador de qualquer maneira.
   global:
     u_not_admin: Você deveria ser um administrador para fazer isso!
     #Rights
@@ -539,10 +541,10 @@ STRINGS:
     wlcm_mutes_enabled: "ativado, estabelecido a {time}"
     welcome_info: |
       <b>Configuração de boas-vindas em {chat_name}:</b>
-      Boas-vindas estão <code>{welcomes_status}</code>
-      A segurança de boas-vindas é <code>{wlcm_security}</code>
+      Boas-vindas está <code>{welcomes_status}</code>
+      A segurança de boas-vindas está <code>{wlcm_security}</code>
       O silencio de boas-vindas está <code>{wlcm_mutes}</code>
-      Apagar a boas-vindas antigas está <code>{clean_welcomes}</code>
+      Apagar as boas-vindas antigas está <code>{clean_welcomes}</code>
       Apagar as mensagens de serviço está <code>{clean_service}</code>
     wlcm_note: "\n\nA nota de boas-vindas é:"
     raw_wlcm_note: "Nota de boas-vindas simples é:"
