@@ -54,6 +54,7 @@ class cached:
 
         value = bredis.get(key)
         if value is not None:
+            value = pickle.loads(value)
             return value if value is not _NotSet else value.real_value
 
         result = await self.func(*args, **kwargs)
