@@ -26,15 +26,17 @@ from typing import Optional, Union
 
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, ContentType, Message
+from aiogram.utils.callback_data import CallbackData
 from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted, BadRequest, ChatAdminRequired
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
 from apscheduler.jobstores.base import JobLookupError
+from babel.dates import format_timedelta
 from captcha.image import ImageCaptcha
 from telethon.tl.custom import Button
 
-from sophie_bot import BOT_USERNAME, BOT_ID, bot
+from sophie_bot import BOT_USERNAME, BOT_ID, bot, dp
 from sophie_bot.config import get_str_key
 from sophie_bot.decorator import register
 from sophie_bot.services.apscheduller import scheduler
@@ -290,9 +292,16 @@ async def welcome_mute(message, chat, strings):
 
 # Welcome Security
 
+wlcm_sec_config_proc = CallbackData("wlcm_sec_proc", "chat_id", "user_id", "level")
+wlcm_sec_config_cancel = CallbackData("wlcm_sec_cancel", "user_id", "level")
+
+
+class WelcomeSecurityConf(StatesGroup):
+    send_time = State()
+
 
 @register(cmds='welcomesecurity', user_admin=True)
-@chat_connection(admin=True, only_groups=True)
+@chat_connection(admin=True)
 @get_strings_dec('greetings')
 async def welcome_security(message, chat, strings):
     chat_id = chat['chat_id']
@@ -327,7 +336,80 @@ async def welcome_security(message, chat, strings):
         upsert=True
     )
     await get_db_data.reset_cache(chat_id)
-    await message.reply(strings['welcomesecurity_enabled'].format(chat_name=chat['chat_title'], level=level))
+    buttons = InlineKeyboardMarkup()
+    buttons.add(
+        InlineKeyboardButton(
+            strings["no_btn"], callback_data=wlcm_sec_config_cancel.new(
+                user_id=message.from_user.id, level=level
+            )
+        ),
+        InlineKeyboardButton(
+            strings["yes_btn"], callback_data=wlcm_sec_config_proc.new(
+                chat_id=chat_id, user_id=message.from_user.id, level=level
+            )
+        )
+    )
+    await message.reply(
+        strings['ask_for_time_customization'].format(
+            time=format_timedelta(
+                convert_time(
+                    get_str_key("JOIN_CONFIRM_DURATION")
+                ),
+                locale=strings['language_info']['babel']
+            )
+        ),
+        reply_markup=buttons
+    )
+
+
+@register(wlcm_sec_config_cancel.filter(), f='cb', allow_kwargs=True)
+@chat_connection(admin=True)
+@get_strings_dec("greetings")
+async def welcome_security_config_cancel(event: CallbackQuery, chat: dict, strings: dict, callback_data: dict, **_):
+    if int(callback_data['user_id']) == event.from_user.id and is_user_admin(chat['chat_id'], event.from_user.id):
+        await event.message.edit_text(
+            text=strings['welcomesecurity_enabled'].format(chat_name=chat['chat_title'], level=callback_data['level'])
+        )
+
+
+@register(wlcm_sec_config_proc.filter(), f='cb', allow_kwargs=True)
+@chat_connection(admin=True)
+@get_strings_dec("greetings")
+async def welcome_security_config_proc(event: CallbackQuery, chat: dict, strings: dict, callback_data: dict, **_):
+    if int(callback_data['user_id']) != event.from_user.id and is_user_admin(chat['chat_id'], event.from_user.id):
+        return
+
+    await WelcomeSecurityConf.send_time.set()
+    async with dp.get_current().current_state().proxy() as data:
+        data["level"] = callback_data["level"]
+    await event.message.edit_text(strings["send_time"])
+
+
+@register(state=WelcomeSecurityConf.send_time, content_types=ContentType.TEXT, allow_kwargs=True)
+@chat_connection(admin=True)
+@get_strings_dec("greetings")
+async def wlcm_sec_time_state(message: Message, chat: dict, strings: dict, state, **_):
+    async with state.proxy() as data:
+        level = data["level"]
+    try:
+        con_time = convert_time(message.text)
+    except (ValueError, TypeError):
+        await message.reply(strings["invalid_tile"])
+    else:
+        await db.greetings.update_one(
+            {"chat_id": chat["chat_id"]},
+            {"$set": {"welcome_security.expire": message.text}}
+        )
+        await get_db_data.reset_cache(chat['chat_id'])
+        await message.reply(
+            strings["welcomesecurity_enabled:customized_time"].format(
+                chat_name=chat['chat_title'], level=level, time=format_timedelta(
+                    con_time, locale=strings['language_info']['babel']
+                )
+            )
+        )
+    finally:
+        await state.finish()
 
 
 @register(cmds=['setsecuritynote', 'sevesecuritynote'], user_admin=True)
@@ -438,11 +520,16 @@ async def welcome_security_handler(message: Message, strings):
 
     redis.set(f'welcome_security_users:{user_id}:{chat_id}', msg.id)
 
+    if raw_time := db_item['welcome_security'].get('expire', None):
+        time = convert_time(raw_time)
+    else:
+        time = convert_time(get_str_key('JOIN_CONFIRM_DURATION'))
+
     scheduler.add_job(
         join_expired,
         "date",
         id=f"wc_expire:{chat_id}:{user_id}",
-        run_date=datetime.utcnow() + convert_time(get_str_key('JOIN_CONFIRM_DURATION')),
+        run_date=datetime.utcnow() + time,
         kwargs={'chat_id': chat_id, 'user_id': user_id, 'message_id': msg.id, 'wlkm_msg_id': message.message_id},
         replace_existing=True
     )
@@ -496,7 +583,7 @@ async def welcome_security_handler_pm(message: Message, strings, regexp=None, st
         data['msg_id'] = int(args[3])
         data['to_delete'] = bool(int(args[4])) if len(args) > 4 else True
 
-    db_item = await get_db_data(message.chat.id)
+    db_item = await get_db_data(chat_id)
 
     level = db_item['welcome_security']['level']
 
