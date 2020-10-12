@@ -718,3 +718,29 @@ STRINGS:
     no_unlock_args: Give me some args to unlock!
     not_locked: Bruh, its not locked to unlock.
     unlocked_successfully: Unlocked {lock} in {chat} successfully!
+
+  antiflood:
+
+    # enforcer
+    flood_exceeded: "{action} {user} for flooding!"
+
+    # /setflood
+    invalid_args:setflood: "Expected an integer!"
+    overflowed_count: Maximum count should be less than 200!
+    config_proc_1: Please send expiration time, '0' (zero) for not being expired.
+    cancel: ❌ Cancel
+    setup_success: Successfully configured antiflood, now enforces {count} messages/{time}!
+    setup_success:no_exp: Successfully configured antiflood, allows {count} messages consecutively!
+    invalid_time: Invalid time!
+
+    # /antiflood | /flood
+    not_configured: Antiflood isn't configured in this chat yet!
+    configuration_info:with_time: Antiflood is configured in this chat, those who sents {count} message within {time} would be {action}!
+    configuration_info: Antiflood is configured in this chat, those who sents {count} consecutively would be {action}!
+    ban: banned
+    mute: muted
+    kick: kicked
+
+    # /setfloodaction
+    invalid_args: "Unsupported action, expected {supported_actions}!"
+    setfloodaction_success: "Successfully updated flood action to <b>{action}</b>!"
