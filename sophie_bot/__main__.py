@@ -68,7 +68,7 @@ async def before_srv_task(loop):
 import_module("sophie_bot.utils.db_structure_migrator")
 
 
-async def start():
+async def start(_):
     log.debug("Starting before serving task for all modules...")
     loop.create_task(before_srv_task(loop))
 
@@ -80,4 +80,4 @@ async def start():
 log.info("Starting loop..")
 log.info("Aiogram: Using polling method")
 
-executor.start_polling(dp, loop=loop, on_shutdown=start())
+executor.start_polling(dp, loop=loop, on_startup=start)
