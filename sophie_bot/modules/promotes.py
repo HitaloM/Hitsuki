@@ -60,7 +60,6 @@ async def promote(message, chat, user, args, strings):
         await tbot.edit_admin(
             chat_id,
             user['user_id'],
-            add_admins=True,
             invite_users=True,
             change_info=True,
             ban_users=True,
