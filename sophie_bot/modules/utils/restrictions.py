@@ -31,7 +31,6 @@ async def ban_user(chat_id, user_id, until_date=None):
 
 
 async def kick_user(chat_id, user_id):
-    await bot.kick_chat_member(chat_id, user_id)
     await bot.unban_chat_member(chat_id, user_id)
     return True
 
