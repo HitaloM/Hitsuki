@@ -266,3 +266,16 @@ async def get_data(chat_id: int):
     return await db.antiflood.find_one(
         {'chat_id': chat_id}
     )
+
+
+async def __export__(chat_id: int):
+    data = await get_data(chat_id)
+    del data['_id'], data['chat_id']
+    return data
+
+
+async def __import__(chat_id: int, data: dict):  # noqa
+    await db.antiflood.update_one(
+        {"chat_id": chat_id},
+        {"$set": data}
+    )
