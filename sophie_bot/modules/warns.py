@@ -16,9 +16,10 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+import functools
 import re
 
+from aiogram.types import Message
 from aiogram.types.inline_keyboard import (
     InlineKeyboardButton,
     InlineKeyboardMarkup
@@ -51,7 +52,7 @@ async def warn_cmd(message, chat, user, text):
 
 
 @get_strings_dec('warns')
-async def warn_func(message, chat, user, text, strings, filter_action=False):
+async def warn_func(message: Message, chat, user, text, strings, filter_action=False):
     chat_id = chat['chat_id']
     chat_title = chat['chat_title']
     by_id = BOT_ID if filter_action is True else message.from_user.id
@@ -102,6 +103,13 @@ async def warn_func(message, chat, user, text, strings, filter_action=False):
     else:
         max_warn = 3
 
+    if filter_action:
+        action = functools.partial(bot.send_message, chat_id=chat_id)
+    elif message.reply_to_message:
+        action = message.reply_to_message.reply
+    else:
+        action = functools.partial(message.reply, disable_notification=True)
+
     if warns_count >= max_warn:
         if await max_warn_func(chat_id, user_id):
             await db.warns.delete_many({'user_id': user_id, 'chat_id': chat_id})
@@ -109,26 +117,17 @@ async def warn_func(message, chat, user, text, strings, filter_action=False):
             if data is not None:
                 if data['mode'] == 'tmute':
                     time = timedelta(days=data['time']['days'], seconds=data['time']['seconds'])
-                    text = strings['max_warn_exceeded:tmute'] % \
-                        (member, format_timedelta(time, locale=strings['language_info']['babel']))
-                    if filter_action:
-                        return await bot.send_message(chat_id, text)
-                    return await message.reply(text)
+                    text = strings['max_warn_exceeded:tmute'].format(
+                        user=member, time=format_timedelta(time, locale=strings['language_info']['babel'])
+                    )
                 else:
-                    text = strings['max_warn_exceeded'] % \
-                        (member, strings['banned'] if data['mode'] == 'ban' else strings['muted'])
-                    if filter_action:
-                        return await bot.send_message(chat_id, text)
-                    return await message.reply(text)
-            text = strings['max_warn_exceeded'] % (member, strings['banned'])
-            if filter_action:
-                return await bot.send_message(chat_id, text)
-            return await message.reply(text)
-    else:
-        text += strings['warn_num'].format(curr_warns=warns_count, max_warns=max_warn)
-    if filter_action:
-        return await bot.send_message(chat_id, text, reply_markup=buttons, disable_web_page_preview=True)
-    await message.reply(text, reply_markup=buttons, disable_web_page_preview=True)
+                    text = strings['max_warn_exceeded'].format(
+                        user=member, action=strings['banned'] if data['mode'] == 'ban' else strings['muted']
+                    )
+                return await action(text)
+            return await action(strings['max_warn_exceeded'].format(user=member, action=strings['banned']))
+    text += strings['warn_num'].format(curr_warns=warns_count, max_warns=max_warn)
+    return await action(text, reply_markup=buttons, disable_web_page_preview=True)
 
 
 @register(regexp=r'remove_warn_(.*)', f='cb', allow_kwargs=True, user_can_restrict_members=True)

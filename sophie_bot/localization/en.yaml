@@ -104,8 +104,8 @@ STRINGS:
     warn_bun: "Warnings has been exceeded! {user} has been banned!"
     warn_num: "Warns: {curr_warns}/{max_warns}\n"
     warn_rsn: "Reason: <code>{reason}</code>\n"
-    max_warn_exceeded: Warnings has been exceeded! %s has been %s!
-    max_warn_exceeded:tmute: Warnings has been exceeded! %s has been tmuted for %s!
+    max_warn_exceeded: Warnings has been exceeded! {user} has been {action}!
+    max_warn_exceeded:tmute: Warnings has been exceeded! {user} has been tmuted for {time}!
 
     # warn rmv callback
     warn_no_admin_alert: "⚠ You are NOT admin to remove warn!"
