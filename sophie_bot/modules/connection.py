@@ -20,8 +20,10 @@
 import re
 
 from aiogram.dispatcher.filters.builtin import CommandStart
+from aiogram.types import CallbackQuery
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
+from aiogram.utils.deep_linking import get_start_link
 from aiogram.utils.exceptions import BotBlocked, CantInitiateConversation
 
 from sophie_bot import bot
@@ -32,7 +34,7 @@ from .utils.connections import chat_connection, set_connected_chat
 from .utils.language import get_strings_dec
 from .utils.message import get_arg
 from .utils.notes import BUTTONS
-from .utils.user_details import get_chat_dec
+from .utils.user_details import get_chat_dec, is_user_admin
 
 connect_to_chat_cb = CallbackData('connect_to_chat_cb', 'chat_id')
 
@@ -57,7 +59,12 @@ async def connect_to_chat_direct(message, strings):
 
     if user_id == 1087968824:
         # just warn the user that connections with admin rights doesn't work
-        return await message.reply(strings["anon_admin_warn"])
+        return await message.reply(
+            strings['anon_admin_conn'],
+            reply_markup=InlineKeyboardMarkup().add(
+                InlineKeyboardButton(strings['click_here'], callback_data="anon_conn_cb")
+            )
+        )
 
     chat = await db.chat_list.find_one({'chat_id': chat_id})
     chat_title = chat['chat_title'] if chat is not None else message.chat.title
@@ -203,3 +210,16 @@ async def connect_start(message, strings, regexp=None, **kwargs):
         return
 
     await def_connect_chat(message, message.from_user.id, chat['chat_id'], chat['chat_title'])
+
+
+@register(regexp="anon_conn_cb", f='cb')
+async def connect_anon_admins(event: CallbackQuery):
+    if not await is_user_admin(event.message.chat.id, event.from_user.id):
+        return
+
+    if event.message.chat.id not in (data := await db.user_list.find_one({"user_id": event.from_user.id}))['chats']:
+        await db.user_list.update_one(
+            {"_id": data['_id']},
+            {"$addToSet": {"chats": event.message.chat.id}}
+        )
+    return await event.answer(url=await get_start_link(f"btn_connect_start_{event.message.chat.id}"))

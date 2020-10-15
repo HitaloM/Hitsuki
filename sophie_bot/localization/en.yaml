@@ -471,9 +471,9 @@ STRINGS:
     u_should_be_admin: "You should be an admin in {}!"
     usage_only_in_groups: "Usage limited only in groups!"
 
-    anon_admin_warn: |
-      You cant connect from chat as long as you are anonymous!
-      try connecting through PM, you wont have admin rights anyway.
+    anon_admin_conn: |
+      Please click below button to connect!
+    click_here: Click here!
   global:
     u_not_admin: You should be an admin to do this!
 
