@@ -95,9 +95,12 @@ async def all_errors_handler(update: Update, error):
 
     ignored_errors = (
         'FloodWaitError', 'RetryAfter', 'SlowModeWaitError', 'InvalidQueryID'
-        'NetworkError', 'TelegramAPIError', 'RestartingTelegram'
     )
     if err_tlt in ignored_errors:
+        return True
+
+    if err_tlt in ('NetworkError', 'TelegramAPIError', 'RestartingTelegram'):
+        log.error("Conn/API error detected", exc_info=error)
         return True
 
     text = "<b>Sorry, I encountered a error!</b>\n"

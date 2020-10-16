@@ -25,8 +25,8 @@ from datetime import datetime
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
 from babel.dates import format_date, format_time, format_datetime
-from telethon.errors import (ButtonUrlInvalidError, MediaCaptionTooLongError, MessageEmptyError, UserIsBlockedError,
-                             MediaEmptyError, BadRequestError, ChatWriteForbiddenError)
+from telethon.errors import (ButtonUrlInvalidError, MediaCaptionTooLongError, MessageEmptyError, MediaEmptyError,
+                             BadRequestError)
 from telethon.tl.custom import Button
 
 import sophie_bot.modules.utils.tmarkdown as tmarkdown
@@ -36,6 +36,7 @@ from .language import get_chat_lang
 from .message import get_args
 from .tmarkdown import tbold, titalic, tpre, tcode, tlink, tstrikethrough, tunderline
 from .user_details import get_user_link
+from ...utils.logger import log
 
 BUTTONS = {}
 
@@ -322,8 +323,8 @@ async def send_note(send_id, text, **kwargs):
     except BadRequestError:  # if reply message deleted
         del kwargs['reply_to']
         return await tbot.send_message(send_id, text, **kwargs)
-    except (ChatWriteForbiddenError, UserIsBlockedError, ValueError):
-        pass
+    except Exception as err:
+        log.error("Something happened on sending note", exc_info=err)
 
 
 def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
