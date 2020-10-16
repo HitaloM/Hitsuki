@@ -412,6 +412,8 @@ STRINGS:
     not_in_chat: "Už nejste v tomto chatu, odpojím vás."
     u_should_be_admin: "Měl bys být správcem v {}!"
     usage_only_in_groups: "Použití omezeno pouze ve skupinách!"
+    anon_admin_warn: |
+      Nemůžete se připojit k chatu pokud jste anonymní! zkuste se připojit přes soukromou zprávu, stejně nebudete mít administrátorská práva.
   global:
     u_not_admin: Měli byste být admin aby jste to mohl udělat!
     #Rights

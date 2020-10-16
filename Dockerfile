@@ -19,6 +19,7 @@
 # Build image
 FROM python:3.8-slim AS compile-image
 RUN apt-get update
+RUN apt-get install -y --no-install-recommends git
 RUN apt-get install -y --no-install-recommends build-essential gcc
 RUN apt-get install -y --no-install-recommends libyaml-dev
 
