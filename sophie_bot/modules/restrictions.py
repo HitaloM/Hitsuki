@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import asyncio
 import datetime  # noqa: F401
 
 from aiogram.utils.exceptions import MessageNotModified
@@ -66,25 +65,19 @@ async def kick_user_cmd(message, chat, user, args, strings):
         text += strings['reason'] % args
 
     # Check if silent
-    silent = False
-    if get_cmd(message) == 'skick':
-        silent = True
-        key = 'leave_silent:' + str(chat_id)
-        redis.set(key, user_id)
-        redis.expire(key, 30)
-        text += strings['purge']
+    if silent := get_cmd(message) == 'skick':
+        redis.set("leave_silent:" + str(chat_id), user_id, ex=30)
 
     await kick_user(chat_id, user_id)
 
-    msg = await message.reply(text)
+    if not silent:
+        return await message.reply(text)
 
     # Del msgs if silent
-    if silent:
-        to_del = [msg.message_id, message.message_id]
-        if 'reply_to_message' in message and message.reply_to_message.from_user.id == user_id:
-            to_del.append(message.reply_to_message.message_id)
-        await asyncio.sleep(5)
-        await tbot.delete_messages(chat_id, to_del)
+    to_del = [message.message_id]
+    if message.reply_to_message and message.reply_to_message.from_user.id == user_id:
+        to_del.append(message.reply_to_message.message_id)
+    await tbot.delete_messages(chat_id, to_del)
 
 
 @register(cmds=['mute', 'smute', 'tmute', 'stmute'], bot_can_restrict_members=True, user_can_restrict_members=True)
@@ -139,25 +132,18 @@ async def mute_user_cmd(message, chat, user, args, strings):
             text += strings['reason'] % ' '.join(args[0:])
 
     # Check if silent
-    silent = False
-    if curr_cmd in ('smute', 'stmute'):
-        silent = True
-        key = 'leave_silent:' + str(chat_id)
-        redis.set(key, user_id)
-        redis.expire(key, 30)
-        text += strings['purge']
+    silent = curr_cmd in ('smute', 'stmute')
 
     await mute_user(chat_id, user_id, until_date=until_date)
 
-    msg = await message.reply(text)
+    if not silent:
+        return await message.reply(text)
 
     # Del msgs if silent
-    if silent:
-        to_del = [msg.message_id, message.message_id]
-        if 'reply_to_message' in message and message.reply_to_message.from_user.id == user_id:
-            to_del.append(message.reply_to_message.message_id)
-        await asyncio.sleep(5)
-        await tbot.delete_messages(chat_id, to_del)
+    to_del = [message.message_id]
+    if message.reply_to_message and message.reply_to_message.from_user.id == user_id:
+        to_del.append(message.reply_to_message.message_id)
+    await tbot.delete_messages(chat_id, to_del)
 
 
 @register(cmds='unmute', bot_can_restrict_members=True, user_can_restrict_members=True)
@@ -243,25 +229,18 @@ async def ban_user_cmd(message, chat, user, args, strings):
             text += strings['reason'] % ' '.join(args[0:])
 
     # Check if silent
-    silent = False
-    if curr_cmd in ('sban', 'stban'):
-        silent = True
-        key = 'leave_silent:' + str(chat_id)
-        redis.set(key, user_id)
-        redis.expire(key, 30)
-        text += strings['purge']
+    if silent := curr_cmd in ('sban', 'stban'):
+        redis.set("leave_silent:" + str(chat_id), user_id, ex=30)
 
     await ban_user(chat_id, user_id, until_date=until_date)
 
-    msg = await message.reply(text)
+    if not silent:
+        return await message.reply(text)
 
-    # Del msgs if silent
-    if silent:
-        to_del = [msg.message_id, message.message_id]
-        if 'reply_to_message' in message and message.reply_to_message.from_user.id == user_id:
-            to_del.append(message.reply_to_message.message_id)
-        await asyncio.sleep(5)
-        await tbot.delete_messages(chat_id, to_del)
+    to_del = [message.message_id]
+    if message.reply_to_message and message.reply_to_message.from_user.id == user_id:
+        to_del.append(message.reply_to_message.message_id)
+    await tbot.delete_messages(chat_id, to_del)
 
 
 @register(cmds='unban', bot_can_restrict_members=True, user_can_restrict_members=True)
@@ -300,7 +279,7 @@ async def leave_silent(message):
     if not message.from_user.id == BOT_ID:
         return
 
-    if redis.get('leave_silent:' + str(message.chat.id)) == message.left_chat_member.id:
+    if int(redis.get('leave_silent:' + str(message.chat.id)) or 0) == message.left_chat_member.id:
         await message.delete()
 
 
