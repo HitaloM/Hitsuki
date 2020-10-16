@@ -110,7 +110,7 @@ def get_fed_user_text(skip_no_fed=False):
             fed = None
             message = args[0]
             real_chat_id = message.chat.id
-            user, text = await get_user_and_text(message, send_text=False)
+            user, text = await get_user_and_text(message)
             strings = await get_strings(real_chat_id, 'feds')
 
             # Check non exits user
