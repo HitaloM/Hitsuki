@@ -728,7 +728,7 @@ STRINGS:
     overflowed_count: Maximum count should be less than 200!
     config_proc_1: Please send expiration time, '0' (zero) for not being expired.
     cancel: ❌ Cancel
-    setup_success: Successfully configured antiflood, now enforces {count} messages/{time}!
+    setup_success: Successfully configured antiflood, now enforces against those who sends {count} messages within {time}!
     setup_success:no_exp: Successfully configured antiflood, allows {count} messages consecutively!
     invalid_time: Invalid time!
 

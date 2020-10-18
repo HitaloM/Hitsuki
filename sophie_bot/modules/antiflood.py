@@ -196,10 +196,11 @@ async def antiflood_expire_proc(message: Message, chat: dict, strings: dict, sta
                 upsert=True
             )
             await get_data.reset_cache(chat['chat_id'])
+            kw = {'count': data}
+            if time is not None:
+                kw.update({'time': format_timedelta(parsed_time, locale=strings['language_info']['babel'])})
             await message.reply(
-                strings['setup_success' if time != 0 else 'setup_success:no_exp'].format(
-                    count=data, time=format_timedelta(parsed_time, locale=strings['language_info']['babel'])
-                )
+                strings['setup_success' if time is not None else 'setup_success:no_exp'].format(**kw)
             )
     finally:
         await state.finish()
