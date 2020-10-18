@@ -52,17 +52,16 @@ class cached:
     async def _set(self, *args: dict, **kwargs: dict):
         key = self.__build_key(*args, **kwargs)
 
-        value = bredis.get(key)
-        if value is not None:
-            value = pickle.loads(value)
-            return value if value is not _NotSet else value.real_value
+        if bredis.exists(key):
+            value = pickle.loads(bredis.get(key))
+            return value if type(value) is not _NotSet else value.real_value
 
         result = await self.func(*args, **kwargs)
         if result is None:
-            result = _NotSet
+            result = _NotSet()
         asyncio.ensure_future(set_value(key, result, ttl=self.ttl))
         log.debug(f'Cached: writing new data for key - {key}')
-        return result
+        return result if type(result) is not _NotSet else result.real_value
 
     def __build_key(self, *args: dict, **kwargs: dict) -> str:
         ordered_kwargs = sorted(kwargs.items())
