@@ -1,6 +1,6 @@
 # General
 #telethon
-git+https://github.com/LonamiWebs/Telethon
+telethon~=1.17.0
 aiogram
 
 # DBs
