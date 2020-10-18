@@ -734,6 +734,7 @@ STRINGS:
 
     # /antiflood | /flood
     not_configured: Antiflood isn't configured in this chat yet!
+    turned_off: Disabled antiflood in <b>{chat_title}</b>!
     configuration_info:with_time: Antiflood is configured in this chat, those who sents {count} message within {time} would be {action}!
     configuration_info: Antiflood is configured in this chat, those who sents {count} consecutively would be {action}!
     ban: banned

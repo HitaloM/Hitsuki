@@ -212,6 +212,11 @@ async def antiflood(message: Message, chat: dict, strings: dict):
     if not (data := await get_data(chat['chat_id'])):
         return await message.reply(strings['not_configured'])
 
+    if message.get_args().lower() in ('off', '0', 'no'):
+        await db.antiflood.delete_one({"chat_id": chat['chat_id']})
+        await get_data.reset_cache(chat['chat_id'])
+        return await message.reply(strings['turned_off'].format(chat_title=chat['chat_title']))
+
     if data['time'] is None:
         return await message.reply(
             strings['configuration_info'].format(
