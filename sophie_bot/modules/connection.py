@@ -30,7 +30,7 @@ from sophie_bot import bot
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
-from .utils.connections import chat_connection, set_connected_chat
+from .utils.connections import chat_connection, set_connected_chat, get_connection_data
 from .utils.language import get_strings_dec
 from .utils.message import get_arg
 from .utils.notes import BUTTONS
@@ -134,7 +134,7 @@ async def connect_to_chat_from_arg(message, chat, strings):
 @register(cmds='disconnect', only_pm=True)
 @get_strings_dec('connections')
 async def disconnect_from_chat_direct(message, strings):
-    if (data := await db.connections.find_one({'user_id': message.from_user.id})) and 'chat_id' in data:
+    if (data := await get_connection_data(message.from_user.id)) and 'chat_id' in data:
         chat = await db.chat_list.find_one({'chat_id': data['chat_id']})
         user_id = message.from_user.id
         await set_connected_chat(user_id, None)
