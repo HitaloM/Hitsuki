@@ -104,7 +104,7 @@ def get_current_chat_fed(func):
     return wrapped_1
 
 
-def get_fed_user_text(skip_no_fed=False):
+def get_fed_user_text(skip_no_fed=False, self=False):
     def wrapped(func):
         async def wrapped_1(*args, **kwargs):
             fed = None
@@ -119,9 +119,12 @@ def get_fed_user_text(skip_no_fed=False):
                 user = {'user_id': int(data[0])}
                 text = ' '.join(data[1:]) if len(data) > 1 else None
             elif not user:
-                await message.reply(strings['cant_get_user'])
-                # Passing 'None' user will throw err
-                return
+                if self is True:
+                    user = await db.user_list.find_one({'user_id': message.from_user.id})
+                else:
+                    await message.reply(strings['cant_get_user'])
+                    # Passing 'None' user will throw err
+                    return
 
             # Check fed_id in args
             if text:
@@ -1103,7 +1106,7 @@ async def check_fbanned(message, chat, strings):
 
 
 @decorator.register(cmds='fcheck')
-@get_fed_user_text(skip_no_fed=True)
+@get_fed_user_text(skip_no_fed=True, self=True)
 @get_strings_dec('feds')
 async def fedban_check(message, fed, user, _, strings):
     fbanned_fed = False  # A variable to find if user is banned in current fed of chat
@@ -1120,8 +1123,8 @@ async def fedban_check(message, fed, user, _, strings):
             fbanned_fed = True
 
             # re-assign fed if user is banned in sub-fed
-            if fban_data['fed_id'] != fed['fed_id']:
-                fed = await get_fed_by_id(fban_data['fed_id'])
+            if fban_data['fed_id'] != fed['fed_id'] or 'origin_fed' in fban_data:
+                fed = await get_fed_by_id(fban_data['fed_id' if 'origin_fed' not in fban_data else 'origin_fed'])
 
     # create text
     text = strings['fcheck_header']
@@ -1155,7 +1158,7 @@ async def fedban_check(message, fed, user, _, strings):
                         text += f'{count}: <code>{fban["fed_id"]}</code>: {fed_name}\n'
     else:
         if total_count > 0:
-            text += strings['fbanned_data'].format(user=await get_user_link(user['user_id']), count=total_count)
+            text += strings["fbanned_data"].format(user=await get_user_link(user['user_id']), count=total_count)
         else:
             text += strings['fbanned_nowhere'].format(user=await get_user_link(user['user_id']))
 
@@ -1166,6 +1169,8 @@ async def fedban_check(message, fed, user, _, strings):
                 )
             else:
                 text += strings['fbanned_in_fed'].format(fed=html.escape(fed['fed_name'], False))
+        elif fed is not None:
+            text += strings['not_fbanned_in_fed'].format(fed_name=html.escape(fed['fed_name'], quote=False))
 
         if total_count > 0:
             if message.from_user.id == user['user_id']:
