@@ -771,7 +771,8 @@ async def unfed_ban_user(message, fed, user, text, strings):
 
         all_unbanned_chats_count = 0
         for sfed_id in sfeds_list:
-            ban = await db.fed_bans.find_one({'fed_id': sfed_id})
+            # revision 19/10/2020: unfbans only those who got banned by `this` fed
+            ban = await db.fed_bans.find_one({'fed_id': sfed_id, 'origin_fed': fed['fed_id']})
             banned_chats = []
             if ban is not None and 'banned_chats' in ban:
                 banned_chats = ban['banned_chats']
@@ -1072,16 +1073,19 @@ async def check_fbanned(message, chat, strings):
         feds_list.extend(fed['subscribed'])
 
     if ban := await db.fed_bans.find_one({'fed_id': {'$in': feds_list}, 'user_id': user_id}):
-        s_fed = await get_fed_by_id(ban['fed_id'])
 
         # check whether banned fed_id is chat's fed id else
         # user is banned in sub fed
-        if fed['fed_id'] == ban['fed_id']:
+        if fed['fed_id'] == ban['fed_id'] and 'origin_fed' not in ban:
             text = strings['automatic_ban'].format(
                 user=await get_user_link(user_id),
                 fed_name=html.escape(fed['fed_name'], False)
             )
         else:
+            s_fed = await get_fed_by_id(ban['fed_id'] if 'origin_fed' not in ban else ban['origin_fed'])
+            if s_fed is None:
+                return
+
             text = strings['automatic_ban_sfed'].format(
                 user=await get_user_link(user_id),
                 fed_name=s_fed['fed_name']
