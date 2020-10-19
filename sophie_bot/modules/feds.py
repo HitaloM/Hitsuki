@@ -652,8 +652,19 @@ async def fed_ban_user(message, fed, user, reason, strings):
 
         all_banned_chats_count = 0
         for s_fed_id in sfeds_list:
+            if await db.fed_bans.find_one({'fed_id': s_fed_id, 'user_id': user_id}) is not None:
+                # user is already banned in subscribed federation, skip
+                continue
             s_fed = await get_fed_by_id(s_fed_id)
             banned_chats = []
+            new = {
+                'fed_id': s_fed_id,
+                'user_id': user_id,
+                'banned_chats': banned_chats,
+                'time': datetime.now(),
+                'origin_fed': fed['fed_id'],
+                'by': message.from_user.id
+            }
             for chat_id in s_fed['chats']:
                 if not user:
                     continue
@@ -674,19 +685,10 @@ async def fed_ban_user(message, fed, user, reason, strings):
                     banned_chats.append(chat_id)
                     all_banned_chats_count += 1
 
-                    new = {
-                        'fed_id': s_fed_id,
-                        'user_id': user_id,
-                        'banned_chats': banned_chats,
-                        'time': datetime.now(),
-                        'origin_fed': fed['fed_id'],
-                        'by': message.from_user.id
-                    }
-
                     if reason:
                         new['reason'] = reason
 
-                    await db.fed_bans.insert_one(new)
+            await db.fed_bans.insert_one(new)
 
         await msg.edit_text(text + strings['fbanned_subs_done'].format(
             chats=this_fed_banned_count,
