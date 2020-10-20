@@ -775,7 +775,10 @@ async def unfed_ban_user(message, fed, user, text, strings):
         all_unbanned_chats_count = 0
         for sfed_id in sfeds_list:
             # revision 19/10/2020: unfbans only those who got banned by `this` fed
-            ban = await db.fed_bans.find_one({'fed_id': sfed_id, 'origin_fed': fed['fed_id']})
+            ban = await db.fed_bans.find_one({'fed_id': sfed_id, 'origin_fed': fed['fed_id'], 'user_id': user_id})
+            if ban is None:
+                # probably old fban
+                ban = await db.fed_bans.find_one({'fed_id': sfed_id, 'user_id': user_id})
             banned_chats = []
             if ban is not None and 'banned_chats' in ban:
                 banned_chats = ban['banned_chats']
