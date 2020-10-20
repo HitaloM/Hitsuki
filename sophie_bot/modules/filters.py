@@ -207,7 +207,7 @@ async def list_filters(message, chat, strings):
 @chat_connection(only_groups=True, admin=True)
 @get_strings_dec('filters')
 async def del_filter(message, chat, strings):
-    handler = get_args_str(message).lower()
+    handler = get_args_str(message)
     chat_id = chat['chat_id']
     filters = await db.filters.find({'chat_id': chat_id, 'handler': handler}).to_list(9999)
     if not filters:
