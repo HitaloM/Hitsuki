@@ -273,7 +273,7 @@ async def delall_filters(message: Message, strings: dict):
 
 @register(filter_delall_yes_cb.filter(), f='cb', allow_kwargs=True)
 @get_strings_dec('filters')
-async def delall_filters_yes(event: CallbackQuery, strings: dict,  callback_data: dict, **_):
+async def delall_filters_yes(event: CallbackQuery, strings: dict, callback_data: dict, **_):
     if not await is_chat_creator(chat_id := int(callback_data['chat_id']), event.from_user.id):
         return False
     result = await db.filters.delete_many({'chat_id': chat_id})
