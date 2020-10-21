@@ -95,6 +95,14 @@ STRINGS:
     select_filter_to_remove: |
       I have found many filters with handler '<code>{handler}</code>'.
       Please select one to remove:
+
+    # /delfilters or /delallfilters
+    not_chat_creator: Only chat creators can use this command!
+    delall_header: This would delete all filters in this chat. This IS irreversible.
+    confirm_yes: ⚠ Delete all
+    confirm_no: ❌ Cancel
+    delall_success: Successfully deleted all ({count}) filters in this chat!
+
   warns:
     # /warn
     warn_sofi: "Haha no way to warn myself!"

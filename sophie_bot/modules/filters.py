@@ -19,6 +19,7 @@
 
 import re
 
+from aiogram.types import Message, CallbackQuery
 from aiogram.types.inline_keyboard import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.callback_data import CallbackData
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -26,7 +27,7 @@ from bson.objectid import ObjectId
 from pymongo import UpdateOne
 
 from .utils.message import need_args_dec, get_args_str
-from .utils.user_details import is_user_admin
+from .utils.user_details import is_user_admin, is_chat_creator
 from .utils.language import get_strings_dec, get_string
 from .utils.connections import chat_connection, get_connected_chat
 
@@ -39,6 +40,7 @@ from sophie_bot.utils.logger import log
 
 filter_action_cp = CallbackData('filter_action_cp', 'filter_id')
 filter_remove_cp = CallbackData('filter_remove_cp', 'id')
+filter_delall_yes_cb = CallbackData('filter_delall_yes_cb', 'chat_id')
 
 FILTERS_ACTIONS = {}
 
@@ -250,6 +252,43 @@ async def del_filter_cb(event, chat, strings, callback_data=None, **kwargs):
     return
 
 
+@register(cmds=['delfilters', "delallfilters"])
+@get_strings_dec('filters')
+async def delall_filters(message: Message, strings: dict):
+    if not await is_chat_creator(message.chat.id, message.from_user.id):
+        return await message.reply(strings['not_chat_creator'])
+    buttons = InlineKeyboardMarkup()
+    buttons.add(
+        *[
+            InlineKeyboardButton(
+                strings['confirm_yes'], callback_data=filter_delall_yes_cb.new(chat_id=message.chat.id)
+            ),
+            InlineKeyboardButton(
+                strings['confirm_no'], callback_data="filter_delall_no_cb"
+            )
+        ]
+    )
+    return await message.reply(strings['delall_header'], reply_markup=buttons)
+
+
+@register(filter_delall_yes_cb.filter(), f='cb', allow_kwargs=True)
+@get_strings_dec('filters')
+async def delall_filters_yes(event: CallbackQuery, strings: dict,  callback_data: dict, **_):
+    if not await is_chat_creator(chat_id := int(callback_data['chat_id']), event.from_user.id):
+        return False
+    result = await db.filters.delete_many({'chat_id': chat_id})
+    await update_handlers_cache(chat_id)
+    return await event.message.edit_text(strings['delall_success'].format(count=result.deleted_count))
+
+
+@register(regexp="filter_delall_no_cb", f='cb')
+@get_strings_dec('filters')
+async def delall_filters_no(event: CallbackQuery, strings: dict):
+    if not await is_chat_creator(event.message.chat.id, event.from_user.id):
+        return False
+    await event.message.delete()
+
+
 async def __before_serving__(loop):
     log.debug('Adding filters actions')
     for module in LOADED_MODULES:
@@ -281,3 +320,4 @@ async def __import__(chat_id, data):
                              {'$set': filter},
                              upsert=True))
     await db.filters.bulk_write(new)
+    await update_handlers_cache(chat_id)
