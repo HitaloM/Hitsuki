@@ -779,6 +779,8 @@ async def unfed_ban_user(message, fed, user, text, strings):
             if ban is None:
                 # probably old fban
                 ban = await db.fed_bans.find_one({'fed_id': sfed_id, 'user_id': user_id})
+                # if ban['time'] > `replace here with datetime of release of v2.2`:
+                #    continue
             banned_chats = []
             if ban is not None and 'banned_chats' in ban:
                 banned_chats = ban['banned_chats']
@@ -1206,4 +1208,6 @@ async def __import__(chat_id, data):
     if fed_id := data['fed_id']:
         if current_fed := await db.feds.find_one({'chats': [int(chat_id)]}):
             await db.feds.update_one({'_id': current_fed['_id']}, {'$pull': {'chats': chat_id}})
+            await get_fed_by_id.reset_cache(current_fed['fed_id'])
         await db.feds.update_one({'fed_id': fed_id}, {'$addToSet': {'chats': chat_id}})
+        await get_fed_by_id.reset_cache(fed_id)
