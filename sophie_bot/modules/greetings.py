@@ -71,7 +71,7 @@ async def welcome(message, chat, strings):
     else:
         no_format = None
 
-    if not (db_item := await get_db_data(chat_id)):
+    if not (db_item := await get_greetings_data(chat_id)):
         db_item = {}
     if 'note' not in db_item:
         db_item['note'] = {'text': strings['default_welcome']}
@@ -122,7 +122,7 @@ async def set_welcome(message, chat, strings):
     chat_id = chat['chat_id']
 
     if len(args := message.get_args().lower().split()) < 1:
-        db_item = await get_db_data(chat_id)
+        db_item = await get_greetings_data(chat_id)
 
         if db_item and 'welcome_disabled' in db_item and db_item['welcome_disabled'] is True:
             status = strings['disabled']
@@ -137,7 +137,7 @@ async def set_welcome(message, chat, strings):
     if args[0] in no:
         await db.greetings.update_one({'chat_id': chat_id}, {'$set': {'chat_id': chat_id, 'welcome_disabled': True}},
                                       upsert=True)
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         await message.reply(strings['turnwelcome_disabled'] % chat['chat_title'])
         return
     else:
@@ -152,7 +152,7 @@ async def set_welcome(message, chat, strings):
         else:
             text = strings['saved']
 
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         await message.reply(text % chat['chat_title'])
 
 
@@ -163,11 +163,11 @@ async def reset_welcome(message, chat, strings):
     chat_id = chat['chat_id']
 
     if (await db.greetings.delete_one({'chat_id': chat_id})).deleted_count < 1:
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         await message.reply(strings['not_found'])
         return
 
-    await get_db_data.reset_cache(chat_id)
+    await get_greetings_data.reset_cache(chat_id)
     await message.reply(strings['deleted'].format(chat=chat['chat_title']))
 
 
@@ -178,7 +178,7 @@ async def clean_welcome(message, chat, strings):
     chat_id = chat['chat_id']
 
     if len(args := message.get_args().lower().split()) < 1:
-        db_item = await get_db_data(chat_id)
+        db_item = await get_greetings_data(chat_id)
 
         if db_item and 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is True:
             status = strings['enabled']
@@ -197,11 +197,11 @@ async def clean_welcome(message, chat, strings):
             {'$set': {'chat_id': chat_id, 'clean_welcome': {'enabled': True}}},
             upsert=True
         )
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         await message.reply(strings['cleanwelcome_enabled'] % chat['chat_title'])
     elif args[0] in no:
         await db.greetings.update_one({'chat_id': chat_id}, {'$unset': {'clean_welcome': 1}}, upsert=True)
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         await message.reply(strings['cleanwelcome_disabled'] % chat['chat_title'])
     else:
         await message.reply(strings['bool_invalid_arg'])
@@ -214,7 +214,7 @@ async def clean_service(message, chat, strings):
     chat_id = chat['chat_id']
 
     if len(args := message.get_args().lower().split()) < 1:
-        db_item = await get_db_data(chat_id)
+        db_item = await get_greetings_data(chat_id)
 
         if db_item and 'clean_service' in db_item and db_item['clean_service']['enabled'] is True:
             status = strings['enabled']
@@ -233,11 +233,11 @@ async def clean_service(message, chat, strings):
             {'$set': {'chat_id': chat_id, 'clean_service': {'enabled': True}}},
             upsert=True
         )
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         await message.reply(strings['cleanservice_enabled'] % chat['chat_title'])
     elif args[0] in no:
         await db.greetings.update_one({'chat_id': chat_id}, {'$unset': {'clean_service': 1}}, upsert=True)
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         await message.reply(strings['cleanservice_disabled'] % chat['chat_title'])
     else:
         await message.reply(strings['bool_invalid_arg'])
@@ -250,7 +250,7 @@ async def welcome_mute(message, chat, strings):
     chat_id = chat['chat_id']
 
     if len(args := message.get_args().lower().split()) < 1:
-        db_item = await get_db_data(chat_id)
+        db_item = await get_greetings_data(chat_id)
 
         if db_item and 'welcome_mute' in db_item and db_item['welcome_mute']['enabled'] is True:
             status = strings['enabled']
@@ -268,7 +268,7 @@ async def welcome_mute(message, chat, strings):
             {'$set': {'chat_id': chat_id, 'welcome_mute': {'enabled': True, 'time': args[0]}}},
             upsert=True
         )
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         text = strings['welcomemute_enabled'] % chat['chat_title']
         try:
             await message.reply(text)
@@ -277,7 +277,7 @@ async def welcome_mute(message, chat, strings):
     elif args[0] in no:
         text = strings['welcomemute_disabled'] % chat['chat_title']
         await db.greetings.update_one({'chat_id': chat_id}, {'$unset': {'welcome_mute': 1}}, upsert=True)
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         try:
             await message.reply(text)
         except BadRequest:
@@ -307,7 +307,7 @@ async def welcome_security(message, chat, strings):
     chat_id = chat['chat_id']
 
     if len(args := message.get_args().lower().split()) < 1:
-        db_item = await get_db_data(chat_id)
+        db_item = await get_greetings_data(chat_id)
 
         if db_item and 'welcome_security' in db_item and db_item['welcome_security']['enabled'] is True:
             status = strings['welcomesecurity_enabled_word'].format(level=db_item['welcome_security']['level'])
@@ -323,7 +323,7 @@ async def welcome_security(message, chat, strings):
         level = args[0].lower()
     elif args[0] in no:
         await db.greetings.update_one({'chat_id': chat_id}, {'$unset': {'welcome_security': 1}}, upsert=True)
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         await message.reply(strings['welcomesecurity_disabled'] % chat['chat_title'])
         return
     else:
@@ -335,7 +335,7 @@ async def welcome_security(message, chat, strings):
         {'$set': {'chat_id': chat_id, 'welcome_security': {'enabled': True, 'level': level}}},
         upsert=True
     )
-    await get_db_data.reset_cache(chat_id)
+    await get_greetings_data.reset_cache(chat_id)
     buttons = InlineKeyboardMarkup()
     buttons.add(
         InlineKeyboardButton(
@@ -400,7 +400,7 @@ async def wlcm_sec_time_state(message: Message, chat: dict, strings: dict, state
             {"chat_id": chat["chat_id"]},
             {"$set": {"welcome_security.expire": message.text}}
         )
-        await get_db_data.reset_cache(chat['chat_id'])
+        await get_greetings_data.reset_cache(chat['chat_id'])
         await message.reply(
             strings["welcomesecurity_enabled:customized_time"].format(
                 chat_name=chat['chat_title'], level=level, time=format_timedelta(
@@ -420,7 +420,7 @@ async def set_security_note(message, chat, strings):
     chat_id = chat['chat_id']
 
     if message.get_args().lower().split()[0] in ['raw', 'noformat']:
-        db_item = await get_db_data(chat_id)
+        db_item = await get_greetings_data(chat_id)
         if 'security_note' not in db_item:
             db_item = {'security_note': {}}
             db_item['security_note']['text'] = strings['default_security_note']
@@ -436,7 +436,7 @@ async def set_security_note(message, chat, strings):
 
     if (await db.greetings.update_one({'chat_id': chat_id}, {'$set': {'chat_id': chat_id, 'security_note': note}},
                                       upsert=True)).modified_count > 0:
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         text = strings['security_note_updated']
     else:
         text = strings['security_note_saved']
@@ -452,7 +452,7 @@ async def reset_security_note(message, chat, strings):
 
     if (await db.greetings.update_one({'chat_id': chat_id}, {'$unset': {'security_note': 1}},
                                       upsert=True)).modified_count > 0:
-        await get_db_data.reset_cache(chat_id)
+        await get_greetings_data.reset_cache(chat_id)
         text = strings['security_note_updated']
     else:
         text = strings['del_security_note_ok']
@@ -475,7 +475,7 @@ async def welcome_security_handler(message: Message, strings):
     if user_id == BOT_ID:
         return
 
-    db_item = await get_db_data(message.chat.id)
+    db_item = await get_greetings_data(message.chat.id)
     if not db_item or 'welcome_security' not in db_item:
         return
 
@@ -583,7 +583,7 @@ async def welcome_security_handler_pm(message: Message, strings, regexp=None, st
         data['msg_id'] = int(args[3])
         data['to_delete'] = bool(int(args[4])) if len(args) > 4 else True
 
-    db_item = await get_db_data(chat_id)
+    db_item = await get_greetings_data(chat_id)
 
     level = db_item['welcome_security']['level']
 
@@ -804,7 +804,7 @@ async def welcome_security_passed(message: Union[CallbackQuery, Message], state,
     else:
         await message.reply(strings['passed'] % title)
 
-    db_item = await get_db_data(chat_id)
+    db_item = await get_greetings_data(chat_id)
 
     if 'message' in message:
         message = message.message
@@ -842,7 +842,7 @@ async def welcome_trigger(message: Message, strings):
     if user_id == BOT_ID:
         return
 
-    if not (db_item := await get_db_data(message.chat.id)):
+    if not (db_item := await get_greetings_data(message.chat.id)):
         db_item = {}
 
     if 'welcome_disabled' in db_item and db_item['welcome_disabled'] is True:
@@ -891,7 +891,7 @@ async def clean_service_trigger(message, strings):
     if message.new_chat_members[0].id == BOT_ID:
         return
 
-    if not (db_item := await get_db_data(chat_id)):
+    if not (db_item := await get_greetings_data(chat_id)):
         return
 
     if 'clean_service' not in db_item or db_item['clean_service']['enabled'] is False:
@@ -909,12 +909,12 @@ _clean_welcome = 'cleanwelcome:{chat}'
 
 
 @cached()
-async def get_db_data(chat: int) -> Optional[dict]:
+async def get_greetings_data(chat: int) -> Optional[dict]:
     return await db.greetings.find_one({'chat_id': chat})
 
 
 async def __export__(chat_id):
-    if greetings := await db.greetings.find_one({'chat_id': chat_id}):
+    if greetings := await get_greetings_data(chat_id):
         del greetings['_id']
         del greetings['chat_id']
 
@@ -923,3 +923,4 @@ async def __export__(chat_id):
 
 async def __import__(chat_id, data):
     await db.greetings.update_one({'chat_id': chat_id}, {'$set': data}, upsert=True)
+    await get_greetings_data.reset_cache(chat_id)
