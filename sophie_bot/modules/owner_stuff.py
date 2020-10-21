@@ -23,7 +23,7 @@ import os
 import requests
 import ujson
 
-from sophie_bot import OWNER_ID, OPERATORS, SOPHIE_VERSION
+from sophie_bot import OWNER_ID, OPERATORS, SOPHIE_VERSION, dp
 from sophie_bot.decorator import REGISTRED_COMMANDS, COMMANDS_ALIASES, register
 from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db, mongodb
@@ -85,6 +85,7 @@ async def cmd_term(message):
 @need_args_dec()
 async def sbroadcast(message):
     data = await get_parsed_note_list(message, split_args=-1)
+    dp.register_message_handler(check_message_for_smartbroadcast)
 
     await db.sbroadcast.drop({})
 
@@ -100,6 +101,7 @@ async def sbroadcast(message):
 
 @register(cmds="stopsbroadcast", is_owner=True)
 async def stop_sbroadcast(message):
+    dp.message_handlers.unregister(check_message_for_smartbroadcast)
     old = await db.sbroadcast.find_one({})
     await db.sbroadcast.drop({})
     await message.reply(
@@ -108,16 +110,19 @@ async def stop_sbroadcast(message):
     )
 
 
+@register(cmds="continuebroadcast", is_owner=True)
+async def continue_sbroadcast(message):
+    dp.register_message_handler(check_message_for_smartbroadcast)
+    return await message.reply("Re-registered the broadcast handler.")
+
+
 # Check on smart broadcast
-@register()
 async def check_message_for_smartbroadcast(message):
     chat_id = message.chat.id
     if not (db_item := await db.sbroadcast.find_one({'chats': {'$in': [chat_id]}})):
         return
 
     text, kwargs = await t_unparse_note_item(message, db_item, chat_id)
-    kwargs['reply_to'] = message.message_id
-
     await send_note(chat_id, text, **kwargs)
 
     await db.sbroadcast.update_one({'_id': db_item['_id']}, {'$pull': {'chats': chat_id}, '$inc': {'recived_chats': 1}})
@@ -154,7 +159,7 @@ async def upload_file(message):
         )
 
 
-@register(cmds="logs", is_owner=True)
+@register(cmds="logs", is_op=True)
 async def upload_logs(message):
     input_str = 'logs/sophie.log'
     with open(input_str, 'rb') as f:
