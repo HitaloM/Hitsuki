@@ -169,6 +169,9 @@ STRINGS:
     send_text: Please send the reply message!
     replymsg_filter_title: 'Reply to message'
 
+    send_customised_reason: Send the <i>reason</i> you want to include in action message. "<code>None</code>" for <i>no reason</i> to be given!
+    expected_text: Expected a text message!
+
   promotes:
     promote_success: "{user} was successfully promoted in {chat_name}!"
     promote_title: "\nWith custom role <code>{role}</code>!"

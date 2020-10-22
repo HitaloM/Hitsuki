@@ -16,7 +16,7 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+from aiogram.types import Message
 from aiogram.utils.exceptions import BadRequest
 from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
 from contextlib import suppress
@@ -56,6 +56,21 @@ async def replymsg_setup_start(message, strings):
 async def replymsg_setup_finish(message, data):
     reply_text = await get_parsed_note_list(message, allow_reply_message=False, split_args=-1)
     return {'reply_text': reply_text}
+
+
+@get_strings_dec('misc')
+async def customise_reason_start(message: Message, strings: dict):
+    await message.reply(strings['send_customised_reason'])
+
+
+@get_strings_dec('misc')
+async def customise_reason_finish(message: Message, _: dict, strings: dict):
+    if message.text is None:
+        await message.reply(strings['expected_text'])
+        return False
+    elif message.text in {'None'}:
+        return {'reason': None}
+    return {'reason': message.text}
 
 
 __filters__ = {
