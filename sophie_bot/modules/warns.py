@@ -34,6 +34,7 @@ from datetime import datetime, timedelta
 from sophie_bot import BOT_ID, bot
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
+from .misc import customise_reason_start, customise_reason_finish
 from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 from .utils.message import convert_time, convert_timedelta, InvalidTimeUnit
@@ -124,10 +125,10 @@ async def warn_func(message: Message, chat, user, text, strings, filter_action=F
                     text = strings['max_warn_exceeded'].format(
                         user=member, action=strings['banned'] if data['mode'] == 'ban' else strings['muted']
                     )
-                return await action(text)
-            return await action(strings['max_warn_exceeded'].format(user=member, action=strings['banned']))
+                return await action(text=text)
+            return await action(text=strings['max_warn_exceeded'].format(user=member, action=strings['banned']))
     text += strings['warn_num'].format(curr_warns=warns_count, max_warns=max_warn)
-    return await action(text, reply_markup=buttons, disable_web_page_preview=True)
+    return await action(text=text, reply_markup=buttons, disable_web_page_preview=True)
 
 
 @register(regexp=r'remove_warn_(.*)', f='cb', allow_kwargs=True, user_can_restrict_members=True)
@@ -330,13 +331,17 @@ async def filter_handle(message, chat, data, string=None):
     if await is_user_admin(chat['chat_id'], message.from_user.id):
         return
     target_user = message.from_user.id
-    text = string['filter_handle_rsn']
+    text = data.get('reason', None) or string['filter_handle_rsn']
     await warn_func(message, chat, target_user, text, filter_action=True)
 
 
 __filters__ = {
     'warn_user': {
         'title': {'module': 'warns', 'string': 'filters_title'},
+        'setup': {
+            'start': customise_reason_start,
+            'finish': customise_reason_finish
+        },
         'handle': filter_handle
     }
 }
