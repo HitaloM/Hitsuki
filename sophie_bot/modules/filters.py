@@ -20,7 +20,6 @@ import asyncio
 import functools
 import re
 
-from aiogram.dispatcher import FSMContext
 from aiogram.types import Message, CallbackQuery
 from aiogram.types.inline_keyboard import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.callback_data import CallbackData
@@ -51,7 +50,6 @@ FILTERS_ACTIONS = {}
 class NewFilter(StatesGroup):
     handler = State()
     setup = State()
-    setup_continuation = State()
 
 
 async def update_handlers_cache(chat_id):
@@ -214,22 +212,6 @@ async def setup_end(message, chat, state=None, **kwargs):
 
     await state.finish()
     await save_filter(message, data)
-
-
-@register(state=NewFilter.setup_continuation, f='any', is_admin=True, allow_kwargs=True)
-@chat_connection(only_groups=True, admin=True)
-async def setup_continuation(message: Message, chat: dict, state: FSMContext, **_):
-    async with state.proxy() as proxy:
-        filter_id = proxy['filter_id']
-        next_setup = proxy['setup_done']
-
-    action = FILTERS_ACTIONS[filter_id]
-    await action['setup'][next_setup]['start'](message)
-    await NewFilter.setup.set()
-    # update setup data
-    async with state.proxy() as proxy:
-        proxy['setup_co'] -= 1
-        proxy['setup_done'] += 1
 
 
 @register(cmds=['filters', 'listfilters'])
