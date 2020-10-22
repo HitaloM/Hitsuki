@@ -301,7 +301,7 @@ class WelcomeSecurityConf(StatesGroup):
 
 
 @register(cmds='welcomesecurity', user_admin=True)
-@chat_connection(admin=True)
+@chat_connection(admin=True, only_group=True)
 @get_strings_dec('greetings')
 async def welcome_security(message, chat, strings):
     chat_id = chat['chat_id']
