@@ -28,3 +28,4 @@ loguru
 sentry_sdk
 babel
 captcha
+async-timeout

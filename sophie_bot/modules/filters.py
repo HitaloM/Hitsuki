@@ -16,13 +16,15 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+import asyncio
+import functools
 import re
 
 from aiogram.types import Message, CallbackQuery
 from aiogram.types.inline_keyboard import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.callback_data import CallbackData
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from async_timeout import timeout
 from bson.objectid import ObjectId
 from pymongo import UpdateOne
 
@@ -36,7 +38,7 @@ from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from sophie_bot.utils.logger import log
-
+from sophie_bot import loop
 
 filter_action_cp = CallbackData('filter_action_cp', 'filter_id')
 filter_remove_cp = CallbackData('filter_remove_cp', 'id')
@@ -86,11 +88,20 @@ async def check_msg(message):
         if text[1:].startswith('addfilter') or text[1:].startswith('delfilter'):
             return
 
-    for handler in filters:
-        pattern = re.escape(handler)
-        pattern = pattern.replace('(+)', '(.*)')
-        if re.search(pattern, text, flags=re.IGNORECASE):
+    for handler in filters:  # type: str
+        if handler.startswith("re:"):
+            func = functools.partial(re.search, handler.replace("re:", "", 1), text)
+        else:
+            # TODO: Remove this (handler.replace(...)). kept for backward compatibility
+            func = functools.partial(re.search, re.escape(handler).replace('(+)', '(.*)'), text, flags=re.IGNORECASE)
 
+        try:
+            async with timeout(0.1):
+                matched = await loop.run_in_executor(None, func)
+        except asyncio.TimeoutError:
+            continue
+
+        if matched:
             # We can have few filters with same handler, that's why we create a new loop.
             filters = db.filters.find({'chat_id': chat_id, 'handler': handler})
             async for filter in filters:
