@@ -130,6 +130,7 @@ async def set_connected_chat(user_id, chat_id):
         {'user_id': user_id},
         {
             "$set": {'user_id': user_id, 'chat_id': chat_id},
+            "$unset": {'command': 1},
             "$addToSet": {'history': {'$each': [chat_id]}}
         },
         upsert=True
