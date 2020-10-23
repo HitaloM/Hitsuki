@@ -465,6 +465,11 @@ STRINGS:
       <b>Current connected chat:</b>
       {chat_name}
       Write /disconect to disconnect from chat
+    connected_chat:cmds: |
+      <b>Current connected chat:</b>
+      {chat_name}, (bridged commands are {commands}),
+      ⚠ <i>You can only access bridged commands of the connected chat! all other commands would be treated as Local chat</i>
+      Write /disconect to disconnect from chat.
     u_wasnt_connected: "You was not connected to any chat before!"
     select_chat_to_connect: "\n<b>Select a chat to connect:</b>"
     disconnected: "You were disconnected from <b>{chat_name}</b>."
