@@ -206,7 +206,7 @@ async def antiflood_expire_proc(message: Message, chat: dict, strings: dict, sta
         await state.finish()
 
 
-@register(cmds=['antiflood'], is_admin=True)
+@register(cmds=['antiflood', 'flood'], is_admin=True)
 @chat_connection(admin=True)
 @get_strings_dec('antiflood')
 async def antiflood(message: Message, chat: dict, strings: dict):
