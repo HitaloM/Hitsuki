@@ -1110,7 +1110,7 @@ async def check_fbanned(message, chat, strings):
         await db.fed_bans.update_one({'_id': ban['_id']}, {"$addToSet": {'banned_chats': chat_id}})
 
 
-@decorator.register(cmds='fcheck')
+@decorator.register(cmds=['fcheck', 'fbanstat'])
 @get_fed_user_text(skip_no_fed=True, self=True)
 @get_strings_dec('feds')
 async def fedban_check(message, fed, user, _, strings):
