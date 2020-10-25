@@ -810,7 +810,7 @@ async def welcome_security_passed(message: Union[CallbackQuery, Message], state,
         message = message.message
 
     # Welcome
-    if 'note' in db_item:
+    if 'note' in db_item and db_item.get("welcome_disabled", True) is False:
         text, kwargs = await t_unparse_note_item(
             message.reply_to_message if message.reply_to_message is not None else message,
             db_item['note'],
