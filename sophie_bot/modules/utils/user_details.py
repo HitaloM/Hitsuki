@@ -270,12 +270,13 @@ async def get_user(message, allow_self=False):
     if not user and bool(message.reply_to_message):
         user = await get_user_by_id(message.reply_to_message.from_user.id)
 
+    if not user and allow_self:
+        # TODO: Fetch user from message instead of db?! less overhead
+        return await get_user_by_id(message.from_user.id)
+
     # No args and no way to get user
     if not user and len(args) < 2:
         return None
-
-    if not user and allow_self:
-        return message.from_user.id
 
     return user
 
