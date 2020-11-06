@@ -36,7 +36,7 @@ from pymongo import DeleteMany, InsertOne
 
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.types import InputFile
+from aiogram.types import InputFile, Message
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 from aiogram.utils.exceptions import Unauthorized, NeedAdministratorRightsInTheChannel, ChatNotFound
@@ -221,6 +221,10 @@ def is_fed_admin(func):
 async def new_fed(message, strings):
     fed_name = html.escape(message.get_args())
     user_id = message.from_user.id
+    # dont support creation of newfed as anon admin
+    if user_id == 1087968824:
+        return await message.reply(strings['disallow_anon'])
+
     if not fed_name:
         await message.reply(strings['no_args'])
 
@@ -1065,7 +1069,11 @@ async def import_state(message, fed, state=None, **kwargs):
 @decorator.register(only_groups=True)
 @chat_connection(only_groups=True)
 @get_strings_dec('feds')
-async def check_fbanned(message, chat, strings):
+async def check_fbanned(message: Message, chat, strings):
+    if message.sender_chat:
+        # should be channel/anon
+        return
+
     user_id = message.from_user.id
     chat_id = chat['chat_id']
 

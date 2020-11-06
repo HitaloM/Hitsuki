@@ -244,7 +244,8 @@ STRINGS:
       <b>Name:</b> {name}
       <b>ID:</b> <code>{id}</code>
       <b>Creator:</b> {creator}
-      Use <code>/fjoin {id}</code> to connect federation to chat
+      Use <code>/fjoin {id}</code> to connect federation to chat\
+    disallow_anon: Being anonymous, you cannot create new federation!
 
     # /fjoin
     only_creators: "You should be a chat creator to be able to connect chat to federation."
