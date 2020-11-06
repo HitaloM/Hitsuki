@@ -144,8 +144,8 @@ STRINGS:
     warnmode_success: Warn mode of <b>%s</b> has successfully changed to <b>%s</b> !
     wrng_args: |
       These are the available options:
-      <code>%s</code>
-    mode_info: 'Current mode in this chat is <b>%s</b>.'
+    mode_info: |
+      Current mode in this chat is <b>%s</b>.
     banned: banned
     muted: muted
 

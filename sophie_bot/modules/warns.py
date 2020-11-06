@@ -265,10 +265,12 @@ async def warnmode(message, chat, strings):
                                          {'$set': new}, upsert=True)
         await message.reply(strings['warnmode_success'] % (chat['chat_title'], option))
     else:
-        text = strings['wrng_args'] % '\n'.join(acceptable_args)
+        text = ''
         if (curr_mode := await db.warnmode.find_one({'chat_id': chat_id})) is not None:
             mode = curr_mode['mode']
             text += strings['mode_info'] % mode
+        text += strings['wrng_args']
+        text += '\n'.join([f"- {i}" for i in acceptable_args])
         await message.reply(text)
 
 
