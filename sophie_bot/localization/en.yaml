@@ -82,6 +82,7 @@ STRINGS:
     no_filters_found: "No filters was found in <b>{chat_name}</b>!"
 
     # /addfilter
+    anon_detected: Being anonymous admin, you cannot add new filters, use connections instead.
     adding_filter: |
       Adding filter <code>{handler}</code> in <b>{chat_name}</b>
       Select action below:
