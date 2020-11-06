@@ -146,6 +146,7 @@ async def get_admins_rights(chat_id, force_update=False):
                 'status': admin['status'],
                 'admin': True,
                 'title': admin['custom_title'],
+                'anonymous': admin['is_anonymous'],
                 'can_change_info': admin['can_change_info'],
                 'can_delete_messages': admin['can_delete_messages'],
                 'can_invite_users': admin['can_invite_users'],
