@@ -34,7 +34,7 @@ import babel
 import ujson
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.types import InputFile
+from aiogram.types import InputFile, Message
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 from aiogram.utils.exceptions import Unauthorized, NeedAdministratorRightsInTheChannel, ChatNotFound
@@ -217,6 +217,10 @@ def is_fed_admin(func):
 async def new_fed(message, strings):
     fed_name = html.escape(message.get_args())
     user_id = message.from_user.id
+    # dont support creation of newfed as anon admin
+    if user_id == 1087968824:
+        return await message.reply(strings['disallow_anon'])
+
     if not fed_name:
         await message.reply(strings['no_args'])
 
@@ -254,7 +258,7 @@ async def join_fed(message, chat, strings):
     user_id = message.from_user.id
     chat_id = chat['chat_id']
 
-    if not await is_chat_creator(chat_id, user_id):
+    if not await is_chat_creator(message, chat_id, user_id):
         await message.reply(strings['only_creators'])
         return
 
@@ -290,7 +294,7 @@ async def join_fed(message, chat, strings):
 @get_strings_dec("feds")
 async def leave_fed_comm(message, chat, fed, strings):
     user_id = message.from_user.id
-    if not await is_chat_creator(chat['chat_id'], user_id):
+    if not await is_chat_creator(message, chat['chat_id'], user_id):
         await message.reply(strings['only_creators'])
         return
 
@@ -426,7 +430,7 @@ async def demote_from_fed(message, fed, user, text, strings):
 async def set_fed_log_chat(message, fed, chat, strings):
     chat_id = chat['chat_id'] if 'chat_id' in chat else chat['id']
     if chat['type'] == 'channel':
-        if await check_admin_rights(chat_id, BOT_ID, ['can_post_messages']) is not True:
+        if await check_admin_rights(message, chat_id, BOT_ID, ['can_post_messages']) is not True:
             return await message.reply(strings['no_right_to_post'])
 
     if 'log_chat_id' in fed and fed['log_chat_id']:
@@ -1062,7 +1066,11 @@ async def import_state(message, fed, state=None, **kwargs):
 @decorator.register(only_groups=True)
 @chat_connection(only_groups=True)
 @get_strings_dec('feds')
-async def check_fbanned(message, chat, strings):
+async def check_fbanned(message: Message, chat, strings):
+    if message.sender_chat:
+        # should be channel/anon
+        return
+
     user_id = message.from_user.id
     chat_id = chat['chat_id']
 

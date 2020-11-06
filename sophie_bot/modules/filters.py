@@ -114,6 +114,10 @@ async def check_msg(message):
 @chat_connection(only_groups=True, admin=True)
 @get_strings_dec('filters')
 async def add_handler(message, chat, strings):
+    # filters doesn't support anon admins
+    if message.from_user.id == 1087968824:
+        return await message.reply(strings['anon_detected'])
+
     handler = get_args_str(message).lower()
     text = strings['adding_filter'].format(handler=handler, chat_name=chat['chat_title'])
 
@@ -283,7 +287,7 @@ async def del_filter_cb(event, chat, strings, callback_data=None, **kwargs):
 @register(cmds=['delfilters', "delallfilters"])
 @get_strings_dec('filters')
 async def delall_filters(message: Message, strings: dict):
-    if not await is_chat_creator(message.chat.id, message.from_user.id):
+    if not await is_chat_creator(message, message.chat.id, message.from_user.id):
         return await message.reply(strings['not_chat_creator'])
     buttons = InlineKeyboardMarkup()
     buttons.add(
@@ -302,7 +306,7 @@ async def delall_filters(message: Message, strings: dict):
 @register(filter_delall_yes_cb.filter(), f='cb', allow_kwargs=True)
 @get_strings_dec('filters')
 async def delall_filters_yes(event: CallbackQuery, strings: dict, callback_data: dict, **_):
-    if not await is_chat_creator(chat_id := int(callback_data['chat_id']), event.from_user.id):
+    if not await is_chat_creator(event, chat_id := int(callback_data['chat_id']), event.from_user.id):
         return False
     result = await db.filters.delete_many({'chat_id': chat_id})
     await update_handlers_cache(chat_id)
@@ -312,7 +316,7 @@ async def delall_filters_yes(event: CallbackQuery, strings: dict, callback_data:
 @register(regexp="filter_delall_no_cb", f='cb')
 @get_strings_dec('filters')
 async def delall_filters_no(event: CallbackQuery, strings: dict):
-    if not await is_chat_creator(event.message.chat.id, event.from_user.id):
+    if not await is_chat_creator(event, event.message.chat.id, event.from_user.id):
         return False
     await event.message.delete()
 
