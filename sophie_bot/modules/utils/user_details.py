@@ -20,7 +20,10 @@
 import pickle
 import re
 from contextlib import suppress
+from typing import Union
 
+from aiogram.dispatcher.handler import SkipHandler
+from aiogram.types import CallbackQuery, Message
 from aiogram.utils.exceptions import BadRequest, Unauthorized, ChatNotFound
 from telethon.tl.functions.users import GetFullUserRequest
 
@@ -28,6 +31,7 @@ from sophie_bot import OPERATORS, bot
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import bredis
 from sophie_bot.services.telethon import tbot
+from .language import get_string
 from .message import get_arg
 
 
@@ -141,6 +145,7 @@ async def get_admins_rights(chat_id, force_update=False):
             alist[user_id] = {
                 'status': admin['status'],
                 'admin': True,
+                'title': admin['custom_title'],
                 'can_change_info': admin['can_change_info'],
                 'can_delete_messages': admin['can_delete_messages'],
                 'can_invite_users': admin['can_invite_users'],
@@ -180,7 +185,7 @@ async def is_user_admin(chat_id, user_id):
             return False
 
 
-async def check_admin_rights(chat_id, user_id, rights):
+async def check_admin_rights(event: Union[Message, CallbackQuery], chat_id, user_id, rights):
     # User's pm should have admin rights
     if chat_id == user_id:
         return True
@@ -189,8 +194,18 @@ async def check_admin_rights(chat_id, user_id, rights):
         return True
 
     # Workaround to support anonymous admins
-    # TODO: Support for real admins rights check
     if user_id == 1087968824:
+        if not isinstance(event, Message):
+            raise ValueError(f"Cannot extract signuature of anonymous admin from {type(event)}")
+
+        if not event.author_signature:
+            return True
+
+        for admin in (await get_admins_rights(chat_id)).values():
+            if "title" in admin and admin["title"] == event.author_signature:
+                for permission in rights:
+                    if not admin[permission]:
+                        return permission
         return True
 
     admin_rights = await get_admins_rights(chat_id)
@@ -220,8 +235,24 @@ async def check_group_admin(event, user_id, no_msg=False):
         return False
 
 
-async def is_chat_creator(chat_id, user_id):
+async def is_chat_creator(event: Union[Message, CallbackQuery], chat_id, user_id):
     admin_rights = await get_admins_rights(chat_id)
+
+    if user_id == 1087968824:
+        _co, possible_creator = 0, None
+        for admin in admin_rights.values():
+            if admin['title'] == event.author_signature:
+                _co += 1
+                possible_creator = admin
+
+        if _co > 1:
+            await event.answer(await get_string(chat_id, 'global', 'unable_identify_creator'))
+            raise SkipHandler
+
+        if possible_creator['status'] == 'creator':
+            return True
+        return False
+
     if user_id not in admin_rights:
         return False
 

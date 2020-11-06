@@ -258,7 +258,7 @@ async def join_fed(message, chat, strings):
     user_id = message.from_user.id
     chat_id = chat['chat_id']
 
-    if not await is_chat_creator(chat_id, user_id):
+    if not await is_chat_creator(message, chat_id, user_id):
         await message.reply(strings['only_creators'])
         return
 
@@ -294,7 +294,7 @@ async def join_fed(message, chat, strings):
 @get_strings_dec("feds")
 async def leave_fed_comm(message, chat, fed, strings):
     user_id = message.from_user.id
-    if not await is_chat_creator(chat['chat_id'], user_id):
+    if not await is_chat_creator(message, chat['chat_id'], user_id):
         await message.reply(strings['only_creators'])
 
     await db.feds.update_one(
@@ -429,7 +429,7 @@ async def demote_from_fed(message, fed, user, text, strings):
 async def set_fed_log_chat(message, fed, chat, strings):
     chat_id = chat['chat_id'] if 'chat_id' in chat else chat['id']
     if chat['type'] == 'channel':
-        if await check_admin_rights(chat_id, BOT_ID, ['can_post_messages']) is not True:
+        if await check_admin_rights(message, chat_id, BOT_ID, ['can_post_messages']) is not True:
             return await message.reply(strings['no_right_to_post'])
 
     if 'log_chat_id' in fed and fed['log_chat_id']:

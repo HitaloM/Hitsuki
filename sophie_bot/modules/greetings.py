@@ -479,7 +479,7 @@ async def welcome_security_handler(message: Message, strings):
     if not db_item or 'welcome_security' not in db_item:
         return
 
-    if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+    if not await check_admin_rights(message, chat_id, BOT_ID, ['can_restrict_members']):
         await message.reply(strings['not_admin_ws'])
         return
 
@@ -886,7 +886,7 @@ async def welcome_trigger(message: Message, strings):
     if 'welcome_mute' in db_item and db_item['welcome_mute']['enabled'] is not False:
         user = await bot.get_chat_member(chat_id, user_id)
         if 'can_send_messages' not in user or user['can_send_messages'] is True:
-            if not await check_admin_rights(chat_id, BOT_ID, ['can_restrict_members']):
+            if not await check_admin_rights(message, chat_id, BOT_ID, ['can_restrict_members']):
                 await message.reply(strings['not_admin_wm'])
                 return
 
@@ -908,7 +908,7 @@ async def clean_service_trigger(message, strings):
     if 'clean_service' not in db_item or db_item['clean_service']['enabled'] is False:
         return
 
-    if not await check_admin_rights(chat_id, BOT_ID, ['can_delete_messages']):
+    if not await check_admin_rights(message, chat_id, BOT_ID, ['can_delete_messages']):
         await bot.send_message(chat_id, strings['not_admin_wsr'])
         return
 
