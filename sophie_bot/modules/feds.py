@@ -22,33 +22,29 @@ import asyncio
 import csv
 import html
 import io
+import os
 import re
+import time
+import uuid
+from contextlib import suppress
+from datetime import datetime, timedelta
 from typing import Optional
 
 import babel
 import ujson
-import uuid
-import os
-import time
-
-from contextlib import suppress
-from pymongo import DeleteMany, InsertOne
-
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import InputFile
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 from aiogram.utils.exceptions import Unauthorized, NeedAdministratorRightsInTheChannel, ChatNotFound
-
 from babel.dates import format_timedelta
-from datetime import datetime, timedelta
+from pymongo import DeleteMany, InsertOne
 
 from sophie_bot import OWNER_ID, BOT_ID, OPERATORS, decorator, bot
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from sophie_bot.services.telethon import tbot
-
 from .utils.connections import get_connected_chat, chat_connection
 from .utils.language import get_strings_dec, get_strings, get_string
 from .utils.message import need_args_dec, get_cmd
@@ -296,6 +292,7 @@ async def leave_fed_comm(message, chat, fed, strings):
     user_id = message.from_user.id
     if not await is_chat_creator(chat['chat_id'], user_id):
         await message.reply(strings['only_creators'])
+        return
 
     await db.feds.update_one(
         {'_id': fed['_id']},
