@@ -30,6 +30,6 @@ docker:deploy:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" registry.gitlab.com
   script:
     - docker build --pull -t "$DOCKER_IMAGE" .
-    - docker push "registry.gitlab.com/sophiebot/sophie:v2.1"
+    - docker push "registry.gitlab.com/sophiebot/sophie:v2.2"
   only:
     - v2.1
