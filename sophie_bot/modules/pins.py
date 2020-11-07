@@ -27,7 +27,7 @@ from .utils.message import get_arg
 
 
 @register(cmds="unpin", user_can_pin_messages=True, bot_can_pin_messages=True)
-@chat_connection(admin=True, only_groups=True)
+@chat_connection(admin=True)
 @get_strings_dec('pins')
 async def unpin_message(message, chat, strings):
 
