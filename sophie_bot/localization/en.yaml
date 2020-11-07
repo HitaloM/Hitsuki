@@ -670,6 +670,7 @@ STRINGS:
     welcomemute_enabled: Welcome mute enabled in <b>%s</b>
     welcomemute_disabled: Welcome mute disabled in <b>%s</b>
     welcomemute_status: Welcome mute is <code>{status}</code> in <b>{chat_name}</b>
+    welcomemute_status:enabled: Welcome mute is enabled ({time}) in <b>{chat_name}</b>
 
     # /welcomesecurity
     welcomesecurity_enabled: Welcome security enabled in <b>{chat_name}</b> to <code>{level}</code>.
