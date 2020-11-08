@@ -288,6 +288,7 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
     else:
         pm = True if message.chat.type == 'private' else False
         text, markup = button_parser(chat_id, text, pm=pm)
+
         if not text and not file_id:
             text = ('#' + db_item['names'][0]) if 'names' in db_item else '404'
 
@@ -310,19 +311,21 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
 
 
 async def send_note(send_id, text, **kwargs):
+    text = textwrap.shorten(text, width=1000)
+
     if 'parse_mode' in kwargs and kwargs['parse_mode'] == 'md':
         kwargs['parse_mode'] = tmarkdown
+
     try:
         return await tbot.send_message(send_id, text, **kwargs)
+
     except (ButtonUrlInvalidError, MessageEmptyError, MediaEmptyError):
-        text = 'I found this note invalid! Please update it (read Wiki).'
-        return await tbot.send_message(send_id, text)
-    except MediaCaptionTooLongError:
-        text = textwrap.shorten(text, width=1000)
-        return await tbot.send_message(send_id, text, **kwargs)
+        return await tbot.send_message(send_id, 'I found this note invalid! Please update it (read Wiki).')
+
     except BadRequestError:  # if reply message deleted
         del kwargs['reply_to']
         return await tbot.send_message(send_id, text, **kwargs)
+
     except Exception as err:
         log.error("Something happened on sending note", exc_info=err)
 
@@ -374,13 +377,14 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
                 text += f'\n[{name}].(btn{action})'
                 continue
 
-        if aio:
-            buttons.insert(btn) if raw_button[4] else buttons.add(btn)
-        else:
-            if len(buttons) < 1 and raw_button[4]:
-                buttons.add(btn) if aio else buttons.append([btn])
+        if btn:
+            if aio:
+                buttons.insert(btn) if raw_button[4] else buttons.add(btn)
             else:
-                buttons[-1].append(btn) if raw_button[4] else buttons.append([btn])
+                if len(buttons) < 1 and raw_button[4]:
+                    buttons.add(btn) if aio else buttons.append([btn])
+                else:
+                    buttons[-1].append(btn) if raw_button[4] else buttons.append([btn])
 
     if not aio and len(buttons) == 0:
         buttons = None
