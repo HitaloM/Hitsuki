@@ -19,6 +19,8 @@
 import asyncio
 import functools
 import re
+import regex
+import random
 
 from aiogram.types import Message, CallbackQuery
 from aiogram.types.inline_keyboard import InlineKeyboardButton, InlineKeyboardMarkup
@@ -27,6 +29,8 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from async_timeout import timeout
 from bson.objectid import ObjectId
 from pymongo import UpdateOne
+
+from string import printable
 
 from .utils.message import need_args_dec, get_args_str
 from .utils.user_details import is_user_admin, is_chat_creator
@@ -43,7 +47,7 @@ from sophie_bot import bot
 
 from contextlib import suppress
 
-from aiogram.utils.exceptions import MessageCantBeDeleted
+from aiogram.utils.exceptions import MessageCantBeDeleted, MessageToDeleteNotFound
 
 
 filter_action_cp = CallbackData('filter_action_cp', 'filter_id')
@@ -96,7 +100,7 @@ async def check_msg(message):
 
     for handler in filters:  # type: str
         if handler.startswith("re:"):
-            func = functools.partial(re.search, handler.replace("re:", "", 1), text)
+            func = functools.partial(regex.search, handler.replace("re:", '', 1), text, timeout=0.1)
         else:
             # TODO: Remove this (handler.replace(...)). kept for backward compatibility
             func = functools.partial(re.search, re.escape(handler).replace('(+)', '(.*)'), text, flags=re.IGNORECASE)
@@ -104,7 +108,7 @@ async def check_msg(message):
         try:
             async with timeout(0.1):
                 matched = await loop.run_in_executor(None, func)
-        except asyncio.TimeoutError:
+        except (asyncio.TimeoutError, TimeoutError):
             continue
 
         if matched:
@@ -124,7 +128,19 @@ async def add_handler(message, chat, strings):
     if message.from_user.id == 1087968824:
         return await message.reply(strings['anon_detected'])
 
-    handler = get_args_str(message).lower()
+    handler = get_args_str(message)
+
+    if handler.startswith('re:'):
+        pattern = handler
+        random_text_str = ''.join(random.choice(printable) for i in range(50))
+        try:
+            regex.match(pattern, random_text_str, timeout=0.5, )
+        except TimeoutError:
+            await message.reply(strings['regex_too_slow'])
+            return
+    else:
+        handler = handler.lower()
+
     text = strings['adding_filter'].format(handler=handler, chat_name=chat['chat_title'])
 
     buttons = InlineKeyboardMarkup(row_width=2)
@@ -136,6 +152,8 @@ async def add_handler(message, chat, strings):
             await get_string(chat['chat_id'], data['title']['module'], data['title']['string']),
             callback_data=filter_action_cp.new(filter_id=filter_id)
         ))
+    buttons.add(InlineKeyboardButton(strings['cancel_btn'], callback_data='cancel'))
+
     user_id = message.from_user.id
     chat_id = chat['chat_id']
     redis.set(f'add_filter:{user_id}:{chat_id}', handler)
@@ -205,7 +223,7 @@ async def setup_end(message, chat, strings, state=None, **kwargs):
         filter_id = proxy['filter_id']
         setup_co = proxy['setup_co']
         curr_step = proxy['setup_done']
-        with suppress(MessageCantBeDeleted):
+        with suppress(MessageCantBeDeleted, MessageToDeleteNotFound):
             await bot.delete_message(message.chat.id, proxy['msg_id'])
 
     action = FILTERS_ACTIONS[filter_id]
