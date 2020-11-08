@@ -439,7 +439,7 @@ async def note_info(message, chat, strings):
     return await message.reply(text)
 
 
-BUTTONS.update({'note': 'btnnotesm'})
+BUTTONS.update({'note': 'btnnotesm', '#': 'btnnotesm'})
 
 
 @register(regexp=r'btnnotesm_(\w+)_(.*)', f='cb', allow_kwargs=True)

@@ -332,13 +332,13 @@ async def send_note(send_id, text, **kwargs):
 
 def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     buttons = InlineKeyboardMarkup(row_width=row_width) if aio else []
-    pattern = r'\[(.+?)\]\((button|btn)(.+?)(:.+?|)(:same|)\)(\n|)'
+    pattern = r'\[(.+?)\]\((button|btn|.)(.+?)(:.+?|)(:same|)\)(\n|)'
     raw_buttons = re.findall(pattern, texts)
     text = re.sub(pattern, '', texts)
     btn = None
     for raw_button in raw_buttons:
         name = raw_button[0]
-        action = raw_button[2]
+        action = raw_button[1] if raw_button[1] not in ('button', 'btn') else raw_button[2]
         argument = raw_button[3][1:].lower().replace('`', '') if raw_button[3] else ''
 
         if action in BUTTONS.keys():
