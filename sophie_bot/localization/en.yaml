@@ -86,6 +86,7 @@ STRINGS:
     adding_filter: |
       Adding filter <code>{handler}</code> in <b>{chat_name}</b>
       Select action below:
+    saved: "New filter was successfully saved!"
 
     # /filters
     list_filters: "Filters in <b>{chat_name}</b>:\n"

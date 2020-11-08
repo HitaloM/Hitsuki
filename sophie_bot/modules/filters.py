@@ -39,6 +39,12 @@ from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from sophie_bot.utils.logger import log
 from sophie_bot import loop
+from sophie_bot import bot
+
+from contextlib import suppress
+
+from aiogram.utils.exceptions import MessageCantBeDeleted
+
 
 filter_action_cp = CallbackData('filter_action_cp', 'filter_id')
 filter_remove_cp = CallbackData('filter_remove_cp', 'id')
@@ -126,7 +132,7 @@ async def add_handler(message, chat, strings):
         filter_id = action[0]
         data = action[1]
 
-        buttons.add(InlineKeyboardButton(
+        buttons.insert(InlineKeyboardButton(
             await get_string(chat['chat_id'], data['title']['module'], data['title']['string']),
             callback_data=filter_action_cp.new(filter_id=filter_id)
         ))
@@ -137,7 +143,7 @@ async def add_handler(message, chat, strings):
         await message.reply(text, reply_markup=buttons)
 
 
-async def save_filter(message, data):
+async def save_filter(message, data, strings):
     if await db.filters.find_one(data):
         # prevent saving duplicate filter
         await message.reply('Duplicate filter!')
@@ -145,12 +151,13 @@ async def save_filter(message, data):
 
     await db.filters.insert_one(data)
     await update_handlers_cache(data['chat_id'])
-    await message.reply('Saved!')
+    await message.reply(strings['saved'])
 
 
 @register(filter_action_cp.filter(), f='cb', allow_kwargs=True)
 @chat_connection(only_groups=True, admin=True)
-async def register_action(event, chat, callback_data=None, state=None, **kwargs):
+@get_strings_dec('filters')
+async def register_action(event, chat, strings, callback_data=None, state=None, **kwargs):
     if not await is_user_admin(event.message.chat.id, event.from_user.id):
         return await event.answer('You are not admin to do this')
     filter_id = callback_data['filter_id']
@@ -178,6 +185,7 @@ async def register_action(event, chat, callback_data=None, state=None, **kwargs)
             proxy['filter_id'] = filter_id
             proxy['setup_co'] = setup_co
             proxy['setup_done'] = 0
+            proxy['msg_id'] = event.message.message_id
 
         if setup_co > 0:
             await action['setup'][0]['start'](event.message)
@@ -185,17 +193,20 @@ async def register_action(event, chat, callback_data=None, state=None, **kwargs)
             await action['setup']['start'](event.message)
         return
 
-    await save_filter(event.message, data)
+    await save_filter(event.message, data, strings)
 
 
 @register(state=NewFilter.setup, f='any', is_admin=True, allow_kwargs=True)
 @chat_connection(only_groups=True, admin=True)
-async def setup_end(message, chat, state=None, **kwargs):
+@get_strings_dec('filters')
+async def setup_end(message, chat, strings, state=None, **kwargs):
     async with state.proxy() as proxy:
         data = proxy['data']
         filter_id = proxy['filter_id']
         setup_co = proxy['setup_co']
         curr_step = proxy['setup_done']
+        with suppress(MessageCantBeDeleted):
+            await bot.delete_message(message.chat.id, proxy['msg_id'])
 
     action = FILTERS_ACTIONS[filter_id]
 
@@ -215,7 +226,7 @@ async def setup_end(message, chat, state=None, **kwargs):
         return
 
     await state.finish()
-    await save_filter(message, data)
+    await save_filter(message, data, strings)
 
 
 @register(cmds=['filters', 'listfilters'])
