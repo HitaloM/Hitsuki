@@ -18,10 +18,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime  # noqa: F401
+from contextlib import suppress
 
 from aiogram.utils.exceptions import MessageNotModified
 from babel.dates import format_datetime, format_timedelta
-from contextlib import suppress
 
 from sophie_bot import BOT_ID, bot
 from sophie_bot.decorator import register

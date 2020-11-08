@@ -61,6 +61,8 @@ class ImportFbansFileWait(StatesGroup):
 
 
 delfed_cb = CallbackData('delfed_cb', 'fed_id', 'creator_id')
+
+
 # functions
 
 
@@ -143,7 +145,9 @@ def get_fed_user_text(skip_no_fed=False, self=False):
                         fed = None
 
             return await func(*args, fed, user, text, **kwargs)
+
         return wrapped_1
+
     return wrapped
 
 

@@ -20,6 +20,7 @@
 
 import difflib
 import re
+from contextlib import suppress
 from datetime import datetime
 
 from aiogram.dispatcher.filters.builtin import CommandStart
@@ -27,17 +28,14 @@ from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardBu
 from aiogram.utils.deep_linking import get_start_link
 from aiogram.utils.exceptions import MessageNotModified, MessageCantBeDeleted, BadRequest
 from babel.dates import format_datetime
-from contextlib import suppress
 from pymongo import ReplaceOne
+from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
 
 from sophie_bot import bot
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from sophie_bot.services.telethon import tbot
-
-from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
-
 from .utils.connections import chat_connection, set_connected_command
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec, get_string
@@ -250,8 +248,7 @@ async def get_note_hashtag(message, chat, regexp=None, **kwargs):
 @get_strings_dec('notes')
 @clean_notes
 async def get_notes_list_cmd(message, chat, strings):
-
-    if await db.privatenotes.find_one({'chat_id': chat['chat_id']})\
+    if await db.privatenotes.find_one({'chat_id': chat['chat_id']}) \
             and message.chat.id == chat['chat_id']:  # Workaround to avoid sending PN to connected PM
         text = strings['notes_in_private']
         if not (keyword := message.get_args()):

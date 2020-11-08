@@ -18,37 +18,31 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import asyncio
 import functools
-import re
-import regex
 import random
+import re
+from contextlib import suppress
+from string import printable
 
+import regex
+from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import Message, CallbackQuery
 from aiogram.types.inline_keyboard import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.callback_data import CallbackData
-from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.utils.exceptions import MessageCantBeDeleted, MessageToDeleteNotFound
 from async_timeout import timeout
 from bson.objectid import ObjectId
 from pymongo import UpdateOne
 
-from string import printable
-
-from .utils.message import need_args_dec, get_args_str
-from .utils.user_details import is_user_admin, is_chat_creator
-from .utils.language import get_strings_dec, get_string
-from .utils.connections import chat_connection, get_connected_chat
-
+from sophie_bot import loop, bot
 from sophie_bot.decorator import register
 from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import redis
 from sophie_bot.utils.logger import log
-from sophie_bot import loop
-from sophie_bot import bot
-
-from contextlib import suppress
-
-from aiogram.utils.exceptions import MessageCantBeDeleted, MessageToDeleteNotFound
-
+from .utils.connections import chat_connection, get_connected_chat
+from .utils.language import get_strings_dec, get_string
+from .utils.message import need_args_dec, get_args_str
+from .utils.user_details import is_user_admin, is_chat_creator
 
 filter_action_cp = CallbackData('filter_action_cp', 'filter_id')
 filter_remove_cp = CallbackData('filter_remove_cp', 'id')
@@ -134,7 +128,7 @@ async def add_handler(message, chat, strings):
         pattern = handler
         random_text_str = ''.join(random.choice(printable) for i in range(50))
         try:
-            regex.match(pattern, random_text_str, timeout=0.5, )
+            regex.match(pattern, random_text_str, timeout=0.2)
         except TimeoutError:
             await message.reply(strings['regex_too_slow'])
             return

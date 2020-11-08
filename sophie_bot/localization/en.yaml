@@ -296,10 +296,10 @@ STRINGS:
     # /fsetlog
     already_have_chatlog: "<b>{name}</b> Federation already have enabled logging in other chat/channel!"
     set_chat_log: |
-     This chat now logging all actions in <b>{name}</b> Federation
+      This chat now logging all actions in <b>{name}</b> Federation
 
-     Federation logging is used for internal assessment of federation and its performance.
-     it should NOT be used as a show wall to public thereby respecting user data and our privacy guidelines.
+      Federation logging is used for internal assessment of federation and its performance.
+      it should NOT be used as a show wall to public thereby respecting user data and our privacy guidelines.
     set_log_fed_log: |
       <b>Enabled logging</b> #LoggingEnabled
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)

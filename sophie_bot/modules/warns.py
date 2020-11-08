@@ -18,6 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import functools
 import re
+from contextlib import suppress
+from datetime import datetime, timedelta
 
 from aiogram.types import Message
 from aiogram.types.inline_keyboard import (
@@ -28,8 +30,6 @@ from aiogram.utils.deep_linking import get_start_link
 from aiogram.utils.exceptions import MessageNotModified
 from babel.dates import format_timedelta
 from bson.objectid import ObjectId
-from contextlib import suppress
-from datetime import datetime, timedelta
 
 from sophie_bot import BOT_ID, bot
 from sophie_bot.decorator import register

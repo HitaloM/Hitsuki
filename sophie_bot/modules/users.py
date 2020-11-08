@@ -22,6 +22,7 @@ import html
 
 from aiogram.dispatcher.middlewares import BaseMiddleware
 
+from sophie_bot import dp
 from sophie_bot.decorator import register
 from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db
@@ -30,7 +31,6 @@ from .utils.connections import chat_connection
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.user_details import get_user_dec, get_user_link, is_user_admin, get_admins_rights
-from sophie_bot import dp
 
 
 async def update_users_handler(message):
@@ -221,7 +221,8 @@ async def adminlist(message, chat, strings):
     admins = await get_admins_rights(chat['chat_id'])
     text = strings['admins']
     for admin, rights in admins.items():
-        if rights['anonymous']: continue
+        if rights['anonymous']:
+            continue
         text += '- {} ({})\n'.format(await get_user_link(admin), admin)
 
     await message.reply(text, disable_notification=True)

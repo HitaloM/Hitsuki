@@ -59,7 +59,6 @@ for fed in all_feds:
     mongodb.feds.update_one({'fed_id': fed['fed_id']}, {'$unset': {'banned': 1}})
     changed_feds += 1
 
-
 log.info('Update done!')
 log.info('Modified feds - ' + str(changed_feds))
 log.info('Unchanged feds - ' + str(all_feds_count - changed_feds))

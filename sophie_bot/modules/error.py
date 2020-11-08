@@ -52,8 +52,8 @@ def catch_redis_error(**dec_kwargs):
                 return await func(*args, **kwargs)
             except RedisError:
                 if chat_id not in SENT:
-                    text = 'Sorry for inconvenience! I encountered error in my redis DB, which is necessary for running '\
-                           'bot \n\nPlease report this to my support group immediately when you see this error!'
+                    text = 'Sorry for inconvenience! I encountered error in my redis DB, which is necessary for  ' \
+                           'running bot \n\nPlease report this to my support group immediately when you see this error!'
                     if await bot.send_message(chat_id, text):
                         SENT.append(chat_id)
                 # Alert bot owner
@@ -63,14 +63,15 @@ def catch_redis_error(**dec_kwargs):
                         SENT.append(OWNER_ID)
                 log.error(RedisError, exc_info=True)
                 return False
+
         return wrapped_1
+
     return wrapped
 
 
 @dp.errors_handler()
 @catch_redis_error()
 async def all_errors_handler(update: Update, error):
-
     if update.message is not None:
         message = update.message
     elif update.callback_query is not None:

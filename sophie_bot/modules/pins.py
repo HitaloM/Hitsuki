@@ -30,7 +30,6 @@ from .utils.message import get_arg
 @chat_connection(admin=True)
 @get_strings_dec('pins')
 async def unpin_message(message, chat, strings):
-
     # support unpinning all
     if get_arg(message) in {'all'}:
         return await bot.unpin_all_chat_messages(chat['chat_id'])

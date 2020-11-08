@@ -18,8 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from sophie_bot.utils.logger import log
 
+from sophie_bot.utils.logger import log
 
 LOADED_MODULES = []
 

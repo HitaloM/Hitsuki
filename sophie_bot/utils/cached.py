@@ -17,13 +17,12 @@
 
 
 import asyncio
+import functools
 import pickle
 from typing import Optional, Union
 
-import functools
-
-from sophie_bot.utils.logger import log
 from sophie_bot.services.redis import bredis
+from sophie_bot.utils.logger import log
 
 
 async def set_value(key, value, ttl):

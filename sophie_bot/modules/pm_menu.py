@@ -18,19 +18,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from aiogram.utils.exceptions import MessageNotModified
+from contextlib import suppress
+
 from aiogram.types.inline_keyboard import (
     InlineKeyboardMarkup,
     InlineKeyboardButton
 )
+from aiogram.utils.exceptions import MessageNotModified
 
-from contextlib import suppress
-from .language import select_lang_keyboard
-
+from sophie_bot import BOT_USERNAME
 from sophie_bot.decorator import register
 from sophie_bot.modules.utils.disable import disableable_dec
+from .language import select_lang_keyboard
 from .utils.language import get_strings_dec
-from sophie_bot import BOT_USERNAME
 
 
 @register(cmds='start', no_args=True, only_groups=True)

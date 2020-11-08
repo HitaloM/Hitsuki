@@ -23,7 +23,6 @@ from aiogram.dispatcher.filters import CommandStart
 
 from sophie_bot.decorator import register
 from sophie_bot.services.mongo import db
-
 from .utils.connections import chat_connection
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec

@@ -16,10 +16,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pymongo import DeleteOne
+
 from sophie_bot.services.mongo import mongodb
 from sophie_bot.utils.logger import log
-
-from pymongo import DeleteOne
 
 log.info('Sophie Database v6')
 log.info("Feds: fix str user_id and fix duplications")

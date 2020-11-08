@@ -17,24 +17,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pickle
-
 from dataclasses import dataclass
-from babel.dates import format_timedelta
-
-from aiogram.types import InlineKeyboardMarkup, ChatType
-from aiogram.types.callback_query import CallbackQuery
-from aiogram.types.inline_keyboard import InlineKeyboardButton
-from sophie_bot.modules.utils.connections import chat_connection
 from typing import Optional
 
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.handler import CancelHandler
 from aiogram.dispatcher.middlewares import BaseMiddleware
+from aiogram.types import InlineKeyboardMarkup, ChatType
+from aiogram.types.callback_query import CallbackQuery
+from aiogram.types.inline_keyboard import InlineKeyboardButton
 from aiogram.types.message import ContentType, Message
 from aiogram.utils.callback_data import CallbackData
+from babel.dates import format_timedelta
 
 from sophie_bot import dp
 from sophie_bot.decorator import register
+from sophie_bot.modules.utils.connections import chat_connection
 from sophie_bot.modules.utils.language import get_strings_dec, get_strings
 from sophie_bot.modules.utils.message import convert_time, get_args, need_args_dec
 from sophie_bot.modules.utils.restrictions import ban_user, kick_user, mute_user
@@ -157,7 +155,6 @@ class AntifloodEnforcer(BaseMiddleware):
 @chat_connection()
 @get_strings_dec('antiflood')
 async def setflood_command(message: Message, chat: dict, strings: dict):
-
     try:
         args = int(get_args(message)[0])
     except ValueError:

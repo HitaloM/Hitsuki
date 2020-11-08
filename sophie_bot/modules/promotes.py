@@ -17,17 +17,17 @@
 import html
 
 from aiogram.utils.exceptions import ChatAdminRequired
-
-from .utils.connections import chat_connection
-from .utils.language import get_strings_dec
-from .utils.user_details import (get_user_dec, get_user_and_text_dec,
-                                 get_user_link, get_admins_rights)
-
 from telethon.errors import AdminRankEmojiNotAllowedError
 
+from sophie_bot import BOT_ID, bot
 from sophie_bot.decorator import register
 from sophie_bot.services.telethon import tbot
-from sophie_bot import BOT_ID, bot
+from .utils.connections import chat_connection
+from .utils.language import get_strings_dec
+from .utils.user_details import (
+    get_user_dec, get_user_and_text_dec,
+    get_user_link, get_admins_rights
+)
 
 
 @register(cmds="promote", bot_can_promote_members=True, user_can_promote_members=True)

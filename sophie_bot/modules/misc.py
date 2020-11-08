@@ -14,17 +14,17 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 
+from contextlib import suppress
+
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from aiogram.types import Message
-from aiogram.utils.exceptions import BadRequest
-from aiogram.utils.exceptions import MessageNotModified, MessageToDeleteNotFound
-from contextlib import suppress
+from aiogram.utils.exceptions import BadRequest, MessageNotModified, MessageToDeleteNotFound
 
 from sophie_bot.decorator import register
+from .utils.language import get_strings_dec
 from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
-from .utils.language import get_strings_dec
 
 
 @register(cmds='cancel', state='*', allow_kwargs=True)

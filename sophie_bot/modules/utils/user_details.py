@@ -431,4 +431,5 @@ def get_chat_dec(allow_self=False, fed=False):
             return await func(*args, chat, **kwargs)
 
         return wrapped_1
+
     return wrapped

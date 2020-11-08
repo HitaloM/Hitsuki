@@ -27,10 +27,10 @@ from typing import Optional, Union
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import CallbackQuery, ContentType, Message
-from aiogram.utils.callback_data import CallbackData
-from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted, BadRequest, ChatAdminRequired
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
+from aiogram.utils.callback_data import CallbackData
+from aiogram.utils.exceptions import MessageToDeleteNotFound, MessageCantBeDeleted, BadRequest, ChatAdminRequired
 from apscheduler.jobstores.base import JobLookupError
 from babel.dates import format_timedelta
 from captcha.image import ImageCaptcha
@@ -467,7 +467,6 @@ async def reset_security_note(message, chat, strings):
 @register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
 async def welcome_security_handler(message: Message, strings):
-
     if len(message.new_chat_members) > 1:
         # FIXME: Sophie doesnt support adding multiple users currently
         return
@@ -846,7 +845,6 @@ async def welcome_security_passed(message: Union[CallbackQuery, Message], state,
 @register(only_groups=True, f='welcome')
 @get_strings_dec('greetings')
 async def welcome_trigger(message: Message, strings):
-
     if len(message.new_chat_members) > 1:
         # FIXME: Sophie doesnt support adding multiple users currently
         return
