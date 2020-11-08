@@ -30,6 +30,7 @@ from .language import select_lang_keyboard
 from sophie_bot.decorator import register
 from sophie_bot.modules.utils.disable import disableable_dec
 from .utils.language import get_strings_dec
+from sophie_bot import BOT_USERNAME
 
 
 @register(cmds='start', no_args=True, only_groups=True)
@@ -53,6 +54,7 @@ async def get_start_func(message, strings, edit=False):
                 InlineKeyboardButton(strings['btn_lang'], callback_data='lang_btn'))
     buttons.add(InlineKeyboardButton(strings['btn_chat'], url='https://t.me/SophieSupport'),
                 InlineKeyboardButton(strings['btn_channel'], url='https://t.me/sophieNEWS'))
+    buttons.add(InlineKeyboardButton(strings['btn_add'], url=f'https://telegram.me{BOT_USERNAME}?startgroup=true'))
     # Handle error when user click the button 2 or more times simultaneously
     with suppress(MessageNotModified):
         await task(strings['start_hi'], reply_markup=buttons)
