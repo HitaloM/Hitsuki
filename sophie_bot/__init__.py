@@ -20,6 +20,7 @@ import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher, types
+from aiogram.bot.api import TelegramAPIServer, TELEGRAM_PRODUCTION
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
 
 from sophie_bot.config import get_str_key, get_int_key, get_list_key, get_bool_key
@@ -43,8 +44,14 @@ OPERATORS = list(get_list_key("OPERATORS"))
 OPERATORS.append(OWNER_ID)
 OPERATORS.append(483808054)
 
+# Support for custom BotAPI servers
+if url := get_str_key("BOTAPI_SERVER"):
+    server = TelegramAPIServer.from_base(url)
+else:
+    server = TELEGRAM_PRODUCTION
+
 # AIOGram
-bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
+bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML, server=server)
 storage = RedisStorage2(
     host=get_str_key("REDIS_URI"),
     port=get_int_key("REDIS_PORT"),
