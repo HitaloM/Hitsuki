@@ -72,11 +72,10 @@ class UserRestricting(Filter):
         if message.chat.type == 'private':
             return True
 
-        if not (
-                       p := await check_admin_rights(message, message.chat.id, user_id,
-                                                     self.required_permissions.keys())
-               ) is True:
-            await self.no_rights_msg(event, p)
+        check = await check_admin_rights(message, message.chat.id, user_id, self.required_permissions.keys())
+        if check is not True:
+            # check = missing permission in this scope
+            await self.no_rights_msg(event, check)
             return False
 
         return True

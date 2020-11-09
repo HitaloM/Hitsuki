@@ -22,6 +22,7 @@ import sys
 import textwrap
 from datetime import datetime
 
+from aiogram.types import Message
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import markdown
 from babel.dates import format_date, format_time, format_datetime
@@ -397,7 +398,7 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     return text, buttons
 
 
-async def vars_parser(text, message, chat_id, md=False, event=None, user=None):
+async def vars_parser(text, message, chat_id, md=False, event: Message = None, user=None):
     if event is None:
         event = message
 
@@ -412,11 +413,14 @@ async def vars_parser(text, message, chat_id, md=False, event=None, user=None):
     user_id = ([user.id for user in event.new_chat_members][0]
                if 'new_chat_members' in event and event.new_chat_members != [] else user.id)
     mention = await get_user_link(user_id, md=md)
-    username = ('@' + str(event.new_chat_members[0].username)
-                if 'new_chat_members' in event and event.new_chat_members != [] and event.new_chat_members[0].username
-                   is not None
-                else '@' + user.username
-    if user.username is not None else mention)
+
+    if event.new_chat_members and event.new_chat_members[0].username:
+        username = "@" + event.new_chat_members[0].username
+    elif user.username:
+        username = "@" + user.username
+    else:
+        username = mention
+
     chat_id = message.chat.id
     chat_name = html.escape(message.chat.title or 'Local', quote=False)
     chat_nick = message.chat.username or chat_name
