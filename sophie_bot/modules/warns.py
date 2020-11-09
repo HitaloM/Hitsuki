@@ -19,7 +19,7 @@
 import functools
 import re
 from contextlib import suppress
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from aiogram.types import Message
 from aiogram.types.inline_keyboard import (
@@ -37,7 +37,7 @@ from sophie_bot.services.mongo import db
 from .misc import customise_reason_start, customise_reason_finish
 from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
-from .utils.message import convert_time, convert_timedelta, InvalidTimeUnit
+from .utils.message import convert_time, InvalidTimeUnit
 from .utils.restrictions import ban_user, mute_user
 from .utils.user_details import (
     get_user_and_text_dec, get_user_dec,
@@ -249,14 +249,13 @@ async def warnmode(message, chat, strings):
                 return await message.reply(strings['no_time'])
             else:
                 try:
-                    # For better UX we have to show until time of tmute when action is done.
+                    # TODO: For better UX we have to show until time of tmute when action is done.
                     # We can't store timedelta class in mongodb; Here we check validity of given time.
-                    time = convert_time(time)
+                    convert_time(time)
                 except (InvalidTimeUnit, TypeError, ValueError):
                     return await message.reply(strings['invalid_time'])
                 else:
-                    new['mode'] = option
-                    new['time'] = convert_timedelta(time)
+                    new.update(mode=option, time=time)
                     await db.warnmode.update_one({'chat_id': chat_id},
                                                  {'$set': new}, upsert=True)
         elif arg[0] == acceptable_args[2]:
@@ -275,13 +274,13 @@ async def warnmode(message, chat, strings):
 
 
 async def max_warn_func(chat_id, user_id):
-    if (mode := await db.warnmode.find_one({'chat_id': chat_id})) is not None:
-        if mode['mode'] == 'ban':
+    if (data := await db.warnmode.find_one({'chat_id': chat_id})) is not None:
+        if data['mode'] == 'ban':
             return await ban_user(chat_id, user_id)
-        elif mode['mode'] == 'tmute':
-            time = timedelta(days=mode['time']['days'], seconds=mode['time']['seconds'])
+        elif data['mode'] == 'tmute':
+            time = convert_time(data['time'])
             return await mute_user(chat_id, user_id, time)
-        elif mode['mode'] == 'mute':
+        elif data['mode'] == 'mute':
             return await mute_user(chat_id, user_id)
     else:  # Default
         return await ban_user(chat_id, user_id)
@@ -293,15 +292,12 @@ async def __export__(chat_id):
     else:
         number = 3
 
-    if data := await db.warnmode.find_one({'chat_id': chat_id}):
-        mode = data['mode']
-        new = {'mode': mode}
-        if mode.startswith('t'):
-            new['time'] = str(data['time'])
+    if warnmode_data := await db.warnmode.find_one({'chat_id': chat_id}):
+        del data['chat_id'], data['_id']
     else:
-        new = None
+        warnmode_data = None
 
-    return {'warns': {'warns_limit': number, 'warn_mode': new}}
+    return {'warns': {'warns_limit': number, 'warn_mode': warnmode_data}}
 
 
 async def __import__(chat_id, data):
@@ -315,17 +311,8 @@ async def __import__(chat_id, data):
 
         await db.warnlimit.update_one({'chat_id': chat_id}, {'$set': {'num': number}}, upsert=True)
 
-    if (mode := data['warn_mode']) is not None:
-        if mode['mode'] == 'tmute':
-            new = {'mode': mode['mode']}
-            raw_time = datetime.strptime(mode['time'], '%H:%M:%S')
-            time = timedelta(hours=raw_time.hour, minutes=raw_time.minute, seconds=raw_time.second)
-            new['time'] = time
-        else:
-            new = {
-                'mode': mode['mode']
-            }
-        await db.warnmode.update_one({'chat_id': chat_id}, {'$set': new}, upsert=True)
+    if (data := data['warn_mode']) is not None:
+        await db.warnmode.update_one({'chat_id': chat_id}, {'$set': data}, upsert=True)
 
 
 @get_strings_dec('warns')
