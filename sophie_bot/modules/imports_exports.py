@@ -34,7 +34,7 @@ from . import LOADED_MODULES
 from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 
-VERSION = 4
+VERSION = 5
 
 
 # Waiting for import file state
