@@ -1,4 +1,5 @@
 # Copyright (C) 2018 - 2020 MrYacha.
+# Copyright (C) 2020 SitiSchu.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -15,84 +16,140 @@
 #
 # This file is part of Sophie.
 
-from typing import Any
+from typing import Any, Union
 
 
-def get_string(string):
-    pass
+class SanTeXDoc:
+    def __init__(self, *args):
+        self.items = list(args)
+
+    def __str__(self) -> str:
+        return '\n'.join([str(items) for items in self.items])
+
+    def __add__(self, other):
+        self.items.append(other)
+        return self
 
 
-class FormatListText:
-    __slots__ = ['data_dict', 'sub_titles_bold', 'title_text', 'titles_bold']
+class StyleFormationCore:
+    start: str
+    end: str
 
-    def __init__(self, data_dict: dict, sub_titles_bold=True, title=None, titles_bold=True) -> None:
-        self.data_dict = data_dict
-        self.sub_titles_bold = sub_titles_bold
+    def __init__(self, text: str):
+        self.text = f'{self.start}{text}{self.end}'
+
+    def __str__(self) -> str:
+        return self.text
+
+
+class Bold(StyleFormationCore):
+    start = '<b>'
+    end = '</b>'
+
+
+class Italic(StyleFormationCore):
+    start = '<i>'
+    end = '</i>'
+
+
+class Code(StyleFormationCore):
+    start = '<code>'
+    end = '</code>'
+
+
+class Pre(StyleFormationCore):
+    start = '<pre>'
+    end = '</pre>'
+
+
+class Strikethrough(StyleFormationCore):
+    start = '<s>'
+    end = '</s>'
+
+
+class Underline(StyleFormationCore):
+    start = '<u>'
+    end = '</u>'
+
+
+class Section:
+    def __init__(self, *args, title='', indent=3, bold=True, postfix=':'):
         self.title_text = title
-        self.titles_bold = titles_bold
-
-    def get_title(self, title) -> str:
-        if self.titles_bold:
-            text = f'<b>{title}:</b> '
-        else:
-            text = f'{title} '
-
-        return text
-
-    def get_sub_title(self, sub_title) -> str:
-        if self.sub_titles_bold:
-            text = f'<b>{sub_title}:</b> '
-        else:
-            text = f'{sub_title} '
-
-        return text
-
-    def build_data_text(self, data, text="", space='  ') -> str:
-        if type(data) is list:
-            for value in data:
-                text += '\n'
-                text += space
-                text += f'- {value}'
-        else:
-            for key, value in data.items():
-                text += '\n'
-                text += space
-                text += self.get_sub_title(key)
-
-                if isinstance(value, dict) or type(value) == list:
-                    text = self.build_data_text(value, text, space + space)
-                else:
-                    text += str(value)
-        return text
-
-    @property
-    def data(self) -> dict:
-        """Returns data dict"""
-        return self.data_dict
+        self.items = list(args)
+        self.indent = indent
+        self.bold = bold
+        self.postfix = postfix
 
     @property
     def title(self) -> str:
-        """Returns formatted title"""
-        return self.get_title(self.title_text)
-
-    @property
-    def text(self) -> str:
-        """Returns formatted text"""
-        text = ''
-        if self.title_text:
-            text += self.title
-
-        text += self.build_data_text(self.data_dict)
+        title = self.title_text
+        text = str(Bold(title)) if self.bold else title
+        text += self.postfix
         return text
 
-    def __getitem__(self, key) -> Any:
-        """Returns data from dict"""
-        return self.data_dict[key]
+    def __str__(self) -> str:
+        text = self.title
+        space = ' ' * self.indent
+        for item in self.items:
+            text += '\n'
 
-    def __setitem__(self, key, value) -> None:
-        """Sets a value to data"""
-        self.data_dict[key] = value
+            if type(item) == Section:
+                item.indent *= 2
+            if type(item) == SList:
+                item.indent = self.indent
+            else:
+                text += space
 
-    def __delitem__(self, key) -> None:
-        """Deletes item"""
-        del self.data_dict[key]
+            text += str(item)
+
+        return text
+
+    def __add__(self, other):
+        self.items.append(other)
+        return self
+
+
+class SList:
+    def __init__(self, *args, indent=0, prefix='- '):
+        self.items = list(args)
+        self.prefix = prefix
+        self.indent = indent
+
+    def __str__(self) -> str:
+        space = ' ' * self.indent if self.indent else ' '
+        text = ''
+        for idx, item in enumerate(self.items):
+            if idx > 0:
+                text += '\n'
+            text += f'{space}{self.prefix}{item}'
+
+        return text
+
+
+class KeyValue:
+    def __init__(self, title, value, suffix=': '):
+        self.title = title
+        self.value = value
+        self.suffix = suffix
+
+    def __str__(self) -> str:
+        text = f'{self.title}{self.suffix}{self.value}'
+        return text
+
+
+class MultiKeyValue:
+    def __init__(self, *items: Union[list, tuple], suffix=': ', separator=', '):
+        self.items: list = items
+        self.suffix = suffix
+        self.separator = separator
+
+    def __str__(self) -> str:
+        text = ''
+        items_count = len(self.items)
+        for idx, item in enumerate(self.items):
+            text += f'{item[0]}{self.suffix}{item[1]}'
+
+            if items_count - 1 != idx:
+                text += self.separator
+
+        return text
