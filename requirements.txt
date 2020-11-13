@@ -30,5 +30,3 @@ babel
 captcha
 async-timeout
 regex
-
-git+https://github.com/kantek/KanTeX
