@@ -78,7 +78,6 @@ async def unmute_user(chat_id, user_id):
 
 async def unban_user(chat_id, user_id):
     try:
-        await bot.unban_chat_member(chat_id, user_id)
+        return await bot.unban_chat_member(chat_id, user_id, only_if_banned=True)
     except (BadRequest, Unauthorized):
         return False
-    return True
