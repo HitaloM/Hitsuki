@@ -584,6 +584,7 @@ STRINGS:
     enter_time: Please add time!
     on_time: "\nFor <code>%s</code>"
     reason: "\nReason: <code>%s</code>"
+    purge: "\nIn 5 seconds messages will be purged!"
 
     filter_title_ban: Ban the user
     filter_action_rsn: <code>Automated filter action!</code>
