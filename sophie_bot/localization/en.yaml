@@ -720,7 +720,7 @@ STRINGS:
     not_found: There's nothing to reset!
 
     # ...
-    link2chat: Link to chat!
+    verification_done: Verification is done! You have been unmuted.
   locks:
     locks_header: "Here is the current lock settings in {chat_title} \n\n"
     no_lock_args: Give me some args to lock!
