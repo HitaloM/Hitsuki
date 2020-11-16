@@ -301,7 +301,7 @@ class WelcomeSecurityConf(StatesGroup):
 
 
 @register(cmds='welcomesecurity', user_admin=True)
-@chat_connection(admin=True, only_group=True)
+@chat_connection(admin=True, only_groups=True)
 @get_strings_dec('greetings')
 async def welcome_security(message, chat, strings):
     chat_id = chat['chat_id']
@@ -823,16 +823,21 @@ async def welcome_security_passed(message: Union[CallbackQuery, Message], state,
         if 'can_send_messages' not in user or user['can_send_messages'] is True:
             await restrict_user(chat_id, user_id, until_date=convert_time(db_item['welcome_mute']['time']))
 
-    if (chat := await db.chat_list.find_one({'chat_id': chat_id})) and "chat_nick" in chat:
-        await bot.send_message(
-            user_id,
-            strings['link2chat'],
-            reply_markup=InlineKeyboardMarkup().add(
-                InlineKeyboardButton(
-                    text=strings['click_here'], url=f"t.me/{chat['chat_nick']}"
-                )
+    chat = await db.chat_list.find_one({'chat_id': chat_id})
+
+    buttons = None
+    if chat_nick := chat['chat_nick'] if chat.get('chat_nick', None) else None:
+        buttons = InlineKeyboardMarkup().add(
+            InlineKeyboardButton(
+                text=strings['click_here'], url=f"t.me/{chat_nick}"
             )
         )
+
+    await bot.send_message(
+        user_id,
+        strings['verification_done'],
+        reply_markup=buttons
+    )
 
 
 # End Welcome Security
