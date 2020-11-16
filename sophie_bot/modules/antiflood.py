@@ -273,6 +273,9 @@ async def get_data(chat_id: int):
 
 async def __export__(chat_id: int):
     data = await get_data(chat_id)
+    if not data:
+        return
+
     del data['_id'], data['chat_id']
     return data
 
