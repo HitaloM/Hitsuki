@@ -342,7 +342,14 @@ def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     for raw_button in raw_buttons:
         name = raw_button[0]
         action = raw_button[1] if raw_button[1] not in ('button', 'btn') else raw_button[2]
-        argument = raw_button[3][1:].lower().replace('`', '') if raw_button[3] else ''
+
+        if raw_button[3]:
+            argument = raw_button[3][1:].lower().replace('`', '')
+        elif action in ('#'):
+            argument = raw_button[2]
+            print(raw_button[2])
+        else:
+            argument = ''
 
         if action in BUTTONS.keys():
             cb = BUTTONS[action]
@@ -414,7 +421,7 @@ async def vars_parser(text, message, chat_id, md=False, event: Message = None, u
                if 'new_chat_members' in event and event.new_chat_members != [] else user.id)
     mention = await get_user_link(user_id, md=md)
 
-    if event.new_chat_members and event.new_chat_members[0].username:
+    if hasattr(event, 'new_chat_members') and event.new_chat_members and event.new_chat_members[0].username:
         username = "@" + event.new_chat_members[0].username
     elif user.username:
         username = "@" + user.username
