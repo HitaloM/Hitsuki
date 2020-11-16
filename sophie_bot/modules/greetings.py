@@ -48,7 +48,7 @@ from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 from .utils.message import need_args_dec, convert_time
 from .utils.notes import get_parsed_note_list, t_unparse_note_item, send_note
-from .utils.restrictions import mute_user, unmute_user, kick_user
+from .utils.restrictions import mute_user, restrict_user, unmute_user, kick_user
 from .utils.user_details import is_user_admin, get_user_link, check_admin_rights
 from ..utils.cached import cached
 
@@ -253,16 +253,12 @@ async def welcome_mute(message, chat, strings):
         db_item = await get_greetings_data(chat_id)
 
         if db_item and 'welcome_mute' in db_item and db_item['welcome_mute']['enabled'] is True:
-            time = format_timedelta(
-                convert_time(db_item['welcome_mute']['time']), locale=strings['language_info']['babel']
-            )
-            return await message.reply(
-                strings['welcomemute_status:enabled'].format(time=time, chat_name=chat['chat_title'])
-            )
+            status = strings['enabled']
         else:
-            return await message.reply(
-                strings['welcomemute_status'].format(status=strings['disabled'], chat_name=chat['chat_title'])
-            )
+            status = strings['disabled']
+
+        await message.reply(strings['welcomemute_status'].format(status=status, chat_name=chat['chat_title']))
+        return
 
     no = ['no', 'off', '0', 'false', 'disable']
 
@@ -825,7 +821,7 @@ async def welcome_security_passed(message: Union[CallbackQuery, Message], state,
     if 'welcome_mute' in db_item and db_item['welcome_mute']['enabled'] is not False:
         user = await bot.get_chat_member(chat_id, user_id)
         if 'can_send_messages' not in user or user['can_send_messages'] is True:
-            await mute_user(chat_id, user_id, until_date=convert_time(db_item['welcome_mute']['time']))
+            await restrict_user(chat_id, user_id, until_date=convert_time(db_item['welcome_mute']['time']))
 
     if (chat := await db.chat_list.find_one({'chat_id': chat_id})) and "chat_nick" in chat:
         await bot.send_message(
@@ -892,7 +888,7 @@ async def welcome_trigger(message: Message, strings):
                 await message.reply(strings['not_admin_wm'])
                 return
 
-            await mute_user(chat_id, user_id, until_date=convert_time(db_item['welcome_mute']['time']))
+            await restrict_user(chat_id, user_id, until_date=convert_time(db_item['welcome_mute']['time']))
 
 
 # Clean service trigger
