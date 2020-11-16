@@ -16,7 +16,7 @@
 #
 # This file is part of Sophie.
 
-from typing import Any, Union
+from typing import Union
 
 
 class SanTeXDoc:
