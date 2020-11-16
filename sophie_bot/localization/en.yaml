@@ -12,7 +12,6 @@ STRINGS:
     note_aliases: "\nNote aliases:"
     blank_note: "Saving blank note is not allowed!"
     notename_cant_contain: "Note name can't contain \"<code>{symbol}</code>\"!"
-    note_group: "\nGroup: {name}"
 
     # /get
     cant_find_note: I can't find this note in <b>{chat_name}</b>!
@@ -22,9 +21,11 @@ STRINGS:
 
     #/notes
     notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
-    notelist_header: "Notes in {chat_name}"
+    notelist_header: "<b>Notes in {chat_name}</b>:"
     notes_in_private: "Click below button to get notes list."
-    search_pattern: Search pattern
+    notelist_search: |
+      <b>Pattern:</b> <code>{request}</code>
+      <b>Matched notes:</b>
 
     # /clear
     note_removed: "Note <code>#{note_name}</code> removed in <b>{chat_name}</b>!"
@@ -40,16 +41,18 @@ STRINGS:
     clearall_done: "All (<code>{num}</code>) notes in {chat_name} were removed!"
 
     # /search
-    search_header: "Search request in {chat_name}"
+    search_header: |
+      <b>Search request in {chat_name}</b>:
+      <b>Pattern:</b> <code>{request}</code>
+      <b>Matched notes:</b>
 
     # /noteinfo
-    note_info_title: "Note info"
-    note_info_note: "Note names"
-    note_info_content: "Note content"
-    note_info_parsing: "Parse mode"
-    note_info_group: "Group"
-    note_info_created: "Was created in: <code>{date}</code> by {user}"
-    note_info_updated: "Last updated in: <code>{date}</code> by {user}"
+    note_info_title: "<b>Note info</b>\n"
+    note_info_note: "Note names: %s\n"
+    note_info_content: "Note content: %s\n"
+    note_info_parsing: "Parse mode: <code>%s</code>\n"
+    note_info_created: "Was created in: <code>{date}</code> by {user}\n"
+    note_info_updated: "Last updated in: <code>{date}</code> by {user}\n"
     user_blocked: "Write /start in my PM!"
 
     # /privatenotes
@@ -74,7 +77,7 @@ STRINGS:
     filters_setup_start: 'Please send a note name.'
 
     #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
-    #bot_msg: "I'm sorry, I am not notelist_headerable to get this message, probably this a other bot's message, so I can't save it."
+    #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
   filters:
     no_filters_found: "No filters was found in <b>{chat_name}</b>!"
 

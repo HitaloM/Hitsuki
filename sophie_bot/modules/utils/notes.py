@@ -222,16 +222,14 @@ async def get_msg_file(message):
 
 async def get_parsed_note_list(message, allow_reply_message=True, split_args=1):
     note = {}
-
-    to_split = ''.join([" " + q for q in get_args(message)[:split_args]])
-    if not to_split:
-        to_split = ' '
-
     if "reply_to_message" in message and allow_reply_message:
         # Get parsed reply msg text
         text, note['parse_mode'] = get_parsed_msg(message.reply_to_message)
         # Get parsed origin msg text
         text += ' '
+        to_split = ''.join([" " + q for q in get_args(message)[:split_args]])
+        if not to_split:
+            to_split = ' '
         text += get_parsed_msg(message)[0].partition(message.get_command() + to_split)[2][1:]
         # Set parse_mode if origin msg override it
         if mode := get_msg_parse(message.text, default_md=False):
@@ -247,7 +245,10 @@ async def get_parsed_note_list(message, allow_reply_message=True, split_args=1):
     else:
         text, note['parse_mode'] = get_parsed_msg(message)
         if message.get_command() and message.get_args():
-            text = text.partition(message.get_command() + to_split)[2][1:]
+            # Remove cmd and arg from message's text
+            text = re.sub(message.get_command() + r"\s?", '', text, 1)
+            if split_args > 0:
+                text = re.sub(re.escape(get_args(message)[0]) + r"\s?", '', text, 1)
         # Check on attachment
         if msg_file := await get_msg_file(message):
             note['file'] = msg_file
