@@ -64,7 +64,7 @@ async def get_start_func(message, strings, edit=False):
 @get_strings_dec('pm_menu')
 async def help_cb(event, strings):
     button = InlineKeyboardMarkup()
-    button.add(InlineKeyboardButton(strings['click_btn'], url='https://wiki.sophiebot.gq'))
+    button.add(InlineKeyboardButton(strings['click_btn'], url='https://sophiebot.rocks/'))
     button.add(InlineKeyboardButton(strings['back'], callback_data='go_to_start'))
     with suppress(MessageNotModified):
         await event.message.edit_text(strings['help_header'], reply_markup=button)
@@ -85,6 +85,6 @@ async def back_btn(event):
 @get_strings_dec('pm_menu')
 async def help_cmd(message, strings):
     button = InlineKeyboardMarkup().add(InlineKeyboardButton(
-        strings['click_btn'], url='https://wiki.sophiebot.gq'
+        strings['click_btn'], url='https://sophiebot.rocks/'
     ))
     await message.reply(strings['help_header'], reply_markup=button)
