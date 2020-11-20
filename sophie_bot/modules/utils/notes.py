@@ -336,7 +336,7 @@ async def send_note(send_id, text, **kwargs):
 
 def button_parser(chat_id, texts, pm=False, aio=False, row_width=None):
     buttons = InlineKeyboardMarkup(row_width=row_width) if aio else []
-    pattern = r'\[(.+?)\]\((button|btn|.)(.+?)(:.+?|)(:same|)\)(\n|)'
+    pattern = r'\[(.+?)\]\((button|btn|#)(.+?)(:.+?|)(:same|)\)(\n|)'
     raw_buttons = re.findall(pattern, texts)
     text = re.sub(pattern, '', texts)
     btn = None
