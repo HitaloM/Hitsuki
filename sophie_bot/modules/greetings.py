@@ -394,7 +394,7 @@ async def wlcm_sec_time_state(message: Message, chat: dict, strings: dict, state
     try:
         con_time = convert_time(message.text)
     except (ValueError, TypeError):
-        await message.reply(strings["invalid_tile"])
+        await message.reply(strings["invalid_time"])
     else:
         await db.greetings.update_one(
             {"chat_id": chat["chat_id"]},

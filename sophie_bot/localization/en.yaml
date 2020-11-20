@@ -683,6 +683,7 @@ STRINGS:
     ask_for_time_customization: |
       Do you want to customize the time period to kick unverified user? (by default it's {time})
     send_time: Please send time.
+    invalid_time: "Invalid time!"
     welcomesecurity_enabled_word: enabled, set to level {level}
     welcomesecurity_disabled: Welcome security disabled in <b>%s</b>.
     welcomesecurity_invalid_arg: Invalid argument, expected <code>button</code>/<code>captcha</code>.
