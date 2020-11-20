@@ -19,7 +19,6 @@
 import html
 import re
 import sys
-import textwrap
 from datetime import datetime
 
 from aiogram.types import Message
