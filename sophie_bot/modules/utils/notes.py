@@ -314,7 +314,8 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
 
 
 async def send_note(send_id, text, **kwargs):
-    text = textwrap.shorten(text, width=1000)
+    if text:
+        text = textwrap.shorten(text, width=1000)
 
     if 'parse_mode' in kwargs and kwargs['parse_mode'] == 'md':
         kwargs['parse_mode'] = tmarkdown
