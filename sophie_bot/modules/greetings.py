@@ -879,7 +879,7 @@ async def welcome_trigger(message: Message, strings):
     if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False:
         if 'last_msg' in db_item['clean_welcome']:
             with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
-                if value := redis.get(_clean_welcome.format(chat_id)):
+                if value := redis.get(_clean_welcome.format(chat=chat_id)):
                     await bot.delete_message(chat_id, value)
         redis.set(_clean_welcome.format(chat=chat_id), msg.id)
 
