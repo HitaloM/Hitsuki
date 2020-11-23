@@ -94,7 +94,7 @@ class AntifloodEnforcer(BaseMiddleware):
         return None
 
     def insert_flood(self, data: CacheModel, message: Message, database: dict):
-        ex = convert_time(database['time']) if database['time'] is not None else None
+        ex = convert_time(database['time']) if database.get('time', None) is not None else None
         return bredis.set(self.cache_key(message), pickle.dumps(data), ex=ex)
 
     def reset_flood(self, message):
