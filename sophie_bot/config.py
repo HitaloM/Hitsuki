@@ -105,7 +105,7 @@ def get_bool_key(name, required=False):
         default = None
     if not (data := env.bool(name, default=default)) and not required:
         log.warn('No bool key: ' + name)
-        return []
+        return False
     elif not data:
         log.critical('No bool key: ' + name)
         exit(2)

@@ -55,6 +55,19 @@ class HasArgs(BoundFilter):
             return True
 
 
+class CmdNotMonospaced(BoundFilter):
+    key = 'cmd_not_mono'
+
+    def __init__(self, cmd_not_mono):
+        self.cmd_not_mono = cmd_not_mono
+
+    async def check(self, message: types.Message):
+        if message.entities and message.entities[0]['type'] == 'code' and message.entities[0]['offset'] < 1:
+            return False
+        return True
+
+
 dp.filters_factory.bind(NotForwarded)
 dp.filters_factory.bind(NoArgs)
 dp.filters_factory.bind(HasArgs)
+dp.filters_factory.bind(CmdNotMonospaced)

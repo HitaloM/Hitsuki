@@ -30,8 +30,9 @@ from sophie_bot.utils.filters import ALL_FILTERS
 from sophie_bot.utils.logger import log
 
 DEBUG_MODE = get_bool_key('DEBUG_MODE')
-ALLOW_F_COMMANDS = get_bool_key("allow_forwards_commands")
-ALLOW_COMMANDS_FROM_EXC = get_bool_key("allow_commands_with_!")
+ALLOW_F_COMMANDS = get_bool_key("ALLOW_FORWARDS_COMMANDS")
+ALLOW_COMMANDS_FROM_EXC = get_bool_key("ALLOW_COMMANDS_WITH_!")
+CMD_NOT_MONO = get_bool_key("DISALLOW_MONO_CMDS")
 
 REGISTRED_COMMANDS = []
 COMMANDS_ALIASES = {}
@@ -55,6 +56,9 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
 
         if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
             kwargs['not_forwarded'] = True
+
+        if 'cmd_not_mono' not in kwargs and CMD_NOT_MONO:
+            kwargs['cmd_not_mono'] = True
 
         for idx, cmd in enumerate(cmds):
             if cmd in REGISTRED_COMMANDS:
