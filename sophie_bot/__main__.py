@@ -17,12 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
+import os
 from importlib import import_module
 
 from aiogram import executor
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 
-from sophie_bot import dp
+from sophie_bot import dp, TOKEN
 from sophie_bot.config import get_bool_key, get_list_key
 from sophie_bot.modules import ALL_MODULES, LOADED_MODULES
 from sophie_bot.utils.logger import log
@@ -77,7 +78,18 @@ async def start(_):
         await asyncio.sleep(2)
 
 
+async def start_webhooks(_):
+    url = os.getenv('WEBHOOK_URL') + f"/{TOKEN}"
+    await bot.set_webhook(url)
+    return await start(_)
+
+
 log.info("Starting loop..")
 log.info("Aiogram: Using polling method")
 
-executor.start_polling(dp, loop=loop, on_startup=start)
+
+
+if os.getenv('WEBHOOKS', False):
+    executor.start_webhook(dp, f'/{TOKEN}', on_startup=start_webhooks)
+else:
+    executor.start_polling(dp, loop=loop, on_startup=start)

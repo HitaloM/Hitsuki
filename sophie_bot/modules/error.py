@@ -45,7 +45,7 @@ def catch_redis_error(**dec_kwargs):
             elif update.edited_message is not None:
                 message = update.edited_message
             else:
-                return
+                return True
 
             chat_id = message.chat.id if 'chat' in message else None
             try:
@@ -62,7 +62,7 @@ def catch_redis_error(**dec_kwargs):
                     if await bot.send_message(OWNER_ID, text):
                         SENT.append(OWNER_ID)
                 log.error(RedisError, exc_info=True)
-                return False
+                return True
 
         return wrapped_1
 
@@ -79,7 +79,7 @@ async def all_errors_handler(update: Update, error):
     elif update.edited_message is not None:
         message = update.edited_message
     else:
-        return  # we don't want other guys in playground
+        return True # we don't want other guys in playground
 
     chat_id = message.chat.id
     err_tlt = sys.exc_info()[0].__name__
@@ -89,7 +89,7 @@ async def all_errors_handler(update: Update, error):
 
     if redis.get(chat_id) == str(error):
         # by err_tlt we assume that it is same error
-        return
+        return True
 
     if err_tlt == 'BadRequest' and err_msg == 'Have no rights to send a message':
         return True
