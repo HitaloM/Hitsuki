@@ -79,7 +79,7 @@ async def all_errors_handler(update: Update, error):
     elif update.edited_message is not None:
         message = update.edited_message
     else:
-        return True # we don't want other guys in playground
+        return True  # we don't want other guys in playground
 
     chat_id = message.chat.id
     err_tlt = sys.exc_info()[0].__name__
