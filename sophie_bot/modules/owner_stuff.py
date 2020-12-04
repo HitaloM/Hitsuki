@@ -191,6 +191,10 @@ async def stats(message):
 
 async def __stats__():
     text = ""
+    if os.getenv('WEBHOOKS', False):
+        text += f"* Webhooks mode, listen port: <code>{os.getenv('WEBHOOKS_PORT', 8080)}</code>\n"
+    else:
+        text += "* Long-polling mode\n"
     text += "* Database structure version <code>{}</code>\n".format(
         (await db.db_structure.find_one({}))['db_ver']
     )
