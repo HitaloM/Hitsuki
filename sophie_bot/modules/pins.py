@@ -50,12 +50,12 @@ async def pin_message(message, strings):
     msg = message.reply_to_message.message_id
     arg = get_arg(message).lower()
 
-    notify = False
+    dnd = True
     loud = ['loud', 'notify']
     if arg in loud:
-        notify = True
+        dnd = False
 
     try:
-        await bot.pin_chat_message(message.chat.id, msg, disable_notification=notify)
+        await bot.pin_chat_message(message.chat.id, msg, disable_notification=dnd)
     except BadRequest:
         await message.reply(strings['chat_not_modified_pin'])
