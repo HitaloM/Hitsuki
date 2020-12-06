@@ -1,4 +1,17 @@
-# module to get anime and character info from MyAnimeList, by t.me/dank_as_fuck (misaki@eagleunion.tk)
+# This file is part of Hitsuki (Telegram Bot)
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import aiohttp
 from urllib.parse import quote as urlencode
@@ -9,6 +22,9 @@ from hitsuki import bot
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec
 from .utils.message import need_args_dec, get_args_str
+
+# module to get anime and character info
+# by t.me/dank_as_fuck (misaki@eagleunion.tk)
 
 
 @register(cmds='kitsu')

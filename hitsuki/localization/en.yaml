@@ -191,10 +191,9 @@ STRINGS:
   pm_menu:
     start_hi_group: 'Hey there! My name is Hitsuki'
     start_hi: "Hey there! My name is Hitsuki, I help you manage your group in an efficient way!"
-    btn_add: "➕ Add me to your chat"
+    btn_source: "📦 Source code"
     btn_help: "❔ Help"
     btn_lang: "🇷🇺 Language"
-    btn_chat: "👥 Hitsuki Group"
     btn_channel: "📡 Hitsuki News"
     back: Back
 
@@ -457,8 +456,6 @@ STRINGS:
     chat_lang: "Current chat language: <b>{lang}</b>"
     select_pm_lang: "\n<b>Select your new language:</b>"
     select_chat_lang: "\n<b>Select new chat language:</b>"
-    crowdin_btn: "🌎 Help us with translation"
-    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukibot\">🌎 Help us improve languages</a>"
     not_supported_lang: This language not supported!
     lang_changed: Language was changed to <b>{lang_name}</b>.
     see_translators: 👥 See translators

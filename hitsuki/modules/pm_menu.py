@@ -26,7 +26,6 @@ from aiogram.types.inline_keyboard import (
 )
 from aiogram.utils.exceptions import MessageNotModified
 
-from hitsuki import BOT_USERNAME
 from hitsuki.decorator import register
 from hitsuki.modules.utils.disable import disableable_dec
 from .language import select_lang_keyboard
@@ -53,7 +52,7 @@ async def get_start_func(message, strings, edit=False):
     buttons.add(InlineKeyboardButton(strings['btn_help'], callback_data='get_help'),
                 InlineKeyboardButton(strings['btn_lang'], callback_data='lang_btn'))
     buttons.add(InlineKeyboardButton(strings['btn_channel'], url='https://t.me/HitsukiNews'),
-                InlineKeyboardButton(strings['btn_add'], url=f'https://t.me/{BOT_USERNAME}?startgroup=true'))
+                InlineKeyboardButton(strings['btn_source'], url='https://github.com/HitsukiNetwork/Hitsuki'))
     # Handle error when user click the button 2 or more times simultaneously
     with suppress(MessageNotModified):
         await task(strings['start_hi'], reply_markup=buttons)

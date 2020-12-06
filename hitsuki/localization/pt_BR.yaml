@@ -153,10 +153,10 @@ STRINGS:
   pm_menu:
     start_hi_group: 'Olá! Meu nome é Hitsuki'
     start_hi: "Olá! Meu nome é Hitsuki, eu ajudo você a gerenciar seu grupo de forma eficiente!"
+    btn_source: "📦 Código fonte"
     btn_help: "❔ Ajuda"
-    btn_lang: "pt-BR Idioma"
-    btn_chat: "👥 Grupo da Hitsuki"
-    btn_channel: "📡 Notícias de Hitsuki"
+    btn_lang: "🇧🇷 Idioma"
+    btn_channel: "📡 Notícias"
     back: Voltar
     #/help
     help_header: Ei! Confira nossa wiki para obter ajuda
@@ -382,8 +382,6 @@ STRINGS:
     chat_lang: "Idioma atual do chat: <b>{lang}</b>"
     select_pm_lang: "\n<b>Selecione o seu novo idioma:</b>"
     select_chat_lang: "\n<b>Selecione o novo idioma do chat:</b>"
-    crowdin_btn: "🌎 Ajude-nos com a tradução"
-    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukibot\">🌎 Ajude-nos a melhorar os idiomas</a>"
     not_supported_lang: Este idioma não é suportado!
     lang_changed: O idioma foi trocado a <b>{lang_name}</b>.
     see_translators: '👥 Veja os tradutores'
