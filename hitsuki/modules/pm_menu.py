@@ -52,9 +52,8 @@ async def get_start_func(message, strings, edit=False):
     buttons = InlineKeyboardMarkup()
     buttons.add(InlineKeyboardButton(strings['btn_help'], callback_data='get_help'),
                 InlineKeyboardButton(strings['btn_lang'], callback_data='lang_btn'))
-    buttons.add(InlineKeyboardButton(strings['btn_chat'], url='https://t.me/HitsukiSupport'),
-                InlineKeyboardButton(strings['btn_channel'], url='https://t.me/hitsukiNEWS'))
-    buttons.add(InlineKeyboardButton(strings['btn_add'], url=f'https://telegram.me/{BOT_USERNAME}?startgroup=true'))
+    buttons.add(InlineKeyboardButton(strings['btn_channel'], url='https://t.me/HitsukiNews'),
+                InlineKeyboardButton(strings['btn_add'], url=f'https://t.me/{BOT_USERNAME}?startgroup=true'))
     # Handle error when user click the button 2 or more times simultaneously
     with suppress(MessageNotModified):
         await task(strings['start_hi'], reply_markup=buttons)
@@ -64,7 +63,7 @@ async def get_start_func(message, strings, edit=False):
 @get_strings_dec('pm_menu')
 async def help_cb(event, strings):
     button = InlineKeyboardMarkup()
-    button.add(InlineKeyboardButton(strings['click_btn'], url='https://hitsukibot.rocks/'))
+    button.add(InlineKeyboardButton(strings['click_btn'], url='https://github.com/HitsukiNetwork/Hitsuki/wiki'))
     button.add(InlineKeyboardButton(strings['back'], callback_data='go_to_start'))
     with suppress(MessageNotModified):
         await event.message.edit_text(strings['help_header'], reply_markup=button)
@@ -85,6 +84,6 @@ async def back_btn(event):
 @get_strings_dec('pm_menu')
 async def help_cmd(message, strings):
     button = InlineKeyboardMarkup().add(InlineKeyboardButton(
-        strings['click_btn'], url='https://hitsukibot.rocks/'
+        strings['click_btn'], url='https://github.com/HitsukiNetwork/Hitsuki/wiki'
     ))
     await message.reply(strings['help_header'], reply_markup=button)
