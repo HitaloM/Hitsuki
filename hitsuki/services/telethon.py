@@ -1,5 +1,7 @@
 # Copyright (C) 2018 - 2020 MrYacha. All rights reserved. Source code available under the AGPL.
 # Copyright (C) 2019 Aiogram
+# Copyright (C) 2017 - 2020 Telethon
+
 #
 # This file is part of HitsukiBot.
 #
@@ -16,29 +18,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Build image
-FROM python:3.8-slim AS compile-image
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends git
-RUN apt-get install -y --no-install-recommends build-essential gcc
-RUN apt-get install -y --no-install-recommends libyaml-dev
 
-COPY requirements.txt .
-RUN pip install --user -r requirements.txt
+from telethon import TelegramClient
 
+from hitsuki.config import get_str_key, get_int_key
 
-# Run image
-FROM python:3.8-slim AS run-image
+TOKEN = get_str_key("TOKEN", required=True)
+NAME = TOKEN.split(':')[0]
 
-# Temp
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends libyaml-dev
+tbot = TelegramClient(
+    NAME,
+    get_int_key("APP_ID", required=True),
+    get_str_key("APP_HASH", required=True)
+)
 
-COPY --from=compile-image /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
-
-ADD . /hitsuki
-RUN rm -rf /hitsuki/data/
-WORKDIR /hitsuki
-
-CMD [ "python", "-m", "hitsuki" ]
+# Telethon
+tbot.start(bot_token=TOKEN)

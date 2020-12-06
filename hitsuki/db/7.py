@@ -1,4 +1,5 @@
 # Copyright (C) 2018 - 2020 MrYacha. All rights reserved. Source code available under the AGPL.
+# Copyright (C) 2020 Jeepeo.
 # Copyright (C) 2019 Aiogram
 #
 # This file is part of HitsukiBot.
@@ -16,29 +17,29 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Build image
-FROM python:3.8-slim AS compile-image
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends git
-RUN apt-get install -y --no-install-recommends build-essential gcc
-RUN apt-get install -y --no-install-recommends libyaml-dev
+from pymongo import UpdateOne
 
-COPY requirements.txt .
-RUN pip install --user -r requirements.txt
+from hitsuki.services.mongo import mongodb
+from hitsuki.utils.logger import log
 
+log.info('Hitsuki Database v6')
+log.info("Filters: migrate 'reply_message'")
+log.info('Starting to updating all filters...')
 
-# Run image
-FROM python:3.8-slim AS run-image
+all_filters = mongodb.filters.find({'action': 'reply_message'})
+count = all_filters.count()
+changed = 0
+updated_list = []
 
-# Temp
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends libyaml-dev
+for i in all_filters:
+    if not isinstance(i['reply_text'], dict):
+        changed += 1
+        log.info(f'Updated {changed} filters of {count}')
+        updated_list.append(UpdateOne(
+            {'_id': i['_id']},
+            {'$set': {'reply_text': {'parse_mode': 'md', 'text': i['reply_text']}}}
+        ))
 
-COPY --from=compile-image /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
-
-ADD . /hitsuki
-RUN rm -rf /hitsuki/data/
-WORKDIR /hitsuki
-
-CMD [ "python", "-m", "hitsuki" ]
+log.info('Updating Database ...')
+if updated_list:
+    mongodb.filters.bulk_write(updated_list)

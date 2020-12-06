@@ -16,29 +16,5 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Build image
-FROM python:3.8-slim AS compile-image
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends git
-RUN apt-get install -y --no-install-recommends build-essential gcc
-RUN apt-get install -y --no-install-recommends libyaml-dev
-
-COPY requirements.txt .
-RUN pip install --user -r requirements.txt
-
-
-# Run image
-FROM python:3.8-slim AS run-image
-
-# Temp
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends libyaml-dev
-
-COPY --from=compile-image /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
-
-ADD . /hitsuki
-RUN rm -rf /hitsuki/data/
-WORKDIR /hitsuki
-
-CMD [ "python", "-m", "hitsuki" ]
+SOPHIE_VERSION = "v2.2.5"
+DB_STRUCTURE_VER = 8

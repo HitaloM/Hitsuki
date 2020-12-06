@@ -16,29 +16,26 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Build image
-FROM python:3.8-slim AS compile-image
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends git
-RUN apt-get install -y --no-install-recommends build-essential gcc
-RUN apt-get install -y --no-install-recommends libyaml-dev
+import asyncio
+import sys
 
-COPY requirements.txt .
-RUN pip install --user -r requirements.txt
+from motor import motor_asyncio
+from pymongo import MongoClient
+from pymongo.errors import ServerSelectionTimeoutError
 
+from hitsuki import log
+from hitsuki.config import get_str_key, get_int_key
 
-# Run image
-FROM python:3.8-slim AS run-image
+MONGO_URI = get_str_key("MONGO_URI")
+MONGO_PORT = get_int_key("MONGO_PORT")
+MONGO_DB = get_str_key("MONGO_DB")
 
-# Temp
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends libyaml-dev
+# Init MongoDB
+mongodb = MongoClient(MONGO_URI, MONGO_PORT)[MONGO_DB]
+motor = motor_asyncio.AsyncIOMotorClient(MONGO_URI, MONGO_PORT)
+db = motor[MONGO_DB]
 
-COPY --from=compile-image /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
-
-ADD . /hitsuki
-RUN rm -rf /hitsuki/data/
-WORKDIR /hitsuki
-
-CMD [ "python", "-m", "hitsuki" ]
+try:
+    asyncio.get_event_loop().run_until_complete(motor.server_info())
+except ServerSelectionTimeoutError:
+    sys.exit(log.critical("Can't connect to mongodb! Exiting..."))

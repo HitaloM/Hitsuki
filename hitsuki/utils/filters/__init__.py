@@ -16,29 +16,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Build image
-FROM python:3.8-slim AS compile-image
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends git
-RUN apt-get install -y --no-install-recommends build-essential gcc
-RUN apt-get install -y --no-install-recommends libyaml-dev
-
-COPY requirements.txt .
-RUN pip install --user -r requirements.txt
+import glob
+import os.path
 
 
-# Run image
-FROM python:3.8-slim AS run-image
+def list_all_filters():
+    mod_paths = glob.glob(os.path.dirname(__file__) + "/*.py")
+    all_filters = [
+        os.path.basename(f)[:-3]
+        for f in mod_paths
+        if os.path.isfile(f) and f.endswith(".py") and not f.endswith("__init__.py")
+    ]
 
-# Temp
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends libyaml-dev
+    return all_filters
 
-COPY --from=compile-image /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
 
-ADD . /hitsuki
-RUN rm -rf /hitsuki/data/
-WORKDIR /hitsuki
+ALL_FILTERS = sorted(list(list_all_filters()))
 
-CMD [ "python", "-m", "hitsuki" ]
+__all__ = ALL_FILTERS + ["ALL_FILTERS"]

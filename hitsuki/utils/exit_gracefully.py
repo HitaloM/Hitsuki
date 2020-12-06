@@ -16,29 +16,23 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Build image
-FROM python:3.8-slim AS compile-image
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends git
-RUN apt-get install -y --no-install-recommends build-essential gcc
-RUN apt-get install -y --no-install-recommends libyaml-dev
+import os
+import signal
 
-COPY requirements.txt .
-RUN pip install --user -r requirements.txt
+from hitsuki.services.redis import redis
+from hitsuki.utils.logger import log
 
 
-# Run image
-FROM python:3.8-slim AS run-image
+def exit_gracefully(signum, frame):
+    log.warning("Bye!")
 
-# Temp
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends libyaml-dev
+    try:
+        redis.save()
+    except Exception:
+        log.error("Exiting immediately!")
+    os.kill(os.getpid(), signal.SIGUSR1)
 
-COPY --from=compile-image /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
 
-ADD . /hitsuki
-RUN rm -rf /hitsuki/data/
-WORKDIR /hitsuki
-
-CMD [ "python", "-m", "hitsuki" ]
+# Signal exit
+log.info("Setting exit_gracefully task...")
+signal.signal(signal.SIGINT, exit_gracefully)

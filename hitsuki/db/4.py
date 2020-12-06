@@ -16,29 +16,27 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Build image
-FROM python:3.8-slim AS compile-image
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends git
-RUN apt-get install -y --no-install-recommends build-essential gcc
-RUN apt-get install -y --no-install-recommends libyaml-dev
+from hitsuki.services.mongo import mongodb
+from hitsuki.utils.logger import log
 
-COPY requirements.txt .
-RUN pip install --user -r requirements.txt
+log.info('Hitsuki Database v4')
+log.info("Filters: move 'note' to 'note_name'")
+log.info('Starting updating all filters...')
 
+all_filters = mongodb.filters.find({})
+all_filters_count = all_filters.count()
+counter = 0
+changed_filters = 0
+for item in all_filters:
+    counter += 1
+    log.info(f'Updating {counter} of {all_filters_count}...')
 
-# Run image
-FROM python:3.8-slim AS run-image
+    if 'note' in item:
+        changed_filters += 1
+        item['note_name'] = item['note']
+        del item['note']
+        mongodb.notes_v2.replace_one({'_id': item['_id']}, item)
 
-# Temp
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends libyaml-dev
-
-COPY --from=compile-image /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
-
-ADD . /hitsuki
-RUN rm -rf /hitsuki/data/
-WORKDIR /hitsuki
-
-CMD [ "python", "-m", "hitsuki" ]
+log.info('Update done!')
+log.info('Modified filters - ' + str(changed_filters))
+log.info('Unchanged filters - ' + str(all_filters_count - changed_filters))
