@@ -15,10 +15,12 @@
 
 import rapidjson as json
 from requests import get
+from bs4 import BeautifulSoup
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec
+from .utils.message import get_arg
 
 
 @register(cmds='magisk')
@@ -100,3 +102,39 @@ async def phh_magisk(message):
             continue
     await message.reply(text, reply_markup=button)
     return
+
+
+@register(cmds='twrp')
+@disableable_dec('twrp')
+async def twrp(message):
+    device = get_arg(message).lower()
+
+    if not device:
+        m = "Type the device codename, example: <code>/twrp j7xelte</code>"
+        await message.reply(m)
+        return
+
+    url = get(f'https://eu.dl.twrp.me/{device}/')
+    if url.status_code == 404:
+        m = "TWRP is not available for <code>{device}</code>"
+        await message.reply(m)
+        return
+
+    else:
+        m = f'<b>Latest TWRP for {device}</b>\n'
+        page = BeautifulSoup(url.content, 'lxml')
+        date = page.find("em").text.strip()
+        m += f'📅 <b>Updated:</b> <code>{date}</code>\n'
+        trs = page.find('table').find_all('tr')
+        row = 2 if trs[0].find('a').text.endswith('tar') else 1
+
+        for i in range(row):
+            download = trs[i].find('a')
+            dl_link = f"https://dl.twrp.me{download['href']}"
+            dl_file = download.text
+            size = trs[i].find("span", {"class": "filesize"}).text
+        m += f'📥 <b>Size:</b> <code>{size}</code>\n'
+        m += f'📦 <b>File:</b> <code>{dl_file.lower()}</code>'
+        btn = "Click here to download!"
+        button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=dl_link))
+        await message.reply(m, reply_markup=button)

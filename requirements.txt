@@ -29,3 +29,4 @@ babel
 captcha
 async-timeout
 regex
+bs4

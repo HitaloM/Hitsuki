@@ -31,6 +31,12 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 
 @disableable_dec('kitsu')
 async def anime(message):
     query = get_args_str(message).lower()
+
+    if not query:
+        m = "Type the anime name, example: <code>/kitsu Naruto</code>"
+        await message.reply(m)
+        return
+
     headers = {"User-Agent": USER_AGENT}
     query.replace('', '%20')
     url = f'https://kitsu.io/api/edge/anime?filter%5Btext%5D={urlencode(query)}'
@@ -63,6 +69,12 @@ async def anime(message):
 @disableable_dec('mal')
 async def manime(message):
     query = get_args_str(message).lower()
+
+    if not query:
+        m = "Type the anime name, example: <code>/mal Naruto</code>"
+        await message.reply(m)
+        return
+
     headers = {"User-Agent": USER_AGENT}
     query.replace('', '%20')
     surl = f'https://api.jikan.moe/v3/search/anime?q={urlencode(query)}'
