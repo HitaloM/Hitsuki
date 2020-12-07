@@ -19,7 +19,6 @@
 import functools
 import re
 from contextlib import suppress
-from datetime import timedelta
 
 from aiogram.types import Message
 from aiogram.types.inline_keyboard import (
@@ -117,9 +116,10 @@ async def warn_func(message: Message, chat, user, text, strings, filter_action=F
             data = await db.warnmode.find_one({'chat_id': chat_id})
             if data is not None:
                 if data['mode'] == 'tmute':
-                    time = timedelta(days=data['time']['days'], seconds=data['time']['seconds'])
                     text = strings['max_warn_exceeded:tmute'].format(
-                        user=member, time=format_timedelta(time, locale=strings['language_info']['babel'])
+                        user=member, time=format_timedelta(
+                            convert_time(data["time"]), locale=strings['language_info']['babel']
+                        )
                     )
                 else:
                     text = strings['max_warn_exceeded'].format(
