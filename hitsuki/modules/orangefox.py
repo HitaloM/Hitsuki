@@ -43,7 +43,8 @@ async def orangefox(message):
         for device in devices:
             reply_text += f"\n • {device['fullname']} (<code>{device['codename']}</code>)"
 
-        reply_text += '\n\n' + "You can get latest release by using <code>/ofox (codename)</code>"
+        reply_text += '\n\n' + \
+            "You can get latest release by using <code>/ofox (codename)</code>"
         await message.reply(reply_text)
         return
 
@@ -63,9 +64,11 @@ async def orangefox(message):
         fullname=device['fullname'],
         codename=device['codename']
     )
-    reply_text += ("🔺 <b>Version:</b> <code>{}</code>\n").format(release['version'])
+    reply_text += ("🔺 <b>Version:</b> <code>{}</code>\n").format(
+        release['version'])
     reply_text += ("📅 <b>Release date:</b> {}\n").format(release['date'])
-    reply_text += ("✅ <b>File MD5:</b> <code>{}</code>\n").format(release['md5'])
+    reply_text += ("✅ <b>File MD5:</b> <code>{}</code>\n").format(
+        release['md5'])
 
     if device['maintained'] == 3:
         status = "Not maintained"
