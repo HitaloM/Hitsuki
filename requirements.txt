@@ -21,7 +21,7 @@ hypercorn
 aiocron
 apscheduler
 requests
-ujson
+rapidjson
 PyYAML>5.0
 coloredlogs
 loguru

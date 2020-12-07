@@ -17,7 +17,7 @@ import asyncio
 import io
 from datetime import datetime, timedelta
 
-import ujson
+import rapidjson
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types.input_file import InputFile
@@ -67,7 +67,7 @@ async def export_chat_data(message, chat, strings):
         if k := await module.__export__(chat_id):
             data.update(k)
 
-    jfile = InputFile(io.StringIO(ujson.dumps(data, indent=2)), filename=f'{chat_id}_export.json')
+    jfile = InputFile(io.StringIO(rapidjson.dumps(data, indent=2)), filename=f'{chat_id}_export.json')
     text = strings['export_done'].format(chat_name=chat['chat_title'])
     await message.answer_document(jfile, text, reply=message.message_id)
     await msg.delete()
@@ -117,7 +117,7 @@ async def import_fun(message, document, chat, strings):
         return
     data = await bot.download_file_by_id(document.file_id, io.BytesIO())
     try:
-        data = ujson.load(data)
+        data = rapidjson.load(data)
     except ValueError:
         return await message.reply(strings['invalid_file'])
 

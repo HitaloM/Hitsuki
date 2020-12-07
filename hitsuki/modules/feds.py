@@ -26,7 +26,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 import babel
-import ujson
+import rapidjson
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import InputFile, Message
@@ -984,7 +984,7 @@ async def importfbans_func(message, fed, strings, document=None):
     data = None
     if file_type == 'json':
         try:
-            data = ujson.load(f).items()
+            data = rapidjson.load(f).items()
         except ValueError:
             return await message.reply(strings['invalid_file'])
     elif file_type == 'csv':

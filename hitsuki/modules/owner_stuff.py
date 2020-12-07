@@ -14,10 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import html
+import sys
 import os
 
 import requests
-import ujson
+import rapidjson
 
 from hitsuki import OWNER_ID, OPERATORS, HITSUKI_VERSION, dp
 from hitsuki.decorator import REGISTRED_COMMANDS, COMMANDS_ALIASES, register
@@ -136,6 +137,13 @@ async def bot_stop(message):
     exit(1)
 
 
+@register(cmds="restart", is_owner=True)
+async def restart_bot(message):
+    await message.reply("Hitsuki will be restarted...")
+    args = [sys.executable, "-m", "hitsuki"]
+    os.execl(sys.executable, *args)
+
+
 @register(cmds="upload", is_owner=True)
 async def upload_file(message):
     input_str = message.get_args()
@@ -171,7 +179,7 @@ async def crash(message):
 @register(cmds="event", is_op=True)
 async def get_event(message):
     print(message)
-    event = str(ujson.dumps(message, indent=2))
+    event = str(rapidjson.dumps(message, indent=2))
     await message.reply(event)
 
 

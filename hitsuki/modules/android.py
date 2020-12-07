@@ -61,3 +61,46 @@ async def magisk(message):
             releases += f'<a href="{data["uninstaller"]["link"]}">Uninstaller</a>\n'
 
     await message.reply(releases, disable_web_page_preview=True)
+
+
+@register(cmds='phh')
+@disableable_dec('phh')
+async def phh(message):
+    fetch = get(
+        "https://api.github.com/repos/phhusson/treble_experimentations/releases/latest"
+    )
+    usr = json.loads(fetch.content)
+    text = "<b>Phh's latest GSI release(s):</b>\n"
+    for i in range(len(usr)):
+        try:
+            name = usr['assets'][i]['name']
+            url = usr['assets'][i]['browser_download_url']
+            text += f"<a href='{url}'>{name}</a>\n"
+        except IndexError:
+            continue
+    await message.reply(text)
+
+
+@register(cmds='phhmagisk')
+@disableable_dec('phhmagisk')
+async def phh_magisk(message):
+    fetch = get(
+        "https://api.github.com/repos/expressluke/phh-magisk-builder/releases/latest"
+    )
+    usr = json.loads(fetch.content)
+    text = "<b>Phh's latest Magisk release(s):</b>\n"
+    for i in range(len(usr)):
+        try:
+            name = usr['assets'][i]['name']
+            url = usr['assets'][i]['browser_download_url']
+            tag = usr['tag_name']
+            size_bytes = usr['assets'][i]['size']
+            size = float("{:.2f}".format((size_bytes/1024)/1024))
+            text += f"<b>Tag:</b> <code>{tag}</code>\n"
+            text += f"<b>Size</b>: <code>{size} MB</code>\n\n"
+            btn = "Click here to download!"
+            button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
+        except IndexError:
+            continue
+    await message.reply(text, reply_markup=button)
+    return
