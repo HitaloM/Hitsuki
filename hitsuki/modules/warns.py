@@ -78,7 +78,8 @@ async def warn_func(message: Message, chat, user, text, strings, filter_action=F
 
     admin = await get_user_link(by_id)
     member = await get_user_link(user_id)
-    text = strings['warn'].format(admin=admin, user=member, chat_name=chat_title)
+    text = strings['warn'].format(
+        admin=admin, user=member, chat_name=chat_title)
 
     if reason:
         text += strings['warn_rsn'].format(reason=reason)
@@ -123,14 +124,16 @@ async def warn_func(message: Message, chat, user, text, strings, filter_action=F
                     )
                 return await action(text=text)
             return await action(text=strings['max_warn_exceeded'].format(user=member, action=strings['banned']))
-    text += strings['warn_num'].format(curr_warns=warns_count, max_warns=max_warn)
+    text += strings['warn_num'].format(curr_warns=warns_count,
+                                       max_warns=max_warn)
     return await action(text=text, reply_markup=buttons, disable_web_page_preview=True)
 
 
 @register(regexp=r'remove_warn_(.*)', f='cb', allow_kwargs=True, user_can_restrict_members=True)
 @get_strings_dec('warns')
 async def rmv_warn_btn(event, strings, regexp=None, **kwargs):
-    warn_id = ObjectId(re.search(r'remove_warn_(.*)', str(regexp)).group(1)[:-2])
+    warn_id = ObjectId(
+        re.search(r'remove_warn_(.*)', str(regexp)).group(1)[:-2])
     user_id = event.from_user.id
     admin_link = await get_user_link(user_id)
     await db.warns.delete_one({'_id': warn_id})

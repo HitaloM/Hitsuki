@@ -60,7 +60,8 @@ async def select_lang_keyboard(message, strings, edit=False):
         )
 
     if edit:
-        markup.add(InlineKeyboardButton(strings['back'], callback_data='go_to_start'))
+        markup.add(InlineKeyboardButton(
+            strings['back'], callback_data='go_to_start'))
     with suppress(MessageNotModified):
         await task(text, reply_markup=markup)
 
@@ -73,16 +74,19 @@ async def change_lang(message, lang, e=False, back_btn=False):
 
     lang_info = LANGUAGES[lang]['language_info']
 
-    text = strings['lang_changed'].format(lang_name=lang_info['flag'] + " " + lang_info['babel'].display_name)
+    text = strings['lang_changed'].format(
+        lang_name=lang_info['flag'] + " " + lang_info['babel'].display_name)
 
     markup = InlineKeyboardMarkup()
 
     if 'translators' in lang_info:
-        markup.add(InlineKeyboardButton(strings['see_translators'], callback_data=translators_lang_cb.new(lang=lang)))
+        markup.add(InlineKeyboardButton(
+            strings['see_translators'], callback_data=translators_lang_cb.new(lang=lang)))
 
     if back_btn == 'True':
         # Callback_data converts boolean to str
-        markup.add(InlineKeyboardButton(strings['back'], callback_data='go_to_start'))
+        markup.add(InlineKeyboardButton(
+            strings['back'], callback_data='go_to_start'))
 
     if e:
         with suppress(MessageNotModified):

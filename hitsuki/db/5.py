@@ -53,7 +53,8 @@ for fed in all_feds:
         queue.append(InsertOne(new))
 
     mongodb.fed_bans.bulk_write(queue)
-    mongodb.feds.update_one({'fed_id': fed['fed_id']}, {'$unset': {'banned': 1}})
+    mongodb.feds.update_one({'fed_id': fed['fed_id']}, {
+                            '$unset': {'banned': 1}})
     changed_feds += 1
 
 log.info('Update done!')

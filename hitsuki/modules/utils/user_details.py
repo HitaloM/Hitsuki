@@ -193,7 +193,8 @@ async def check_admin_rights(event: Union[Message, CallbackQuery], chat_id, user
     # Workaround to support anonymous admins
     if user_id == 1087968824:
         if not isinstance(event, Message):
-            raise ValueError(f"Cannot extract signuature of anonymous admin from {type(event)}")
+            raise ValueError(
+                f"Cannot extract signuature of anonymous admin from {type(event)}")
 
         if not event.author_signature:
             return True
@@ -261,7 +262,8 @@ async def is_chat_creator(event: Union[Message, CallbackQuery], chat_id, user_id
 
 async def get_user_by_text(message, text: str):
     # Get all entities
-    entities = filter(lambda ent: ent['type'] == 'text_mention' or ent['type'] == 'mention', message.entities)
+    entities = filter(
+        lambda ent: ent['type'] == 'text_mention' or ent['type'] == 'mention', message.entities)
     for entity in entities:
         # If username matches entity's text
         if text in entity.get_text(message.text):

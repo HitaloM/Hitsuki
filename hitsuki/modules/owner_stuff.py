@@ -214,7 +214,8 @@ async def __stats__():
             convert_size(536870912 - local_db['storageSize'])
         )
 
-    text += "* <code>{}</code> total keys in Redis database\n".format(len(redis.keys()))
+    text += "* <code>{}</code> total keys in Redis database\n".format(
+        len(redis.keys()))
     text += "* <code>{}</code> total commands registred, in <code>{}</code> modules\n".format(
         len(REGISTRED_COMMANDS), len(LOADED_MODULES))
     return text

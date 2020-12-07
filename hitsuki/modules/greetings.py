@@ -105,7 +105,8 @@ async def welcome(message, chat, strings):
 
     if 'welcome_security' in db_item:
         if 'security_note' not in db_item:
-            db_item['security_note'] = {'text': strings['default_security_note']}
+            db_item['security_note'] = {
+                'text': strings['default_security_note']}
         await message.reply(strings['security_note'])
         text, kwargs = await t_unparse_note_item(message, db_item['security_note'], chat_id)
         await send_note(send_id, text, **kwargs)
@@ -141,7 +142,8 @@ async def set_welcome(message, chat, strings):
 
         if (await db.greetings.update_one(
                 {'chat_id': chat_id},
-                {'$set': {'chat_id': chat_id, 'note': note}, '$unset': {'welcome_disabled': 1}},
+                {'$set': {'chat_id': chat_id, 'note': note},
+                    '$unset': {'welcome_disabled': 1}},
                 upsert=True
         )).modified_count > 0:
             text = strings['updated']
@@ -261,7 +263,8 @@ async def welcome_mute(message, chat, strings):
     if args[0].endswith(('m', 'h', 'd')):
         await db.greetings.update_one(
             {'chat_id': chat_id},
-            {'$set': {'chat_id': chat_id, 'welcome_mute': {'enabled': True, 'time': args[0]}}},
+            {'$set': {'chat_id': chat_id, 'welcome_mute': {
+                'enabled': True, 'time': args[0]}}},
             upsert=True
         )
         await get_greetings_data.reset_cache(chat_id)
@@ -288,7 +291,8 @@ async def welcome_mute(message, chat, strings):
 
 # Welcome Security
 
-wlcm_sec_config_proc = CallbackData("wlcm_sec_proc", "chat_id", "user_id", "level")
+wlcm_sec_config_proc = CallbackData(
+    "wlcm_sec_proc", "chat_id", "user_id", "level")
 wlcm_sec_config_cancel = CallbackData("wlcm_sec_cancel", "user_id", "level")
 
 
@@ -306,7 +310,8 @@ async def welcome_security(message, chat, strings):
         db_item = await get_greetings_data(chat_id)
 
         if db_item and 'welcome_security' in db_item and db_item['welcome_security']['enabled'] is True:
-            status = strings['welcomesecurity_enabled_word'].format(level=db_item['welcome_security']['level'])
+            status = strings['welcomesecurity_enabled_word'].format(
+                level=db_item['welcome_security']['level'])
         else:
             status = strings['disabled']
 
@@ -328,7 +333,8 @@ async def welcome_security(message, chat, strings):
 
     await db.greetings.update_one(
         {'chat_id': chat_id},
-        {'$set': {'chat_id': chat_id, 'welcome_security': {'enabled': True, 'level': level}}},
+        {'$set': {'chat_id': chat_id, 'welcome_security': {
+            'enabled': True, 'level': level}}},
         upsert=True
     )
     await get_greetings_data.reset_cache(chat_id)
@@ -364,7 +370,8 @@ async def welcome_security(message, chat, strings):
 async def welcome_security_config_cancel(event: CallbackQuery, chat: dict, strings: dict, callback_data: dict, **_):
     if int(callback_data['user_id']) == event.from_user.id and is_user_admin(chat['chat_id'], event.from_user.id):
         await event.message.edit_text(
-            text=strings['welcomesecurity_enabled'].format(chat_name=chat['chat_title'], level=callback_data['level'])
+            text=strings['welcomesecurity_enabled'].format(
+                chat_name=chat['chat_title'], level=callback_data['level'])
         )
 
 
@@ -509,7 +516,8 @@ async def welcome_security_handler(message: Message, strings):
                           else message.message_id)
 
     kwargs['buttons'] = [] if not kwargs['buttons'] else kwargs['buttons']
-    kwargs['buttons'] += [Button.inline(strings['click_here'], f'ws_{chat_id}_{user_id}')]
+    kwargs['buttons'] += [Button.inline(strings['click_here'],
+                                        f'ws_{chat_id}_{user_id}')]
 
     msg = await send_note(chat_id, text, **kwargs)
 
@@ -525,7 +533,8 @@ async def welcome_security_handler(message: Message, strings):
         "date",
         id=f"wc_expire:{chat_id}:{user_id}",
         run_date=datetime.utcnow() + time,
-        kwargs={'chat_id': chat_id, 'user_id': user_id, 'message_id': msg.id, 'wlkm_msg_id': message.message_id},
+        kwargs={'chat_id': chat_id, 'user_id': user_id,
+                'message_id': msg.id, 'wlkm_msg_id': message.message_id},
         replace_existing=True
     )
 
@@ -615,7 +624,8 @@ async def wc_button_btn_cb(event, state=None, **kwargs):
 def generate_captcha(number=None):
     if not number:
         number = str(random.randint(10001, 99999))
-    captcha = ImageCaptcha(fonts=ALL_FONTS, width=200, height=100).generate_image(number)
+    captcha = ImageCaptcha(fonts=ALL_FONTS, width=200,
+                           height=100).generate_image(number)
     img = io.BytesIO()
     captcha.save(img, 'PNG')
     img.seek(0)
@@ -713,7 +723,8 @@ def gen_int_btns(answer):
             a = random.randint(1, 20)
         buttons.append(Button.inline(str(a), data='wc_int_btn:' + str(a)))
 
-    buttons.insert(random.randint(0, 3), Button.inline(str(answer), data='wc_int_btn:' + str(answer)))
+    buttons.insert(random.randint(0, 3), Button.inline(
+        str(answer), data='wc_int_btn:' + str(answer)))
 
     return buttons
 
@@ -739,7 +750,8 @@ async def send_btn_math(message, state, strings, msg_id=False):
     async with state.proxy() as data:
         data['verify_msg_id'] = msg_id
 
-    await tbot.edit_message(chat_id, msg_id, text, buttons=btns)  # TODO: change to aiogram
+    # TODO: change to aiogram
+    await tbot.edit_message(chat_id, msg_id, text, buttons=btns)
 
 
 @register(regexp='wc_int_btn:', f='cb', state=WelcomeSecurityState.math, allow_kwargs=True)

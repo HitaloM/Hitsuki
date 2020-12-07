@@ -58,7 +58,8 @@ async def connect_to_chat_direct(message, strings):
         return await message.reply(
             strings['anon_admin_conn'],
             reply_markup=InlineKeyboardMarkup().add(
-                InlineKeyboardButton(strings['click_here'], callback_data="anon_conn_cb")
+                InlineKeyboardButton(
+                    strings['click_here'], callback_data="anon_conn_cb")
             )
         )
 
@@ -93,7 +94,8 @@ async def connect_chat_keyboard(message, strings, chat):
         text = strings['connected_chat:cmds'].format(
             chat_name=chat_title,
             # disconnect is builtin command, should not be shown
-            commands=", ".join(f"<code>/{cmd}</code>" for cmd in connected_data['command'] if cmd != "disconnect")
+            commands=", ".join(
+                f"<code>/{cmd}</code>" for cmd in connected_data['command'] if cmd != "disconnect")
         )
     else:
         text = ''

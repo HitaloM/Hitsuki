@@ -33,7 +33,8 @@ for i in all_filters:
         log.info(f'Updated {changed} filters of {count}')
         updated_list.append(UpdateOne(
             {'_id': i['_id']},
-            {'$set': {'reply_text': {'parse_mode': 'md', 'text': i['reply_text']}}}
+            {'$set': {'reply_text': {
+                'parse_mode': 'md', 'text': i['reply_text']}}}
         ))
 
 log.info('Updating Database ...')
