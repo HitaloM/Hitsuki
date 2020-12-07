@@ -16,6 +16,7 @@
 import os
 
 from hitsuki.utils.logger import log
+import sys
 
 LOADED_MODULES = []
 
@@ -34,7 +35,7 @@ def list_all_modules() -> list:
 
         if path in all_modules:
             log.path("Modules with same name can't exists!")
-            exit(5)
+            sys.exit(5)
 
         # One file module type
         if path.endswith('.py'):

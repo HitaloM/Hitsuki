@@ -134,7 +134,7 @@ async def purge_caches(message):
 @register(cmds="botstop", is_owner=True)
 async def bot_stop(message):
     await message.reply("Goodbye...")
-    exit(1)
+    sys.exit(1)
 
 
 @register(cmds="restart", is_owner=True)

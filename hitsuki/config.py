@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 import yaml
 from envparse import env
@@ -59,7 +60,7 @@ def get_str_key(name, required=False):
         return None
     elif not data:
         log.critical('No str key: ' + name)
-        exit(2)
+        sys.exit(2)
     else:
         return data
 
@@ -74,7 +75,7 @@ def get_int_key(name, required=False):
         return None
     elif not data:
         log.critical('No int key: ' + name)
-        exit(2)
+        sys.exit(2)
     else:
         return data
 
@@ -89,7 +90,7 @@ def get_list_key(name, required=False):
         return []
     elif not data:
         log.critical('No list key: ' + name)
-        exit(2)
+        sys.exit(2)
     else:
         return data
 
@@ -104,6 +105,6 @@ def get_bool_key(name, required=False):
         return False
     elif not data:
         log.critical('No bool key: ' + name)
-        exit(2)
+        sys.exit(2)
     else:
         return data
