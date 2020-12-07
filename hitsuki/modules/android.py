@@ -29,35 +29,35 @@ from .utils.message import need_args_dec, get_args_str
 @disableable_dec('magisk')
 async def magisk(message):
     url = 'https://raw.githubusercontent.com/topjohnwu/magisk_files/'
-    releases = '**Latest Magisk Releases:**\n'
+    releases = '<b>Latest Magisk Releases:</b>\n'
     variant = ['master/stable', 'master/beta', 'canary/canary']
     for variants in variant:
         fetch = get(url + variants + '.json')
         data = json.loads(fetch.content)
         if variants == "master/stable":
-            name = "**Stable**"
+            name = "<b>Stable</b>"
             cc = 0
             branch = "master"
         elif variants == "master/beta":
-            name = "**Beta**"
+            name = "<b>Beta</b>"
             cc = 0
             branch = "master"
         elif variants == "canary/canary":
-            name = "**Canary**"
+            name = "<b>Canary</b>"
             cc = 1
             branch = "canary"
 
         if variants == "canary/canary":
-            releases += f'{name}: [ZIP v{data["magisk"]["version"]}]({url}{branch}/{data["magisk"]["link"]}) | ' \
-                        f'[APK v{data["app"]["version"]}]({url}{branch}/{data["app"]["link"]}) | '
+            releases += f'{name}: <a href="{url}{branch}/{data["magisk"]["link"]}">ZIP v{data["magisk"]["version"]}</a> | ' \
+                        f'<a href="{url}{branch}/{data["app"]["link"]}">APK v{data["app"]["version"]}</a> | '
         else:
-            releases += f'{name}: [ZIP v{data["magisk"]["version"]}]({data["magisk"]["link"]}) | ' \
-                        f'[APK v{data["app"]["version"]}]({data["app"]["link"]}) | '
+            releases += f'{name}: <a href="{url}{branch}/{data["magisk"]["link"]}">ZIP v{data["magisk"]["version"]}</a> | ' \
+                        f'<a href="{data["app"]["link"]}">APK v{data["app"]["version"]}</a> | '
 
         if cc == 1:
-            releases += f'[Uninstaller]({url}{branch}/{data["uninstaller"]["link"]}) | ' \
-                        f'[Changelog]({url}{branch}/notes.md)\n'
+            releases += f'<a href="{url}{branch}/{data["uninstaller"]["link"]}">Uninstaller</a> | ' \
+                        f'<a href="{url}{branch}/notes.md">Changelog</a>\n'
         else:
-            releases += f'[Uninstaller]({data["uninstaller"]["link"]})\n'
+            releases += f'<a href="{data["uninstaller"]["link"]}">Uninstaller</a>\n'
 
-    await message.reply(releases, parse_mode="markdown", disable_web_page_preview=True)
+    await message.reply(releases, disable_web_page_preview=True)

@@ -30,3 +30,4 @@ babel
 captcha
 async-timeout
 regex
+python-rapidjson
