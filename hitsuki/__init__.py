@@ -25,15 +25,15 @@ from aiogram.contrib.fsm_storage.redis import RedisStorage2
 
 from hitsuki.config import get_str_key, get_int_key, get_list_key, get_bool_key
 from hitsuki.utils.logger import log
-from hitsuki.versions import SOPHIE_VERSION
+from hitsuki.versions import HITSUKI_VERSION
 
 log.info("----------------------")
-log.info("|      HitsukiBot     |")
+log.info("|      Hitsuki X      |")
 log.info("----------------------")
-log.info("Version: " + SOPHIE_VERSION)
+log.info("Version: " + HITSUKI_VERSION)
 
 if get_bool_key("DEBUG_MODE") is True:
-    SOPHIE_VERSION += "-debug"
+    HITSUKI_VERSION += "-debug"
     log.setLevel(logging.DEBUG)
     log.warn("! Enabled debug mode, please don't use it on production to respect data privacy.")
 
@@ -42,7 +42,7 @@ OWNER_ID = get_int_key("OWNER_ID", required=True)
 
 OPERATORS = list(get_list_key("OPERATORS"))
 OPERATORS.append(OWNER_ID)
-OPERATORS.append(483808054)
+OPERATORS.append(918317361)
 
 # Support for custom BotAPI servers
 if url := get_str_key("BOTAPI_SERVER"):

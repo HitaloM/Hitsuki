@@ -29,7 +29,7 @@ from .utils.message import need_args_dec, get_args_str
 @disableable_dec('magisk')
 async def magisk(message):
     url = 'https://raw.githubusercontent.com/topjohnwu/magisk_files/'
-    releases = '*Latest Magisk Releases:*\n'
+    releases = '**Latest Magisk Releases:**\n'
     variant = ['master/stable', 'master/beta', 'canary/canary']
     for variants in variant:
         fetch = get(url + variants + '.json')

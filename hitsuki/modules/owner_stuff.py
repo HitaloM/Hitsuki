@@ -23,7 +23,7 @@ import os
 import requests
 import ujson
 
-from hitsuki import OWNER_ID, OPERATORS, SOPHIE_VERSION, dp
+from hitsuki import OWNER_ID, OPERATORS, HITSUKI_VERSION, dp
 from hitsuki.decorator import REGISTRED_COMMANDS, COMMANDS_ALIASES, register
 from hitsuki.modules import LOADED_MODULES
 from hitsuki.services.mongo import db, mongodb
@@ -181,7 +181,7 @@ async def get_event(message):
 
 @register(cmds="stats", is_op=True)
 async def stats(message):
-    text = f"<b>Hitsuki {SOPHIE_VERSION} stats</b>\n"
+    text = f"<b>Hitsuki {HITSUKI_VERSION} stats</b>\n"
 
     for module in [m for m in LOADED_MODULES if hasattr(m, '__stats__')]:
         text += await module.__stats__()
