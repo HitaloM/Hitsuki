@@ -134,7 +134,7 @@ async def purge_caches(message):
 @register(cmds="botstop", is_owner=True)
 async def bot_stop(message):
     await message.reply("Goodbye...")
-    exit(1)
+    sys.exit(1)
 
 
 @register(cmds="restart", is_owner=True)
@@ -214,7 +214,8 @@ async def __stats__():
             convert_size(536870912 - local_db['storageSize'])
         )
 
-    text += "* <code>{}</code> total keys in Redis database\n".format(len(redis.keys()))
+    text += "* <code>{}</code> total keys in Redis database\n".format(
+        len(redis.keys()))
     text += "* <code>{}</code> total commands registred, in <code>{}</code> modules\n".format(
         len(REGISTRED_COMMANDS), len(LOADED_MODULES))
     return text
