@@ -1,5 +1,4 @@
 # General
-#telethon
 telethon~=1.17.0
 aiogram
 
@@ -21,7 +20,7 @@ hypercorn
 aiocron
 apscheduler
 requests
-rapidjson
+python-rapidjson
 PyYAML>5.0
 coloredlogs
 loguru
@@ -30,4 +29,3 @@ babel
 captcha
 async-timeout
 regex
-python-rapidjson

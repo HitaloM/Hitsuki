@@ -2,6 +2,7 @@
 
 # Basic
 TOKEN: "YOUR_TOKEN"
+BOTAPI_SERVER: "http://23.102.182.92:8081/bot"
 
 # Get they in https://my.telegram.org/
 APP_ID: 1234
