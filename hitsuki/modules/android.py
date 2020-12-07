@@ -17,12 +17,8 @@ import rapidjson as json
 from requests import get
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from aiogram.types import Message
-
-from hitsuki import bot
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec
-from .utils.message import need_args_dec, get_args_str
 
 
 @register(cmds='magisk')

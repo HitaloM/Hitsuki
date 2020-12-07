@@ -17,11 +17,9 @@ import aiohttp
 from urllib.parse import quote as urlencode
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-
-from hitsuki import bot
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec
-from .utils.message import need_args_dec, get_args_str
+from .utils.message import get_args_str
 
 # module to get anime and character info
 # by t.me/dank_as_fuck (misaki@eagleunion.tk)
