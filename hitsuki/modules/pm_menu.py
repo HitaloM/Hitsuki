@@ -78,7 +78,11 @@ async def help_cb(event, strings):
                    text='Restrictions', url='https://telegra.ph/Hitsuki-Restrictions-Help-12-08'),
                InlineKeyboardButton(text='Rules', url='https://telegra.ph/Hitsuki-Rules-Help-12-08'))
     button.add(InlineKeyboardButton(text='Stickers',
-                                    url='https://telegra.ph/Hitsuki-Stickers-Help-12-08'))
+                                    url='https://telegra.ph/Hitsuki-Stickers-Help-12-08'),
+               InlineKeyboardButton(text='Anime',
+                                    url='https://telegra.ph/Hitsuki-Anime-Help-12-08'),
+               InlineKeyboardButton(text='Android',
+                                    url='https://telegra.ph/Hitsuki-Android-Help-12-08'))
     button.add(InlineKeyboardButton(
         strings['back'], callback_data='go_to_start'))
     with suppress(MessageNotModified):
