@@ -196,7 +196,7 @@ async def get_id(message, user, strings, chat):
     if chat['status'] is True:
         text += strings["conn_chat_id"].format(id=chat['chat_id'])
 
-    if not user['user_id'] == user_id:
+    if user['user_id'] != user_id:
         text += strings["user_id"].format(
             user=await get_user_link(user['user_id']),
             id=user['user_id']

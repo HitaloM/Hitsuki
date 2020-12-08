@@ -176,10 +176,7 @@ async def is_user_admin(chat_id, user_id):
     except BadRequest:
         return False
     else:
-        if user_id in admins:
-            return True
-        else:
-            return False
+        return user_id in admins
 
 
 async def check_admin_rights(event: Union[Message, CallbackQuery], chat_id, user_id, rights):
@@ -227,10 +224,9 @@ async def check_group_admin(event, user_id, no_msg=False):
         chat_id = event.chat.id
     if await is_user_admin(chat_id, user_id) is True:
         return True
-    else:
-        if no_msg is False:
-            await event.reply("You should be a admin to do it!")
-        return False
+    if no_msg is False:
+        await event.reply("You should be a admin to do it!")
+    return False
 
 
 async def is_chat_creator(event: Union[Message, CallbackQuery], chat_id, user_id):
@@ -247,17 +243,11 @@ async def is_chat_creator(event: Union[Message, CallbackQuery], chat_id, user_id
             await event.answer(await get_string(chat_id, 'global', 'unable_identify_creator'))
             raise SkipHandler
 
-        if possible_creator['status'] == 'creator':
-            return True
-        return False
-
+        return possible_creator['status'] == 'creator'
     if user_id not in admin_rights:
         return False
 
-    if admin_rights[user_id]['status'] == 'creator':
-        return True
-
-    return False
+    return admin_rights[user_id]['status'] == 'creator'
 
 
 async def get_user_by_text(message, text: str):
@@ -360,11 +350,11 @@ def get_user_and_text_dec(**dec_kwargs):
                 message = message.message
 
             user, text = await get_user_and_text(message, **dec_kwargs)
-            if not user:
-                await message.reply("I can't get the user!")
-                return
-            else:
+            if user:
                 return await func(*args, user, text, **kwargs)
+
+            await message.reply("I can't get the user!")
+            return
 
         return wrapped_1
 
@@ -379,11 +369,11 @@ def get_user_dec(**dec_kwargs):
                 message = message.message
 
             user, text = await get_user_and_text(message, **dec_kwargs)
-            if not bool(user):
-                await message.reply("I can't get the user!")
-                return
-            else:
+            if bool(user):
                 return await func(*args, user, **kwargs)
+
+            await message.reply("I can't get the user!")
+            return
 
         return wrapped_1
 

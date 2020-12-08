@@ -33,11 +33,7 @@ LOAD = get_list_key("LOAD")
 DONT_LOAD = get_list_key("DONT_LOAD")
 
 if get_bool_key('LOAD_MODULES'):
-    if len(LOAD) > 0:
-        modules = LOAD
-    else:
-        modules = ALL_MODULES
-
+    modules = LOAD if len(LOAD) > 0 else ALL_MODULES
     modules = [x for x in modules if x not in DONT_LOAD]
 
     log.info("Modules to load: %s", str(modules))

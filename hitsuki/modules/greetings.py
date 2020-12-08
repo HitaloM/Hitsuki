@@ -565,7 +565,7 @@ async def ws_redirecter(message, strings):
     called_user_id = message.from_user.id
 
     url = f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}'
-    if not called_user_id == real_user_id:
+    if called_user_id != real_user_id:
         # The persons which are muted before wont have their signatures registered on cache
         if not redis.exists(f"welcome_security_users:{called_user_id}:{chat_id}"):
             await message.answer(strings['not_allowed'], show_alert=True)
@@ -688,7 +688,7 @@ async def check_captcha_text(message, strings, state=None, **kwargs):
     async with state.proxy() as data:
         captcha_num = data['captcha_num']
 
-    if not int(num) == int(captcha_num):
+    if int(num) != int(captcha_num):
         await message.reply(strings['bad_num'])
         return
 
@@ -767,7 +767,7 @@ async def wc_math_check_cb(event, strings, state=None, **kwargs):
             await event.message.delete()
             return
 
-    if not num == answer:
+    if num != answer:
         await send_btn_math(event.message, state, msg_id=event.message.message_id)
         await event.answer(strings['math_wc_wrong'], show_alert=True)
         return

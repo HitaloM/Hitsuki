@@ -47,7 +47,7 @@ async def get_similar_note(chat_id, note_name):
     async for note in db.notes.find({'chat_id': chat_id}):
         all_notes.extend(note['names'])
 
-    if len(all_notes) > 0:
+    if all_notes:
         check = difflib.get_close_matches(note_name, all_notes)
         if len(check) > 0:
             return check[0]
@@ -275,7 +275,7 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
             for note_name in note['names']:
                 if re.search(request, note_name):
                     notes.append(note)
-        if not len(notes) > 0:
+        if not notes:
             return await message.reply(strings['no_notes_pattern'] % request)
 
     # Search
@@ -575,10 +575,9 @@ async def private_notes_func(message, strings):
 
 
 async def __stats__():
-    text = "* <code>{}</code> total notes\n".format(
+    return "* <code>{}</code> total notes\n".format(
         await db.notes.count_documents({})
     )
-    return text
 
 
 async def __export__(chat_id):

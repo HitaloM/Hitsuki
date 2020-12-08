@@ -78,11 +78,9 @@ class AntifloodEnforcer(BaseMiddleware):
         _pre = [
             ContentType.NEW_CHAT_MEMBERS, ContentType.LEFT_CHAT_MEMBER
         ]
-        if message.content_type in _pre:
-            return False
-        elif message.chat.type in (ChatType.PRIVATE,):
-            return False
-        return True
+        return message.content_type not in _pre and message.chat.type not in (
+            ChatType.PRIVATE,
+        )
 
     def get_flood(self, message) -> Optional[CacheModel]:
         if data := bredis.get(self.cache_key(message)):

@@ -55,7 +55,7 @@ async def list_disabled(message, chat, strings):
 @get_strings_dec("disable")
 async def disable_command(message, chat, strings):
     cmd = get_arg(message).lower()
-    if cmd[0] == '/' or cmd[0] == '!':
+    if cmd[0] in ['/', '!']:
         cmd = cmd[1:]
 
     # Check on commands aliases
@@ -91,7 +91,7 @@ async def disable_command(message, chat, strings):
 async def enable_command(message, chat, strings):
     chat_id = chat['chat_id']
     cmd = get_arg(message).lower()
-    if cmd[0] == '/' or cmd[0] == '!':
+    if cmd[0] in ['/', '!']:
         cmd = cmd[1:]
 
     # Check on commands aliases
@@ -104,7 +104,9 @@ async def enable_command(message, chat, strings):
         await message.reply(strings["wot_to_enable"])
         return
 
-    if not await db.disabled.find_one({'chat_id': chat['chat_id'], 'cmds': {'$in': [cmd]}}):
+    if not await db.disabled.find_one(
+        {'chat_id': chat_id, 'cmds': {'$in': [cmd]}}
+    ):
         await message.reply(strings["already_enabled"])
         return
 
