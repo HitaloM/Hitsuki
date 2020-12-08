@@ -58,7 +58,8 @@ def tparse_ent(ent, text, as_html=True):
     if sys.maxunicode == 0xffff:
         return text[offset:offset + length]
 
-    entity_text = text.encode('utf-16-le') if not isinstance(text, bytes) else text
+    entity_text = text.encode(
+        'utf-16-le') if not isinstance(text, bytes) else text
     entity_text = entity_text[offset *
                               2:(offset + length) * 2].decode('utf-16-le')
 

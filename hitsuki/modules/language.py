@@ -63,7 +63,6 @@ async def select_lang_keyboard(message, strings, edit=False):
             )
         )
 
-
     if edit:
         markup.add(InlineKeyboardButton(
             strings['back'], callback_data='go_to_start'))
