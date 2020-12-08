@@ -109,7 +109,8 @@ def parse(message, delimiters=None, url_re=None):
                 # Append the found entity
                 ent = delimiters[delim]
                 if ent == MessageEntityPre:
-                    result.append(ent(i, end - i - len(delim), ''))  # has 'lang'
+                    # has 'lang'
+                    result.append(ent(i, end - i - len(delim), ''))
                 else:
                     result.append(ent(i, end - i - len(delim)))
 
@@ -165,7 +166,8 @@ def unparse(text, entities, delimiters=None, url_fmt=None):
         delimiters = DEFAULT_DELIMITERS
 
     if url_fmt is not None:
-        warnings.warn('url_fmt is deprecated')  # since it complicates everything *a lot*
+        # since it complicates everything *a lot*
+        warnings.warn('url_fmt is deprecated')
 
     if isinstance(entities, TLObject):
         entities = (entities,)

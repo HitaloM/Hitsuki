@@ -38,6 +38,7 @@ async def get_sticker(message, strings):
     sticker_file = await bot.download_file_by_id(file_id, io.BytesIO())
 
     await message.reply_document(
-        InputFile(sticker_file, filename=f'{sticker.set_name}_{sticker.file_id[:5]}.png'),
+        InputFile(sticker_file,
+                  filename=f'{sticker.set_name}_{sticker.file_id[:5]}.png'),
         text
     )

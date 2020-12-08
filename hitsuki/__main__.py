@@ -86,6 +86,7 @@ log.info("Aiogram: Using polling method")
 
 if os.getenv('WEBHOOKS', False):
     port = os.getenv('WEBHOOKS_PORT', 8080)
-    executor.start_webhook(dp, f'/{TOKEN}', on_startup=start_webhooks, port=port)
+    executor.start_webhook(
+        dp, f'/{TOKEN}', on_startup=start_webhooks, port=port)
 else:
     executor.start_polling(dp, loop=loop, on_startup=start)
