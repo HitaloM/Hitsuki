@@ -47,7 +47,7 @@ async def get_start_func(message, strings, edit=False):
     buttons.add(InlineKeyboardButton(strings['btn_help'], callback_data='get_help'),
                 InlineKeyboardButton(strings['btn_lang'], callback_data='lang_btn'))
     buttons.add(InlineKeyboardButton(strings['btn_channel'], url='https://t.me/HitsukiNews'),
-                InlineKeyboardButton(strings['btn_source'], url='https://github.com/HitsukiNetwork/Hitsuki'))
+                InlineKeyboardButton(strings['btn_source'], url='https://github.com/HitsukiNetwork/HitsukiX'))
     # Handle error when user click the button 2 or more times simultaneously
     with suppress(MessageNotModified):
         await task(strings['start_hi'], reply_markup=buttons)
@@ -57,7 +57,22 @@ async def get_start_func(message, strings, edit=False):
 @get_strings_dec('pm_menu')
 async def help_cb(event, strings):
     button = InlineKeyboardMarkup()
-    button.add(InlineKeyboardButton(strings['click_btn'], url='https://github.com/HitsukiNetwork/Hitsuki/wiki'))
+    button.add(InlineKeyboardButton(text='AntiFlood', url='https://telegra.ph/Hitsuki-AntiFlood-Help-12-07'),
+               InlineKeyboardButton(text='Connections', url='https://telegra.ph/Hitsuki-Connections-Help-12-07'),
+               InlineKeyboardButton(text='Disabling', url='https://telegra.ph/Hitsuki-Disabling-Help-12-08'))
+    button.add(InlineKeyboardButton(text='Federations', url='https://telegra.ph/Hitsuki-Federations-Help-12-08'),
+               InlineKeyboardButton(text='Filters', url='https://telegra.ph/Hitsuki-Filters-Help-12-08'),
+               InlineKeyboardButton(text='Greetings', url='https://telegra.ph/Hitsuki-Greetings-Help-12-08'))
+    button.add(InlineKeyboardButton(text='Backups', url='https://telegra.ph/Hitsuki-Backups-Help-12-08'),
+               InlineKeyboardButton(text='Language', url='https://telegra.ph/Hitsuki-Language-Help-12-08'),
+               InlineKeyboardButton(text='Locks', url='https://telegra.ph/Hitsuki-Locks-Help-12-08'))
+    button.add(InlineKeyboardButton(text='Misc', url='https://telegra.ph/Hitsuki-Misc-Help-12-08'),
+               InlineKeyboardButton(text='Notes', url='https://telegra.ph/Hitsuki-Notes-Help-12-08'),
+               InlineKeyboardButton(text='Admin', url='https://telegra.ph/Hitsuki-Admin-Help-12-08'))
+    button.add(InlineKeyboardButton(text='Reporting', url='https://telegra.ph/Hitsuki-Reporting-Help-12-08'),
+               InlineKeyboardButton(text='Restrictions', url='https://telegra.ph/Hitsuki-Restrictions-Help-12-08'),
+               InlineKeyboardButton(text='Rules', url='https://telegra.ph/Hitsuki-Rules-Help-12-08'))
+    button.add(InlineKeyboardButton(text='Stickers', url='https://telegra.ph/Hitsuki-Stickers-Help-12-08'))
     button.add(InlineKeyboardButton(strings['back'], callback_data='go_to_start'))
     with suppress(MessageNotModified):
         await event.message.edit_text(strings['help_header'], reply_markup=button)
@@ -78,6 +93,6 @@ async def back_btn(event):
 @get_strings_dec('pm_menu')
 async def help_cmd(message, strings):
     button = InlineKeyboardMarkup().add(InlineKeyboardButton(
-        strings['click_btn'], url='https://github.com/HitsukiNetwork/Hitsuki/wiki'
+        strings['btn_help'], url='https://t.me/Hitsuki_BOT?start'
     ))
-    await message.reply(strings['help_header'], reply_markup=button)
+    await message.reply(strings['help_headerg'], reply_markup=button)

@@ -190,15 +190,16 @@ STRINGS:
 
   pm_menu:
     start_hi_group: 'Hey there! My name is Hitsuki'
-    start_hi: "Hey there! My name is Hitsuki, I help you manage your group in an efficient way!"
+    start_hi: "Hey there! My name is <b>Hitsuki.</b>\nI can help manage your groups with useful features, feel free to add me to your groups!"
     btn_source: "📦 Source code"
     btn_help: "❔ Help"
-    btn_lang: "🇷🇺 Language"
-    btn_channel: "📡 Hitsuki News"
-    back: Back
+    btn_lang: "🇺🇸 Language"
+    btn_channel: "📬 Hitsuki News"
+    back: ⬅️ Back
 
     # /help
-    help_header: Hey! Checkout our wiki for help
+    help_header: "Hello, <b>I'm Hitsuki!</b>!\n\nI have lots of handy features, such as warning system, a note keeping system, and even predetermined replies on certain keywords.\n\nClick the buttons below to learn more about using my command."
+    help_headerg: "Contact me in PM to get the list of possible commands."
     click_btn: Click here
 
   disable:
