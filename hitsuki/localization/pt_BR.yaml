@@ -157,10 +157,9 @@ STRINGS:
     btn_help: "❔ Ajuda"
     btn_lang: "🇧🇷 Idioma"
     btn_channel: "📬 Hitsuki Notícias"
-    back: ⬅️ Voltar
+    back: Voltar
     #/help
-    help_header: "Olá, meu nome é <b>Hitsuki!</b>!\n\nTenho muitos recursos úteis, como sistema de avisoa, sistema de anotações e até respostas predeterminadas para certas palavras-chave.\n\nClique nos botões abaixo para saber mais sobre como usar meus comandos."
-    help_headerg: "Me chame no PV para obter a lista de comandos."
+    help_header: "Ei! Confira nossa wiki para obter ajuda."
     click_btn: Clique aqui
   disable:
     #/disableable

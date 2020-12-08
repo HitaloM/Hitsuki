@@ -195,11 +195,10 @@ STRINGS:
     btn_help: "❔ Help"
     btn_lang: "🇺🇸 Language"
     btn_channel: "📬 Hitsuki News"
-    back: ⬅️ Back
+    back: Back
 
     # /help
-    help_header: "Hello, <b>I'm Hitsuki!</b>!\n\nI have lots of handy features, such as warning system, a note keeping system, and even predetermined replies on certain keywords.\n\nClick the buttons below to learn more about using my command."
-    help_headerg: "Contact me in PM to get the list of possible commands."
+    help_header: "Hey! Checkout our wiki for help."
     click_btn: Click here
 
   disable:
