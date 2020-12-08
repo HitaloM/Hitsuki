@@ -59,6 +59,7 @@ async def select_lang_keyboard(message, strings, edit=False):
             callback_data=select_lang_cb.new(lang=lang_info['code'], back_btn=False if edit is False else True))
         )
 
+    markup.add(InlineKeyboardButton(strings['crowdin_btn'], url='https://crowdin.com/project/hitsukix'))
     if edit:
         markup.add(InlineKeyboardButton(strings['back'], callback_data='go_to_start'))
     with suppress(MessageNotModified):
@@ -74,6 +75,7 @@ async def change_lang(message, lang, e=False, back_btn=False):
     lang_info = LANGUAGES[lang]['language_info']
 
     text = strings['lang_changed'].format(lang_name=lang_info['flag'] + " " + lang_info['babel'].display_name)
+    text += strings['help_us_translate']
 
     markup = InlineKeyboardMarkup()
 

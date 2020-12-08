@@ -427,7 +427,7 @@ STRINGS:
     fban_info:fcheck: "You have been fbanned in {fed} federation on {date}, No reason where given!"
     fban_info:fcheck:reason: "You have been fbanned in {fed} federation on {date} because of reason -\n {reason}\n"
     fbanned_data: "{user} has been fbanned in {count} federation(s).\n"
-    fbanned_nowhere: "{user} isn't fbanned anywhere!"
+    fbanned_nowhere: "{user} isn't fbanned anywhere! "
     fbanned_in_fed: "Including this <b>{fed}</b> federation!\n"
     fbanned_in_fed:reason: "Including this <b>{fed}</b> federation for reason of -\n <code>{reason}</code>"
     contact_in_pm: "\n\nFor more info on your fbans, please direct message me thus your privacy is secured!"
@@ -457,6 +457,8 @@ STRINGS:
     select_pm_lang: "\n<b>Select your new language:</b>"
     select_chat_lang: "\n<b>Select new chat language:</b>"
     not_supported_lang: This language not supported!
+    crowdin_btn: "🌎 Help us with translation"
+    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukix\">🌎 Help us improve languages</a>"
     lang_changed: Language was changed to <b>{lang_name}</b>.
     see_translators: 👥 See translators
     back: Back
