@@ -118,7 +118,7 @@ STRINGS:
     #/delwarns
     purged_warns: "{admin} restableció <code>{num}</code> advertencias a {user} en <b>{chat_title}</b>!"
     usr_no_wrn: "{user} aún no tiene ninguna advertencia."
-    rst_wrn_sofi: 'Sophie nunca ha tenido advertencias para reiniciar.'
+    rst_wrn_sofi: 'Hitsuki nunca ha tenido advertencias para reiniciar.'
     not_digit: '¡El límite de advertencias deben ser dígitos!'
     #/warnmode
     same_mode: '¡Este es el modo actual! ¿Cómo puedo cambiarlo?'
@@ -165,11 +165,11 @@ STRINGS:
     emoji_not_allowed: "Lo siento, pero los roles de administrador no pueden contener emojis 😞"
   pm_menu:
     start_hi_group: '¡Hola! Mi nombre es Sophie'
-    start_hi: "¡Hola! ¡Mi nombre es Sophie, te ayudo a gestionar tu grupo de una manera eficiente!"
+    start_hi: "¡Hola! ¡Mi nombre es <b>Hitsuki</b>, te ayudo a gestionar tu grupo de una manera eficiente!"
     btn_source: "📦 Código fuente"
     btn_help: "❔ Ayuda"
     btn_lang: "es Idioma"
-    btn_channel: "📡 Noticias de Sophie"
+    btn_channel: "📡 Noticias de Hitsuki"
     back: Atrás
     #/help
     help_header: "¡Hola! Consulta nuestra wiki para ayuda"
@@ -399,7 +399,7 @@ STRINGS:
     select_chat_lang: "\n<b>Seleccionar nuevo idioma del chat:</b>"
     not_supported_lang: '¡Este idioma no es soportado!'
     crowdin_btn: "🌎 Ayúdanos con la traducción"
-    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/sophiebot\">🌎 Ayúdanos a mejorar los idiomas</a>"
+    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukix\">🌎 Ayúdanos a mejorar los idiomas</a>"
     lang_changed: Idioma cambiado a <b>{lang_name}</b>.
     see_translators: '👥 Ver traductores'
     back: Atrás
@@ -482,7 +482,7 @@ STRINGS:
     big_file: '¡Archivos de importación soportados solo por menos de 50 MB!'
     started_importing: '¡Importación iniciada! Por favor espere...'
     bad_file: '¡Archivo erróneo! Se esperaba <code>columna ''general''</code>.'
-    file_version_so_new: '¡La versión del archivo exportado es más reciente que la que soporta actualmente Sophie!'
+    file_version_so_new: '¡La versión del archivo exportado es más reciente que la que soporta actualmente Hitsuki!'
     imports_locked: '¡Por favor, espera %s para volver a usar la importación!'
     import_done: '¡Importación hecha!'
   restrictions:
