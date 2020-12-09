@@ -224,7 +224,8 @@ async def anime_search(message):
             buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(text="More Info", url=info),
                                                  InlineKeyboardButton(text="Trailer 🎬", url=trailer))
         else:
-           buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(text="More Info", url=info))
+            buttons = InlineKeyboardMarkup().add(
+                InlineKeyboardButton(text="More Info", url=info))
 
         if image:
             try:
@@ -234,7 +235,6 @@ async def anime_search(message):
                 await message.reply(msg)
         else:
             await message.reply(msg)
-
 
 
 @register(cmds='character')
