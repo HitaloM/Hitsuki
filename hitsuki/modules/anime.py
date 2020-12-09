@@ -294,7 +294,7 @@ async def manga_search(message):
         ms_g = ms_g[:-2]
 
         image = json.get("bannerImage", False)
-        ms_g += f"\n<i>{json.get('description', None)}</i>"
+        ms_g += (f"\n<i>{json.get('description', None)}</i>").replace('<br>', '').replace("</br>", "")
         if image:
             try:
                 await message.reply_photo(image, caption=ms_g)
