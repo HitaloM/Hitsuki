@@ -15,12 +15,198 @@
 
 import rapidjson as json
 from requests import get
+from yaml import load, Loader
 from bs4 import BeautifulSoup
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec
 from .utils.message import get_arg
+
+MIUI_FIRM = "https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml"
+REALME_FIRM = "https://raw.githubusercontent.com/RealmeUpdater/realme-updates-tracker/master/data/latest.yml"
+
+
+class GetDevice:
+    def __init__(self, device):
+        """Get device info by codename or model!"""
+        self.device = device
+
+    def get(self):
+        if self.device.lower().startswith('sm-'):
+            data = get(
+                'https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_model.json').content
+            db = json.loads(data)
+            try:
+                name = db[self.device.upper()][0]['name']
+                device = db[self.device.upper()][0]['device']
+                brand = db[self.device.upper()][0]['brand']
+                model = self.device.lower()
+                return {'name': name,
+                        'device': device,
+                        'model': model,
+                        'brand': brand
+                        }
+            except KeyError:
+                return False
+        else:
+            data = get(
+                'https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json').content
+            db = json.loads(data)
+            newdevice = self.device.strip('lte').lower() if self.device.startswith(
+                'beyond') else self.device.lower()
+            try:
+                name = db[newdevice][0]['name']
+                model = db[newdevice][0]['model']
+                brand = db[newdevice][0]['brand']
+                device = self.device.lower()
+                return {'name': name,
+                        'device': device,
+                        'model': model,
+                        'brand': brand
+                        }
+            except KeyError:
+                return False
+
+
+@register(cmds='whatis')
+@disableable_dec('whatis')
+async def whatis(message):
+    device = get_arg(message)
+    if not device:
+        m = "Please write your codename into it, i.e <code>/whatis raphael</code>"
+        await message.reply(m)
+        return
+
+    data = GetDevice(device).get()
+    if data:
+        name = data['name']
+        device = data['device']
+        brand = data['brand']
+        model = data['model']
+    else:
+        m = "coudn't find your device, check device & try!"
+        await message.reply(m)
+        return
+
+    m = f'<b>{device}</b> is <code>{brand} {name}</code>\n'
+    await message.reply(m)
+
+
+@register(cmds='variants')
+@disableable_dec('variants')
+async def variants(message):
+    device = get_arg(message)
+    if not device:
+        m = "Please write your codename into it, i.e <code>/specs herolte</code>"
+        await message.reply(m)
+        return
+
+    data = GetDevice(device).get()
+    if data:
+        name = data['name']
+        device = data['device']
+    else:
+        m = "coudn't find your device, chack device & try!"
+        await message.reply(m)
+        return
+
+    data = get(
+        'https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json').content
+    db = json.loads(data)
+    device = db[device]
+    m = f'<b>{name}</b> variants:\n\n'
+
+    for i in device:
+        name = i['name']
+        model = i['model']
+        m += '<b>Model</b>: <code>{}</code> \n<b>Name:</b> <code>{}</code>\n\n'.format(
+            model, name)
+
+    await message.reply(m)
+
+
+@register(cmds='miui')
+@disableable_dec('miui')
+async def miui(message):
+    codename = get_arg(message)
+    if not codename:
+        m = "Please write a codename, example: <code>/miui whyred</code>"
+        await message.reply(m)
+        return
+
+    yaml_data = load(get(MIUI_FIRM).content, Loader=Loader)
+    data = [i for i in yaml_data if codename in i['codename']]
+
+    if len(data) < 1:
+        await message.reply("Provide a valid codename!")
+        return
+
+    for fw in data:
+        av = fw['android']
+        branch = fw['branch']
+        method = fw['method']
+        link = fw['link']
+        fname = fw['name']
+        version = fw['version']
+        size = fw['size']
+        date = fw['date']
+        md5 = fw['md5']
+        codename = fw['codename']
+
+        btn = branch + ' | ' + method + ' | ' + version
+
+        button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=link))
+
+    text = f"<b>MIUI - Last build for {codename}:</b>"
+    text += f"\n\n<b>Name:</b> <code>{fname}</code>"
+    text += f"\n<b>Android:</b> <code>{av}</code>"
+    text += f"\n<b>Size:</b> <code>{size}</code>"
+    text += f"\n<b>Date:</b> <code>{date}</code>"
+    text += f"\n<b>MD5:</b> <code>{md5}</code>"
+
+    await message.reply(text, reply_markup=button)
+
+
+@register(cmds='realmeui')
+@disableable_dec('realmeui')
+async def realmeui(message):
+    codename = get_arg(message)
+    if not codename:
+        m = "Please write a codename, example: <code>/realmeui RMX2061</code>"
+        await message.reply(m)
+        return
+
+    yaml_data = load(get(REALME_FIRM).content, Loader=Loader)
+    data = [i for i in yaml_data if codename in i['codename']]
+
+    if len(data) < 1:
+        await message.reply("Provide a valid codename!")
+        return
+
+    for fw in data:
+        reg = fw['region']
+        link = fw['download']
+        device = fw['device']
+        version = fw['version']
+        cdn = fw['codename']
+        sys = fw['system']
+        size = fw['size']
+        date = fw['date']
+        md5 = fw['md5']
+
+        btn = reg + ' | ' + version
+
+        button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=link))
+
+    text = f"<b>RealmeUI - Last build for {codename}:</b>"
+    text += f"\n\n<b>Device:</b> <code>{device}</code>"
+    text += f"\n<b>System:</b> <code>{sys}</code>"
+    text += f"\n<b>Size:</b> <code>{size}</code>"
+    text += f"\n<b>Date:</b> <code>{date}</code>"
+    text += f"\n<b>MD5:</b> <code>{md5}</code>"
+
+    await message.reply(text, reply_markup=button)
 
 
 @register(cmds='magisk')
