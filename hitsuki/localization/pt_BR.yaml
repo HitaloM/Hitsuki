@@ -171,7 +171,7 @@ STRINGS:
     btn_channel: "📬 Notícias do Hitsuki"
     back: Voltar
     #/help
-    help_header: "Ei! Verifique nosso wiki para obter ajuda."
+    help_header: "Ei! Verifique nossa wiki para obter ajuda."
     click_btn: Clique aqui
   disable:
     #/disableable
@@ -399,7 +399,7 @@ STRINGS:
     select_chat_lang: "\n<b>Selecione o novo idioma do chat:</b>"
     not_supported_lang: Esse idioma não é suportado!
     crowdin_btn: "🌎 Ajude-nos com a tradução"
-    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukix\">🌎 Ajude-nos melhorar os idiomas</a>"
+    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukix\">🌎 Ajude-nos a melhorar as traduções</a>"
     lang_changed: Idioma mudou para <b>{lang_name}</b>.
     see_translators: '👥 Veja os tradutores'
     back: Voltar
@@ -509,7 +509,7 @@ STRINGS:
     user_unband: "{user} foi desbanido por {admin} em {chat_name}."
     invalid_time: Tempo inválido!
     enter_time: Por favor, adicione o tempo!
-    on_time: "\nPara <code>%s</code>"
+    on_time: "\nPor <code>%s</code>"
     reason: "\nMotivo: <code>%s</code>"
     purge: "\nEm 5 segundos, a mensagem será eliminada!"
     filter_title_ban: Banir o usuário
@@ -587,14 +587,14 @@ STRINGS:
     welcomemute_disabled: Boas-vindas com mute desativada em <b>%s</b>
     welcomemute_status: Boas-vindas com mute está <code>{status}</code> em <b>{chat_name}</b>
     #/welcomesecurity
-    welcomesecurity_enabled: Welcome security enabled in <b>{chat_name}</b> to <code>{level}</code>.
+    welcomesecurity_enabled: Segurança de boas-vindas ativada no chat <b>{chat_name}</b> para <code>{level}</code>.
     "welcomesecurity_enabled:customized_time": |
-      Welcome security enabled in <b>{chat_name}</b> to <code>{level}</code>, and kick users which aren't verified within {time}.
+      Segurança de boas-vindas ativada no chat <b>{chat_name}</b> para <code>{level}</code>, irei remover os usuários que não foram verificados dentro de {time}.
     ask_for_time_customization: |
-      Do you want to customize the time period to kick unverified user? (by default it's {time})
-    send_time: Please send time.
-    invalid_time: "Invalid time!"
-    welcomesecurity_enabled_word: enabled, set to level {level}
+      Você deseja personalizar o período de tempo para remover o usuário que não é verificado? (Por padrão, o período de tempo é {time})
+    send_time: Por favor, envie um tempo.
+    invalid_time: "Tempo inválido!"
+    welcomesecurity_enabled_word: ativado, level definido como {level}
     welcomesecurity_disabled: Segurança de boas-vindas desativada em <b>%s</b>.
     welcomesecurity_invalid_arg: Argumento inválido, esperado <code>button</code>/<code>captcha</code>.
     welcomesecurity_status: Segurança de boas-vindas está <code>{status}</code> em <b>{chat_name}</b>
@@ -629,30 +629,30 @@ STRINGS:
     locks_header: "Aqui estão as configurações de bloqueio atuais em {chat_title} \n\n"
     no_lock_args: Dê-me alguns args para bloquear!
     already_locked: Isso já está bloqueado
-    no_such_lock: See /locks to find out what can be locked and unlocked!
-    locked_successfully: Locked {lock} in {chat} sucessfully!
-    no_unlock_args: Give me some args to unlock!
-    not_locked: Bruh, its not locked to unlock.
-    unlocked_successfully: Unlocked {lock} in {chat} successfully!
+    no_such_lock: Veja /locks para descobrir o que pode ser bloqueado e desbloqueado!
+    locked_successfully: Bloqueado {lock} com sucesso no chat {chat}!
+    no_unlock_args: Me dê algum argumento para eu poder desbloquear!
+    not_locked: Meh, isso não está bloqueado para fazer o desbloqueio.
+    unlocked_successfully: Desbloqueado {lock} com sucesso no chat {chat}!
   antiflood:
     #enforcer
-    flood_exceeded: "{action} {user} for flooding!"
+    flood_exceeded: "{action} {user} por flooding!"
     #/setflood
-    "invalid_args:setflood": "Expected an integer!"
-    overflowed_count: Maximum count should be less than 200!
-    config_proc_1: Please send expiration time, '0' (zero) for not being expired.
-    cancel: '❌ Cancel'
-    setup_success: Successfully configured antiflood, now enforces against those who sends {count} messages within {time}!
-    "setup_success:no_exp": Successfully configured antiflood, allows {count} messages consecutively!
-    invalid_time: Invalid time!
+    "invalid_args:setflood": "Esperava um número inteiro!"
+    overflowed_count: A contagem máxima deve ser inferior a 200!
+    config_proc_1: Envie um prazo de validade, envie '0' (zero) para não ser expirado.
+    cancel: '❌ Cancelar'
+    setup_success: O antiflood configurado com sucesso, agora aplica contra aqueles que enviam {count} mensagens consecutivas dentro de {time}!
+    "setup_success:no_exp": Antiflood configurado com sucesso, permite {count} mensagens consecutivamente!
+    invalid_time: Tempo inválido!
     #/antiflood | /flood
-    not_configured: Antiflood isn't configured in this chat yet!
-    turned_off: Disabled antiflood in <b>{chat_title}</b>!
-    "configuration_info:with_time": Antiflood is configured in this chat, those who sents {count} message within {time} would be {action}!
-    configuration_info: Antiflood is configured in this chat, those who sents {count} consecutively would be {action}!
-    ban: banned
-    mute: muted
-    kick: kicked
+    not_configured: Antiflood ainda não está configurado neste chat!
+    turned_off: Antiflood desativado no chat <b>{chat_title}</b>!
+    "configuration_info:with_time": O Antiflood está configurado neste chat, quem enviar {count} mensagem dentro de {time} vai ser {action}!
+    configuration_info: O Antiflood está configurado neste chat, aqueles que enviarem {count} mensagens consecutivamente serão {action}!
+    ban: banido
+    mute: mutado
+    kick: expulso
     #/setfloodaction
-    invalid_args: "Unsupported action, expected {supported_actions}!"
-    setfloodaction_success: "Successfully updated flood action to <b>{action}</b>!"
+    invalid_args: "Ação não suportada, esperava {supported_actions}!"
+    setfloodaction_success: "Ação de flood atualizada com sucesso para <b>{action}</b>!"
