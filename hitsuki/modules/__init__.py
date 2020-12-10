@@ -28,9 +28,7 @@ def list_all_modules() -> list:
     for module_name in os.listdir(modules_directory):
         path = modules_directory + '/' + module_name
 
-        if '__pycache__' in path:
-            continue
-        if '__init__' in path:
+        if path in ['__init__', '__pycache__', 'pm_menu']:
             continue
 
         if path in all_modules:

@@ -22,9 +22,17 @@ from aiogram.types.inline_keyboard import (
 from aiogram.utils.exceptions import MessageNotModified
 
 from hitsuki.decorator import register
+from hitsuki.__main__ import MOD_HELP
 from hitsuki.modules.utils.disable import disableable_dec
 from .language import select_lang_keyboard
 from .utils.language import get_strings_dec
+
+
+def help_markup(modules):
+    markup = InlineKeyboardMarkup()
+    for module in modules:
+        markup.insert(InlineKeyboardButton(module, callback_data=f"helpmenu_{module}"))
+    return markup
 
 
 @register(cmds='start', no_args=True, only_groups=True)
@@ -56,11 +64,8 @@ async def get_start_func(message, strings, edit=False):
 @register(regexp='get_help', f='cb')
 @get_strings_dec('pm_menu')
 async def help_cb(event, strings):
-    button = InlineKeyboardMarkup()
-    button.add(InlineKeyboardButton(
-        strings['click_btn'], url='https://hitsukinetwork.github.io/#/'))
-    button.add(InlineKeyboardButton(
-        strings['back'], callback_data='go_to_start'))
+    button = help_markup(MOD_HELP)
+    button.add(InlineKeyboardButton(strings['back'], callback_data='go_to_start'))
     with suppress(MessageNotModified):
         await event.message.edit_text(strings['help_header'], reply_markup=button)
 
@@ -79,7 +84,5 @@ async def back_btn(event):
 @disableable_dec('help')
 @get_strings_dec('pm_menu')
 async def help_cmd(message, strings):
-    button = InlineKeyboardMarkup().add(InlineKeyboardButton(
-        strings['click_btn'], url='https://hitsukinetwork.github.io/#/'
-    ))
+    button = help_markup(MOD_HELP)
     await message.reply(strings['help_header'], reply_markup=button)

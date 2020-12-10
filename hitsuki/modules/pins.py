@@ -55,3 +55,9 @@ async def pin_message(message, strings):
         await bot.pin_chat_message(message.chat.id, msg, disable_notification=dnd)
     except BadRequest:
         await message.reply(strings['chat_not_modified_pin'])
+
+
+__help__ = """
+• /pin: silently pins the message replied to - add 'loud' or 'notify' to give notifs to users
+• /unpin: unpins the currently pinned message
+"""
