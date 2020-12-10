@@ -56,6 +56,7 @@ async def pin_message(message, strings):
     except BadRequest:
         await message.reply(strings['chat_not_modified_pin'])
 
+__mod_name__ = "Pins"
 
 __help__ = """
 • /pin: silently pins the message replied to - add 'loud' or 'notify' to give notifs to users

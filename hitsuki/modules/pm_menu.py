@@ -22,10 +22,11 @@ from aiogram.types.inline_keyboard import (
 from aiogram.utils.exceptions import MessageNotModified
 
 from hitsuki.decorator import register
-from hitsuki.__main__ import MOD_HELP
 from hitsuki.modules.utils.disable import disableable_dec
-from .language import select_lang_keyboard
+from . import MOD_HELP
+from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
+from .language import select_lang_keyboard
 
 
 def help_markup(modules):

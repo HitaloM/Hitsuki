@@ -22,8 +22,9 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 
 from hitsuki import dp, TOKEN, bot
 from hitsuki.config import get_bool_key, get_list_key
-from hitsuki.modules import ALL_MODULES, LOADED_MODULES
+from hitsuki.modules import ALL_MODULES, LOADED_MODULES, MOD_HELP
 from hitsuki.utils.logger import log
+
 
 if get_bool_key("DEBUG_MODE"):
     log.debug("Enabling logging middleware.")
@@ -31,7 +32,6 @@ if get_bool_key("DEBUG_MODE"):
 
 LOAD = get_list_key("LOAD")
 DONT_LOAD = get_list_key("DONT_LOAD")
-MOD_HELP = {}
 
 if get_bool_key('LOAD_MODULES'):
     if len(LOAD) > 0:
@@ -43,6 +43,9 @@ if get_bool_key('LOAD_MODULES'):
 
     log.info("Modules to load: %s", str(modules))
     for module_name in modules:
+	# Load pm_menu at last
+        if module_name == 'pm_menu':
+            continue
         log.debug(f"Importing <d><n>{module_name}</></>")
         imported_module = import_module("hitsuki.modules." + module_name)
         if hasattr(imported_module, '__help__'):
@@ -57,8 +60,8 @@ else:
 
 loop = asyncio.get_event_loop()
 
-# Import misc stuff
 import_module('hitsuki.modules.pm_menu')
+# Import misc stuff
 import_module("hitsuki.utils.exit_gracefully")
 if not get_bool_key('DEBUG_MODE'):
     import_module("hitsuki.utils.sentry")
