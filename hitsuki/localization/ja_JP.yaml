@@ -73,11 +73,11 @@ STRINGS:
     #/addfilter
     anon_detected: Being anonymous admin, you cannot add new filters, use connections instead.
     regex_too_slow: "Your regex pattern is matching too slow (more than the half of second), it can't be added!"
-    cancel_btn: "🛑 Cancel"
+    cancel_btn: "🛑 キャンセル"
     adding_filter: |
       フィルター <code>{handler}</code> の <b>{chat_name}</b>
       以下のアクションを選択します:
-    saved: "New filter was successfully saved!"
+    saved: "新しいフィルターが正常に保存されました！"
     #/filters
     list_filters: "<b>{chat_name}</b>:\n のフィルター"
     #/delfilter
@@ -87,7 +87,7 @@ STRINGS:
       私は多くのフィルタがあります。 ハンドラ'<code>{handler}</code>'
       削除するフィルタを選択してください:
     #/delfilters or /delallfilters
-    not_chat_creator: Only chat creators can use this command!
+    not_chat_creator: このコマンドを使用できるのはチャット作成者だけです。
     delall_header: This would delete all filters in this chat. This IS irreversible.
     confirm_yes: '⚠ Delete all'
     confirm_no: '❌ Cancel'
@@ -172,7 +172,7 @@ STRINGS:
     btn_channel: ":satellite_アンテナ: Hitsuki News"
     back: 戻る
     #/help
-    help_header: "こんにちは! ヘルプのために私たちのwikiをチェックしてください"
+    help_header: "ねえ！ 私の名前は<b>Hitsuki</b>です。 私はグループ管理ボットです。ここでは、グループ内を移動して順序を維持するのに役立ちます。\n洪水調節、警告システム、メモ管理システム、さらには特定のキーワードに対する事前に決められた返信など、便利な機能がたくさんあります。"
     click_btn: ここをクリック
   disable:
     #/disableable
