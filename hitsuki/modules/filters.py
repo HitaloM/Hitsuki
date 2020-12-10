@@ -90,10 +90,12 @@ async def check_msg(message):
 
     for handler in filters:  # type: str
         if handler.startswith("re:"):
-            func = functools.partial(regex.search, handler.replace("re:", '', 1), text, timeout=0.1)
+            func = functools.partial(regex.search, handler.replace(
+                "re:", '', 1), text, timeout=0.1)
         else:
             # TODO: Remove this (handler.replace(...)). kept for backward compatibility
-            func = functools.partial(re.search, re.escape(handler).replace('(+)', '(.*)'), text, flags=re.IGNORECASE)
+            func = functools.partial(re.search, re.escape(
+                handler).replace('(+)', '(.*)'), text, flags=re.IGNORECASE)
 
         try:
             async with timeout(0.1):
@@ -131,7 +133,8 @@ async def add_handler(message, chat, strings):
     else:
         handler = handler.lower()
 
-    text = strings['adding_filter'].format(handler=handler, chat_name=chat['chat_title'])
+    text = strings['adding_filter'].format(
+        handler=handler, chat_name=chat['chat_title'])
 
     buttons = InlineKeyboardMarkup(row_width=2)
     for action in FILTERS_ACTIONS.items():
@@ -142,7 +145,8 @@ async def add_handler(message, chat, strings):
             await get_string(chat['chat_id'], data['title']['module'], data['title']['string']),
             callback_data=filter_action_cp.new(filter_id=filter_id)
         ))
-    buttons.add(InlineKeyboardButton(strings['cancel_btn'], callback_data='cancel'))
+    buttons.add(InlineKeyboardButton(
+        strings['cancel_btn'], callback_data='cancel'))
 
     user_id = message.from_user.id
     chat_id = chat['chat_id']
@@ -187,7 +191,8 @@ async def register_action(event, chat, strings, callback_data=None, state=None, 
 
     if 'setup' in action:
         await NewFilter.setup.set()
-        setup_co = len(action['setup']) - 1 if type(action['setup']) is list else 0
+        setup_co = len(action['setup']) - \
+            1 if type(action['setup']) is list else 0
         async with state.proxy() as proxy:
             proxy['data'] = data
             proxy['filter_id'] = filter_id
@@ -218,7 +223,8 @@ async def setup_end(message, chat, strings, state=None, **kwargs):
 
     action = FILTERS_ACTIONS[filter_id]
 
-    func = action['setup'][curr_step]['finish'] if type(action['setup']) is list else action['setup']['finish']
+    func = action['setup'][curr_step]['finish'] if type(
+        action['setup']) is list else action['setup']['finish']
     if not bool(a := await func(message, data)):
         await state.finish()
         return
@@ -282,7 +288,9 @@ async def del_filter(message, chat, strings):
         action = FILTERS_ACTIONS[filter['action']]
         buttons.add(InlineKeyboardButton(
             # If module's filter support custom del btn names else just show action name
-            '' + action['del_btn_name'](message, filter) if 'del_btn_name' in action else filter['action'],
+            '' + \
+            action['del_btn_name'](
+                message, filter) if 'del_btn_name' in action else filter['action'],
             callback_data=filter_remove_cp.new(id=str(filter['_id']))
         ))
 
@@ -312,7 +320,8 @@ async def delall_filters(message: Message, strings: dict):
     buttons.add(
         *[
             InlineKeyboardButton(
-                strings['confirm_yes'], callback_data=filter_delall_yes_cb.new(chat_id=message.chat.id)
+                strings['confirm_yes'], callback_data=filter_delall_yes_cb.new(
+                    chat_id=message.chat.id)
             ),
             InlineKeyboardButton(
                 strings['confirm_no'], callback_data="filter_delall_no_cb"

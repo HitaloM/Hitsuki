@@ -345,4 +345,3 @@ __help__ = """
 - /models (codename): Search for Android device models using codename.
 - /whatis (codename): Find out which smartphone is using the codename.
 """
-

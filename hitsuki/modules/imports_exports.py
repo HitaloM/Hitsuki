@@ -45,7 +45,8 @@ async def export_chat_data(message, chat, strings):
     chat_id = chat['chat_id']
     key = 'export_lock:' + str(chat_id)
     if redis.get(key) and message.from_user.id not in OPERATORS:
-        ttl = format_timedelta(timedelta(seconds=redis.ttl(key)), strings['language_info']['babel'])
+        ttl = format_timedelta(timedelta(seconds=redis.ttl(
+            key)), strings['language_info']['babel'])
         await message.reply(strings['exports_locked'] % ttl)
         return
 
@@ -67,7 +68,8 @@ async def export_chat_data(message, chat, strings):
         if k := await module.__export__(chat_id):
             data.update(k)
 
-    jfile = InputFile(io.StringIO(rapidjson.dumps(data, indent=2)), filename=f'{chat_id}_export.json')
+    jfile = InputFile(io.StringIO(rapidjson.dumps(
+        data, indent=2)), filename=f'{chat_id}_export.json')
     text = strings['export_done'].format(chat_name=chat['chat_title'])
     await message.answer_document(jfile, text, reply=message.message_id)
     await msg.delete()
@@ -104,7 +106,8 @@ async def import_fun(message, document, chat, strings):
     chat_id = chat['chat_id']
     key = 'import_lock:' + str(chat_id)
     if redis.get(key) and message.from_user.id not in OPERATORS:
-        ttl = format_timedelta(timedelta(seconds=redis.ttl(key)), strings['language_info']['babel'])
+        ttl = format_timedelta(timedelta(seconds=redis.ttl(
+            key)), strings['language_info']['babel'])
         await message.reply(strings['imports_locked'] % ttl)
         return
 
