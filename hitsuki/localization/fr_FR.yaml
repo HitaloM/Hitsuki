@@ -172,7 +172,7 @@ STRINGS:
     btn_channel: "📬 Hitsuki News"
     back: Retour
     #/help
-    help_header: "Hé ! Consultez notre wiki pour obtenir de l'aide"
+    help_header: "Hey! Je m'appelle <b>Hitsuki</b>. Je suis un robot de gestion de groupe, là pour vous aider à vous déplacer et à garder l'ordre dans vos groupes!\nJ'ai beaucoup de fonctionnalités pratiques, telles que le contrôle des inondations, un système d'alerte, un système de conservation de notes et même des réponses prédéterminées sur certains mots clés."
     click_btn: Cliquez ici
   disable:
     #/disableable
