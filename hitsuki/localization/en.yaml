@@ -198,7 +198,7 @@ STRINGS:
     back: Back
 
     # /help
-    help_header: "Hey! Checkout our wiki for help."
+    help_header: "Hey! My name is <b>Hitsuki</b>. I am a group management bot, here to help you get around and keep the order in your groups!\nI have lots of handy features, such as flood control, a warning system, a note keeping system, and even predetermined replies on certain keywords."
     click_btn: Click here
 
   disable:

@@ -59,6 +59,6 @@ async def pin_message(message, strings):
 __mod_name__ = "Pins"
 
 __help__ = """
-• /pin: silently pins the message replied to - add 'loud' or 'notify' to give notifs to users
-• /unpin: unpins the currently pinned message
+- /pin: silently pins the message replied to - add 'loud' or 'notify' to give notifs to users
+- /unpin: unpins the currently pinned message
 """

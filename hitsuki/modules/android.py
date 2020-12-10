@@ -324,3 +324,25 @@ async def twrp(message):
         btn = "Click here to download!"
         button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=dl_link))
         await message.reply(m, reply_markup=button)
+
+
+__mod_name__ = "Android"
+
+__help__ = """
+<b>GSI</b>
+- /phh: Get the latest PHH AOSP GSIs.
+- /phhmagisk: Get the latest PHH Magisk.
+
+<b>Device firmware:</b>
+- /miui (codename): Xiaomi only - gets latest MIUI download links for the given device.
+- /realmeui (codename): Realme only - gets latest RealmeUI download links for the given device.
+
+<b>Misc</b>
+- /magisk: Get latest Magisk releases.
+- /twrp (codename): Gets latest twrp for the android device using the codename.
+- /ofox: Gets the list of officially supported devices by the Orange Fox Recovery Project.
+- /ofox (device): Gets the download link and basic OFRP information to the specified device.
+- /models (codename): Search for Android device models using codename.
+- /whatis (codename): Find out which smartphone is using the codename.
+"""
+

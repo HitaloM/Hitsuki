@@ -304,3 +304,16 @@ async def manga_search(message):
                 await message.reply(ms_g)
         else:
             await message.reply(ms_g)
+
+
+__mod_name__ = "Anime"
+
+__help__ = """
+Get information about anime, manga or anime characters.
+
+<b<Available commands:</b>
+- /anime (anime): returns information about the anime.
+- /character (character): returns information about the character.
+- /manga (manga): returns information about the manga.
+- /airing (anime): returns anime airing info.
+"""
