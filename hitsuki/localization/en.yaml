@@ -283,6 +283,7 @@ STRINGS:
       <b>User promoted to the fed admins</b> #UserPromoted
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
       <b>User:</b> {user} (<code>{user_id}</code>)
+    restricted_user:promote: This user is restricted from being federation admin!
 
     # /fdemote
     #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."

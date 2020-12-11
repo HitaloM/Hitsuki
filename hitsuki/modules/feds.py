@@ -177,6 +177,10 @@ def is_fed_owner(func):
         fed = args[1]
         user_id = message.from_user.id
 
+        # check on anon
+        if user_id in [1087968824, 777000]:
+            return
+
         if not user_id == fed["creator"] and user_id != OWNER_ID:
             text = (await get_string(message.chat.id, "feds", 'need_fed_admin')).format(
                 name=html.escape(fed['fed_name'], False)
@@ -194,6 +198,10 @@ def is_fed_admin(func):
         message = args[0]
         fed = args[1]
         user_id = message.from_user.id
+
+        # check on anon
+        if user_id in [1087968824, 777000]:
+            return
 
         if not user_id == fed["creator"] and user_id != OWNER_ID:
             if 'admins' not in fed or user_id not in fed['admins']:
@@ -381,6 +389,9 @@ async def fed_unsub(message, fed, strings):
 @is_fed_owner
 @get_strings_dec("feds")
 async def promote_to_fed(message, fed, user, text, strings):
+    restricted_ids = [1087968824, 777000]
+    if user['user_id'] in restricted_ids:
+        return await message.reply(strings['restricted_user:promote'])
     await db.feds.update_one(
         {'_id': fed['_id']},
         {"$addToSet": {'admins': {'$each': [user['user_id']]}}}
