@@ -195,6 +195,7 @@ STRINGS:
     btn_help: "❔ Help"
     btn_lang: "🇺🇸 Language"
     btn_channel: "📬 Hitsuki News"
+    btn_group_help: "Click me for help!"
     back: Back
 
     # /help
