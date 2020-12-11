@@ -361,7 +361,7 @@ STRINGS:
     importing_process: <b>Importando fbans...</b>
     import_done: Importação de banimentos de fed terminado! Foi importado {num} banimentos.
     #def
-    automatic_ban: O usuário {user} está banido na atual Federação <b>{fed_name}</b>. Então foi removido!
+    automatic_ban: O usuário {user} está banido na atual Federação <b>{fed_name}</b>. Então foi removido! 
     automatic_ban_sfed: O usuário {user} está banido na federação <b>{fed_name}</b> inscrita na atual. Então foi removido!
     automatic_ban_reason: "Motivo: <code>{text}</code>"
     #/fcheck
