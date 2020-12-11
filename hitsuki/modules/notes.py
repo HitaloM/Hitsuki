@@ -38,7 +38,8 @@ from .utils.message import get_arg, need_args_dec
 from .utils.notes import BUTTONS, ALLOWED_COLUMNS, get_parsed_note_list, t_unparse_note_item, send_note
 from .utils.user_details import get_user_link
 
-RESTRICTED_SYMBOLS_IN_NOTENAMES = [':', '**', '__', '`', '#', '"', '[', ']', "'", '$', '||']
+RESTRICTED_SYMBOLS_IN_NOTENAMES = [
+    ':', '**', '__', '`', '#', '"', '[', ']', "'", '$', '||']
 
 
 async def get_similar_note(chat_id, note_name):
@@ -302,7 +303,8 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
 @clean_notes
 async def search_in_note(message, chat, strings):
     request = message.get_args()
-    text = strings["search_header"].format(chat_name=chat['chat_title'], request=request)
+    text = strings["search_header"].format(
+        chat_name=chat['chat_title'], request=request)
 
     notes = db.notes.find({
         'chat_id': chat['chat_id'],
@@ -333,9 +335,11 @@ async def clear_note(message, chat, strings):
 
         if not (note := await db.notes.find_one({'chat_id': chat['chat_id'], 'names': {'$in': [note_name]}})):
             if len(note_names) <= 1:
-                text = strings['cant_find_note'].format(chat_name=chat['chat_title'])
+                text = strings['cant_find_note'].format(
+                    chat_name=chat['chat_title'])
                 if alleged_note_name := await get_similar_note(chat['chat_id'], note_name):
-                    text += strings['u_mean'].format(note_name=alleged_note_name)
+                    text += strings['u_mean'].format(
+                        note_name=alleged_note_name)
                 await message.reply(text)
                 return
             else:
@@ -346,9 +350,11 @@ async def clear_note(message, chat, strings):
         removed += ' #' + note_name
 
     if len(note_names) > 1:
-        text = strings['note_removed_multiple'].format(chat_name=chat['chat_title'], removed=removed)
+        text = strings['note_removed_multiple'].format(
+            chat_name=chat['chat_title'], removed=removed)
         if not_removed:
-            text += strings['not_removed_multiple'].format(not_removed=not_removed)
+            text += strings['not_removed_multiple'].format(
+                not_removed=not_removed)
         await message.reply(text)
     else:
         await message.reply(strings['note_removed'].format(note_name=note_name, chat_name=chat['chat_title']))
@@ -365,8 +371,10 @@ async def clear_all_notes(message, chat, strings):
 
     text = strings['clear_all_text'].format(chat_name=chat['chat_title'])
     buttons = InlineKeyboardMarkup()
-    buttons.add(InlineKeyboardButton(strings['clearall_btn_yes'], callback_data='clean_all_notes_cb'))
-    buttons.add(InlineKeyboardButton(strings['clearall_btn_no'], callback_data='cancel'))
+    buttons.add(InlineKeyboardButton(
+        strings['clearall_btn_yes'], callback_data='clean_all_notes_cb'))
+    buttons.add(InlineKeyboardButton(
+        strings['clearall_btn_no'], callback_data='cancel'))
     await message.reply(text, reply_markup=buttons)
 
 
@@ -376,7 +384,8 @@ async def clear_all_notes(message, chat, strings):
 async def clear_all_notes_cb(event, chat, strings):
     num = (await db.notes.delete_many({'chat_id': chat['chat_id']})).deleted_count
 
-    text = strings['clearall_done'].format(num=num, chat_name=chat['chat_title'])
+    text = strings['clearall_done'].format(
+        num=num, chat_name=chat['chat_title'])
     await event.message.edit_text(text)
 
 
@@ -403,7 +412,8 @@ async def note_info(message, chat, strings):
         note_names += f" <code>#{note_name}</code>"
 
     text += strings['note_info_note'] % note_names
-    text += strings['note_info_content'] % ('text' if 'file' not in note else note['file']['type'])
+    text += strings['note_info_content'] % (
+        'text' if 'file' not in note else note['file']['type'])
 
     if 'parse_mode' not in note or note['parse_mode'] == 'md':
         parse_mode = 'Markdown'
@@ -418,13 +428,15 @@ async def note_info(message, chat, strings):
 
     if 'created_date' in note:
         text += strings['note_info_created'].format(
-            date=format_datetime(note['created_date'], locale=strings['language_info']['babel']),
+            date=format_datetime(note['created_date'],
+                                 locale=strings['language_info']['babel']),
             user=await get_user_link(note['created_user'])
         )
 
     if 'edited_date' in note:
         text += strings['note_info_updated'].format(
-            date=format_datetime(note['edited_date'], locale=strings['language_info']['babel']),
+            date=format_datetime(
+                note['edited_date'], locale=strings['language_info']['babel']),
             user=await get_user_link(note['edited_user'])
         )
 
@@ -532,16 +544,20 @@ async def clean_notes(message, chat, strings):
     arg = get_arg(message)
     if arg and arg.lower() in enable:
         await db.clean_notes.update_one({'chat_id': chat_id}, {'$set': {'enabled': True}}, upsert=True)
-        text = strings['clean_notes_enable'].format(chat_name=chat['chat_title'])
+        text = strings['clean_notes_enable'].format(
+            chat_name=chat['chat_title'])
     elif arg and arg.lower() in disable:
         await db.clean_notes.update_one({'chat_id': chat_id}, {'$set': {'enabled': False}}, upsert=True)
-        text = strings['clean_notes_disable'].format(chat_name=chat['chat_title'])
+        text = strings['clean_notes_disable'].format(
+            chat_name=chat['chat_title'])
     else:
         data = await db.clean_notes.find_one({'chat_id': chat_id})
         if data and data['enabled'] is True:
-            text = strings['clean_notes_enabled'].format(chat_name=chat['chat_title'])
+            text = strings['clean_notes_enabled'].format(
+                chat_name=chat['chat_title'])
         else:
-            text = strings['clean_notes_disabled'].format(chat_name=chat['chat_title'])
+            text = strings['clean_notes_disabled'].format(
+                chat_name=chat['chat_title'])
 
     await message.reply(text)
 
@@ -607,7 +623,8 @@ async def __import__(chat_id, data):
         note['created_date'] = datetime.fromisoformat(note['created_date'])
         if 'edited_date' in note:
             note['edited_date'] = datetime.fromisoformat(note['edited_date'])
-        new.append(ReplaceOne({'chat_id': note['chat_id'], 'names': {'$in': [note['names'][0]]}}, note, upsert=True))
+        new.append(ReplaceOne({'chat_id': note['chat_id'], 'names': {
+                   '$in': [note['names'][0]]}}, note, upsert=True))
 
     await db.notes.bulk_write(new)
 

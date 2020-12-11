@@ -122,7 +122,8 @@ async def mute_user_cmd(message, chat, user, args, strings):
                 await message.reply(strings['invalid_time'])
                 return
 
-            text += strings['on_time'] % format_timedelta(until_date, locale=strings['language_info']['babel'])
+            text += strings['on_time'] % format_timedelta(
+                until_date, locale=strings['language_info']['babel'])
 
             # Add reason
             if len(args) > 1:
@@ -226,7 +227,8 @@ async def ban_user_cmd(message, chat, user, args, strings):
                 await message.reply(strings['invalid_time'])
                 return
 
-            text += strings['on_time'] % format_datetime(until_date, locale=strings['language_info']['babel'])
+            text += strings['on_time'] % format_datetime(
+                until_date, locale=strings['language_info']['babel'])
 
             # Add reason
             if len(args) > 1:
@@ -329,7 +331,8 @@ async def filter_handle_tmute(message, chat, data, strings=None):
         return
     if await mute_user(chat['chat_id'], message.from_user.id, until_date=eval(data['time'])):
         reason = data.get("reason", None) or strings['filter_action_rsn']
-        time = format_timedelta(eval(data['time']), locale=strings['language_info']['babel'])
+        time = format_timedelta(
+            eval(data['time']), locale=strings['language_info']['babel'])
         text = strings['filtr_tmute_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
                                                  time, reason)
         await bot.send_message(chat['chat_id'], text)
@@ -341,7 +344,8 @@ async def filter_handle_tban(message, chat, data, strings=None):
         return
     if await ban_user(chat['chat_id'], message.from_user.id, until_date=eval(data['time'])):
         reason = data.get("reason", None) or strings['filter_action_rsn']
-        time = format_timedelta(eval(data['time']), locale=strings['language_info']['babel'])
+        time = format_timedelta(
+            eval(data['time']), locale=strings['language_info']['babel'])
         text = strings['filtr_tban_success'] % (await get_user_link(BOT_ID), await get_user_link(message.from_user.id),
                                                 time, reason)
         await bot.send_message(chat['chat_id'], text)
@@ -456,4 +460,3 @@ General admin's rights is restrict users and control their rules with this modul
 <code>- Mute a user for two hours.
 -> /tmute @username 2h</code>
 """
-

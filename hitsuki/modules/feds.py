@@ -442,7 +442,8 @@ async def set_fed_log_chat(message, fed, chat, strings):
     )
     await get_fed_by_id.reset_cache(fed['fed_id'])
 
-    text = strings['set_chat_log'].format(name=html.escape(fed['fed_name'], False))
+    text = strings['set_chat_log'].format(
+        name=html.escape(fed['fed_name'], False))
     await message.reply(text)
 
     # Current fed variable is not updated
@@ -467,7 +468,8 @@ async def unset_fed_log_chat(message, fed, strings):
     )
     await get_fed_by_id.reset_cache(fed['fed_id'])
 
-    text = strings['logging_removed'].format(name=html.escape(fed['fed_name'], False))
+    text = strings['logging_removed'].format(
+        name=html.escape(fed['fed_name'], False))
     await message.reply(text)
 
     await fed_post_log(fed, strings['unset_log_fed_log'].format(
@@ -481,7 +483,8 @@ async def unset_fed_log_chat(message, fed, strings):
 @is_fed_admin
 @get_strings_dec("feds")
 async def fed_chat_list(message, fed, strings):
-    text = strings['chats_in_fed'].format(name=html.escape(fed['fed_name'], False))
+    text = strings['chats_in_fed'].format(
+        name=html.escape(fed['fed_name'], False))
     if 'chats' not in fed:
         return await message.reply(strings['no_chats'].format(name=html.escape(fed['fed_name'], False)))
 
@@ -503,7 +506,8 @@ async def fed_chat_list(message, fed, strings):
 @is_fed_admin
 @get_strings_dec("feds")
 async def fed_admins_list(message, fed, strings):
-    text = strings['fadmins_header'].format(fed_name=html.escape(fed['fed_name'], False))
+    text = strings['fadmins_header'].format(
+        fed_name=html.escape(fed['fed_name'], False))
     text += '* {} (<code>{}</code>)\n'.format(await get_user_link(fed['creator']), fed['creator'])
     if 'admins' in fed:
         for user_id in fed['admins']:
@@ -820,7 +824,8 @@ async def del_fed_cmd(message, fed, strings):
     buttons = InlineKeyboardMarkup()
     buttons.add(InlineKeyboardButton(text=strings['delfed_btn_yes'], callback_data=delfed_cb.new(fed_id=fed_id,
                                                                                                  creator_id=fed_owner)))
-    buttons.add(InlineKeyboardButton(text=strings['delfed_btn_no'], callback_data=f'cancel_{fed_owner}'))
+    buttons.add(InlineKeyboardButton(
+        text=strings['delfed_btn_no'], callback_data=f'cancel_{fed_owner}'))
 
     await message.reply(strings['delfed'] % fed_name, reply_markup=buttons)
 
@@ -890,7 +895,8 @@ async def fban_export(message, fed, strings):
     fed_id = fed['fed_id']
     key = 'fbanlist_lock:' + str(fed_id)
     if redis.get(key) and message.from_user.id not in OPERATORS:
-        ttl = format_timedelta(timedelta(seconds=redis.ttl(key)), strings['language_info']['babel'])
+        ttl = format_timedelta(timedelta(seconds=redis.ttl(
+            key)), strings['language_info']['babel'])
         await message.reply(strings['fbanlist_locked'] % ttl)
         return
 
@@ -911,7 +917,8 @@ async def fban_export(message, fed, strings):
                 data['reason'] = banned_data['reason']
 
             if 'time' in banned_data:
-                data['time'] = int(time.mktime(banned_data['time'].timetuple()))
+                data['time'] = int(time.mktime(
+                    banned_data['time'].timetuple()))
 
             if 'by' in banned_data:
                 data['by'] = banned_data['by']
@@ -938,7 +945,8 @@ async def importfbans_cmd(message, fed, strings):
     fed_id = fed['fed_id']
     key = 'importfbans_lock:' + str(fed_id)
     if redis.get(key) and message.from_user.id not in OPERATORS:
-        ttl = format_timedelta(timedelta(seconds=redis.ttl(key)), strings['language_info']['babel'])
+        ttl = format_timedelta(timedelta(seconds=redis.ttl(
+            key)), strings['language_info']['babel'])
         await message.reply(strings['importfbans_locked'] % ttl)
         return
 
@@ -1030,7 +1038,8 @@ async def importfbans_func(message, fed, strings, document=None):
         if 'banned_chats' in row and type(row['banned_chats']) == list:
             new['banned_chats'] = row['banned_chats']
 
-        queue_del.append(DeleteMany({'fed_id': fed['fed_id'], 'user_id': user_id}))
+        queue_del.append(DeleteMany(
+            {'fed_id': fed['fed_id'], 'user_id': user_id}))
         queue_insert.append(InsertOne(new))
 
         if len(queue_insert) == 1000:
@@ -1177,9 +1186,11 @@ async def fedban_check(message, fed, user, _, strings):
                     fed=html.escape(fed['fed_name'], False), reason=fban_data['reason']
                 )
             else:
-                text += strings['fbanned_in_fed'].format(fed=html.escape(fed['fed_name'], False))
+                text += strings['fbanned_in_fed'].format(
+                    fed=html.escape(fed['fed_name'], False))
         elif fed is not None:
-            text += strings['not_fbanned_in_fed'].format(fed_name=html.escape(fed['fed_name'], quote=False))
+            text += strings['not_fbanned_in_fed'].format(
+                fed_name=html.escape(fed['fed_name'], quote=False))
 
         if total_count > 0:
             if message.from_user.id == user['user_id']:

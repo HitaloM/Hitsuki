@@ -26,7 +26,7 @@ from .utils.user_details import is_user_admin
 @register(cmds='buttonshelp', no_args=True, only_pm=True)
 async def buttons_help(message):
     await message.reply(
-    """
+        """
 <b>Buttons:</b>
 Here you will know how to setup buttons in your note, welcome note, etc...
 
@@ -69,7 +69,7 @@ You use this button with adding following syntax to your message which support f
 @register(cmds='variableshelp', no_args=True, only_pm=True)
 async def buttons_help(message):
     await message.reply(
-    """
+        """
 <b>Variables:</b>
 Variables are special words which will be replaced by actual info
 

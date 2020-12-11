@@ -369,7 +369,8 @@ async def site_search(message, site: str):
             post_name = html.escape(entry.text.strip())
             result += f"• <a href='{post_link}'>{post_name}</a>\n"
 
-    buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(text="See all results", url=search_url))
+    buttons = InlineKeyboardMarkup().add(
+        InlineKeyboardButton(text="See all results", url=search_url))
 
     if more_results:
         await message.reply(result, reply_markup=buttons, disable_web_page_preview=True)
