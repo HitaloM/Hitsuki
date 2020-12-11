@@ -144,3 +144,16 @@ async def import_fun(message, document, chat, strings):
         await module.__import__(chat_id, data[module_name])
 
     await msg.edit_text(strings['import_done'])
+
+
+__mod_name__ = "Backups"
+
+__help__ = """
+Sometimes you want to see all of your data in your chats or you want to copy your data to another chats or you even want to swift bots, in all these cases imports/exports for you!
+
+<b>Available commands:</b>
+- /export: Export chat's data to JSON file
+- /import: Import JSON file to chat
+
+<b>Notes:</b> Exporting / importing avaible every 2 hours to prevent flooding.
+"""

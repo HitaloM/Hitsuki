@@ -15,6 +15,7 @@ cryptg
 cryptography
 
 # Other
+jikanpy
 envparse
 hypercorn
 aiocron
@@ -30,3 +31,4 @@ captcha
 async-timeout
 regex
 bs4
+lxml

@@ -229,3 +229,23 @@ async def connect_anon_admins(event: CallbackQuery):
             {"$addToSet": {"chats": event.message.chat.id}}
         )
     return await event.answer(url=await get_start_link(f"btn_connect_start_{event.message.chat.id}"))
+
+
+__mod_name__ = "Connections"
+
+__help__ = """
+Sometimes you need change something in your chat, like notes, but you don't want to spam in it, try connections, this allow you change chat settings and manage chat's content in personal message with Hitsuki.
+
+<b>Available commands are:</b>
+<b>Avaible only in PM:</b>
+- /connect: Show last connected chats button for fast connection
+- /connect (chat ID or chat nickname): Connect to chat by argument which you provided
+- /reconnect: Connect to last connected chat before
+- /disconnect: Disconnect from
+
+<b>Avaible only in groups:</b>
+- /connect: Direct connect to this group
+
+<b>Other commands:</b>
+- /allowusersconnect (on/off enable/disable): Enable or disable connection feature for regular users, for admins connections will be works always
+"""

@@ -41,3 +41,13 @@ async def get_sticker(message, strings):
         InputFile(sticker_file, filename=f'{sticker.set_name}_{sticker.file_id[:5]}.png'),
         text
     )
+
+
+__mod_name__ = "Stickers"
+
+__help__ = """
+Stickers are the best way to show emotion.
+
+<b>Available commands:</b>
+- /getsticker: Give the sticker image and ID.
+"""

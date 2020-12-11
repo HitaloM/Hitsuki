@@ -99,8 +99,8 @@ async def helpmenu_callback(query, callback_data=None, **kwargs):
     if not mod in MOD_HELP:
         await query.answer()
         return
-    msg = f"Help for <b>{mod}</b>\n"
+    msg = f"Help for <b>{mod} module</b>\n"
     msg += f"{MOD_HELP[mod]}"
     with suppress(MessageNotModified):
-        await query.message.edit_text(msg)
+        await query.message.edit_text(msg, disable_web_page_preview=True)
         await query.answer('Help for ' + mod)

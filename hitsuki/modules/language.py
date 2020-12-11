@@ -131,3 +131,17 @@ async def __import__(chat_id, data):
     if data not in LANGUAGES:
         return
     await db.lang.update_one({'chat_id': chat_id}, {"$set": {'lang': data}}, upsert=True)
+
+
+__mod_name__ = "Languages"
+
+__help__ = """
+This module is dedicated towards utlising Hitsuki's localization feature! You can also <a href='https://crowdin.com/project/hitsukix'>contribute</a> for improving localization in Hitsuki!
+
+<b>Available commands:</b>
+- /lang: Shows a list of avaible languages
+- /lang (language codename): Sets a language
+
+<b>Example:</b> <code>/lang</code>
+Hitsuki will send you bunch of inline buttons where you can select your prefered language interatively without any hassles!
+"""

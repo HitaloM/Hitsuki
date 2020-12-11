@@ -120,3 +120,12 @@ async def __import__(chat_id, data):
 
     rules['chat_id'] = chat_id
     await db.rules.replace_one({'chat_id': rules['chat_id']}, rules, upsert=True)
+
+
+__mod_name__ = "Rules"
+
+__help__ = """
+<b>Available Commands:</b>
+- /setrules (rules): saves the rules (also works with reply)
+- /rules: Shows the rules of chat if any!
+"""

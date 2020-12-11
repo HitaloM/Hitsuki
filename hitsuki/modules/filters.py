@@ -372,3 +372,31 @@ async def __import__(chat_id, data):
                              upsert=True))
     await db.filters.bulk_write(new)
     await update_handlers_cache(chat_id)
+
+
+__mod_name__ = "Filters"
+
+__help__ = """
+Filter module is great for everything! filter in here is used to filter words or sentences in your chat - send notes, warn, ban those!
+
+<b>General (Admins):</b>
+- /addfilter (word/sentence)
+As in command this is used to add filter. To avoid hassle when setting up the the filter, Hitsuki will take you through an interactive setup!
+
+<b>As of now, there is 6 actions that you can do:</b>
+- <code>Send a note</code>
+- <code>Warn the user</code>
+- <code>Ban the user</code>
+- <code>Mute the user</code>
+- <code>tBan the user</code>
+- <code>tMute the user</code>
+
+A filter can support multiple actions !
+
+Ah if you don't understand what this actions are for? Actions says bot what to do when the given <code>word/sentence</code> is triggered.
+
+<b>Available for all users:</b>
+- /filters or /listfilters
+
+You want to know all filter of your chat/ chat you joined? Use this command. It will list all filters along with specified actions !
+"""

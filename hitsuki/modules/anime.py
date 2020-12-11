@@ -14,6 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import requests
+import jikanpy
+import html
+import bs4
 import rapidjson as json
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -306,14 +309,98 @@ async def manga_search(message):
             await message.reply(ms_g)
 
 
+@register(cmds='upcoming')
+@disableable_dec('upcoming')
+async def upcoming(message):
+    jikan = jikanpy.jikan.Jikan()
+    upcoming = jikan.top('anime', page=1, subtype="upcoming")
+
+    upcoming_list = [entry['title'] for entry in upcoming['top']]
+    upcoming_message = ""
+
+    for entry_num in range(len(upcoming_list)):
+        if entry_num == 10:
+            break
+        upcoming_message += f"{entry_num + 1}. {upcoming_list[entry_num]}\n"
+
+    await message.reply(upcoming_message)
+
+
+async def site_search(message, site: str):
+    args = message.text.split(' ', 1)
+    more_results = True
+
+    try:
+        search_query = args[1]
+    except IndexError:
+        await message.reply("Give something to search")
+        return
+
+    if site == "kaizoku":
+        search_url = f"https://animekaizoku.com/?s={search_query}"
+        html_text = requests.get(search_url).text
+        soup = bs4.BeautifulSoup(html_text, "html.parser")
+        search_result = soup.find_all("h2", {'class': "post-title"})
+
+        if search_result:
+            result = f"<b>Search results for</b> <code>{html.escape(search_query)}</code> <b>on</b> <code>AnimeKaizoku</code>: \n"
+            for entry in search_result:
+                post_link = entry.a['href']
+                post_name = html.escape(entry.text)
+                result += f"• <a href='{post_link}'>{post_name}</a>\n"
+        else:
+            more_results = False
+            result = f"<b>No result found for</b> <code>{html.escape(search_query)}</code> <b>on</b> <code>AnimeKaizoku</code>"
+
+    elif site == "kayo":
+        search_url = f"https://animekayo.com/?s={search_query}"
+        html_text = requests.get(search_url).text
+        soup = bs4.BeautifulSoup(html_text, "html.parser")
+        search_result = soup.find_all("h2", {'class': "title"})
+
+        result = f"<b>Search results for</b> <code>{html.escape(search_query)}</code> <b>on</b> <code>AnimeKayo</code>: \n"
+        for entry in search_result:
+
+            if entry.text.strip() == "Nothing Found":
+                result = f"<b>No result found for</b> <code>{html.escape(search_query)}</code> <b>on</b> <code>AnimeKayo</code>"
+                more_results = False
+                break
+
+            post_link = entry.a['href']
+            post_name = html.escape(entry.text.strip())
+            result += f"• <a href='{post_link}'>{post_name}</a>\n"
+
+    buttons = InlineKeyboardMarkup().add(InlineKeyboardButton(text="See all results", url=search_url))
+
+    if more_results:
+        await message.reply(result, reply_markup=buttons, disable_web_page_preview=True)
+    else:
+        await message.reply(result)
+
+
+@register(cmds='kaizoku')
+@disableable_dec('kaizoku')
+async def kaizoku(message):
+    await site_search(message, "kaizoku")
+
+
+@register(cmds='kayo')
+@disableable_dec('kayo')
+async def kayo(message):
+    await site_search(message, "kayo")
+
+
 __mod_name__ = "Anime"
 
 __help__ = """
 Get information about anime, manga or anime characters.
 
-<b<Available commands:</b>
+<b>Available commands:</b>
 - /anime (anime): returns information about the anime.
 - /character (character): returns information about the character.
 - /manga (manga): returns information about the manga.
 - /airing (anime): returns anime airing info.
+- /kaizoku (anime): search an anime on animekaizoku.com
+- /kayo (anime): search an anime on animekayo.com
+- /upcoming: returns a list of new anime in the upcoming seasons.
 """

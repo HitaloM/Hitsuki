@@ -1,15 +1,30 @@
 # Hitsuki X
 
 [![Crowdin](https://badges.crowdin.net/hitsukix/localized.svg)](https://crowdin.com/project/hitsukix)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0b02d30b65874904a780c09c82d17220)](https://www.codacy.com/gh/HitsukiNetwork/HitsukiX/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=HitsukiNetwork/HitsukiX&amp;utm_campaign=Badge_Grade)
-
+[![GitHub contributors](https://img.shields.io/github/contributors/HitsukiNetwork/HitsukiX.svg)](https://GitHub.com/HitsukiNetwork/HitsukiX/graphs/contributors/)
+ 
 >  Hitsuki is a modern and fast Telegram Bot developed entirely to improve the chat experience,
 >  Hitsuki contains commands related to Anime, Android, group administration, and more!
 
-## How to use
+To anyone coming here to **clone this bot**, no support will be given for it. If you PM me on Telegram will be ignored.
 
-You can learn more about Hitsuki X and how to use your commands through wiki.
-- [Hitsuki's Wiki](https://hitsukinetwork.github.io/#/)
+## Hitsuki's features over other bots
+
+* Modern
+* Fast
+* Modular
+* Fully asynchronous
+* Fully open-source
+* Frequently updated
+* Hitsuki respects your data privacy, we constantly improving privacy and security in Hitsuki
+
+## What is it
+
+Hitsuki X is a rebased version of Hitsuki, this time being done completely in aiogram (and a bit of Telethon).
+
+Hitsuki will still be up and running for a long time and will also receive support for cumulative updates of improvements and optimizations.
+
+You can find the Hitsuki X as [@Hitsuki_BOT](https://t.me/Hitsuki_BOT) on Telegram.
 
 ## DeepSource stats
 

@@ -426,3 +426,34 @@ __filters__ = {
         'handle': filter_handle_kick
     }
 }
+
+
+__mod_name__ = "Restrictions"
+
+__help__ = """
+General admin's rights is restrict users and control their rules with this module you can easely do it.
+
+<b>Available commands:</b>
+<b>Kicks:</b>
+- /kick: Kicks a user
+- /skick: Silently kicks
+
+<b>Mutes:</b>
+- /mute: Mutes a user
+- /smute: Silently mutes
+- /tmute (time): Temprotary mute a user
+- /stmute (time): Silently temprotary mute a user
+- /unmute: Unmutes the user
+
+<b>Bans:</b>
+- /ban: Bans a user
+- /sban: Silently bans
+- /tban (time): Temprotary ban a user
+-/stban (time): Silently temprotary ban a user
+- /unban: Unbans the user
+
+<b>Examples:</b>
+<code>- Mute a user for two hours.
+-> /tmute @username 2h</code>
+"""
+

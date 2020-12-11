@@ -23,6 +23,70 @@ from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
 
 
+@register(cmds='buttonshelp', no_args=True, only_pm=True)
+async def buttons_help(message):
+    await message.reply(
+    """
+<b>Buttons:</b>
+Here you will know how to setup buttons in your note, welcome note, etc...
+
+There are different types of buttons!
+
+<i>Due to current Implementation adding invalid button syntax to your note will raise error! This will be fixed in next major version.</i>
+
+<b>Did you know?</b>
+You could save buttons in same row using this syntax
+<code>[Button](btn{mode}:{args if any}:same)</code>
+(adding <code>:same</code> like that does the job.)
+
+<b>Button Note:</b>
+<i>Don't confuse this title with notes with buttons</i> 😜
+
+This types of button will allow you to show specific notes to users when they click on buttons!
+
+You can save note with button note without any hassle by adding below line to your note ( Don't forget to replace <code>notename</code> according to you 😀)
+
+<code>[Button Name](btnnote:notename)</code>
+
+<b>URL Button:</b>
+Ah as you guessed! This method is used to add URL button to your note. With this you can redirect users to your website or even redirecting them to any channel, chat or messages!
+
+You can add URL button by adding following syntax to your note
+
+<code>[Button Name](btnurl:https://your.link.here)</code>
+
+<b>Button rules:</b>
+Well in v2 we introduced some changes, rules are now saved seperately unlike saved as note before v2 so it require seperate button method!
+
+You can use this button method for including Rules button in your welcome messages, filters etc.. literally anywhere*
+
+You use this button with adding following syntax to your message which support formatting!
+<code>[Button Name](btnrules)</code>
+    """
+    )
+
+
+@register(cmds='variableshelp', no_args=True, only_pm=True)
+async def buttons_help(message):
+    await message.reply(
+    """
+<b>Variables:</b>
+Variables are special words which will be replaced by actual info
+
+<b>Avaible variables:</b>
+<code>{first}</code>: User's first name
+<code>{last}</code>: User's last name
+<code>{fullname}</code>: User's full name
+<code>{id}</code>: User's ID
+<code>{mention}</code>: Mention the user using first name
+<code>{username}</code>: Get the username, if user don't have username will be returned mention
+<code>{chatid}</code>: Chat's ID
+<code>{chatname}</code>: Chat name
+<code>{chatnick}</code>: Chat username
+    """
+    )
+
+
 @register(cmds='cancel', state='*', allow_kwargs=True)
 async def cancel_handle(message, state, **kwargs):
     await state.finish()
@@ -85,3 +149,15 @@ __filters__ = {
         'del_btn_name': lambda msg, data: f"Reply to {data['handler']}: \"{data['reply_text'].get('text', 'None')}\" "
     }
 }
+
+
+__mod_name__ = "Misc"
+
+__help__ = """
+An "odds and ends" module for small, simple commands which don't really fit anywhere.
+
+<b>Available commands:</b>
+- /runs: Showes random runs message
+- /direct: Generates direct links from the sourceforge.net
+- /cancel: Disables current state. Can help in cases if Hitsuki not responing on your message.
+"""

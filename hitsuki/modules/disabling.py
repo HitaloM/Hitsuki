@@ -164,3 +164,24 @@ async def __import__(chat_id, data):
         {'$set': {'cmds': new}},
         upsert=True
     )
+
+
+__mod_name__ = "Disabling"
+
+__help__ = """
+Disabling module is allow you to disable certain commands from be executed by users.
+
+<b>Available commands:</b>
+- /disableable: Shows commands which can be disabled
+- /disabled: Shows the all disabled commands of the chat
+- /disable (command name): Disables the command. Command should be disable-able
+- /enable (command name): Enables the disabled command back.
+- /enableall: Enables all disabled commands
+
+<b>Examples:</b>
+<code>/disable help</code>
+It would disable usauge of <code>/help</code> command in the chat!
+
+<code>/enable help</code>
+This enables previously disable command <code>/help</code>.
+"""

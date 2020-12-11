@@ -647,3 +647,59 @@ __filters__ = {
         'del_btn_name': lambda msg, data: f"Get note: {data['note_name']}"
     }
 }
+
+
+__mod_name__ = "Notes"
+
+__help__ = """
+Sometimes you need to save some data, like text or pictures. With notes, you can save any types of Telegram's data in your chats.
+Also notes perfectly working in PM with Hitsuki.
+
+<b>Available commands:</b>
+- /save (name) (data): Saves the note.
+- #(name) or /get (name): Get the note registered to that word.
+- /clear (name): deletes the note.
+- /notes or /saved: Lists all notes.
+- /noteinfo (name): Shows detailed info about the note.
+- /search (search pattern): Search text in notes
+- /clearall: Clears all notes
+
+<b>Only in groups:</b>
+- /privatenotes (on/off): Redirect user in PM to see notes
+- /cleannotes (on/off): Will clean old notes messages
+
+<b>Examples:</b>
+An example of how to save a note would be via:
+<code>/save data This is example note!</code>
+Now, anyone using <code>/get data</code>, or <code>#data</code> will be replied to with This is example note!.
+
+<b>Saving pictures and other non-text data:</b>
+If you want to save an image, gif, or sticker, or any other data, do the following:
+<code>/save word</code> while replying to a sticker or whatever data you'd like. Now, the note at <code>#word</code> contains a sticker which will be sent as a reply.
+
+<b>Removing many notes per one request:</b>
+To remove many notes you can use the /clear command, just place all note names which you want to remove as argument of the command, use | as seprator, for example:
+<code>/clear note1|note2|note3</code>
+
+<b>Notes aliases:</b>
+You can save note with many names, example:
+<code>/save name1|name2|name3</code>
+That will save a note with 3 different names, by any you can /get note, that can be useful if users in your chat trying to get notes which exits by other names.
+
+<b>Notes buttons and variables:</b>
+Notes support inline buttons, send /buttonshelp to get started with using it.
+Variables are special words which will be replaced by actual info like if you add <code>{id}</code> in your note it will be replaced by user ID which asked note. Send /variableshelp to get started with using it.
+
+<b>Notes formatting and settings:</b>
+Every note can contain special settings, for example you can change formatting method to HTML by <code>%PARSEMODE_HTML</code> and fully disable it by <code>%PARSEMODE_NONE</code> ( By default formatting is Markdown or the same formatting Telegram supports )
+
+<code>%PARSEMODE_(HTML, NONE)</code>: Change the note formatting
+<code>%PREVIEW</code>: Enables the links preview in saved note
+
+<b>Saving notes from other Marie style bots:</b>
+Sophie can save notes from other bots, just reply /save on the saved message from another bot, saving pictures and buttons supported aswell.
+
+<b>Retrieving notes without the formatting:</b>
+To retrieve a note without the formatting, use <code>/get (name) raw</code> or <code>/get (name) noformat</code>
+This will retrieve the note and send it without formatting it; getting you the raw note, allowing you to make easy edits.
+"""
