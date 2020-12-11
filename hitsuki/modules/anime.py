@@ -17,7 +17,6 @@ import requests
 import jikanpy
 import html
 import bs4
-import rapidjson as json
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from hitsuki.decorator import register
