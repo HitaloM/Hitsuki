@@ -100,7 +100,8 @@ async def help_cmd(message, strings):
 @get_strings_dec('pm_menu')
 async def help_cmd(message, strings):
     text = (strings['btn_group_help'])
-    button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=text, url="https://t.me/Hitsuki_BOT?start"))
+    button = InlineKeyboardMarkup().add(InlineKeyboardButton(
+        text=text, url="https://t.me/Hitsuki_BOT?start"))
     await message.reply(strings['help_header'], reply_markup=button)
 
 
@@ -112,7 +113,8 @@ async def helpmenu_callback(query, callback_data=None, **kwargs):
         return
     msg = f"Help for <b>{mod}</b> module:\n"
     msg += f"{MOD_HELP[mod]}"
-    button = InlineKeyboardMarkup().add(InlineKeyboardButton(text='⬅️ Back', callback_data='get_help'))
+    button = InlineKeyboardMarkup().add(
+        InlineKeyboardButton(text='⬅️ Back', callback_data='get_help'))
     with suppress(MessageNotModified):
         await query.message.edit_text(msg, disable_web_page_preview=True, reply_markup=button)
         await query.answer('Help for ' + mod)
