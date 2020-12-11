@@ -330,3 +330,30 @@ __filters__ = {
         'handle': filter_handle
     }
 }
+
+
+__mod_name__ = "Warnings"
+
+__help__ = """
+You can keep your members from getting out of control using this feature!
+
+<b>Available commands:</b>
+<b>General (Admins):</b>
+- /warn (?user) (?reason): Use this command to warn the user! you can mention or reply to the offended user and add reason if needed
+- /delwarns or /resetwarns: This command is used to delete all the warns user got so far in the chat
+
+<b>Warnlimt (Admins):</b>
+- /warnlimit (new limit): Sets a warnlimit
+Not all chats want to give same maximum warns to the user, right? This command will help you to modify default maximum warns. Default is 3
+
+The warnlimit should be greater than <code>1</code> and less than <code>10,000</code>
+
+<b>Warnaction (Admins):</b>
+/warnaction (mode) (?time)
+Well again, not all chats want to ban (default) users when exceed maximum warns so this command will able to modify that.
+Current supported actions are <code>ban</code> (default one), <code>mute</code>, <code>tmute</code>. The tmute mode require <code>time</code> argument as you guessed.
+
+<b>Available for all users:</b>
+/warns (?user)
+Use this command to know number of warns and information about warns you got so far in the chat. To use yourself you doesn't require user argument.
+"""
