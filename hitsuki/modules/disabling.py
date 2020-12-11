@@ -129,8 +129,10 @@ async def enable_all(message, chat, strings):
 
     text = strings['enable_all_text'].format(chat_name=chat['chat_title'])
     buttons = InlineKeyboardMarkup()
-    buttons.add(InlineKeyboardButton(strings['enable_all_btn_yes'], callback_data='enable_all_notes_cb'))
-    buttons.add(InlineKeyboardButton(strings['enable_all_btn_no'], callback_data='cancel'))
+    buttons.add(InlineKeyboardButton(
+        strings['enable_all_btn_yes'], callback_data='enable_all_notes_cb'))
+    buttons.add(InlineKeyboardButton(
+        strings['enable_all_btn_no'], callback_data='cancel'))
     await message.reply(text, reply_markup=buttons)
 
 
@@ -141,7 +143,8 @@ async def enable_all_notes_cb(event, chat, strings):
     data = await db.disabled.find_one({'chat_id': chat['chat_id']})
     await db.disabled.delete_one({'_id': data['_id']})
 
-    text = strings['enable_all_done'].format(num=len(data['cmds']), chat_name=chat['chat_title'])
+    text = strings['enable_all_done'].format(
+        num=len(data['cmds']), chat_name=chat['chat_title'])
     await event.message.edit_text(text)
 
 

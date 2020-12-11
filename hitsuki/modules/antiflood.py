@@ -91,7 +91,8 @@ class AntifloodEnforcer(BaseMiddleware):
         return None
 
     def insert_flood(self, data: CacheModel, message: Message, database: dict):
-        ex = convert_time(database['time']) if database.get('time', None) is not None else None
+        ex = convert_time(database['time']) if database.get(
+            'time', None) is not None else None
         return bredis.set(self.cache_key(message), pickle.dumps(data), ex=ex)
 
     def reset_flood(self, message):
@@ -102,7 +103,8 @@ class AntifloodEnforcer(BaseMiddleware):
 
     def set_state(self, message: Message):
         return bredis.set(
-            self.state_cache_key.format(chat_id=message.chat.id), message.from_user.id
+            self.state_cache_key.format(
+                chat_id=message.chat.id), message.from_user.id
         )
 
     def get_state(self, message: Message):
@@ -128,7 +130,8 @@ class AntifloodEnforcer(BaseMiddleware):
             return False
 
     async def on_pre_process_message(self, message: Message, _):
-        log.debug(f"Enforcing flood control on {message.from_user.id} in {message.chat.id}")
+        log.debug(
+            f"Enforcing flood control on {message.from_user.id} in {message.chat.id}")
         if self.is_message_valid(message):
             if await is_user_admin(message.chat.id, message.from_user.id):
                 return self.set_state(message)
@@ -140,7 +143,8 @@ class AntifloodEnforcer(BaseMiddleware):
                 strings = await get_strings(message.chat.id, 'antiflood')
                 await message.answer(
                     strings['flood_exceeded'].format(
-                        action=(strings[database['action']] if 'action' in database else 'banned').capitalize(),
+                        action=(
+                            strings[database['action']] if 'action' in database else 'banned').capitalize(),
                         user=await get_user_link(message.from_user.id)
                     )
                 )
@@ -164,7 +168,8 @@ async def setflood_command(message: Message, chat: dict, strings: dict):
     await message.reply(
         strings['config_proc_1'],
         reply_markup=InlineKeyboardMarkup().add(
-            InlineKeyboardButton(text=strings['cancel'], callback_data=cancel_state.new(user_id=message.from_user.id))
+            InlineKeyboardButton(text=strings['cancel'], callback_data=cancel_state.new(
+                user_id=message.from_user.id))
         )
     )
 
@@ -175,7 +180,8 @@ async def setflood_command(message: Message, chat: dict, strings: dict):
 async def antiflood_expire_proc(message: Message, chat: dict, strings: dict, state, **_):
     try:
         if (time := message.text) not in (0, "0"):
-            parsed_time = convert_time(time)  # just call for making sure its valid
+            # just call for making sure its valid
+            parsed_time = convert_time(time)
         else:
             time, parsed_time = None, None
     except (TypeError, ValueError):
@@ -192,9 +198,11 @@ async def antiflood_expire_proc(message: Message, chat: dict, strings: dict, sta
             await get_data.reset_cache(chat['chat_id'])
             kw = {'count': data}
             if time is not None:
-                kw.update({'time': format_timedelta(parsed_time, locale=strings['language_info']['babel'])})
+                kw.update({'time': format_timedelta(
+                    parsed_time, locale=strings['language_info']['babel'])})
             await message.reply(
-                strings['setup_success' if time is not None else 'setup_success:no_exp'].format(**kw)
+                strings['setup_success' if time is not None else 'setup_success:no_exp'].format(
+                    **kw)
             )
     finally:
         await state.finish()
@@ -215,13 +223,15 @@ async def antiflood(message: Message, chat: dict, strings: dict):
     if data['time'] is None:
         return await message.reply(
             strings['configuration_info'].format(
-                action=strings[data['action']] if 'action' in data else strings['ban'],
+                action=strings[data['action']
+                               ] if 'action' in data else strings['ban'],
                 count=data['count']
             )
         )
     return await message.reply(
         strings['configuration_info:with_time'].format(
-            action=strings[data['action']] if 'action' in data else strings['ban'],
+            action=strings[data['action']
+                           ] if 'action' in data else strings['ban'],
             count=data['count'],
             time=format_timedelta(
                 convert_time(data['time']), locale=strings['language_info']['babel']

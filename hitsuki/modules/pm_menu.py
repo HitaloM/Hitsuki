@@ -36,7 +36,8 @@ helpmenu_cb = CallbackData('helpmenu', 'mod')
 def help_markup(modules):
     markup = InlineKeyboardMarkup()
     for module in modules:
-        markup.insert(InlineKeyboardButton(module, callback_data=helpmenu_cb.new(mod = module)))
+        markup.insert(InlineKeyboardButton(
+            module, callback_data=helpmenu_cb.new(mod=module)))
     return markup
 
 
@@ -70,7 +71,8 @@ async def get_start_func(message, strings, edit=False):
 @get_strings_dec('pm_menu')
 async def help_cb(event, strings):
     button = help_markup(MOD_HELP)
-    button.add(InlineKeyboardButton(strings['back'], callback_data='go_to_start'))
+    button.add(InlineKeyboardButton(
+        strings['back'], callback_data='go_to_start'))
     with suppress(MessageNotModified):
         await event.message.edit_text(strings['help_header'], reply_markup=button)
 
