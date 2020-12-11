@@ -182,6 +182,13 @@ def is_fed_owner(func):
         fed = args[1]
         user_id = message.from_user.id
 
+        # check on anon
+        if user_id == 1087968824:
+            return await message.reply(
+                await get_string(message.chat.id, "feds", "anon_user"),
+                allow_sending_without_reply=True
+            )
+
         if not user_id == fed["creator"] and user_id != OWNER_ID:
             text = (await get_string(message.chat.id, "feds", 'need_fed_admin')).format(
                 name=html.escape(fed['fed_name'], False)
@@ -199,6 +206,13 @@ def is_fed_admin(func):
         message = args[0]
         fed = args[1]
         user_id = message.from_user.id
+
+        # check on anon
+        if user_id == 1087968824:
+            return await message.reply(
+                await get_string(message.chat.id, "feds", "anon_user"),
+                allow_sending_without_reply=True
+            )
 
         if not user_id == fed["creator"] and user_id != OWNER_ID:
             if 'admins' not in fed or user_id not in fed['admins']:

@@ -238,6 +238,7 @@ STRINGS:
     need_fed_admin: "You are not an admin in <b>{name}</b> Federation"
     need_fed_owner: "You are not an owner of <b>{name}</b> Federation"
     cant_get_user: "Sorry, I can't get that user, try using user ID"
+    anon_user: Sorry, being anonymous, you can't use this command!
 
     # /fnew
     fed_name_long: "Federation name can't be longer than 60 symbols!"
