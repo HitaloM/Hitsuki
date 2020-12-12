@@ -21,6 +21,7 @@ import sys
 LOADED_MODULES = []
 MOD_HELP = {}
 
+
 def list_all_modules() -> list:
     modules_directory = 'hitsuki/modules'
 

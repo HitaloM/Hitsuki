@@ -60,7 +60,8 @@ else:
             import_module("hitsuki.db." + str(new_ver))
 
             curr_ver += 1
-            mongodb.db_structure.update_one({'db_ver': curr_ver - 1}, {"$set": {'db_ver': curr_ver}})
+            mongodb.db_structure.update_one(
+                {'db_ver': curr_ver - 1}, {"$set": {'db_ver': curr_ver}})
 
         log.warn(f"Database update done to {str(curr_ver)} successfully!")
         log.debug("Let's notify the bot owner")
