@@ -170,6 +170,7 @@ STRINGS:
     btn_help: "❔ ヘルプ"
     btn_lang: "🇷🇺 Language"
     btn_channel: ":satellite_アンテナ: Hitsuki News"
+    btn_group_help: "Click me for help!"
     back: 戻る
     #/help
     help_header: "ねえ！ 私の名前は<b>Hitsuki</b>です。 私はグループ管理ボットです。ここでは、グループ内を移動して順序を維持するのに役立ちます。\n洪水調節、警告システム、メモ管理システム、さらには特定のキーワードに対する事前に決められた返信など、便利な機能がたくさんあります。"
@@ -246,6 +247,7 @@ STRINGS:
       <b>User promoted to the fed admins</b> #UserPromoted
       <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
       <b>User:</b> {user} (<code>{user_id}</code>)
+    "restricted_user:promote": This user is restricted from being federation admin!
     #/fdemote
     #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
     admin_demoted_from_fed: "ユーザー {user} が <b>{name}</b> フェデレーション管理者から降格しました。"
