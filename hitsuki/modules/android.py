@@ -20,53 +20,12 @@ from bs4 import BeautifulSoup
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from hitsuki.decorator import register
+from .utils.android import GetDevice
 from .utils.disable import disableable_dec
 from .utils.message import get_arg
 
 MIUI_FIRM = "https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml"
 REALME_FIRM = "https://raw.githubusercontent.com/RealmeUpdater/realme-updates-tracker/master/data/latest.yml"
-
-
-class GetDevice:
-    def __init__(self, device):
-        """Get device info by codename or model!"""
-        self.device = device
-
-    def get(self):
-        if self.device.lower().startswith('sm-'):
-            data = get(
-                'https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_model.json').content
-            db = json.loads(data)
-            try:
-                name = db[self.device.upper()][0]['name']
-                device = db[self.device.upper()][0]['device']
-                brand = db[self.device.upper()][0]['brand']
-                model = self.device.lower()
-                return {'name': name,
-                        'device': device,
-                        'model': model,
-                        'brand': brand
-                        }
-            except KeyError:
-                return False
-        else:
-            data = get(
-                'https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json').content
-            db = json.loads(data)
-            newdevice = self.device.strip('lte').lower() if self.device.startswith(
-                'beyond') else self.device.lower()
-            try:
-                name = db[newdevice][0]['name']
-                model = db[newdevice][0]['model']
-                brand = db[newdevice][0]['brand']
-                device = self.device.lower()
-                return {'name': name,
-                        'device': device,
-                        'model': model,
-                        'brand': brand
-                        }
-            except KeyError:
-                return False
 
 
 @register(cmds='whatis')
