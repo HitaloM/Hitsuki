@@ -285,6 +285,58 @@ async def twrp(message):
         await message.reply(m, reply_markup=button)
 
 
+@register(cmds='samcheck')
+@disableable_dec('samcheck')
+async def check(message):
+    msg_args = message.text.split()
+    temp = msg_args[1]
+    csc = msg_args[2]
+    if not temp and csc:
+        m = "Please type your device <b>MODEL</b> and <b>CSC</b> into it!\ni.e <code>/fw SM-G975F XSG!</code>"
+        await message.reply(m)
+        return
+
+    model = 'sm-' + temp if not temp.upper().startswith('SM-') else temp
+    fota = get(
+        f'http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.xml')
+    test = get(
+        f'http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.test.xml')
+    if test.status_code != 200:
+        m = f"Couldn't find any firmwares for {temp.upper()} - {csc.upper()}, please refine your search or try again later!"
+        await message.reply(m)
+        return
+
+    page1 = BeautifulSoup(fota.content, 'lxml')
+    page2 = BeautifulSoup(test.content, 'lxml')
+    os1 = page1.find("latest").get("o")
+    os2 = page2.find("latest").get("o")
+    if page1.find("latest").text.strip():
+        pda1, csc1, phone1 = page1.find("latest").text.strip().split('/')
+        m = f'<b>MODEL:</b> <code>{model.upper()}</code>\n<b>CSC:</b> <code>{csc.upper()}</code>\n\n'
+        m += '<b>Latest Avaliable Firmware:</b>\n'
+        m += f'• PDA: <code>{pda1}</code>\n• CSC: <code>{csc1}</code>\n'
+        if phone1:
+            m += f'• Phone: <code>{phone1}</code>\n'
+        if os1:
+            m += f'• Android: <code>{os1}</code>\n'
+        m += '\n'
+    else:
+        m = f'<b>No public release found for {model.upper()} and {csc.upper()}.</b>\n\n'
+    m += '<b>Latest Test Firmware:</b>\n'
+    if len(page2.find("latest").text.strip().split('/')) == 3:
+        pda2, csc2, phone2 = page2.find("latest").text.strip().split('/')
+        m += f'• PDA: <code>{pda2}</code>\n• CSC: <code>{csc2}</code>\n'
+        if phone2:
+            m += f'• Phone: <code>{phone2}</code>\n'
+        if os2:
+            m += f'• Android: <code>{os2}</code>\n'
+    else:
+        md5 = page2.find("latest").text.strip()
+        m += f'• Hash: <code>{md5}</code>\n• Android: <code>{os2}</code>\n\n'
+
+    await message.reply(m)
+
+
 __mod_name__ = "Android"
 
 __help__ = """
@@ -295,6 +347,7 @@ __help__ = """
 <b>Device firmware:</b>
 - /miui (codename): Xiaomi only - gets latest MIUI download links for the given device.
 - /realmeui (codename): Realme only - gets latest RealmeUI download links for the given device.
+- /samcheck <model> <csc>: Samsung only - shows the latest firmware info for the given device, taken from samsung servers.
 
 <b>Misc</b>
 - /magisk: Get latest Magisk releases.
