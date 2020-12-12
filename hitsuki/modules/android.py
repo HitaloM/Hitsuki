@@ -291,10 +291,6 @@ async def check(message):
     msg_args = message.text.split()
     temp = msg_args[1]
     csc = msg_args[2]
-    if not temp and csc:
-        m = "Please type your device <b>MODEL</b> and <b>CSC</b> into it!\ni.e <code>/fw SM-G975F XSG!</code>"
-        await message.reply(m)
-        return
 
     model = 'sm-' + temp if not temp.upper().startswith('SM-') else temp
     fota = get(
