@@ -92,6 +92,8 @@ async def back_btn(event):
 @get_strings_dec('pm_menu')
 async def help_cmd(message, strings):
     button = help_markup(MOD_HELP)
+    button.add(InlineKeyboardButton(
+        strings['back'], callback_data='go_to_start'))
     await message.reply(strings['help_header'], reply_markup=button)
 
 
