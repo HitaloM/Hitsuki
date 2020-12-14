@@ -348,7 +348,7 @@ __help__ = """
 <b>Device firmware:</b>
 - /miui (codename): Xiaomi only - gets latest MIUI download links for the given device.
 - /realmeui (codename): Realme only - gets latest RealmeUI download links for the given device.
-- /samcheck <model> <csc>: Samsung only - shows the latest firmware info for the given device, taken from samsung servers.
+- /samcheck (model) (csc): Samsung only - shows the latest firmware info for the given device, taken from samsung servers.
 
 <b>Misc</b>
 - /magisk: Get latest Magisk releases.
