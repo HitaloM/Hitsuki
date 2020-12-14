@@ -11,6 +11,8 @@
 # GNU Affero General Public License for more details.
 
 from contextlib import suppress
+from datetime import datetime
+from requests import get
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -18,6 +20,7 @@ from aiogram.types import Message
 from aiogram.utils.exceptions import BadRequest, MessageNotModified, MessageToDeleteNotFound
 
 from hitsuki.decorator import register
+from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
@@ -85,6 +88,62 @@ Variables are special words which will be replaced by actual info
 <code>{chatnick}</code>: Chat username
     """
     )
+
+
+@register(cmds='git')
+@disableable_dec('git')
+async def github(message):
+    text = message.text[len('/git '):]
+    usr = get(f'https://api.github.com/users/{text}').json()
+    if usr.get('login'):
+        text = f"<b>Username:</b> <a href='https://github.com/{usr['login']}'>{usr['login']}</a>"
+
+        whitelist = [
+            'name', 'id', 'type', 'location', 'blog', 'bio', 'followers',
+            'following', 'hireable', 'public_gists', 'public_repos', 'email',
+            'company', 'updated_at', 'created_at'
+        ]
+
+        difnames = {
+            'id': 'Account ID',
+            'type': 'Account type',
+            'created_at': 'Account created at',
+            'updated_at': 'Last updated',
+            'public_repos': 'Public Repos',
+            'public_gists': 'Public Gists'
+        }
+
+        goaway = [None, 0, 'null', '']
+
+        for x, y in usr.items():
+            if x in whitelist:
+                x = difnames.get(x, x.title())
+
+                if x in ('Account created at', 'Last updated'):
+                    y = datetime.strptime(y, "%Y-%m-%dT%H:%M:%SZ")
+
+                if y not in goaway:
+                    if x == 'Blog':
+                        x = "Website"
+                        y = f"[Here!]({y})"
+                        text += ("\n<b>{}:</b> {}".format(x, y))
+                    else:
+                        text += ("\n<b>{}:</b> <code>{}</code>".format(x, y))
+        reply_text = text
+    else:
+        reply_text = "User not found. Make sure you entered valid username!"
+    await message.reply(reply_text, disable_web_page_preview=True)
+
+
+@register(cmds='repo')
+@disableable_dec('repo')
+async def repo(message):
+    text = message.text[len('/repo '):]
+    usr = get(f'https://api.github.com/users/{text}/repos?per_page=40').json()
+    reply_text = "<b>Repository</b>\n"
+    for i in range(len(usr)):
+        reply_text += f"<a href='{usr[i]['html_url']}'>{usr[i]['name']}</a>\n"
+    await message.reply(reply_text, disable_web_page_preview=True)
 
 
 @register(cmds='cancel', state='*', allow_kwargs=True)
@@ -158,6 +217,8 @@ An "odds and ends" module for small, simple commands which don't really fit anyw
 
 <b>Available commands:</b>
 - /direct: Generates direct links from the sourceforge.net
+- /git: Returns info about a GitHub user or organization.
+- /repo: Return the GitHub user or organization repository list (Limited at 40).
 - /cancel: Disables current state. Can help in cases if Hitsuki not responing on your message.
 - /id: get the current group id. If used by replying to a message, gets that user's id.
 - /info: get information about a user.
