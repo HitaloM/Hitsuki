@@ -140,18 +140,18 @@ async def github(message):
 @register(cmds='ip')
 @disableable_dec('ip')
 async def ip(message):
-    ip = message.text.split(maxsplit=1)[1]
-
-    aioclient = ClientSession()
-    if not ip:
-        await message.reply("Provide an IP!")
+    try:
+        ip = message.text.split(maxsplit=1)[1]
+    except IndexError:
+        await message.reply(f"Apparently you forgot something!")
         return
 
+    aioclient = ClientSession()
     async with aioclient.get(f"http://ip-api.com/json/{ip}") as response:
         if response.status == 200:
             lookup_json = await response.json()
         else:
-            await message.reply(f"An error occurred when looking for **{ip}**: **{response.status}**", parse_mode="markdown")
+            await message.reply(f"An error occurred when looking for <b>{ip}</b>: <b>{response.status}</b>")
             return
 
     fixed_lookup = {}
