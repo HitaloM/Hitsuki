@@ -10,7 +10,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 
+import re
 from contextlib import suppress
+from aiohttp import ClientSession
 from datetime import datetime
 from requests import get
 
@@ -90,10 +92,10 @@ Variables are special words which will be replaced by actual info
     )
 
 
-@register(cmds='git')
-@disableable_dec('git')
+@register(cmds='github')
+@disableable_dec('github')
 async def github(message):
-    text = message.text[len('/git '):]
+    text = message.text[len('/github '):]
     usr = get(f'https://api.github.com/users/{text}').json()
     if usr.get('login'):
         text = f"<b>Username:</b> <a href='https://github.com/{usr['login']}'>{usr['login']}</a>"
@@ -125,7 +127,7 @@ async def github(message):
                 if y not in goaway:
                     if x == 'Blog':
                         x = "Website"
-                        y = f"[Here!]({y})"
+                        y = f"<a href='{y}'>Here!</a>"
                         text += ("\n<b>{}:</b> {}".format(x, y))
                     else:
                         text += ("\n<b>{}:</b> <code>{}</code>".format(x, y))
@@ -135,15 +137,46 @@ async def github(message):
     await message.reply(reply_text, disable_web_page_preview=True)
 
 
-@register(cmds='repo')
-@disableable_dec('repo')
-async def repo(message):
-    text = message.text[len('/repo '):]
-    usr = get(f'https://api.github.com/users/{text}/repos?per_page=40').json()
-    reply_text = "<b>Repository</b>\n"
-    for i in range(len(usr)):
-        reply_text += f"<a href='{usr[i]['html_url']}'>{usr[i]['name']}</a>\n"
-    await message.reply(reply_text, disable_web_page_preview=True)
+@register(cmds='ip')
+@disableable_dec('ip')
+async def ip(message):
+    ip = message.text.split(maxsplit=1)[1]
+
+    aioclient = ClientSession()
+    if not ip:
+        await message.reply("Provide an IP!")
+        return
+
+    async with aioclient.get(f"http://ip-api.com/json/{ip}") as response:
+        if response.status == 200:
+            lookup_json = await response.json()
+        else:
+            await message.reply(f"An error occurred when looking for **{ip}**: **{response.status}**", parse_mode="markdown")
+            return
+
+    fixed_lookup = {}
+
+    for key, value in lookup_json.items():
+        special = {"lat": "Latitude", "lon": "Longitude",
+                   "isp": "ISP", "as": "AS", "asname": "AS name"}
+        if key in special:
+            fixed_lookup[special[key]] = str(value)
+            continue
+
+        key = re.sub(r"([a-z])([A-Z])", r"\g<1> \g<2>", key)
+        key = key.capitalize()
+
+        if not value:
+            value = "None"
+
+        fixed_lookup[key] = str(value)
+
+    text = ""
+
+    for key, value in fixed_lookup.items():
+        text = text + f"<b>{key}:</b> <code>{value}</code>\n"
+
+    await message.reply(text)
 
 
 @register(cmds='cancel', state='*', allow_kwargs=True)
@@ -217,8 +250,8 @@ An "odds and ends" module for small, simple commands which don't really fit anyw
 
 <b>Available commands:</b>
 - /direct: Generates direct links from the sourceforge.net
-- /git: Returns info about a GitHub user or organization.
-- /repo: Return the GitHub user or organization repository list (Limited at 40).
+- /github: Returns info about a GitHub user or organization.
+- /ip: Displays information about an IP / domain.
 - /cancel: Disables current state. Can help in cases if Hitsuki not responing on your message.
 - /id: get the current group id. If used by replying to a message, gets that user's id.
 - /info: get information about a user.

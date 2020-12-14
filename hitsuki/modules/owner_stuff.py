@@ -64,7 +64,7 @@ async def all_btns_list(message):
     await message.reply(text)
 
 
-@register(cmds='ip', is_owner=True)
+@register(cmds='ip', is_owner=True, only_pm=True)
 async def get_bot_ip(message):
     await message.reply(requests.get("http://ipinfo.io/ip").text)
 
