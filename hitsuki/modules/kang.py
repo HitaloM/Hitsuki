@@ -1,4 +1,7 @@
 from aiogram import types
+from hitsuki import bot
+from hitsuki.decorator import register
+from .utils.disable import disableable_dec
 from PIL import Image
 from math import floor
 import os
@@ -78,8 +81,9 @@ class Stickers:
                 emojis = emoji,
                 tgs_sticker = types.InputFile(file_destination))
 
-
-async def start(message: types.Message):
+@register(cmds='kang')
+@disableable_dec('kang')
+async def kang(message: types.Message):
     
     try:
         sticker_data = message["reply_to_message"]["sticker"]
