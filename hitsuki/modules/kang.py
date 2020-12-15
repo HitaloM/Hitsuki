@@ -74,18 +74,19 @@ class Stickers:
     async def create_sticker_set(is_animated, user_data, sticker_url, emoji, file_destination, packnum):
         if is_animated == False:
             await bot.create_new_sticker_set(
-                user_id = user_data["id"],
-                name = sticker_url,
-                title = f"{user_data['first_name']}'s animated sticker set {packnum} by Hitsuki"
-                emojis = emoji,
-                png_sticker = types.InputFile(file_destination))
+                user_id=user_data["id"],
+                name=sticker_url,
+                title=f"{user_data['first_name']}'s animated sticker set {packnum} by Hitsuki"
+                emojis=emoji,
+                png_sticker=types.InputFile(file_destination))
         else:
             await bot.create_new_sticker_set(
-                user_id = user_data["id"],
-                name = sticker_url,
-                title = f"{user_data['first_name']}'s animated sticker set {packnum} by Hitsuki"
-                emojis = emoji,
-                tgs_sticker = types.InputFile(file_destination))
+                user_id=user_data["id"],
+                name=sticker_url,
+                title=f"{user_data['first_name']}'s animated sticker set {packnum} by Hitsuki"
+                emojis=emoji,
+                tgs_sticker=types.InputFile(file_destination))
+
     @staticmethod
     async def upload_sticker_to_set(is_animated, user_data, sticker_url, emoji, file_destination):
         if is_animated == False:
