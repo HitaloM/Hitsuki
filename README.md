@@ -1,4 +1,4 @@
-# Hitsuki X
+# Hitsuki X - Fast, practical and easy
 
 [![Crowdin](https://badges.crowdin.net/hitsukix/localized.svg)](https://crowdin.com/project/hitsukix)
 [![GitHub contributors](https://img.shields.io/github/contributors/HitsukiNetwork/HitsukiX.svg)](https://GitHub.com/HitsukiNetwork/HitsukiX/graphs/contributors/)
