@@ -18,3 +18,7 @@ venv/
 
 .vscode/
 .idea/
+
+# Temp files
+*.png
+*.tgs
