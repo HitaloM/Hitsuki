@@ -67,24 +67,25 @@ class Stickers:
                 packnum += 1
             except:
                 self.sticker_url = sticker_url
-                if await self.create_sticker_set(self.is_animated, self.user_data, self.sticker_url, self.emoji, self.file_destination):
+                if await self.create_sticker_set(self.is_animated, self.user_data, self.sticker_url, self.emoji, self.file_destination, packnum):
                     return sticker_url
 
     @staticmethod
-    async def create_sticker_set(is_animated, user_data, sticker_url, emoji, file_destination):
+    async def create_sticker_set(is_animated, user_data, sticker_url, emoji, file_destination, packnum):
         if is_animated == False:
-            await bot.add_sticker_to_set(
-                user_id=user_data["id"],
-                name=sticker_url,
-                emojis=emoji,
-                png_sticker=types.InputFile(file_destination))
+            await bot.create_new_sticker_set(
+                user_id = user_data["id"],
+                name = sticker_url,
+                title = f"{user_data['first_name']}'s animated sticker set {packnum} by Hitsuki"
+                emojis = emoji,
+                png_sticker = types.InputFile(file_destination))
         else:
-            await bot.add_sticker_to_set(
-                user_id=user_data["id"],
-                name=sticker_url,
-                emojis=emoji,
-                tgs_sticker=types.InputFile(file_destination))
-
+            await bot.create_new_sticker_set(
+                user_id = user_data["id"],
+                name = sticker_url,
+                title = f"{user_data['first_name']}'s animated sticker set {packnum} by Hitsuki"
+                emojis = emoji,
+                tgs_sticker = types.InputFile(file_destination))
     @staticmethod
     async def upload_sticker_to_set(is_animated, user_data, sticker_url, emoji, file_destination):
         if is_animated == False:
