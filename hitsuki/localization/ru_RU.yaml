@@ -27,8 +27,8 @@ STRINGS:
     #/clear
     note_removed: "Заметка <code>#{note_name}</code> удалена в <b>{chat_name}</b>!"
     note_removed_multiple: |
-      Множественное удаление заметок в <b>{chat_name}</b>
-      <b>Удалено:</b><code>{removed}</code>
+      Removed multiple notes in <b>{chat_name}</b>
+      <b>Removed:</b><code>{removed}</code>
     not_removed_multiple: "<b>Не удалено:</b><code>{not_removed}</code>"
     #/clearall
     clear_all_text: "Все заметки будут удалены из {chat_name}. Вы уверены?"
@@ -49,13 +49,13 @@ STRINGS:
     note_info_updated: "Последнее обновление: <code>{date}</code> пользователем {user}\n"
     user_blocked: "Напишите /start мне в личные сообщения!"
     #/privatenotes
-    private_notes_false_args: "У вас есть 2 варианта <code>Disable</code> (отключить) и <code>Enable</code> (включить)!"
+    private_notes_false_args: "You have 2 options <code>Disable</code> and <code>Enable</code>!"
     already_enabled: "Приватные заметки уже включены в %s"
-    current_state_info: "В настоящее время приватные заметки {state} в {chat}! "
+    current_state_info: "Private notes are currently <code>{state}</code> in <b>{chat}</b>!"
     enabled_successfully: "Приватные заметки <b>Включены</b> в %s успешно!"
     disabled_successfully: "Приватные заметки <b>Отключены</b> в %s успешно!"
-    not_enabled: "Приватные заметки уже отключены. Отключать нечего."
-    privatenotes_notif: "Вы успешно подключены к <b>{chat}</b> заметки! Для отключения используйте команду <code>/disconnect</code>!"
+    not_enabled: "Private notes are not enabled."
+    privatenotes_notif: "You have been successfully connected to <b>{chat}</b> notes! To disconnect please use command <code>/disconnect</code>!"
     enabled: 'Включены'
     disabled: 'Выключены'
     #/cleannotes
@@ -72,7 +72,7 @@ STRINGS:
     no_filters_found: "Фильтры не были найдены в <b>{chat_name}</b>!"
     #/addfilter
     anon_detected: Будучи анонимным администратором, вы не можете добавлять новые фильтры, вместо этого используйте соединения.
-    regex_too_slow: "Ваш шаблон регулярного выражения соответствует слишком медленно (более половины секунды), его нельзя добавить!"
+    regex_too_slow: "Your regex pattern matches too slowly (more than the half of second) and it can't be added!"
     cancel_btn: "🛑 Cancel"
     adding_filter: |
       Добавление фильтра <code>{handler}</code> в <b>{chat_name}</b>
@@ -81,7 +81,7 @@ STRINGS:
     #/filters
     list_filters: "Фильтры в <b>{chat_name}</b>:\n"
     #/delfilter
-    no_such_filter: Я не могу найти этот фильтр в <b>{chat_name}</b>, проверьте включённые фильтры с помощью команды <code>/filters</code>.
+    no_such_filter: I can't find that filter in <b>{chat_name}</b>, you can check what filters are enabled with the <code>/filters</code> command.
     del_filter: "Фильтр '<code>{handler}</code>' был успешно удалён!"
     select_filter_to_remove: |
       Я нашла много фильтров '<code>{handler}</code>'.
@@ -104,8 +104,8 @@ STRINGS:
     max_warn_exceeded: Предупреждения превышены! %s был %s!
     "max_warn_exceeded:tmute": Предупреждения превышены! %s был заткнут на %s!
     #warn rmv callback
-    warn_no_admin_alert: "⚠ Вы не являетесь 👷‍♂️ админом для удаления предупреждения!"
-    warn_btn_rmvl_success: "✔ Предупреждение удалено 👷‍♂️ {admin}!"
+    warn_no_admin_alert: "⚠ You are NOT admin and cannot remove warnings!"
+    warn_btn_rmvl_success: "✅ Warning removed by {admin}!"
     #/warns
     warns_header: "Вот ваши предупреждения в этом чате\n\n"
     warns: "{count} : <code>{reason}</code> {admin}\n"
@@ -114,7 +114,7 @@ STRINGS:
     warn_limit: "Лимит предупреждений в {chat_name}: `{num}`"
     warnlimit_short: 'Лимит предупреждений должен быть не менее 2!'
     warnlimit_long: 'Лимит предупреждений должен быть меньше 1 000!'
-    warnlimit_updated: '✔ Лимит предупреждений успешно обновлён до {num}'
+    warnlimit_updated: '✅ Warnlimit successfully updated to {num}'
     #/delwarns
     purged_warns: "{admin} удалил <code>{num}</code> предупреждений у {user} в <b>{chat_title}</b>!"
     usr_no_wrn: "У {user} пока нет предупреждений."
@@ -123,8 +123,8 @@ STRINGS:
     #/warnmode
     same_mode: Это текущий режим! Как изменить его?
     no_time: Для выбора режима «tmute» вы должны указать время!
-    invalid_time: Неверное время!
-    warnmode_success: Режим предупреждений <b>%s</b> успешно изменён на <b>%s</b>!
+    invalid_time: Invalid time!
+    warnmode_success: Warn mode of <b>%s</b> has successfully changed to <b>%s</b>!
     wrng_args: |
       Это доступные варианты:
       <code>%s</code>
@@ -159,7 +159,7 @@ STRINGS:
     promote_failed: "Повышение не удалось! Проверьте, имею ли я права для этого."
     demote_success: "{user} был успешно понижен в {chat_name}!"
     demote_not_admin: "Этот пользователь не админ."
-    demote_failed: "Понижение не удалось. Возможно, я не имею нужных прав, или человек повышен кем-то другим"
+    demote_failed: "Demotion failed. Maybe I can't demote or the person is promoted by someone else?"
     cant_get_user: "Я не смогла получить пользователя! Пожалуйста, ответьте на его сообщение и повторите попытку."
     cant_promote_yourself: "Вы не можете повысить себя."
     emoji_not_allowed: "Извините, но роли администратора не могут иметь эмодзи 😞"
@@ -191,7 +191,7 @@ STRINGS:
     enabled: "Команда <code>{cmd}</code> была включена в <b>{chat_name}</b>!"
     #/enableall
     not_disabled_anything: "Ничего не было отключено в <b>{chat_title}</b>!"
-    enable_all_text: "Это включит все команды в чате <b>{chat_name}</b>. Вы уверены?"
+    enable_all_text: "This will enable all commands in the <b>{chat_name}</b>. Are you sure?"
     enable_all_btn_yes: "Да. Включите все команды!"
     enable_all_btn_no: "Нет!"
     enable_all_done: "Все (<code>{num}</code>) команды были включены в чате <b>{chat_name}</b>!"
@@ -204,29 +204,29 @@ STRINGS:
     add_admins: "У меня нет прав добавлять администраторов, пожалуйста, сделайте меня администратором с этими правами."
   feds:
     #decorators
-    need_fed_admin: "Вы не являетесь админом в Федерации <b>{name}</b> "
-    need_fed_owner: "Вы не владелец Федерации <b>{name}</b>"
-    cant_get_user: "Извините, я не могу получить этого пользователя, попробуйте использовать ID пользователя"
+    need_fed_admin: "You are not an admin in <b>{name}</b> federation"
+    need_fed_owner: "You are not an owner of <b>{name}</b> federation"
+    cant_get_user: "Sorry, I can't get that user, try using their user ID"
     #/fnew
     fed_name_long: "Название федерации не может быть длиннее 60 символов!"
-    can_only_1_fed: "1 пользователь может создать только 1 федерацию, пожалуйста, удалите ранее созданную."
+    can_only_1_fed: "Users can only create 1 federation, please remove one."
     name_not_avaible: "Федерация с именем <code>{name}</code> уже существует! Пожалуйста, используйте другое имя."
     created_fed: |
-      Поздравляем, вы успешно создали Федерацию.
-      <b>Имя:</b> {name}
+      Congrats, you have successfully created a federation.
+      <b>Name:</b> {name}
       <b>ID:</b> <code>{id}</code>
-      <b>Создатель:</b> {creator}
-      Используйте <code>/fjoin {id}</code> для подключения федерации к чату
-    disallow_anon: Being anonymous, you cannot create new federation!
+      <b>Creator:</b> {creator}
+      Use <code>/fjoin {id}</code> to connect federation to chat\
+    disallow_anon: As an anonymous admin you cannot create new federation!
     #/fjoin
-    only_creators: "Вы должны быть создателем чата, чтобы подключить чат к федерации."
-    fed_id_invalid: "Данный ID Федерации недействителен! Пожалуйста, дайте мне верный ID."
-    joined_fed_already: "Этот чат уже вступил в Федерацию! Пожалуйста, используйте /fleave, чтобы покинуть эту федерацию"
-    join_fed_success: "Отлично! Чат <b>{chat}</b> теперь является частью <b>{fed}</b> Федерации!"
+    only_creators: "You must be the chat creator to be able to connect chat to a federation."
+    fed_id_invalid: "The given federation ID is invalid! Please give me a valid ID."
+    joined_fed_already: "This chat has already joined a federation! Please use /fleave to leave that federation"
+    join_fed_success: "Great! Chat <b>{chat}</b> is now a part of <b>{fed}</b> federation!"
     join_chat_fed_log: |
-      <b>Присойденение чата к федерации</b> #ChatJoined
-      <b>Федерация:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>Чат:</b> {chat_name} (<code>{chat_id}</code>)
+      <b>Chat joined federation</b> #ChatJoined
+      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
     #/leavefed
     chat_not_in_fed: "Этот чат ещё не вступил в федерацию."
     leave_fed_success: "Чат <b>{chat}</b> покинул федерацию <b>{fed}</b>."
@@ -238,11 +238,11 @@ STRINGS:
     already_subsed: "Федерация <b>{name}</b> уже подписана на <b>{name2}</b>"
     subsed_success: "Федерация <b>{name}</b> подписана на <b>{name2}</b>!"
     #/funsub
-    not_subsed: "Федерация <b>{name}</b> не подписана на федерацию <b>{name2}</b> для отказа от подписки"
-    unsubsed_success: "Федерация <b>{name}</b> отписана от федерации <b>{name2}</b>!"
+    not_subsed: "Federation <b>{name}</b> is not subscribed to <b>{name2}</b>"
+    unsubsed_success: "Federation <b>{name}</b> unsubscribed from <b>{name2}</b>!"
     #/fpromote
     #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
-    admin_added_to_fed: "Пользователь {user} добавлен в админы <b>{name}</b> Федерации."
+    admin_added_to_fed: "User {user} added to <b>{name}</b> federation admins."
     promote_user_fed_log: |
       <b>Пользователь повышен до админа федерации</b> #UserPromoted
       <b>Федерация:</b> {fed_name} (<code>{fed_id}</code>)
@@ -250,28 +250,31 @@ STRINGS:
     "restricted_user:promote": This user is restricted from being federation admin!
     #/fdemote
     #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
-    admin_demoted_from_fed: "Пользователь {user} понижен из админов Федерации <b>{name}</b>."
+    admin_demoted_from_fed: "User {user} demoted from <b>{name}</b> federation admins."
     demote_user_fed_log: |
       <b>Пользователь исключён из админов федерации</b> #UserDemoted
       <b>Федерация:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Пользователь:</b> {user} (<code>{user_id}</code>)
     #/fsetlog
-    already_have_chatlog: "<b>{name}</b> Федерация уже включила логгирование в другом чате/канале!"
+    already_have_chatlog: "<b>{name}</b> federation already has logging enabled in another chat/channel!"
     set_chat_log: |
-      Этот чат теперь хранит лог всех действий в <b>{name}</b> Федерации
+      This chat is now logging all actions in <b>{name}</b> federation
+
+      Federation logging is used for internal assessment of the federation and its performance.
+      The federation should <b>NOT</b> be used as a public wall of shame thereby respecting user data and our privacy guidelines.
     set_log_fed_log: |
       <b>Включён лог</b> #LoggingEnabled
       <b>Федерация:</b> {fed_name} (<code>{fed_id}</code>)
     no_right_to_post: У меня нет прав на публикацию сообщений в этом канале!
     #/funsetlog
-    not_logging: "<b>{name}</b> Федерация не логгирует действия ни в одном чате/канале!"
-    logging_removed: "Успешно отключено логгирование в Федерации <b>{name}</b>."
+    not_logging: "<b>{name}</b> federation isn't logging to any chat/channel!"
+    logging_removed: "Successfully removed logging from <b>{name}</b> federation."
     unset_log_fed_log: |
       <b>Отключено логгирование</b> #LoggingDisabled
       <b>Федерация:</b> {fed_name} (<code>{fed_id}</code>)
     #/fchatlist
-    no_chats: "Нет чатов в Федерации <b>{name}</b>"
-    chats_in_fed: "<b>Чаты, подключённые к {name} Федерации:</b>\n"
+    no_chats: "There's no chats joined this <b>{name}</b> federation"
+    chats_in_fed: "<b>Chats connected to {name} federation:</b>\n"
     too_large: "Вывод слишком велик, отправляю файлом"
     #/finfo
     finfo_text: |
@@ -281,16 +284,16 @@ STRINGS:
       <b>Создатель:</b> {creator}
       <b>Чаты в федерации:</b> {chats}
       <b>Заблокированные пользователи в федерации:</b> {fbanned}
-    finfo_subs_title: "<b>Федерация подписана на эти федерации:</b>\n"
+    finfo_subs_title: "<b>Federations subscribed to this feds:</b>\n"
     #/fadminlist
-    fadmins_header: "Админы в <b>{fed_name}</b> федерации:\n"
+    fadmins_header: "Admins in <b>{fed_name}</b> fed:\n"
     #no_fbanned_in_fed: "There isn't any banned users in {fed_name} Federation!"
     #/fban
     user_wl: "Этот пользователь в белом списке."
     fban_self: "Это хорошее шоу!"
-    fban_creator: "Как я могу забанить создателя Федерации?! Я не думаю что это будет весело."
-    fban_fed_admin: "Я не собираюсь банить админа Федерации в его собственной Федерации!"
-    update_fban: "Этот пользователь был забанен ранее. Причина обновлена на <code>{reason}</code>"
+    fban_creator: "How can I ban the federation creator?! I don't think it's gonna be funny."
+    fban_fed_admin: "I'm not going to ban a federation admin from their own fed!"
+    update_fban: "This user was already fbanned therefore I am updating the reason to <code>{reason}</code>"
     already_fbanned: "{user} уже забанен в этой федерации."
     fbanned_header: "<b>Новый Федеральный бан</b>\n"
     fban_info: |
@@ -302,10 +305,10 @@ STRINGS:
     fbanned_done: "\n<b>Статус:</b> Готово! забанен в <code>{num}</code> чатах!"
     fbanned_silence: "Это сообщение будет очищено через 5 секунд"
     fbanned_subs_process: "\n<b>Статус:</b> Бан в <code>{feds}</code> подписанных федерациях..."
-    fbanned_subs_done: "\n<b>Статус:</b> Готово! забанен в <code>{chats}</code> чатах этой федерации и <code>{subs_chats}</code> чатах <code>{feds}</code> подписанных федераций"
+    fbanned_subs_done: "\n<b>Status:</b> Done! Banned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
     fban_usr_rmvd: |
-      Пользователь {user} забанен в текущей федерации <b>{fed}</b>. Поэтому был удалён!
-      Причина: <code>{rsn}</code>
+      User {user} is currently banned in <b>{fed}</b> federation and have been removed!
+      Reason: <code>{rsn}</code>
     fban_log_fed_log: |
       <b>Блокировка в федерации</b> #FedBan
       <b>Федерация:</b> {fed_name} (<code>{fed_id}</code>)
@@ -313,8 +316,8 @@ STRINGS:
     fban_reason_fed_log: "<b>Причина:</b> <code>{reason}</code>\n"
     fban_subs_fed_log: "\n<b>Подписанные федерации:</b> забанен в <code>{subs_chats}</code> чатах <code>{feds}</code> федераций"
     #/unfban
-    unfban_self: "Подумайте про что-нибудь другое вместо этого."
-    user_not_fbanned: "{user} не был забанен в этой федерации."
+    unfban_self: "Think of something else to have fun with instead of this."
+    user_not_fbanned: "{user} isn't banned in this federation."
     un_fbanned_header: "<b>Новый раз-FedBan</b>\n"
     un_fbanned_process: "\n<b>Статус:</b> Разбан в <code>{num}</code> чатах..."
     un_fbanned_done: "\n<b>Статус:</b> Готово! Разбанен в <code>{num}</code> чатах!"
@@ -329,56 +332,56 @@ STRINGS:
     delfed_btn_yes: Да. Удалить федерацию
     delfed_btn_no: Нет.
     delfed: |
-      Вы уверены, что хотите удалить эту федерацию <b>%s</b>?
+      Are you sure you want to delete the <b>%s</b> federation?
 
-      <i>Отказ от ответственности: Удаление федерации удалит все данные, связанные с ней из нашей базы данных!
-      Это действие никак не может быть отменено!</i>
+      <i>Disclaimer: Deleting this federation will remove all data associated with it from our database!
+      This action is permanent and cannot be reversed!</i>
     delfed_success: Федерация успешно удалена!
     #/frename
-    frename_same_name: Пожалуйста, введите имя, отличное от существующего!
-    frename_success: Федерация <b>{old_name}</b> переименована в <b>{new_name}</b> успешно!
+    frename_same_name: Please enter a different name, not the same one!
+    frename_success: The federation <b>{old_name}</b> renamed to <b>{new_name}</b> successfully!
     #/fbanlist
-    fbanlist_locked: Пожалуйста, подождите %s для использования fbanlist снова.
+    fbanlist_locked: Please wait until %s to use fbanlist again.
     creating_fbanlist: Создание списка забаненых пользователей! Пожалуйста, подождите ..
-    fbanlist_done: Fbanlist Федерации <b>%s</b>!
+    fbanlist_done: Fbanlist of federation <b>%s</b>!
     #/importfbans
     send_import_file: |
-      Отправьте файл импорта!
+      Send the import file!
 
-      Для отмены этого процесса используйте /cancel
+      To cancel this process use /cancel
     rpl_to_file: Пожалуйста, ответьте на файл!
     importfbans_locked: Импорт fban заблокирован на %s в этой федерации.
-    big_file_csv: Поддерживается импорт только файлов меньше {num} мегабайт!
+    big_file_csv: Only supports import csv files less {num} megabytes!
     big_file_json: |
-      В настоящее время json файлы ограничены {num} мегабайтами!
-      Используйте csv формат, если вы хотите импортировать большие файлы.
+      Currently json files are limited to {num} megabytes!
+      Use the csv format if you want to import bigger files.
     invalid_file: "Недопустимый файл"
     wrong_file_ext: "Неправильный формат файла! В настоящее время имеется поддержка только: json, csv"
     importing_process: <b>Импорт запретов федерации...</b>
-    import_done: Импорт банов с фанатами завершен! Импортировано {num} банов.
+    import_done: Importing fed bans finished! {num} bans were imported.
     #def
-    automatic_ban: Пользователь {user} забанен в текущей федерации <b>{fed_name}</b>. Поэтому был удалён!
-    automatic_ban_sfed: Пользователь {user} забанен в подписаной федерации <b>{fed_name}</b>. Поэтому был удалён!
+    automatic_ban: User {user} is banned in the current federation <b>{fed_name}</b> and has been removed!
+    automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b and has been removed!
     automatic_ban_reason: "\nПричина: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>Информация о федерационном бане:</b>\n"
     fbanned_count_pm: "Вы были забанены в {count} федераций!\n"
-    "fban_info:fcheck": "Вас забанили в федерации {fed} в {date}, и без причины!"
+    "fban_info:fcheck": "You have been fbanned in {fed} federation on {date}, No reason was given!"
     "fban_info:fcheck:reason": "Вы были забанены в федерации {fed} в {date} по причине -\n {reason}\n"
     fbanned_data: "{user} был забанен в {count} федерации(ях)\n"
-    fbanned_nowhere: "{user} не был забанен нигде!"
-    fbanned_in_fed: "Включая эту федерацию <b>{fed}</b>!\n"
-    "fbanned_in_fed:reason": "Включая эту федерацию <b>{fed}</b> по причине -\n <code>{reason}</code>"
-    contact_in_pm: "\n\nДля получения дополнительной информации о ваших банах, пожалуйста, напишите мне, таким образом, ваша конфиденциальность будет защищена!"
+    fbanned_nowhere: "{user} isn't fbanned anywhere!\n"
+    fbanned_in_fed: "Including the <b>{fed}</b> federation!\n"
+    "fbanned_in_fed:reason": "Including the <b>{fed}</b> federation for reason of -\n <code>{reason}</code>"
+    contact_in_pm: "\n\nFor more info on your fbans, please send me a direct message for privacy!"
     too_long_fbaninfo: "Ну, ваш fbaninfo требует создание файла!"
-    didnt_fbanned: "Вы не были забанены в этой федерации."
-    not_fbanned_in_fed: Anyway, they aren't fbanned in fed <b>{fed_name}</b>
+    didnt_fbanned: "You aren't fbanned in this fed."
+    not_fbanned_in_fed: They aren't fbanned in the <b>{fed_name}</b> fed
   reports:
     user_user_admin: "Вы админ здесь, почему Вам нужно пожаловаться на кого-то?.."
     user_is_whitelisted: "Вы в белом списке, почему Вы жалуетесь на кого-то?.."
     reports_disabled: "Репорты <b>отключены</b> в этой группе."
     no_user_to_report: "На какого пользователя Вы хотите пожаловаться?"
-    report_admin: "Вы <b>не можете</b> пожаловаться на админа."
+    report_admin: "You <b>cannot</b> report admins."
     report_whitedlisted: "Вы <b>не можете</b> пожаловатся на пользователя в белом списке."
     reported_user: "<b>Я настучала на</b> {user} <b>админам></b>."
     reported_reason: "\n<b>Причина:</b>\n<code>{reason}</code>"
@@ -393,9 +396,9 @@ STRINGS:
     chat_lang: "Текущий язык чата: <b>{lang}</b>"
     select_pm_lang: "\n<b>Выберите ваш новый язык:</b>"
     select_chat_lang: "\n<b>Выберите новый язык чата:</b>"
-    not_supported_lang: Этот язык не поддерживается!
     crowdin_btn: "🌎 Помогите нам с переводом"
-    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukix\">🌎 Помогите нам улучшить переводы</a>"
+    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukix\">🌎 Help us improve our translations</a>"
+    not_supported_lang: This language is not supported!
     lang_changed: Язык был изменён на <b>{lang_name}</b>.
     see_translators: '👥 Список переводчиков'
     back: Назад
@@ -410,9 +413,9 @@ STRINGS:
     "connected_chat:cmds": |
       <b>Current connected chat:</b>
       {chat_name}, (bridged commands are {commands}),
-      ⚠ <i>You can only access bridged commands of the connected chat! all other commands would be treated as Local chat</i>
-      Write /disconnect to disconnect from chat.
-    u_wasnt_connected: "Вы не были подключены к какому-либо чату раньше!"
+      ⚠ <i>You can only access bridged commands of the connected chat! All other commands would be treated as Local chat</i>
+      Write /disconect to disconnect from chat.
+    u_wasnt_connected: "You were not connected to any chat before!"
     select_chat_to_connect: "\n<b>Выберите чат для подключения:</b>"
     disconnected: "Вы были отключены от <b>{chat_name}</b>."
     cant_find_chat: "Я не могу найти этот чат."
@@ -461,6 +464,8 @@ STRINGS:
     info_username: "\nИмя пользователя: {username}"
     info_link: "\nСсылка на пользователя: {user_link}"
     info_saw: "\nЯ видела их в <code>{num}</code> группах"
+    info_sw_ban: "\nThis user is banned in @SpamWatch!"
+    info_sw_ban_reason: "\nReason: <code>{sw_reason}</code>"
     info_fbanned: "\nЗабанен в текущей Федерации: "
     info_admeme: "\nПользователь имеет права админа в этом чате."
     upd_cache: "Обновление кэша..."
@@ -470,47 +475,47 @@ STRINGS:
     #Exporting
     started_exporting: Экспорт начался! Пожалуйста, подождите...
     export_done: Экспорт из <b>{chat_name}</b> завершён!
-    exports_locked: Пожалуйста, подождите %s до повторного использования экспорта!
+    exports_locked: Please wait %s before using exports again!
     #Importing
     invalid_file: "Недопустимый файл"
-    send_import_file: Пожалуйста, отправьте файл импорта!
+    send_import_file: Please send a file for importing!
     rpl_to_file: Пожалуйста, ответьте на файл!
-    big_file: Поддерживается импорт файлов только до 50 МБ!
+    big_file: Only files under 50 MB are supported!
     started_importing: Импорт начался! Пожалуйста, подождите...
     bad_file: Некорректный файл! Ожидался столбец <code>'Общие'</code>.
-    file_version_so_new: Версия экспортированного файла новее, чем в настоящее время поддерживает Hitsuki!
-    imports_locked: Пожалуйста, подождите %s до повторного использования импорта!
+    file_version_so_new: Exported file version is newer than what Hitsuki currently supports!
+    imports_locked: Please wait %s before using imports again!
     import_done: Импорт завершён!
   restrictions:
-    user_not_in_chat: Пользователь не в этом чате!
+    user_not_in_chat: User is not in this chat!
     #Kicks
     kick_hitsuki: Instead of trying kick me you could spend your time better. Thats just boring.
     kick_admin: Выкинуть админа — это не лучшая идея.
-    kick_self: Если ты хочешь выкинуть себя - просто оставь этот чат. Мне лучше не видеть тебя, чем смотреть на эти жалкие попытки самоистязания.
+    kick_self: If you want to kick yourself - just leave this chat. I would rather not see you than look at these pathetic attempts at self-punishment.
     user_kicked: "{user} был кикнут {admin} в {chat_name}."
     #Mutes
     mute_hitsuki: Actually, I'll be happy to shut up you instead.
-    mute_admin: Если вы думаете, что можете заткнуть админа, вы неправы!
-    mute_self: Если ты хочешь выкинуть себя - просто оставь этот чат. Мне лучше не видеть тебя, чем смотреть на эти жалкие попытки самоистязания.
+    mute_admin: If you think you can shut up an admin, you are wrong!
+    mute_self: If you want to mute yourself - just stop talking! Better to thought a fool than open your mouth and remove all doubt.
     user_muted: "{user} был заглушён пользователем {admin} в {chat_name}."
     unmute_hitsuki: Actually, I'm not muted.
-    unmute_admin: Ха-нет, попробуйте для начала заткнуть его!
+    unmute_admin: Haha no, try muting him first!
     unmute_self: Может я сначала заткну тебя?
     user_unmuted: "{user} был размучен пользователем {admin} в {chat_name}."
     #Bans
-    ban_hitsuki: No, I won't do it! Ask chat creator to do it!
+    ban_hitsuki: No, I won't do it! Ask the chat creator to do it!
     ban_admin: Хах, давай сначала сделаем ему <code>/demote</code>.
     ban_self: Почему ты пытаешься забанить сам себя?
     user_banned: "{user} был забанен пользователем {admin} в {chat_name}."
     unban_hitsuki: Actually, I'm not banned.
-    unban_admin: Ха-нет, сначала попробуй его забанить!
+    unban_admin: Haha no, try banning him first!
     unban_self: Может сначала я забаню тебя?
     user_unband: "{user} был разбанен {admin} в {chat_name}."
     invalid_time: Неправильное время!
-    enter_time: Пожалуйста, добавьте время!
+    enter_time: Please specify a time!
     on_time: "\nНа <code>%s</code>"
     reason: "\nПричина: <code>%s</code>"
-    purge: "\nВ течение 5 секунд сообщения будут очищены!"
+    purge: "\nMessages will be purged in 5 seconds!"
     filter_title_ban: Забанить пользователя
     filter_action_rsn: <code>Автоматическое действие фильтра на '%s'</code>
     filtr_ban_success: '%s забанил %s на %s'
@@ -518,7 +523,7 @@ STRINGS:
     filtr_tmute_success: |
       %s заткнул %s на %s
       Причина: %s
-    time_setup_start: Отправьте время!
+    time_setup_start: Please specify a time!
     filtr_tban_success: |
       %s забанил %s на %s
       Причина: %s
@@ -544,7 +549,7 @@ STRINGS:
   #success_remove_rules_note: "Successfully removed rules note in <b>{}</b>."
   greetings:
     default_welcome: "Добро пожаловать, {mention}! Как вы?"
-    default_security_note: "Добро пожаловать, {mention}! Пожалуйста, нажмите кнопку ниже, чтобы подтвердить, что вы человек!"
+    default_security_note: "Welcome {mention}! Please press button below to verify yourself as human!"
     bool_invalid_arg: Недопустимый аргумент, ожидается <code>on</code> (включить)/<code>off</code> (выключить).
     #/setwelcome
     saved: Приветственное сообщение было сохранено в <b>%s</b>
@@ -572,8 +577,8 @@ STRINGS:
     security_note_saved: "Пользовательский текст безопасности был сохранён <b>%s</b>"
     security_note_updated: "Пользовательский текст безопасности был обновлён <b>%s</b>"
     #/delsecuritynote
-    security_note_not_found: Текст безопасности в <b>%s</b> не был установлен ранее
-    del_security_note_ok: Текст безопасности был сброшен по умолчанию в <b>%s</b>
+    security_note_not_found: Security text in <b>%s</b> has not been set before
+    del_security_note_ok: Security text was reset to default in <b>%s</b>
     #/cleanwelcome
     cleanwelcome_enabled: Очистка приветствий включена в <b>%s</b>
     cleanwelcome_disabled: Очистка приветствий выключена в <b>%s</b>
@@ -583,7 +588,7 @@ STRINGS:
     cleanservice_disabled: Очистка служебных сообщений выключена в <b>%s</b>
     cleanservice_status: 'Очистка служебных сообщений: <code>{status}</code> в <b>{chat_name}</b>'
     #/welcomemute
-    welcomemute_invalid_arg: Недопустимый аргумент, ожидалось время.
+    welcomemute_invalid_arg: Invalid argument, expected a time.
     welcomemute_enabled: Заглушение при приветствии включено в <b>%s</b>
     welcomemute_disabled: Заглушение при приветствии выключено в <b>%s</b>
     welcomemute_status: 'Заглушение при приветствии: <code>{status}</code> в <b>{chat_name}</b>'
@@ -593,7 +598,7 @@ STRINGS:
       Welcome security enabled in <b>{chat_name}</b> to <code>{level}</code>, and kick users which aren't verified within {time}.
     ask_for_time_customization: |
       Do you want to customize the time period to kick unverified user? (by default it's {time})
-    send_time: Please send time.
+    send_time: Please specify a time.
     invalid_time: "Invalid time!"
     welcomesecurity_enabled_word: включена, установлена на уровне {level}
     welcomesecurity_disabled: Защита входа отключена в <b>%s</b>.
@@ -618,11 +623,11 @@ STRINGS:
     math_wc_rtr_text: "У вас последний шанс! Будьте осторожны.\n"
     math_wc_wrong: Неправильно, попробуйте ещё раз!
     math_wc_sry: Извините, вы использовали последнюю попытку. Спросите админов чата.
-    not_admin_wm: Я не могу ограничивать людей здесь, поэтому я не буду использовать заглушение при приветствии!
-    not_admin_ws: Я не могу ограничить людей здесь, поэтому я не буду использовать приветственную безопасность!
+    not_admin_wm: I can't restrict people here, so I won't use welcome mute!
+    not_admin_ws: I can't restrict people here, so I won't use welcome security!
     not_admin_wsr: Я не могу удалять сообщения здесь, так что я не буду удалять сервисные сообщения!
     #/resetwelcome
-    deleted: Успешно сброшены приветствия в <b>{chat}</b>!
+    deleted: Successfully reset greetings in <b>{chat}</b>!
     not_found: Нет ничего для сброса!
     #...
     verification_done: Verification is done! You have been unmuted.
@@ -639,18 +644,18 @@ STRINGS:
     #enforcer
     flood_exceeded: "{action} {user} for flooding!"
     #/setflood
-    "invalid_args:setflood": "Expected an integer!"
+    "invalid_args:setflood": "Expected a number!"
     overflowed_count: Maximum count should be less than 200!
     config_proc_1: Please send expiration time, '0' (zero) for not being expired.
     cancel: '❌ Cancel'
-    setup_success: Successfully configured antiflood, now enforces against those who sends {count} messages within {time}!
+    setup_success: Successfully configured antiflood, now enforces against those who send {count} messages within {time}!
     "setup_success:no_exp": Successfully configured antiflood, allows {count} messages consecutively!
     invalid_time: Invalid time!
     #/antiflood | /flood
     not_configured: Antiflood isn't configured in this chat yet!
     turned_off: Disabled antiflood in <b>{chat_title}</b>!
-    "configuration_info:with_time": Antiflood is configured in this chat, those who sents {count} message within {time} would be {action}!
-    configuration_info: Antiflood is configured in this chat, those who sents {count} consecutively would be {action}!
+    "configuration_info:with_time": Antiflood is configured in this chat, those who send {count} message within {time} will be {action}!
+    configuration_info: Antiflood is configured in this chat, those who send {count} consecutively will be {action}!
     ban: banned
     mute: muted
     kick: kicked
