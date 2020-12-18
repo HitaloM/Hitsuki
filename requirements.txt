@@ -33,3 +33,4 @@ regex
 bs4
 lxml
 spamwatch
+httpx[http2]

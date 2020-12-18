@@ -12,7 +12,6 @@
 
 import re
 from contextlib import suppress
-from aiohttp import ClientSession
 from datetime import datetime
 from requests import get
 
@@ -23,6 +22,7 @@ from aiogram.utils.exceptions import BadRequest, MessageNotModified, MessageToDe
 
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec
+from .utils.httpx import http
 from .utils.language import get_strings_dec
 from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
@@ -96,7 +96,9 @@ Variables are special words which will be replaced by actual info
 @disableable_dec('github')
 async def github(message):
     text = message.text[len('/github '):]
-    usr = get(f'https://api.github.com/users/{text}').json()
+    response = await http.get(f'https://api.github.com/users/{text}')
+    usr = response.json()
+
     if usr.get('login'):
         text = f"<b>Username:</b> <a href='https://github.com/{usr['login']}'>{usr['login']}</a>"
 
@@ -146,13 +148,12 @@ async def ip(message):
         await message.reply(f"Apparently you forgot something!")
         return
 
-    aioclient = ClientSession()
-    async with aioclient.get(f"http://ip-api.com/json/{ip}") as response:
-        if response.status == 200:
-            lookup_json = await response.json()
-        else:
-            await message.reply(f"An error occurred when looking for <b>{ip}</b>: <b>{response.status}</b>")
-            return
+    response = await http.get(f"http://ip-api.com/json/{ip}")
+    if response.status_code == 200:
+        lookup_json = response.json()
+    else:
+        await message.reply(f"An error occurred when looking for <b>{ip}</b>: <b>{response.status_code}</b>")
+        return
 
     fixed_lookup = {}
 
