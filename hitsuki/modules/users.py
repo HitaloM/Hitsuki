@@ -152,7 +152,8 @@ async def user_info(message, user, strings):
         text += strings["info_last"].format(last_name=str(user['last_name']))
 
     if user['username'] is not None:
-        text += strings["info_username"].format(username="@" + str(user['username']))
+        text += strings["info_username"].format(
+            username="@" + str(user['username']))
 
     text += strings['info_link'].format(user_link=str(await get_user_link(user['user_id'])))
 
@@ -161,8 +162,9 @@ async def user_info(message, user, strings):
     try:
         spamwatch = sw.get_ban(int(user['user_id']))
         if spamwatch:
-            text += strings["info_sw_ban"] 
-            text += strings['info_sw_ban_reason'].format(sw_reason=str(spamwatch.reason))
+            text += strings["info_sw_ban"]
+            text += strings['info_sw_ban_reason'].format(
+                sw_reason=str(spamwatch.reason))
         else:
             pass
     except BaseException:
@@ -175,7 +177,8 @@ async def user_info(message, user, strings):
         if txt := await module.__user_info__(message, user['user_id']):
             text += txt
 
-    text += strings['info_saw'].format(num=len(user['chats']) if 'chats' in user else 0)
+    text += strings['info_saw'].format(num=len(user['chats'])
+                                       if 'chats' in user else 0)
 
     await message.reply(text)
 
@@ -184,7 +187,8 @@ async def user_info(message, user, strings):
 @chat_connection(only_groups=True, admin=True)
 @get_strings_dec("users")
 async def reset_admins_cache(message, chat, strings):
-    await get_admins_rights(chat['chat_id'], force_update=True)  # Reset a cache
+    # Reset a cache
+    await get_admins_rights(chat['chat_id'], force_update=True)
     await message.reply(strings['upd_cache_done'])
 
 
