@@ -32,3 +32,4 @@ async-timeout
 regex
 bs4
 lxml
+spamwatch

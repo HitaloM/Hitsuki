@@ -293,7 +293,7 @@ async def check(message):
         temp = msg_args[1]
         csc = msg_args[2]
     except IndexError:
-        m = "Please type your device <b>MODEL</b> and <b>CSC</b> into it!\ni.e <code>/fw SM-G975F XSG!</code>"
+        m = "Please type your device <b>MODEL</b> and <b>CSC</b> into it!\ni.e <code>/samcheck SM-J710MN ZTO</code>!"
         await message.reply(m)
         return
 
