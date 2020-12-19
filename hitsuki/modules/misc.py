@@ -11,13 +11,14 @@
 # GNU Affero General Public License for more details.
 
 import re
+import wikipedia
 from contextlib import suppress
 from datetime import datetime
 from requests import get
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from aiogram.types import Message
+from aiogram.types import Message, ChatType, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.exceptions import BadRequest, MessageNotModified, MessageToDeleteNotFound
 
 from hitsuki.decorator import register
@@ -26,6 +27,7 @@ from .utils.httpx import http
 from .utils.language import get_strings_dec
 from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
+from .utils.message import get_args_str
 
 
 @register(cmds='buttonshelp', no_args=True, only_pm=True)
@@ -90,6 +92,39 @@ Variables are special words which will be replaced by actual info
 <code>{chatnick}</code>: Chat username
     """
     )
+
+
+@register(cmds='wiki')
+@disableable_dec('wiki')
+async def wiki(message):
+    args = get_args_str(message)
+    wikipedia.set_lang("en")
+    try:
+        pagewiki = wikipedia.page(args)
+    except wikipedia.exceptions.PageError as e:
+        await message.reply(f"No results found!\nError: <code>{e}</code>")
+        return
+    except wikipedia.exceptions.DisambiguationError as refer:
+        refer = str(refer).split("\n")
+        if len(refer) >= 6:
+            batas = 6
+        else:
+            batas = len(refer)
+        text = ""
+        for x in range(batas):
+            if x == 0:
+                text += refer[x]+"\n"
+            else:
+                text += "- `"+refer[x]+"`\n"
+        await message.reply(text)
+        return
+    except IndexError:
+        msg.reply_text("Write a message to search from wikipedia sources.")
+        return
+    title = pagewiki.title
+    summary = pagewiki.summary
+    button = InlineKeyboardMarkup().add(InlineKeyboardButton("🔧 More Info...", url=wikipedia.page(args).url))
+    await message.reply(("The result of {} is:\n\n<b>{}</b>\n{}").format(args, title, summary), reply_markup=button)
 
 
 @register(cmds='github')
@@ -253,6 +288,7 @@ An "odds and ends" module for small, simple commands which don't really fit anyw
 - /direct: Generates direct links from the sourceforge.net
 - /github: Returns info about a GitHub user or organization.
 - /ip: Displays information about an IP / domain.
+- /wiki <keywords>: Get wikipedia articles just using this bot.
 - /cancel: Disables current state. Can help in cases if Hitsuki not responing on your message.
 - /id: get the current group id. If used by replying to a message, gets that user's id.
 - /info: get information about a user.
