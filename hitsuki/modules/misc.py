@@ -123,7 +123,8 @@ async def wiki(message):
         return
     title = pagewiki.title
     summary = pagewiki.summary
-    button = InlineKeyboardMarkup().add(InlineKeyboardButton("🔧 More Info...", url=wikipedia.page(args).url))
+    button = InlineKeyboardMarkup().add(InlineKeyboardButton(
+        "🔧 More Info...", url=wikipedia.page(args).url))
     await message.reply(("The result of {} is:\n\n<b>{}</b>\n{}").format(args, title, summary), reply_markup=button)
 
 
