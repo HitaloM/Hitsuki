@@ -18,7 +18,7 @@ import datetime  # noqa: F401
 from contextlib import suppress
 
 from aiogram.utils.exceptions import MessageNotModified
-from babel.dates import format_datetime, format_timedelta
+from babel.dates import format_timedelta
 
 from hitsuki import BOT_ID, bot
 from hitsuki.decorator import register
@@ -222,12 +222,12 @@ async def ban_user_cmd(message, chat, user, args, strings):
     if curr_cmd in ('tban', 'stban'):
         if args is not None and len(args := args.split()) > 0:
             try:
-                until_date, unit = convert_time(args[0])
+                until_date = convert_time(args[0])
             except (InvalidTimeUnit, TypeError, ValueError):
                 await message.reply(strings['invalid_time'])
                 return
 
-            text += strings['on_time'] % format_datetime(
+            text += strings['on_time'] % format_timedelta(
                 until_date, locale=strings['language_info']['babel'])
 
             # Add reason
