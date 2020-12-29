@@ -194,7 +194,7 @@ async def magisk(message):
             releases += f'{name}: <a href="{url}{branch}/{data["magisk"]["link"]}">ZIP v{data["magisk"]["version"]}</a> | ' \
                         f'<a href="{url}{branch}/{data["app"]["link"]}">APK v{data["app"]["version"]}</a> | '
         else:
-            releases += f'{name}: <a href="{url}{branch}/{data["magisk"]["link"]}">ZIP v{data["magisk"]["version"]}</a> | ' \
+            releases += f'{name}: <a href="{data["magisk"]["link"]}">ZIP v{data["magisk"]["version"]}</a> | ' \
                         f'<a href="{data["app"]["link"]}">APK v{data["app"]["version"]}</a> | '
 
         if cc == 1:
