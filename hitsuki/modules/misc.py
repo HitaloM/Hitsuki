@@ -175,47 +175,6 @@ async def github(message):
     await message.reply(reply_text, disable_web_page_preview=True)
 
 
-@register(cmds='ip')
-@disableable_dec('ip')
-async def ip(message):
-    try:
-        ip = message.text.split(maxsplit=1)[1]
-    except IndexError:
-        await message.reply(f"Apparently you forgot something!")
-        return
-
-    response = await http.get(f"http://ip-api.com/json/{ip}")
-    if response.status_code == 200:
-        lookup_json = response.json()
-    else:
-        await message.reply(f"An error occurred when looking for <b>{ip}</b>: <b>{response.status_code}</b>")
-        return
-
-    fixed_lookup = {}
-
-    for key, value in lookup_json.items():
-        special = {"lat": "Latitude", "lon": "Longitude",
-                   "isp": "ISP", "as": "AS", "asname": "AS name"}
-        if key in special:
-            fixed_lookup[special[key]] = str(value)
-            continue
-
-        key = re.sub(r"([a-z])([A-Z])", r"\g<1> \g<2>", key)
-        key = key.capitalize()
-
-        if not value:
-            value = "None"
-
-        fixed_lookup[key] = str(value)
-
-    text = ""
-
-    for key, value in fixed_lookup.items():
-        text = text + f"<b>{key}:</b> <code>{value}</code>\n"
-
-    await message.reply(text)
-
-
 @register(cmds='cancel', state='*', allow_kwargs=True)
 async def cancel_handle(message, state, **kwargs):
     await state.finish()
@@ -288,7 +247,6 @@ An "odds and ends" module for small, simple commands which don't really fit anyw
 <b>Available commands:</b>
 - /direct (url): Generates direct links from the sourceforge.net
 - /github (username): Returns info about a GitHub user or organization.
-- /ip (url): Displays information about an IP / domain.
 - /wiki (keywords): Get wikipedia articles just using this bot.
 - /cancel: Disables current state. Can help in cases if Hitsuki not responing on your message.
 - /id: get the current group id. If used by replying to a message, gets that user's id.

@@ -261,7 +261,7 @@ async def twrp(message):
 
     url = get(f'https://eu.dl.twrp.me/{device}/')
     if url.status_code == 404:
-        m = "TWRP is not available for <code>{device}</code>"
+        m = f"TWRP is not available for <code>{device}</code>"
         await message.reply(m)
         return
 
