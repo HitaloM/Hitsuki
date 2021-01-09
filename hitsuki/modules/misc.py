@@ -122,10 +122,10 @@ async def wiki(message):
         msg.reply_text("Write a message to search from wikipedia sources.")
         return
     title = pagewiki.title
-    summary = pagewiki.summary
+    summary = pagewiki.summary[0:500]
     button = InlineKeyboardMarkup().add(InlineKeyboardButton(
         "🔧 More Info...", url=wikipedia.page(args).url))
-    await message.reply(("The result of {} is:\n\n<b>{}</b>\n{}").format(args, title, summary), reply_markup=button)
+    await message.reply(("The result of {} is:\n\n<b>{}</b>\n{}...").format(args, title, summary), reply_markup=button)
 
 
 @register(cmds='github')

@@ -353,8 +353,6 @@ __help__ = """
 <b>Misc</b>
 - /magisk: Get latest Magisk releases.
 - /twrp (codename): Gets latest twrp for the android device using the codename.
-- /ofox: Gets the list of officially supported devices by the Orange Fox Recovery Project.
-- /ofox (device): Gets the download link and basic OFRP information to the specified device.
 - /models (codename): Search for Android device models using codename.
 - /whatis (codename): Find out which smartphone is using the codename.
 """
