@@ -84,8 +84,10 @@ class UserRestricting(Filter):
         strings = await get_strings(message.message.chat.id if hasattr(message, 'message')
                                     else message.chat.id, 'global')
         task = message.answer if hasattr(message, 'message') else message.reply
-        if not isinstance(required_permissions, bool):  # Check if check_admin_rights func returned missing perm
-            required_permissions = ' '.join(required_permissions.strip('can_').split('_'))
+        # Check if check_admin_rights func returned missing perm
+        if not isinstance(required_permissions, bool):
+            required_permissions = ' '.join(
+                required_permissions.strip('can_').split('_'))
             try:
                 await task(strings['user_no_right'].format(permission=required_permissions))
             except BadRequest as error:
@@ -117,10 +119,12 @@ class BotHasPermissions(UserRestricting):
         return BOT_ID
 
     async def no_rights_msg(self, message, required_permissions):
-        message = message.message if isinstance(message, CallbackQuery) else message
+        message = message.message if isinstance(
+            message, CallbackQuery) else message
         strings = await get_strings(message.chat.id, 'global')
         if not isinstance(required_permissions, bool):
-            required_permissions = ' '.join(required_permissions.strip('can_').split('_'))
+            required_permissions = ' '.join(
+                required_permissions.strip('can_').split('_'))
             try:
                 await message.reply(strings['bot_no_right'].format(permission=required_permissions))
             except BadRequest as error:

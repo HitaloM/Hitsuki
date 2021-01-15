@@ -115,16 +115,19 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
                 # log.debug('Event: \n' + str(message))
                 start = time.time()
                 await func(*def_args, **def_kwargs)
-                log.debug('[*] {} Time: {} sec.'.format(func.__name__, time.time() - start))
+                log.debug(
+                    '[*] {} Time: {} sec.'.format(func.__name__, time.time() - start))
             else:
                 await func(*def_args, **def_kwargs)
             raise SkipHandler()
 
         if f == 'cb':
-            dp.register_callback_query_handler(new_func, *args, **register_kwargs)
+            dp.register_callback_query_handler(
+                new_func, *args, **register_kwargs)
         else:
             dp.register_message_handler(new_func, *args, **register_kwargs)
             if allow_edited is True:
-                dp.register_edited_message_handler(new_func, *args, **register_kwargs)
+                dp.register_edited_message_handler(
+                    new_func, *args, **register_kwargs)
 
     return decorator

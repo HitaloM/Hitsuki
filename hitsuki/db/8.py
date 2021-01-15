@@ -53,7 +53,8 @@ def _convert_time(__t: dict) -> str:
 for i in data:
     time = i['time']
     if new_t := _convert_time(time):
-        updated_list.append(UpdateOne({"_id": i['_id']}, {"$set": {'time': new_t}}))
+        updated_list.append(
+            UpdateOne({"_id": i['_id']}, {"$set": {'time': new_t}}))
         changed += 1
     else:
         # deleted += 1
