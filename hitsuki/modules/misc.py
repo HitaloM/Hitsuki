@@ -10,15 +10,13 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 
-import re
 import wikipedia
 from contextlib import suppress
 from datetime import datetime
-from requests import get
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from aiogram.types import Message, ChatType, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.exceptions import BadRequest, MessageNotModified, MessageToDeleteNotFound
 
 from hitsuki.decorator import register
