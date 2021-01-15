@@ -22,7 +22,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from hitsuki.decorator import register
 from .utils.anime import (
     shorten, t, airing_query, manga_query,
-    character_query, anime_query, fav_query
+    character_query, anime_query
 )
 from .utils.disable import disableable_dec
 
