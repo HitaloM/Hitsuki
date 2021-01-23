@@ -47,33 +47,33 @@ STRINGS:
     note_info_parsing: "Mode penguraian: <code>%s</code>\n"
     note_info_created: "Telah dibuat pada: <code>{date}</code> oleh {user}\n"
     note_info_updated: "Terakhir diperbarui pada: <code>{date}</code> oleh {user}\n"
-    user_blocked: "Write /start in my PM!"
+    user_blocked: "Tulis /start di percakapan pribadi dengan saya!"
     #/privatenotes
-    private_notes_false_args: "You have 2 options <code>Disable</code> and <code>Enable</code>!"
-    already_enabled: "Private notes are already enabled in %s"
-    current_state_info: "Private notes are currently <code>{state}</code> in <b>{chat}</b>!"
-    enabled_successfully: "Private notes are <b>Enabled</b> in %s successfully!"
-    disabled_successfully: "Private notes are <b>Disabled</b> in %s successfully!"
-    not_enabled: "Private notes are not enabled."
-    privatenotes_notif: "You have been successfully connected to <b>{chat}</b> notes! To disconnect please use command <code>/disconnect</code>!"
-    enabled: 'Enabled'
-    disabled: 'Disabled'
+    private_notes_false_args: "Anda memiliki 2 opsi <code>Nonaktifkan</code> dan <code> Aktifkan</code>!"
+    already_enabled: "Catatan pribadi sudah diaktifkan di %s"
+    current_state_info: "Catatan pribadi saat ini <code>{state}</code> di <b>{chat}</b>!"
+    enabled_successfully: "Catatan pribadi telah berhasil <b>Diaktifkan</b> di %s!"
+    disabled_successfully: "Catatan pribadi telah berhasil <b>Dinonaktifkan</b> di %s!"
+    not_enabled: "Catatan pribadi tidak diaktifkan."
+    privatenotes_notif: "Anda telah berhasil terhubung ke catatan <b> {chat} </b>! Untuk memutuskan koneksi, gunakan perintah <code>/disconnect</code>!"
+    enabled: 'Aktif'
+    disabled: 'Nonaktif'
     #/cleannotes
-    clean_notes_enable: "Cleaning notes successfully enabled in <b>{chat_name}</b>"
-    clean_notes_disable: "Cleaning notes successfully disabled in <b>{chat_name}</b>"
-    clean_notes_enabled: "Cleaning notes currently is <b>enabled</b> in <b>{chat_name}</b>"
-    clean_notes_disabled: "Cleaning notes currently is <b>disabled</b> in <b>{chat_name}</b>"
+    clean_notes_enable: "Berhasil mengaktifkan pembersihan catatan di <b>{chat_name}</b>"
+    clean_notes_disable: "Berhasil menonaktifkan pembersihan catatan di <b>{chat_name}</b>"
+    clean_notes_enabled: "Pembersihan catatan saat ini <b>aktif</b> di <b>{chat_name}</b>"
+    clean_notes_disabled: "Pembersihan catatan saat ini <b>nonaktif</b> di <b>{chat_name}</b>"
     #Filter
-    filters_title: 'Send a note'
-    filters_setup_start: 'Please send a note name.'
+    filters_title: 'Kirim sebuah catatan'
+    filters_setup_start: 'Mohon untuk mengirim sebuah nama catatan.'
   #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
   #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
   filters:
-    no_filters_found: "No filters was found in <b>{chat_name}</b>!"
+    no_filters_found: "Tidak ada filter yang ditemukan di <b>{chat_name}</b>!"
     #/addfilter
-    anon_detected: Being anonymous admin, you cannot add new filters, use connections instead.
-    regex_too_slow: "Your regex pattern matches too slowly (more than the half of second) and it can't be added!"
-    cancel_btn: "🛑 Cancel"
+    anon_detected: Menjadi admin anonim, anda tidak dapat menambahkan filter baru, gunakan koneksi sebagai gantinya.
+    regex_too_slow: "Pencocokan pola regex anda terlalu lambat (lebih dari setengah detik) dan tidak dapat ditambahkan!"
+    cancel_btn: "🛑 Batal"
     adding_filter: |
       Adding filter <code>{handler}</code> in <b>{chat_name}</b>
       Select action below:
@@ -142,14 +142,14 @@ STRINGS:
   misc:
     your_id: "Your ID: <code>{id}</code>\n"
     chat_id: "Group ID: <code>{id}</code>\n"
-    user_id: "{user}'s ID: <code>{id}</code>\n"
-    conn_chat_id: "Current connected chat ID: <code>{id}</code>"
-    help_btn: "Click me for help!"
-    help_txt: "Click the button below for help!"
-    delmsg_filter_title: 'Delete the message'
-    send_text: Please send the reply message!
-    replymsg_filter_title: 'Reply to message'
-    send_customised_reason: Send the <i>reason</i> you want to include in action message. "<code>None</code>" for <i>no reason</i> to be given!
+    user_id: "ID {user}: <code>{id}</code>\n"
+    conn_chat_id: "ID percakapan yang terhubung saat ini: <code>{id}</code>"
+    help_btn: "Tekan saya untuk mendapatkan bantuan!"
+    help_txt: "Klik tombol dibawah untuk mendapatkan bantuan!"
+    delmsg_filter_title: 'Hapus pesan'
+    send_text: Mohon kirim pesan balasan!
+    replymsg_filter_title: 'Balas pesan'
+    send_customised_reason: Kirim <i>alasan</i> yang anda inginkan untuk disertakan di pesan aksi. "<code>None</code>" untuk memberikan <i>tidak ada alasan</i>!
     expected_text: Expected a text message!
   promotes:
     promote_success: "{user} was successfully promoted in {chat_name}!"
