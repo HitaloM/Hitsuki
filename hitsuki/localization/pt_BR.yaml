@@ -27,8 +27,8 @@ STRINGS:
     #/clear
     note_removed: "Nota <code>#{note_name}</code> removida em <b>{chat_name}</b>!"
     note_removed_multiple: |
-      Removido várias notas em <b>{chat_name}</b>
-      <b>Removido:</b><code>{removed}</code>
+      Múltiplas notas removidas em <b>{chat_name}</b>
+      <b>Removidas:</b><code>{removed}</code>
     not_removed_multiple: "<b>Não removido:</b><code>{not_removed}</code>"
     #/clearall
     clear_all_text: "Isso vai remover todas as notas em {chat_name}. Você tem certeza?"
