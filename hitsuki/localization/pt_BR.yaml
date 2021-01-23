@@ -22,13 +22,13 @@ STRINGS:
     notelist_header: "<b>Notas em {chat_name}</b>:"
     notes_in_private: "Clique no botão abaixo para obter a lista de notas."
     notelist_search: |
-      <b>Padrão</b> <code>{request}</code>
-      <b>Notas combinando:</b>
+      <b>Padrão:</b> <code>{request}</code>
+      <b>Notas correspondidas:</b>
     #/clear
     note_removed: "Nota <code>#{note_name}</code> removida em <b>{chat_name}</b>!"
     note_removed_multiple: |
-      Removido várias notas em <b>{chat_name}</b>
-      <b>Removido:</b><code>{removed}</code>
+      Múltiplas notas removidas em <b>{chat_name}</b>
+      <b>Removidas:</b><code>{removed}</code>
     not_removed_multiple: "<b>Não removido:</b><code>{not_removed}</code>"
     #/clearall
     clear_all_text: "Isso vai remover todas as notas em {chat_name}. Você tem certeza?"
@@ -171,6 +171,9 @@ STRINGS:
     btn_channel: "📬 Notícias do Hitsuki"
     btn_group_help: "Clique aqui para obter ajuda!"
     back: Voltar
+    back_emoji: '⬅️ Voltar'
+    help_for: "Ajuda para o módulo <b>{mod}</b>:\n"
+    help_for_top: "Ajuda para "
     #/help
     help_header: "Ei! Meu nome é <b>Hitsuki</b>. Sou um bot de gerenciamento de grupo, estou aqui para ajudá-lo a se locomover e manter a ordem em seus grupos!\nTenho muitos recursos úteis, como controle de flood, um sistema de avisos, um sistema de notas e até mesmo respostas predeterminadas em certas palavras-chave."
     click_btn: Clique aqui
