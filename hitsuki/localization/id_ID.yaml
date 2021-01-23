@@ -1,52 +1,52 @@
 ---
 language_info:
-  flag: "🇺🇸"
-  code: en
+  flag: "id"
+  code: id
 STRINGS:
   notes:
     #/save
-    note_saved: "🗒 Note <code>{note_name}</code> saved in <b>{chat_title}</b>!"
-    note_updated: "🗒 Note <code>{note_name}</code> updated in <b>{chat_title}</b>!"
-    you_can_get_note: "\nYou can retrieve this note by using <code>/get {note_name}</code>, or <code>#{note_name}</code>"
+    note_saved: "🗒 Catatan <code>{note_name}</code> tersimpan di <b>{chat_title}</b>!"
+    note_updated: "🗒 Catatan <code>{note_name}</code> diperbarui di <b>{chat_title}</b>!"
+    you_can_get_note: "\nAnda dapat mengambil catatan ini dengan menggunakan <code>/get {note_name}</code>, atau <code>{note_name}</code>"
     #Translator note: please keep sure that you don't have space in the end of string
-    note_aliases: "\nNote aliases:"
-    blank_note: "Saving blank note is not allowed!"
-    notename_cant_contain: "Note name can't contain \"<code>{symbol}</code>\"!"
+    note_aliases: "\nAlias catatan:"
+    blank_note: "Menyimpan catatan kosong tidak diizinkan!"
+    notename_cant_contain: "Nama catatan tidak boleh mengandung \"<code>{symbol}</code>\"!"
     #/get
-    cant_find_note: I can't find this note in <b>{chat_name}</b>!
-    no_note: "Can't find that note."
-    no_notes_pattern: "No notes found by pattern <code>%s</code>"
-    u_mean: "\nDid you mean <code>#{note_name}</code>?"
+    cant_find_note: Saya tidak dapat menemukan catatan ini di <b>{chat_name}</b>!
+    no_note: "Tidak dapat menemukan catatan tersebut."
+    no_notes_pattern: "Tidak ada catatan ditemukan dengan pola <code>%s</code>"
+    u_mean: "\nMungkin maksud anda <code>#{note_name}</code>?"
     #/notes
-    notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
-    notelist_header: "<b>Notes in {chat_name}</b>:"
-    notes_in_private: "Click below button to get notes list."
+    notelist_no_notes: "Tidak ada catatan apapun di <b>{chat_title}</b>!"
+    notelist_header: "<b>Catatan di {chat_name}</b>:"
+    notes_in_private: "Tekan tombol dibawah untuk mendapatkan daftar catatan."
     notelist_search: |
-      <b>Pattern:</b> <code>{request}</code>
-      <b>Matched notes:</b>
+      <b>Pola:</b> <code>{request}</code>
+      <b>Catatan yang cocok:</b>
     #/clear
-    note_removed: "Note <code>#{note_name}</code> removed in <b>{chat_name}</b>!"
+    note_removed: "Catatan <code>#{note_name}</code> dihapus di <b>{chat_name}</b>!"
     note_removed_multiple: |
-      Removed multiple notes in <b>{chat_name}</b>
-      <b>Removed:</b><code>{removed}</code>
-    not_removed_multiple: "<b>Not removed:</b><code>{not_removed}</code>"
+      Beberapa catatan dihapus di <b>{chat_name}</b>
+      <b>Dihapus:</b><code>{removed}</code>
+    not_removed_multiple: "<b>Tidak dihapus:</b><code>{not_removed}</code>"
     #/clearall
-    clear_all_text: "This will remove all notes from {chat_name}. Are you sure?"
-    clearall_btn_yes: "Yes. Remove all my notes!"
-    clearall_btn_no: "No!"
-    clearall_done: "All (<code>{num}</code>) notes in {chat_name} were removed!"
+    clear_all_text: "Ini akan menghapus seluruh catatan dari {chat_name}. Apakah anda yakin?"
+    clearall_btn_yes: "Ya. Hapus semua catatan saya!"
+    clearall_btn_no: "Tidak!"
+    clearall_done: "Seluruh (<code>{num}</code>) catatan di {chat_name} telah dihapus!"
     #/search
     search_header: |
-      <b>Search request in {chat_name}</b>:
-      <b>Pattern:</b> <code>{request}</code>
-      <b>Matched notes:</b>
+      <b>Permintaan pencarian di {chat_name}</b>:
+      <b>Pola:</b> <code>{request}</code>
+      <b>Catatan yang cocok:</b>
     #/noteinfo
-    note_info_title: "<b>Note info</b>\n"
-    note_info_note: "Note names: %s\n"
-    note_info_content: "Note content: %s\n"
-    note_info_parsing: "Parse mode: <code>%s</code>\n"
-    note_info_created: "Was created in: <code>{date}</code> by {user}\n"
-    note_info_updated: "Last updated in: <code>{date}</code> by {user}\n"
+    note_info_title: "<b>Informasi catatan</b>\n"
+    note_info_note: "Nama catatan: %s\n"
+    note_info_content: "Isi catatan: %s\n"
+    note_info_parsing: "Mode penguraian: <code>%s</code>\n"
+    note_info_created: "Telah dibuat pada: <code>{date}</code> oleh {user}\n"
+    note_info_updated: "Terakhir diperbarui pada: <code>{date}</code> oleh {user}\n"
     user_blocked: "Write /start in my PM!"
     #/privatenotes
     private_notes_false_args: "You have 2 options <code>Disable</code> and <code>Enable</code>!"
