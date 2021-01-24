@@ -1,6 +1,6 @@
 ---
 language_info:
-  flag: "id"
+  flag: "🇮🇩"
   code: id
 STRINGS:
   notes:
@@ -75,17 +75,17 @@ STRINGS:
     regex_too_slow: "Pencocokan pola regex anda terlalu lambat (lebih dari setengah detik) dan tidak dapat ditambahkan!"
     cancel_btn: "🛑 Batal"
     adding_filter: |
-      Adding filter <code>{handler}</code> in <b>{chat_name}</b>
-      Select action below:
-    saved: "New filter was successfully saved!"
+      Menambahkan filter <code>{handler}</code> di <b>{chat_name}</b>
+      Pilih aksi dibawah:
+    saved: "Filter baru telah berhasil tersimpan!"
     #/filters
-    list_filters: "Filters in <b>{chat_name}</b>:\n"
+    list_filters: "Filter di <b>{chat_name}</b>:\n"
     #/delfilter
-    no_such_filter: I can't find that filter in <b>{chat_name}</b>, you can check what filters are enabled with the <code>/filters</code> command.
-    del_filter: "Filter with handler '<code>{handler}</code>' was successfully removed!"
+    no_such_filter: Saya tidak dapat menemukan filter tersebut di <b>{chat_name}</b>, anda bisa memeriksa filter yang apa yang diaktifkan dengan perintah <code>/filters</code>.
+    del_filter: "Filter dengan penangan '<code>{handler}</code>' telah berhasil dihapus!"
     select_filter_to_remove: |
-      I have found many filters with handler '<code>{handler}</code>'.
-      Please select one to remove:
+      Saya telah menemukan banyak filter dengan penangan '<code>{handler}</code>'.
+      Mohon pilih satu untuk dihapus:
     #/delfilters or /delallfilters
     not_chat_creator: Only chat creators can use this command!
     delall_header: This would delete all filters in this chat. This IS irreversible.
