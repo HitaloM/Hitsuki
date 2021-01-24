@@ -87,61 +87,61 @@ STRINGS:
       Saya telah menemukan banyak filter dengan penangan '<code>{handler}</code>'.
       Mohon pilih satu untuk dihapus:
     #/delfilters or /delallfilters
-    not_chat_creator: Only chat creators can use this command!
-    delall_header: This would delete all filters in this chat. This IS irreversible.
-    confirm_yes: '⚠ Delete all'
-    confirm_no: '❌ Cancel'
-    delall_success: Successfully deleted all ({count}) filters in this chat!
+    not_chat_creator: Hanya pemilik grup yang bisa menggunakan perintah ini!
+    delall_header: Ini akan menghapus seluruh filter di obrolan ini. Ini tidak bisa diubah.
+    confirm_yes: '⚠ Hapus semua'
+    confirm_no: '❌ Batal'
+    delall_success: Berhasil menghapus seluruh ({count}) filter di obrolan ini!
   warns:
     #/warn
-    warn_sofi: "Haha no way to warn myself!"
-    warn_self: "Do you wanna warn yourself? Just leave the chat then."
-    warn_admin: "Well.. you are wrong. You can't warn an admin."
-    warn: "{admin} has warned {user} in <b>{chat_name}</b>\n"
-    warn_bun: "Warnings has been exceeded! {user} has been banned!"
-    warn_num: "Warns: {curr_warns}/{max_warns}\n"
-    warn_rsn: "Reason: <code>{reason}</code>\n"
-    max_warn_exceeded: Warnings has been exceeded! {user} has been {action}!
-    "max_warn_exceeded:tmute": Warnings has been exceeded! {user} has been tmuted for {time}!
+    warn_sofi: "Haha, tidak mungkin untuk memperingati saya sendiri!"
+    warn_self: "Anda ingin memperingati diri sendiri? Tinggalkan saja obrolan ini."
+    warn_admin: "Baiklah.. anda salah. Anda tidak dapat memperingati seorang admin."
+    warn: "{admin} telah memperingati {user} di <b>{chat_name}</b>\n"
+    warn_bun: "Peringatan telah melebihi batas! {user} telah diblokir!"
+    warn_num: "Peringatan: {curr_warns}/{max_warns}\n"
+    warn_rsn: "Alasan: <code>{reason}</code>\n"
+    max_warn_exceeded: Peringatan telah melebihi batas! {user} telah di {action}!
+    "max_warn_exceeded:tmute": Peringatan telah melebihi batas! {user} telah di bisukan sementara untuk {time}!
     #warn rmv callback
-    warn_no_admin_alert: "⚠ You are NOT admin and cannot remove warnings!"
-    warn_btn_rmvl_success: "✅ Warning removed by {admin}!"
+    warn_no_admin_alert: "⚠ Anda BUKAN admin dan tidak dapat menghapus peringatan!"
+    warn_btn_rmvl_success: "✅ Peringatan dihapus oleh {admin}!"
     #/warns
-    warns_header: "Here are your warns in this chat \n\n"
-    warns: "{count} : <code>{reason}</code> by {admin}\n"
-    no_warns: "Well, {user} doesn't have any warns."
+    warns_header: "Berikut ini adalah peringatan anda di obrolan ini\n\n"
+    warns: "{count} : <code>{reason}</code> oleh {admin}\n"
+    no_warns: "Baiklah, {user} tidak memiliki peringatan apapun."
     #/warnlimit
-    warn_limit: "Warn limit in <b>{chat_name}</b> is currently: <code>{num}</code>"
-    warnlimit_short: 'Warnlimit should be at least 2!'
-    warnlimit_long: 'Warnlimit should be shorter than 1 000!'
-    warnlimit_updated: '✅ Warnlimit successfully updated to {num}'
+    warn_limit: "Batas peringatan di <b>{chat_name}</b> saat ini adalah: <code>{num}</code>"
+    warnlimit_short: 'Batas peringatan sedikitnya harus 2!'
+    warnlimit_long: 'Batas peringatan harus lebih pendek dari 1.000!'
+    warnlimit_updated: '✅ Batas peringatan telah berhasil diperbarui ke {num}'
     #/delwarns
-    purged_warns: "{admin} reset <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
-    usr_no_wrn: "{user} doesn't have any warns to reset."
-    rst_wrn_sofi: 'Hitsuki never had warns to reset.'
-    not_digit: Warnlimits should be digits!
+    purged_warns: "{admin} menyetel ulang <code>{num}</code> peringatan pada {user} di <b>{chat_title}</b>!"
+    usr_no_wrn: "{user} tidak memiliki peringatan untuk di setel ulang."
+    rst_wrn_sofi: 'Hitsuki tidak pernah diperingati untuk di setel ulang.'
+    not_digit: Batas peringatan harus berupa angka!
     #/warnmode
-    same_mode: This is the current mode! How can I change it?
-    no_time: For selecting mode 'tmute' you have to mention time!
-    invalid_time: Invalid time!
-    warnmode_success: Warn mode of <b>%s</b> has successfully changed to <b>%s</b>!
+    same_mode: Berikut ini adalah mode saat ini! Bagaimana saya akan mengubahnya?
+    no_time: Untuk memilih mode 'tmute' anda harus memberikan waktu!
+    invalid_time: Waktu salah!
+    warnmode_success: Mode peringatan dari <b>%s</b> telah berhasil diubah ke <b>%s</b>!
     wrng_args: |
-      These are the available options:
+      Berikut ini beberapa opsi yang tersedia:
     mode_info: |
-      Current mode in this chat is <b>%s</b>.
-    banned: banned
-    muted: muted
-    filters_title: Warn the user
-    filter_handle_rsn: Automated filter action!
+      Mode saat ini di obrolan ini adalah <b>%s</b>.
+    banned: diblokir
+    muted: disenyapkan
+    filters_title: Peringati pengguna
+    filter_handle_rsn: Tindakan filter otomatis!
   msg_deleting:
-    no_rights_purge: "You don't have enough rights to purge in this group!"
-    reply_to_msg: "Reply to a message to delete!"
-    purge_error: "I can't continue purge, mostly because you started purge from a message that was sent older than 2 days."
-    fast_purge_done: "<b>Fast purge completed!</b>\nThis message will be removed in 5 seconds."
-    purge_user_done: "All messages from {user} were successfully deleted!"
+    no_rights_purge: "Anda tidak memiliki cukup hak untuk membersihkan di grup ini!"
+    reply_to_msg: "Balas ke sebuah pesan untuk menghapusnya!"
+    purge_error: "Saya tidak dapat melanjutkan pembersihan, dikarenakan anda memulai pembersihan dari sebuah pesan yang dikirim lebih lama dari 2 hari."
+    fast_purge_done: "<b>Pembersihan cepat selesai!</b>\nPesan ini akan dihapus dalam 5 detik."
+    purge_user_done: "Seluruh pesan dari {user} telah berhasil dihapus!"
   misc:
-    your_id: "Your ID: <code>{id}</code>\n"
-    chat_id: "Group ID: <code>{id}</code>\n"
+    your_id: "ID anda: <code>{id}</code>\n"
+    chat_id: "ID grup: <code>{id}</code>\n"
     user_id: "ID {user}: <code>{id}</code>\n"
     conn_chat_id: "ID percakapan yang terhubung saat ini: <code>{id}</code>"
     help_btn: "Tekan saya untuk mendapatkan bantuan!"
@@ -150,47 +150,47 @@ STRINGS:
     send_text: Mohon kirim pesan balasan!
     replymsg_filter_title: 'Balas pesan'
     send_customised_reason: Kirim <i>alasan</i> yang anda inginkan untuk disertakan di pesan aksi. "<code>None</code>" untuk memberikan <i>tidak ada alasan</i>!
-    expected_text: Expected a text message!
+    expected_text: Diharap untuk memasukkan pesan teks!
   promotes:
-    promote_success: "{user} was successfully promoted in {chat_name}!"
-    promote_title: "\nWith custom role <code>{role}</code>!"
-    rank_to_loong: "Custom role text cannot be longer than 16 symbols."
-    promote_failed: "Promotion failed! Check if I have rights to."
-    demote_success: "{user} was successfully demoted in {chat_name}!"
-    demote_not_admin: "That user isn't admin."
-    demote_failed: "Demotion failed. Maybe I can't demote or the person is promoted by someone else?"
-    cant_get_user: "I couldn't get the user! If you mind, please reply to his message and try again."
-    cant_promote_yourself: "You can't promote yourself."
-    emoji_not_allowed: "I'm sorry, but admin roles can't have emojis 😞"
+    promote_success: "{user} telah berhasil dipromosikan di {chat_name}!"
+    promote_title: "\nDengan gelar khusus <code>{role}</code>!"
+    rank_to_loong: "Teks untuk gelar khusus tidak dapat lebih dari 16 simbol."
+    promote_failed: "Promosi gagal! Periksa apakah saya memiliki hak yang dibutuhkan."
+    demote_success: "{user} telah berhasil diturunkan di {chat_name}!"
+    demote_not_admin: "Pengguna tersebut bukan seorang admin."
+    demote_failed: "Gagal menurunkan. Mungkin saya tidak dapat menurunkan atau orang tersebut dipromosikan oleh orang lain?"
+    cant_get_user: "Saya tidak dapat mendapatkan pengguna! Jika anda tidak keberatan, harap balas pesannya kembali dan coba lagi."
+    cant_promote_yourself: "Anda tidak dapat mempromosikan diri anda sendiri."
+    emoji_not_allowed: "Mohon maaf, tetapi gelar admin tidak dapat memiliki sebuah emoji 😞"
   pm_menu:
-    start_hi_group: 'Hey there! My name is Hitsuki'
-    start_hi: "Hey there! My name is <b>Hitsuki.</b>\nI can help manage your groups with useful features, feel free to add me to your groups!"
-    btn_source: "📦 Source code"
-    btn_help: "❔ Help"
-    btn_lang: "🇺🇸 Language"
-    btn_channel: "📬 Hitsuki News"
-    btn_group_help: "Click me for help!"
-    back: Back
-    back_emoji: '⬅️ Back'
-    help_for: "Help for <b>{mod}</b> module:\n"
-    help_for_top: "Help for "
+    start_hi_group: 'Hai yang disana! Nama saya Hitsuki'
+    start_hi: "Hai yang disana! Nama saya <b>Hitsuki.</b>\nSaya bisa membantu mengatur grup dengan fitur-fitur yang berguna, jangan ragu untuk menambahkan saya ke grup anda!"
+    btn_source: "📦 Kode sumber"
+    btn_help: "❔ Bantuan"
+    btn_lang: "Bahasa id"
+    btn_channel: "📬 Berita Hitsuki"
+    btn_group_help: "Tekan saya untuk mendapatkan bantuan!"
+    back: Kembali
+    back_emoji: '⬅️ Kembali'
+    help_for: "Bantuan untuk modul <b>{mod}</b>:\n"
+    help_for_top: "Bantuan untuk "
     #/help
-    help_header: "Hey! My name is <b>Hitsuki</b>. I am a group management bot, here to help you get around and keep the order in your groups!\nI have lots of handy features, such as flood control, a warning system, a note keeping system, and even predetermined replies on certain keywords."
-    click_btn: Click here
+    help_header: "Hai! Nama saya <b>Hitsuki</b>. Saya adalah seorang bot manajemen grup, disini untuk membantu anda menjaga ketertiban dalam grup anda! Saya memiliki banyak fitur berguna, seperti pengendalian pesan banjir, sistem peringatan, sistem catatan, dan bahkan balasan yang telah ditentukan sebelumnya pada kata kunci tertentu."
+    click_btn: Tekan disini
   disable:
     #/disableable
-    disablable: "<b>Disable-able commands:</b>\n"
+    disablable: "<b>Perintah yang dapat dinonaktifkan:</b>\n"
     #/disabled
-    no_disabled_cmds: No disabled commands in <b>{chat_name}</b>!
-    disabled_list: "<b>Disabled commands in {chat_name}:</b>\n"
+    no_disabled_cmds: Tidak ada perintah yang dinonaktifkan di <b>{chat_name}</b>!
+    disabled_list: "<b>Perintah yang dinonaktifkan di {chat_name}:</b>\n"
     #/disable
-    wot_to_disable: "What do you want to disable?"
-    already_disabled: "This command is already disabled!"
-    disabled: "Command <code>{cmd}</code> was disabled in <b>{chat_name}</b>!"
+    wot_to_disable: "Apa yang ingin anda nonaktifkan?"
+    already_disabled: "Perintah ini sudah dinonaktifkan!"
+    disabled: "Perintah <code>{cmd}</code> telah dinonaktifkan di <b>{chat_name}</b>!"
     #/enable
-    wot_to_enable: "What do you want to enable?"
-    already_enabled: "This command isn't disabled!"
-    enabled: "Command <code>{cmd}</code> was enabled in <b>{chat_name}</b>!"
+    wot_to_enable: "Apa yang ingin anda aktifkan?"
+    already_enabled: "Perintah ini tidak dinonaktifkan!"
+    enabled: "Perintah <code>{cmd}</code> telah diaktifkan di <b>{chat_name}</b>!"
     #/enableall
     not_disabled_anything: "Nothing was disabled in <b>{chat_title}</b>!"
     enable_all_text: "This will enable all commands in the <b>{chat_name}</b>. Are you sure?"
@@ -226,9 +226,9 @@ STRINGS:
     joined_fed_already: "This chat has already joined a federation! Please use /fleave to leave that federation"
     join_fed_success: "Great! Chat <b>{chat}</b> is now a part of <b>{fed}</b> federation!"
     join_chat_fed_log: |
-      <b>Chat joined federation</b> #ChatJoined
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
+      <b>Obrolan bergabung dengan federasi</b> #ChatJoined
+      <b>Federasi:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Obrolan:</b> {chat_name} (<code>{chat_id}</code>)
     #/leavefed
     chat_not_in_fed: "This chat is not in any federation yet."
     leave_fed_success: "Chat <b>{chat}</b> left the <b>{fed}</b> federation."
