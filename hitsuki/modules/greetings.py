@@ -885,10 +885,9 @@ async def welcome_trigger(message: Message, strings):
     msg = await send_note(chat_id, text, reply_to=reply_to, **kwargs)
     # Clean welcome
     if 'clean_welcome' in db_item and db_item['clean_welcome']['enabled'] is not False:
-        if 'last_msg' in db_item['clean_welcome']:
+        if value := redis.get(_clean_welcome.format(chat=chat_id)):
             with suppress(MessageToDeleteNotFound, MessageCantBeDeleted):
-                if value := redis.get(_clean_welcome.format(chat=chat_id)):
-                    await bot.delete_message(chat_id, value)
+                await bot.delete_message(chat_id, value)
         redis.set(_clean_welcome.format(chat=chat_id), msg.id)
 
     # Welcome mute
