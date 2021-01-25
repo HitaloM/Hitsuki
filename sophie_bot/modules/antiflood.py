@@ -215,7 +215,7 @@ async def antiflood(message: Message, chat: dict, strings: dict):
         await get_data.reset_cache(chat['chat_id'])
         return await message.reply(strings['turned_off'].format(chat_title=chat['chat_title']))
 
-    if data['time'] is None:
+    if data.get("time", None) is None:
         return await message.reply(
             strings['configuration_info'].format(
                 action=strings[data['action']] if 'action' in data else strings['ban'],
