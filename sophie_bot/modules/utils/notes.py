@@ -215,6 +215,9 @@ async def get_msg_file(message):
     for file_type in file_types:
         if file_type not in message:
             continue
+        if not tmsg.file:
+            # FIXME: NoneType is unexpected here
+            raise Exception("Telegram refused to give file info!")
         return {'id': tmsg.file.id, 'type': file_type}
     return None
 
