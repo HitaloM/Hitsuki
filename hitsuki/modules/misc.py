@@ -173,6 +173,16 @@ async def github(message):
     await message.reply(reply_text, disable_web_page_preview=True)
 
 
+@register(cmds='ping')
+@disableable_dec('ping')
+async def ping(message):
+    first = datetime.now()
+    sent = await message.reply("<b>Pong!</b>")
+    second = datetime.now()
+    time = (second - first).microseconds / 1000
+    await sent.edit_text(f"<b>Pong!</b> <code>{time}</code>ms")
+
+
 @register(cmds='cancel', state='*', allow_kwargs=True)
 async def cancel_handle(message, state, **kwargs):
     await state.finish()
