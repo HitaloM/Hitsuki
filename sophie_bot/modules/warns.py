@@ -293,7 +293,7 @@ async def __export__(chat_id):
         number = 3
 
     if warnmode_data := await db.warnmode.find_one({'chat_id': chat_id}):
-        del data['chat_id'], data['_id']
+        del warnmode_data['chat_id'], warnmode_data['_id']
     else:
         warnmode_data = None
 
