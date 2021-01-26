@@ -404,7 +404,7 @@ STRINGS:
     select_pm_lang: "\n<b>新しい言語を選択:</b>"
     select_chat_lang: "\n<b>新しいチャット言語を選択:</b>"
     crowdin_btn: "🌎 翻訳を手伝ってください"
-    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/sophiebot\">🌎 Help us improve languages</a>"
+    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukix\">🌎 翻訳の改善にご協力ください</a>"
     not_supported_lang: この言語はサポートされていません！
     lang_changed: 言語が <b>{lang_name}</b> に変更されました。
     see_translators: ':busts_in_sシルエット: 翻訳者を参照'
@@ -490,7 +490,7 @@ STRINGS:
     big_file: サポートされているインポートファイルは50 MB未満です！
     started_importing: インポートを開始しました。お待ちください...
     bad_file: ファイルが正しくありません! <code>'general'</code> 列が期待されています。
-    file_version_so_new: Exported file version is newer than Sophie currently supports!
+    file_version_so_new: エクスポートされたファイルのバージョンは現在サポートされているHitsukiより新しいです!
     imports_locked: インポートが再び使用されるまで、 %s をお待ちください！
     import_done: インポート完了！
   restrictions:
