@@ -324,51 +324,51 @@ STRINGS:
     user_not_fbanned: "{user} tidak diblokir di federasi ini."
     un_fbanned_header: "<b>Pembatalan FedBan baru</b>\n"
     un_fbanned_process: "\n<b>Status:</b> Membatalkan blokir di <code>{num}</code> obrolan..."
-    un_fbanned_done: "\n<b>Status:</b> Done! Unbanned in <code>{num}</code> chats!"
-    un_fbanned_subs_process: "\n<b>Status:</b> Unbanning in <code>{feds}</code> subscribed feds..."
-    un_fbanned_subs_done: "\n<b>Status:</b> Done! Unbanned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
+    un_fbanned_done: "\n<b>Status:</b> Selesai! Membatalkan blokir di <code>{num}</code> obrolan!"
+    un_fbanned_subs_process: "\n<b>Status:</b> Membatalkan blokir di federasi yang di langganan <code>{feds}</code>..."
+    un_fbanned_subs_done: "\n<b>Status:</b> Selesai! Membatalkan blokir di <code>{chats}</code> obrolan dari federasi ini dan <code>{subs_chats}</code> obrolan dari federasi yang berlangganan ke <code>{feds}</code>"
     un_fban_log_fed_log: |
-      <b>Unban user in the fed</b> #FedUnBan
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} ({user_id})
-      <b>By:</b> {by}
-      <b>Chats:</b> user unbanned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
-    un_fban_subs_fed_log: "\n<b>Subscribed feds:</b> unbanned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
+      <b>Membatalkan blokir pengguna di federasi</b> #FedUnBan
+      <b>Federasi:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Pengguna:</b> {user} ({user_id})
+      <b>Oleh:</b> {by}
+      <b>Obrolan:</b> pengguna dibatalkan blokir di <code>{chat_count}</code>/<code>{all_chats}</code> obrolan
+    un_fban_subs_fed_log: "\n<b>Federasi yang di langganan:</b> dibatalkan blokir di <code>{subs_chats}</code> obrolan dari federasi <code>{feds}</code>"
     #/delfed
-    delfed_btn_yes: Yes. Delete federation
-    delfed_btn_no: No.
+    delfed_btn_yes: Ya. Hapus federasi
+    delfed_btn_no: Tidak.
     delfed: |
-      Are you sure you want to delete the <b>%s</b> federation?
+      Apakah anda yakin ingin menghapus federasi <b>%s</b>?
 
-      <i>Disclaimer: Deleting this federation will remove all data associated with it from our database!
-      This action is permanent and cannot be reversed!</i>
-    delfed_success: Successfully deleted the federation!
+      <i>Sangkalan: Menghapus federasi ini akan menghapus seluruh data yang terkait dengan ini dari basis data kami!
+      Aksi ini permanen dan tidak dapat dikembalikan!</i>
+    delfed_success: Berhasil menghapus federasi!
     #/frename
-    frename_same_name: Please enter a different name, not the same one!
-    frename_success: The federation <b>{old_name}</b> renamed to <b>{new_name}</b> successfully!
+    frename_same_name: Mohon masukkan nama yang berbeda, bukan yang sama!
+    frename_success: Berhasil mengubah nama federasi <b>{old_name}</b> menjadi <b>{new_name}</b>!
     #/fbanlist
-    fbanlist_locked: Please wait until %s to use fbanlist again.
-    creating_fbanlist: Creating fban list! Please wait ..
-    fbanlist_done: Fbanlist of federation <b>%s</b>!
+    fbanlist_locked: Mohon tunggu hingga %s untuk menggunakan kembali fbanlist.
+    creating_fbanlist: Membuat daftar fban! Harap tunggu ..
+    fbanlist_done: Fbanlist dari federasi <b>%s</b>!
     #/importfbans
     send_import_file: |
-      Send the import file!
+      Kirim file impor!
 
-      To cancel this process use /cancel
-    rpl_to_file: Please reply to a file!
-    importfbans_locked: Importing fbans is locked for %s in this federation.
-    big_file_csv: Only supports import csv files less {num} megabytes!
+      Untuk membatalkan proses ini, gunakan /cancel
+    rpl_to_file: Harap membalas ke sebuah file!
+    importfbans_locked: Mengimpor fban dikunci untuk %s di federasi ini.
+    big_file_csv: Hanya mendukung impor file csv kurang dari {num} megabytes!
     big_file_json: |
-      Currently json files are limited to {num} megabytes!
-      Use the csv format if you want to import bigger files.
-    invalid_file: "The file is invalid"
-    wrong_file_ext: "Wrong file format! Currently support are: json, csv"
-    importing_process: <b>Importing federation bans...</b>
-    import_done: Importing fed bans finished! {num} bans were imported.
+      Untuk saat ini file json dibatasi ke {num} megabytes!
+      Gunakan format csv jika anda ingin mengimpor file berukuran besar.
+    invalid_file: "File tidak valid"
+    wrong_file_ext: "Format file salah! Saat ini hanya mendukung: json, csv"
+    importing_process: <b>Mengimpor blokir federasi...</b>
+    import_done: Mengimpor blokir federasi selesai! {num} blokir telah diimpor.
     #def
-    automatic_ban: User {user} is banned in the current federation <b>{fed_name}</b> and has been removed!
-    automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b and has been removed!
-    automatic_ban_reason: "\nReason: <code>{text}</code>"
+    automatic_ban: Pengguna {user} diblokir di federasi saat ini <b>{fed_name}</b> dan telah dikeluarkan!
+    automatic_ban_sfed: Pengguna {user} diblokir di sub federasi <b>{fed_name}</b> dan telah dikeluarkan!
+    automatic_ban_reason: "\nAlasan: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>Federation ban info:</b>\n"
     fbanned_count_pm: "You are fbanned in {count} federation(s)!\n"
