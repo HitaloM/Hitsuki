@@ -192,183 +192,183 @@ STRINGS:
     already_enabled: "Perintah ini tidak dinonaktifkan!"
     enabled: "Perintah <code>{cmd}</code> telah diaktifkan di <b>{chat_name}</b>!"
     #/enableall
-    not_disabled_anything: "Nothing was disabled in <b>{chat_title}</b>!"
-    enable_all_text: "This will enable all commands in the <b>{chat_name}</b>. Are you sure?"
-    enable_all_btn_yes: "Yes. Enable all commands!"
-    enable_all_btn_no: "No!"
-    enable_all_done: "All (<code>{num}</code>) commands were enabled in the <b>{chat_name}</b>!"
+    not_disabled_anything: "Tidak ada yang dinonaktifkan di <b>{chat_title}</b>!"
+    enable_all_text: "Ini akan mengaktifkan seluruh perintah di <b>{chat_name}</b>. Apakah anda yakin?"
+    enable_all_btn_yes: "Ya. Aktifkan seluruh perintah!"
+    enable_all_btn_no: "Tidak!"
+    enable_all_done: "Seluruh (<code>{num}</code>) perintah telah diaktifkan di <b>{chat_name}</b>!"
   bot_rights:
-    change_info: "I don't have rights to change group info, please make me admin with that right."
-    edit_messages: "I don't have rights to edit messages!"
-    delete_messages: "I don't have rights to delete messages here."
-    ban_user: "I don't have rights to ban users, please make me admin with that right."
-    pin_messages: "I don't have rights to pin messages, please make me admin with that right."
-    add_admins: "I don't have rights to add admins, please make me admin with that right."
+    change_info: "Saya tidak memiliki hak untuk mengubah info grup, harap jadikan saya admin dengan hak tersebut."
+    edit_messages: "Saya tidak memiliki hak untuk mengubah pesan!"
+    delete_messages: "Saya tidak memiliki hak untuk menghapus pesan disini."
+    ban_user: "Saya tidak memiliki hak untuk memblokir pengguna, harap jadikan saya admin dengan hak tersebut."
+    pin_messages: "Saya tidak memiliki hak untuk menyematkan pesan, harap jadikan saya admin dengan hak tersebut."
+    add_admins: "Saya tidak memiliki hak untuk menambahkan admin, harap jadikan saya admin dengan hak tersebut."
   feds:
     #decorators
-    need_fed_admin: "You are not an admin in <b>{name}</b> federation"
-    need_fed_owner: "You are not an owner of <b>{name}</b> federation"
-    cant_get_user: "Sorry, I can't get that user, try using their user ID"
+    need_fed_admin: "Anda bukan seorang admin di federasi <b>{name}</b>"
+    need_fed_owner: "Anda bukan seorang pemilik dari federasi <b>{name}</b>"
+    cant_get_user: "Maaf, saya tidak dapat mendapatkan pengguna tersebut, coba gunakan ID pengguna tersebut"
     #/fnew
-    fed_name_long: "Federation name can't be longer than 60 symbols!"
-    can_only_1_fed: "Users can only create 1 federation, please remove one."
-    name_not_avaible: "Federation with name <code>{name}</code> already exits! Please use another name."
+    fed_name_long: "Nama federasi tidak dapat lebih dari 60 simbol!"
+    can_only_1_fed: "Pengguna hanya dapat membuat 1 federasi, harap hapus satu."
+    name_not_avaible: "Federasi dengan nama <code>{name}</code> sudah ada! Harap gunakan nama lain."
     created_fed: |
-      Congrats, you have successfully created a federation.
-      <b>Name:</b> {name}
+      Selamat, anda telah berhasil membuat sebuah federasi.
+      <b>Nama:</b> {name}
       <b>ID:</b> <code>{id}</code>
-      <b>Creator:</b> {creator}
-      Use <code>/fjoin {id}</code> to connect federation to chat\
-    disallow_anon: As an anonymous admin you cannot create new federation!
+      <b>Pencipta:</b> {creator}
+      Gunakan perintah <code>/fjoin {id}</code> untuk menghubungkan federasi ke obrolan
+    disallow_anon: Sebagai seorang admin anonim anda tidak dapat membuat federasi!
     #/fjoin
-    only_creators: "You must be the chat creator to be able to connect chat to a federation."
-    fed_id_invalid: "The given federation ID is invalid! Please give me a valid ID."
-    joined_fed_already: "This chat has already joined a federation! Please use /fleave to leave that federation"
-    join_fed_success: "Great! Chat <b>{chat}</b> is now a part of <b>{fed}</b> federation!"
+    only_creators: "Anda harus menjadi seorang pencipta obrolan agar dapat menghubungkan obrolan ke sebuah federasi."
+    fed_id_invalid: "ID federasi yang diberikan tidak valid! Tolong beri saya sebuah ID yang valid."
+    joined_fed_already: "Obrolan ini sudah bergabung dengan sebuah federasi! Silakan gunakan /fleave untuk meninggalkan federasi tersebut"
+    join_fed_success: "Bagus! Obrolan <b>{chat}</b> sekarang adalah bagian dari federasi <b>{fed}</b>!"
     join_chat_fed_log: |
       <b>Obrolan bergabung dengan federasi</b> #ChatJoined
       <b>Federasi:</b> {fed_name} (<code>{fed_id}</code>)
       <b>Obrolan:</b> {chat_name} (<code>{chat_id}</code>)
     #/leavefed
-    chat_not_in_fed: "This chat is not in any federation yet."
-    leave_fed_success: "Chat <b>{chat}</b> left the <b>{fed}</b> federation."
+    chat_not_in_fed: "Obrolan ini tidak masuk ke dalam federasi apapun."
+    leave_fed_success: "Obrolan <b>{chat}</b> meninggalkan federasi <b>{fed}</b>."
     leave_chat_fed_log: |
-      <b>Chat left Federation</b> #ChatLeaved
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
+      <b>Obrolan meninggalkan federasi</b> #ChatLeaved
+      <b>Federasi:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Obrolan:</b> {chat_name} (<code>{chat_id}</code>)
     #/fsub
-    already_subsed: "Federation <b>{name}</b> already subscribed to <b>{name2}</b>"
-    subsed_success: "Federation <b>{name}</b> subscribed to <b>{name2}</b>!"
+    already_subsed: "Federasi <b>{name}</b> telah berlangganan ke <b>{name2}</b>"
+    subsed_success: "Federasi <b>{name}</b> berlangganan ke <b>{name2}</b>!"
     #/funsub
-    not_subsed: "Federation <b>{name}</b> is not subscribed to <b>{name2}</b>"
-    unsubsed_success: "Federation <b>{name}</b> unsubscribed from <b>{name2}</b>!"
+    not_subsed: "Federasi <b>{name}</b> tidak berlangganan ke <b>{name2}</b>"
+    unsubsed_success: "Federasi <b>{name}</b> membatalkan berlangganan ke <b>{name2}</b>!"
     #/fpromote
     #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
-    admin_added_to_fed: "User {user} added to <b>{name}</b> federation admins."
+    admin_added_to_fed: "Pengguna {user} ditambahkan ke admin federasi <b>{name}</b>."
     promote_user_fed_log: |
-      <b>User promoted to the fed admins</b> #UserPromoted
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} (<code>{user_id}</code>)
-    "restricted_user:promote": This user is restricted from being federation admin!
+      <b>Pengguna dipromosikan ke admin federasi</b> #UserPromoted
+      <b>Federasi:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Pengguna:</b> {user} (<code>{user_id}</code>)
+    "restricted_user:promote": Pengguna ini telah dibatasi dari menjadi admin federasi!
     #/fdemote
     #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
-    admin_demoted_from_fed: "User {user} demoted from <b>{name}</b> federation admins."
+    admin_demoted_from_fed: "Pengguna {user} diturunkan dari admin federasi <b>{name}</b>."
     demote_user_fed_log: |
-      <b>User demoted from the fed admins</b> #UserDemoted
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} (<code>{user_id}</code>)
+      <b>Pengguna diturunkan dari admin federasi</b> #UserDemoted
+      <b>Federasi:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Pengguna:</b> {user} (<code>{user_id}</code>)
     #/fsetlog
-    already_have_chatlog: "<b>{name}</b> federation already has logging enabled in another chat/channel!"
+    already_have_chatlog: "Federasi <b>{name}</b> telah mengaktifkan logging di obrolan/saluran yang lain!"
     set_chat_log: |
-      This chat is now logging all actions in <b>{name}</b> federation
+      Obrolan ini sekarang logging seluruh aksinya dari federasi <b>{name}</b>
 
-      Federation logging is used for internal assessment of the federation and its performance.
-      The federation should <b>NOT</b> be used as a public wall of shame thereby respecting user data and our privacy guidelines.
+      Logging federasi digunakan untuk penilaian internal dari federasi tersebut dan performanya.
+      Federasi <b>JANGAN</b> digunakan sebagai dinding rasa malu publik sehingga menghormati data pengguna dan pedoman privasi kami.
     set_log_fed_log: |
-      <b>Enabled logging</b> #LoggingEnabled
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-    no_right_to_post: I don't have rights to post messages in that channel!
+      <b>Logging diaktifkan</b> #LoggingEnabled
+      <b>Federasi:</b> {fed_name} (<code>{fed_id}</code>)
+    no_right_to_post: Saya tidak memiliki hak untuk mengirim pesan di saluran tersebut!
     #/funsetlog
-    not_logging: "<b>{name}</b> federation isn't logging to any chat/channel!"
-    logging_removed: "Successfully removed logging from <b>{name}</b> federation."
+    not_logging: "Federasi <b>{name}</b> tidak logging ke obrolan/saluran manapun!"
+    logging_removed: "Berhasil menghapus logging dari federasi <b>{name}</b>."
     unset_log_fed_log: |
-      <b>Disabled logging</b> #LoggingDisabled
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Logging dinonaktifkan</b> #LoggingDisabled
+      <b>Federasi:</b> {fed_name} (<code>{fed_id}</code>)
     #/fchatlist
-    no_chats: "There's no chats joined this <b>{name}</b> federation"
-    chats_in_fed: "<b>Chats connected to {name} federation:</b>\n"
-    too_large: "Output too large, sending as file"
+    no_chats: "Tidak ada obrolan apapun yang bergabung ke federasi <b>{name}</b> ini"
+    chats_in_fed: "<b>Obrolan terhubung ke federasi {name}:</b>\n"
+    too_large: "Keluaran terlalu besar, mengirim sebagai file"
     #/finfo
     finfo_text: |
-      <b>Federation info</b>
-      <b>Name:</b> {name}
+      <b>Info federasi</b>
+      <b>Nama:</b> {name}
       <b>ID:</b> <code>{fed_id}</code>
-      <b>Creator:</b> {creator}
-      <b>Chats in the fed:</b> {chats}
-      <b>Banned users in the fed:</b> {fbanned}
-    finfo_subs_title: "<b>Federations subscribed to this feds:</b>\n"
+      <b>Pencipta:</b> {creator}
+      <b>Obrolan:</b> {chats}
+      <b>Pengguna terblokir di federasi:</b> {fbanned}
+    finfo_subs_title: "<b>Federasi yang berlangganan ke federasi ini:</b>\n"
     #/fadminlist
-    fadmins_header: "Admins in <b>{fed_name}</b> fed:\n"
+    fadmins_header: "Admin di federasi <b>{fed_name}</b>:\n"
     #no_fbanned_in_fed: "There isn't any banned users in {fed_name} Federation!"
     #/fban
-    user_wl: "This user is whitelisted from banning."
-    fban_self: "That's a nice show!"
-    fban_creator: "How can I ban the federation creator?! I don't think it's gonna be funny."
-    fban_fed_admin: "I'm not going to ban a federation admin from their own fed!"
-    update_fban: "This user was already fbanned therefore I am updating the reason to <code>{reason}</code>"
-    already_fbanned: "{user} already banned in this federation."
-    fbanned_header: "<b>New FedBan</b>\n"
+    user_wl: "Pengguna ini telah masuk daftar putih dari pemblokiran."
+    fban_self: "Itu pertunjukan yang bagus!"
+    fban_creator: "Bagaimana saya bisa memblokir pencipta federasi?! Saya tidak berpikir itu akan menjadi lucu."
+    fban_fed_admin: "Saya tidak akan memblokir seorang admin federasi dari federasi mereka sendiri!"
+    update_fban: "Pengguna ini telah fbanned oleh karena itu saya memperbarui alasan menjadi <code>{reason}</code>"
+    already_fbanned: "{user} telah diblokir di federasi ini."
+    fbanned_header: "<b>FedBan baru</b>\n"
     fban_info: |
-      <b>Federation:</b> {fed}
-      <b>Fed admin:</b> {fadmin}
-      <b>User:</b> {user} (<code>{user_id}</code>)
-    fbanned_reason: "<b>Reason:</b> <code>{reason}</code>"
-    fbanned_process: "\n<b>Status:</b> Banning in <code>{num}</code> fed chats..."
-    fbanned_done: "\n<b>Status:</b> Done! banned in <code>{num}</code> chats!"
-    fbanned_silence: "This message will be purged in 5 seconds"
-    fbanned_subs_process: "\n<b>Status:</b> Banning in <code>{feds}</code> subscribed feds..."
-    fbanned_subs_done: "\n<b>Status:</b> Done! Banned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
+      <b>Federasi:</b> {fed}
+      <b>Admin federasi:</b> {fadmin}
+      <b>Pengguna:</b> {user} (<code>{user_id}</code>)
+    fbanned_reason: "<b>Alasan:</b> <code>{reason}</code>"
+    fbanned_process: "\n<b>Status:</b> Memblokir di <code>{num}</code> obrolan federasi..."
+    fbanned_done: "\n<b>Status:</b> Selesai! Terblokir di <code>{num}</code> obrolan!"
+    fbanned_silence: "Pesan ini akan dihapus dalam 5 detik"
+    fbanned_subs_process: "\n<b>Status:</b> Memblokir di federasi yang berlangganan ke <code>{feds}</code>..."
+    fbanned_subs_done: "\n<b>Status:</b> Selesai! Terblokir di <code>{chats}</code> obrolan dari federasi ini dan <code>{subs_chats}</code> obrolan dari federasi yang berlangganan ke <code>{feds}</code>"
     fban_usr_rmvd: |
-      User {user} is currently banned in <b>{fed}</b> federation and have been removed!
-      Reason: <code>{rsn}</code>
+      Pengguna {user} telah terblokir di federasi <b>{fed}</b> dan telah disingkirkan!
+      Alasan: <code>{rsn}</code>
     fban_log_fed_log: |
-      <b>Ban user in the fed</b> #FedBan
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} ({user_id})
-      <b>By:</b> {by}
-      <b>Chats banned:</b> user banned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
-    fban_reason_fed_log: "<b>Reason:</b> <code>{reason}</code>\n"
-    fban_subs_fed_log: "\n<b>Subscribed feds:</b> banned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
+      <b>Blokir pengguna di federasi</b> #FedBan
+      <b>Federasi:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Pengguna:</b> {user} ({user_id})
+      <b>Oleh:</b> {by}
+      <b>Obrolan terblokir:</b> pengguna diblokir di <code>{chat_count}</code>/<code>{all_chats}</code> obrolan
+    fban_reason_fed_log: "<b>Alasan:</b> <code>{reason}</code>\n"
+    fban_subs_fed_log: "\n<b>Federasi yang di langganan:</b> terblokir di <code>{subs_chats}</code> obrolan dari federasi <code>{feds}</code>"
     #/unfban
-    unfban_self: "Think of something else to have fun with instead of this."
-    user_not_fbanned: "{user} isn't banned in this federation."
-    un_fbanned_header: "<b>New Un-FedBan</b>\n"
-    un_fbanned_process: "\n<b>Status:</b> Unbanning in <code>{num}</code> chats..."
-    un_fbanned_done: "\n<b>Status:</b> Done! Unbanned in <code>{num}</code> chats!"
-    un_fbanned_subs_process: "\n<b>Status:</b> Unbanning in <code>{feds}</code> subscribed feds..."
-    un_fbanned_subs_done: "\n<b>Status:</b> Done! Unbanned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
+    unfban_self: "Pikirkan hal lain untuk bersenang-senang daripada ini."
+    user_not_fbanned: "{user} tidak diblokir di federasi ini."
+    un_fbanned_header: "<b>Pembatalan FedBan baru</b>\n"
+    un_fbanned_process: "\n<b>Status:</b> Membatalkan blokir di <code>{num}</code> obrolan..."
+    un_fbanned_done: "\n<b>Status:</b> Selesai! Membatalkan blokir di <code>{num}</code> obrolan!"
+    un_fbanned_subs_process: "\n<b>Status:</b> Membatalkan blokir di federasi yang di langganan <code>{feds}</code>..."
+    un_fbanned_subs_done: "\n<b>Status:</b> Selesai! Membatalkan blokir di <code>{chats}</code> obrolan dari federasi ini dan <code>{subs_chats}</code> obrolan dari federasi yang berlangganan ke <code>{feds}</code>"
     un_fban_log_fed_log: |
-      <b>Unban user in the fed</b> #FedUnBan
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} ({user_id})
-      <b>By:</b> {by}
-      <b>Chats:</b> user unbanned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
-    un_fban_subs_fed_log: "\n<b>Subscribed feds:</b> unbanned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
+      <b>Membatalkan blokir pengguna di federasi</b> #FedUnBan
+      <b>Federasi:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Pengguna:</b> {user} ({user_id})
+      <b>Oleh:</b> {by}
+      <b>Obrolan:</b> pengguna dibatalkan blokir di <code>{chat_count}</code>/<code>{all_chats}</code> obrolan
+    un_fban_subs_fed_log: "\n<b>Federasi yang di langganan:</b> dibatalkan blokir di <code>{subs_chats}</code> obrolan dari federasi <code>{feds}</code>"
     #/delfed
-    delfed_btn_yes: Yes. Delete federation
-    delfed_btn_no: No.
+    delfed_btn_yes: Ya. Hapus federasi
+    delfed_btn_no: Tidak.
     delfed: |
-      Are you sure you want to delete the <b>%s</b> federation?
+      Apakah anda yakin ingin menghapus federasi <b>%s</b>?
 
-      <i>Disclaimer: Deleting this federation will remove all data associated with it from our database!
-      This action is permanent and cannot be reversed!</i>
-    delfed_success: Successfully deleted the federation!
+      <i>Sangkalan: Menghapus federasi ini akan menghapus seluruh data yang terkait dengan ini dari basis data kami!
+      Aksi ini permanen dan tidak dapat dikembalikan!</i>
+    delfed_success: Berhasil menghapus federasi!
     #/frename
-    frename_same_name: Please enter a different name, not the same one!
-    frename_success: The federation <b>{old_name}</b> renamed to <b>{new_name}</b> successfully!
+    frename_same_name: Mohon masukkan nama yang berbeda, bukan yang sama!
+    frename_success: Berhasil mengubah nama federasi <b>{old_name}</b> menjadi <b>{new_name}</b>!
     #/fbanlist
-    fbanlist_locked: Please wait until %s to use fbanlist again.
-    creating_fbanlist: Creating fban list! Please wait ..
-    fbanlist_done: Fbanlist of federation <b>%s</b>!
+    fbanlist_locked: Mohon tunggu hingga %s untuk menggunakan kembali fbanlist.
+    creating_fbanlist: Membuat daftar fban! Harap tunggu ..
+    fbanlist_done: Fbanlist dari federasi <b>%s</b>!
     #/importfbans
     send_import_file: |
-      Send the import file!
+      Kirim file impor!
 
-      To cancel this process use /cancel
-    rpl_to_file: Please reply to a file!
-    importfbans_locked: Importing fbans is locked for %s in this federation.
-    big_file_csv: Only supports import csv files less {num} megabytes!
+      Untuk membatalkan proses ini, gunakan /cancel
+    rpl_to_file: Harap membalas ke sebuah file!
+    importfbans_locked: Mengimpor fban dikunci untuk %s di federasi ini.
+    big_file_csv: Hanya mendukung impor file csv kurang dari {num} megabytes!
     big_file_json: |
-      Currently json files are limited to {num} megabytes!
-      Use the csv format if you want to import bigger files.
-    invalid_file: "The file is invalid"
-    wrong_file_ext: "Wrong file format! Currently support are: json, csv"
-    importing_process: <b>Importing federation bans...</b>
-    import_done: Importing fed bans finished! {num} bans were imported.
+      Untuk saat ini file json dibatasi ke {num} megabytes!
+      Gunakan format csv jika anda ingin mengimpor file berukuran besar.
+    invalid_file: "File tidak valid"
+    wrong_file_ext: "Format file salah! Saat ini hanya mendukung: json, csv"
+    importing_process: <b>Mengimpor blokir federasi...</b>
+    import_done: Mengimpor blokir federasi selesai! {num} blokir telah diimpor.
     #def
-    automatic_ban: User {user} is banned in the current federation <b>{fed_name}</b> and has been removed!
-    automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b and has been removed!
-    automatic_ban_reason: "\nReason: <code>{text}</code>"
+    automatic_ban: Pengguna {user} diblokir di federasi saat ini <b>{fed_name}</b> dan telah dikeluarkan!
+    automatic_ban_sfed: Pengguna {user} diblokir di sub federasi <b>{fed_name}</b> dan telah dikeluarkan!
+    automatic_ban_reason: "\nAlasan: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>Federation ban info:</b>\n"
     fbanned_count_pm: "You are fbanned in {count} federation(s)!\n"
