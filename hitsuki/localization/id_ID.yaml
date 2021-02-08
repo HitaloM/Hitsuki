@@ -370,8 +370,8 @@ STRINGS:
     automatic_ban_sfed: Pengguna {user} diblokir di sub federasi <b>{fed_name}</b> dan telah dikeluarkan!
     automatic_ban_reason: "\nAlasan: <code>{text}</code>"
     #/fcheck
-    fcheck_header: "<b>Federation ban info:</b>\n"
-    fbanned_count_pm: "You are fbanned in {count} federation(s)!\n"
+    fcheck_header: "<b>Info blokir federasi:</b>\n"
+    fbanned_count_pm: "Anda terblokir di {count} federasi!\n"
     "fban_info:fcheck": "You have been fbanned in {fed} federation on {date}, No reason was given!"
     "fban_info:fcheck:reason": "You have been fbanned in {fed} federation on {date} because of reason -\n {reason}\n"
     fbanned_data: "{user} has been fbanned in {count} federation(s).\n"
