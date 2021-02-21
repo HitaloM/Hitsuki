@@ -21,7 +21,6 @@ from aiogram.types.inline_keyboard import (
     InlineKeyboardMarkup,
     InlineKeyboardButton
 )
-from aiogram.utils.exceptions import MessageNotModified
 
 from hitsuki.decorator import register
 from hitsuki.modules.utils.disable import disableable_dec
