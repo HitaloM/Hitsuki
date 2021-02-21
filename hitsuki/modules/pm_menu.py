@@ -99,7 +99,7 @@ async def help_cmd(message, strings):
 @register(cmds='help', only_groups=True)
 @disableable_dec('help')
 @get_strings_dec('pm_menu')
-async def help_cmd(message, strings):
+async def help_cmd_g(message, strings):
     text = (strings['btn_group_help'])
     button = InlineKeyboardMarkup().add(InlineKeyboardButton(
         text=text, url="https://t.me/Hitsuki_BOT?start"))

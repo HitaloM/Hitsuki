@@ -275,7 +275,7 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
             for note_name in note['names']:
                 if re.search(request, note_name):
                     notes.append(note)
-        if not len(notes) > 0:
+        if len(notes) <= 0:
             return await message.reply(strings['no_notes_pattern'] % request)
 
     # Search

@@ -43,7 +43,7 @@ log.info("Filters loaded!")
 
 
 def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **kwargs):
-    if cmds and type(cmds) == str:
+    if cmds and type(cmds) is str:
         cmds = [cmds]
 
     register_kwargs = {}

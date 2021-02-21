@@ -72,7 +72,7 @@ You use this button with adding following syntax to your message which support f
 
 
 @register(cmds='variableshelp', no_args=True, only_pm=True)
-async def buttons_help(message):
+async def variables_help(message):
     await message.reply(
         """
 <b>Variables:</b>

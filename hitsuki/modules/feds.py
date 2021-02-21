@@ -1046,7 +1046,7 @@ async def importfbans_func(message, fed, strings, document=None):
         else:
             new['time'] = current_time
 
-        if 'banned_chats' in row and type(row['banned_chats']) == list:
+        if 'banned_chats' in row and type(row['banned_chats']) is list:
             new['banned_chats'] = row['banned_chats']
 
         queue_del.append(DeleteMany(

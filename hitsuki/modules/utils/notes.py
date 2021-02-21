@@ -111,7 +111,7 @@ def get_parsed_msg(message):
     if not entities:
         return text, mode
 
-    if not sys.maxunicode == 0xffff:
+    if sys.maxunicode != 0xffff:
         text = text.encode('utf-16-le')
 
     result = ''

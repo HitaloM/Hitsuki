@@ -688,7 +688,7 @@ async def check_captcha_text(message, strings, state=None, **kwargs):
     async with state.proxy() as data:
         captcha_num = data['captcha_num']
 
-    if not int(num) == int(captcha_num):
+    if int(num) != int(captcha_num):
         await message.reply(strings['bad_num'])
         return
 
