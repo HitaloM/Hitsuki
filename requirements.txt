@@ -35,3 +35,4 @@ lxml
 spamwatch
 httpx[http2]
 wikipedia
+git+https://github.com/aioanilist/aioanilist
