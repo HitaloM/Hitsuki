@@ -268,7 +268,7 @@ async def get_notes_list(message, strings, chat, keyword=None, pm=False):
 
     async def search_notes(request):
         nonlocal notes, text, note, note_name
-        text += strings['notelist_search'].format(request=request)
+        text += "\n" + strings['notelist_search'].format(request=request)
         all_notes = notes
         notes = []
         for note in all_notes:

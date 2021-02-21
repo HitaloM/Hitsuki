@@ -26,37 +26,34 @@ class GetDevice:
         self.device = device
 
     def get(self):
-        if self.device.lower().startswith('sm-'):
+        if self.device.lower().startswith("sm-"):
             data = get(
-                'https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_model.json').content
+                "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_model.json"
+            ).content
             db = json.loads(data)
             try:
-                name = db[self.device.upper()][0]['name']
-                device = db[self.device.upper()][0]['device']
-                brand = db[self.device.upper()][0]['brand']
+                name = db[self.device.upper()][0]["name"]
+                device = db[self.device.upper()][0]["device"]
+                brand = db[self.device.upper()][0]["brand"]
                 model = self.device.lower()
-                return {'name': name,
-                        'device': device,
-                        'model': model,
-                        'brand': brand
-                        }
+                return {"name": name, "device": device, "model": model, "brand": brand}
             except KeyError:
                 return False
         else:
             data = get(
-                'https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json').content
+                "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json"
+            ).content
             db = json.loads(data)
-            newdevice = self.device.strip('lte').lower() if self.device.startswith(
-                'beyond') else self.device.lower()
+            newdevice = (
+                self.device.strip("lte").lower()
+                if self.device.startswith("beyond")
+                else self.device.lower()
+            )
             try:
-                name = db[newdevice][0]['name']
-                model = db[newdevice][0]['model']
-                brand = db[newdevice][0]['brand']
+                name = db[newdevice][0]["name"]
+                model = db[newdevice][0]["model"]
+                brand = db[newdevice][0]["brand"]
                 device = self.device.lower()
-                return {'name': name,
-                        'device': device,
-                        'model': model,
-                        'brand': brand
-                        }
+                return {"name": name, "device": device, "model": model, "brand": brand}
             except KeyError:
                 return False

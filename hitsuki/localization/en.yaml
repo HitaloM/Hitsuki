@@ -19,7 +19,7 @@ STRINGS:
     no_notes_pattern: "No notes found by pattern <code>%s</code>"
     u_mean: "\nDid you mean <code>#{note_name}</code>?"
 
-    #/notes
+    # /notes
     notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
     notelist_header: "<b>Notes in {chat_name}</b>:"
     notes_in_private: "Click below button to get notes list."
