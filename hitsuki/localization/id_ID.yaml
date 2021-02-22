@@ -171,9 +171,6 @@ STRINGS:
     btn_channel: "📬 Berita Hitsuki"
     btn_group_help: "Tekan saya untuk mendapatkan bantuan!"
     back: Kembali
-    back_emoji: '⬅️ Kembali'
-    help_for: "Bantuan untuk modul <b>{mod}</b>:\n"
-    help_for_top: "Bantuan untuk "
     #/help
     help_header: "Hai! Nama saya <b>Hitsuki</b>. Saya adalah seorang bot manajemen grup, disini untuk membantu anda menjaga ketertiban dalam grup anda! Saya memiliki banyak fitur berguna, seperti pengendalian pesan banjir, sistem peringatan, sistem catatan, dan bahkan balasan yang telah ditentukan sebelumnya pada kata kunci tertentu."
     click_btn: Tekan disini
