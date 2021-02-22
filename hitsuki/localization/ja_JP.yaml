@@ -172,9 +172,6 @@ STRINGS:
     btn_channel: ":satellite_アンテナ: Hitsuki News"
     btn_group_help: "ヘルプのためにクリックしてください!"
     back: 戻る
-    back_emoji: '⬅️ 戻る'
-    help_for: "<b>{mod}</b> モジュールのヘルプ:\n"
-    help_for_top: "ヘルプ "
     #/help
     help_header: "ねえ！ 私の名前は<b>Hitsuki</b>です。 私はグループ管理ボットです。ここでは、グループ内を移動して順序を維持するのに役立ちます。\n洪水調節、警告システム、メモ管理システム、さらには特定のキーワードに対する事前に決められた返信など、便利な機能がたくさんあります。"
     click_btn: ここをクリック
