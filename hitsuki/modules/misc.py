@@ -10,7 +10,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 
-import wikipedia
+import wikipediaapi
 from contextlib import suppress
 from datetime import datetime
 
@@ -96,34 +96,19 @@ Variables are special words which will be replaced by actual info
 @disableable_dec('wiki')
 async def wiki(message):
     args = get_args_str(message)
-    wikipedia.set_lang("en")
-    try:
-        pagewiki = wikipedia.page(args)
-    except wikipedia.exceptions.PageError as e:
-        await message.reply(f"No results found!\nError: <code>{e}</code>")
+    wiki = wikipediaapi.Wikipedia("en")
+
+    page = wiki.page(args)
+
+    if page.exists() is False:
+        await message.reply("No results were found!")
         return
-    except wikipedia.exceptions.DisambiguationError as refer:
-        refer = str(refer).split("\n")
-        if len(refer) >= 6:
-            batas = 6
-        else:
-            batas = len(refer)
-        text = ""
-        for x in range(batas):
-            if x == 0:
-                text += refer[x]+"\n"
-            else:
-                text += "- `"+refer[x]+"`\n"
-        await message.reply(text)
-        return
-    except IndexError:
-        msg.reply_text("Write a message to search from wikipedia sources.")
-        return
-    title = pagewiki.title
-    summary = pagewiki.summary[0:500]
-    button = InlineKeyboardMarkup().add(InlineKeyboardButton(
-        "🔧 More Info...", url=wikipedia.page(args).url))
-    await message.reply(("The result of {} is:\n\n<b>{}</b>\n{}...").format(args, title, summary), reply_markup=button)
+
+    button = InlineKeyboardMarkup().add(InlineKeyboardButton(text="Read more...", url=page.fullurl))
+    await message.reply(
+        ("The result of {} is:\n\n<b>{}</b>\n{}...").format(args, page.title, page.summary[0:500]),
+        reply_markup=button,
+    )
 
 
 @register(cmds='github')
