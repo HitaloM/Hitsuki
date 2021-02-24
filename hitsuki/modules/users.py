@@ -233,7 +233,7 @@ async def adminlist(message, chat, strings):
     for admin, rights in admins.items():
         if rights['anonymous']:
             continue
-        text += '- {} ({})\n'.format(await get_user_link(admin), admin)
+        text += '- {} (<code>{}</code>)\n'.format(await get_user_link(admin), admin)
 
     await message.reply(text, disable_notification=True)
 
