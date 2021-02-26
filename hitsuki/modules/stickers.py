@@ -40,7 +40,7 @@ async def get_sticker(message, strings):
     await message.reply_document(
         InputFile(sticker_file,
                   filename=f'{sticker.set_name}_{sticker.file_id[:5]}.png'),
-        text
+        caption=text
     )
 
 
