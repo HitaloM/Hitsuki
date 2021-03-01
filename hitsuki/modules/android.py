@@ -13,12 +13,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import httpx
 import rapidjson as json
-from requests import get
 from yaml import load, Loader
 from bs4 import BeautifulSoup
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from hitsuki import decorator
 from hitsuki.decorator import register
 from .utils.android import GetDevice
 from .utils.disable import disableable_dec
@@ -37,7 +38,7 @@ async def whatis(message):
         await message.reply(m)
         return
 
-    data = GetDevice(device).get()
+    data = await GetDevice(device).get()
     if data:
         name = data["name"]
         device = data["device"]
@@ -52,8 +53,8 @@ async def whatis(message):
     await message.reply(m)
 
 
-@register(cmds="variants")
-@disableable_dec("variants")
+@decorator.register(cmds=["models", "variants"])
+@disableable_dec("models")
 async def variants(message):
     device = get_arg(message)
     if not device:
@@ -61,7 +62,7 @@ async def variants(message):
         await message.reply(m)
         return
 
-    data = GetDevice(device).get()
+    data = await GetDevice(device).get()
     if data:
         name = data["name"]
         device = data["device"]
@@ -70,10 +71,11 @@ async def variants(message):
         await message.reply(m)
         return
 
-    data = get(
-        "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json"
-    ).content
-    db = json.loads(data)
+    async with httpx.AsyncClient(http2=True) as http:
+        data = await http.get(
+            "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json"
+        )
+        db = json.loads(data.content)
     device = db[device]
     m = f"<b>{name}</b> variants:\n\n"
 
@@ -84,6 +86,7 @@ async def variants(message):
             model, name
         )
 
+    await http.aclose()
     await message.reply(m)
 
 
@@ -96,8 +99,11 @@ async def miui(message):
         await message.reply(m)
         return
 
-    yaml_data = load(get(MIUI_FIRM).content, Loader=Loader)
-    data = [i for i in yaml_data if codename in i["codename"]]
+    async with httpx.AsyncClient(http2=True) as http:
+        yaml_data = await http.get(MIUI_FIRM)
+        db = load(yaml_data.content, Loader=Loader)
+
+    data = [i for i in db if codename in i["codename"]]
 
     if len(data) < 1:
         await message.reply("Provide a valid codename!")
@@ -126,6 +132,7 @@ async def miui(message):
     text += f"\n<b>Date:</b> <code>{date}</code>"
     text += f"\n<b>MD5:</b> <code>{md5}</code>"
 
+    await http.aclose()
     await message.reply(text, reply_markup=button)
 
 
@@ -138,8 +145,11 @@ async def realmeui(message):
         await message.reply(m)
         return
 
-    yaml_data = load(get(REALME_FIRM).content, Loader=Loader)
-    data = [i for i in yaml_data if codename in i["codename"]]
+    async with httpx.AsyncClient(http2=True) as http:
+        yaml_data = await http.get(REALME_FIRM)
+        db = load(yaml_data.content, Loader=Loader)
+
+    data = [i for i in db if codename in i["codename"]]
 
     if len(data) < 1:
         await message.reply("Provide a valid codename!")
@@ -167,6 +177,7 @@ async def realmeui(message):
     text += f"\n<b>Date:</b> <code>{date}</code>"
     text += f"\n<b>MD5:</b> <code>{md5}</code>"
 
+    await http.aclose()
     await message.reply(text, reply_markup=button)
 
 
@@ -177,8 +188,9 @@ async def magisk(message):
     releases = "<b>Latest Magisk Releases:</b>\n"
     variant = ["master/stable", "master/beta", "canary/canary"]
     for variants in variant:
-        fetch = get(url + variants + ".json")
-        data = json.loads(fetch.content)
+        async with httpx.AsyncClient(http2=True) as http:
+            fetch = await http.get(url + variants + ".json")
+            data = json.loads(fetch.content)
         if variants == "master/stable":
             name = "<b>Stable</b>"
             cc = 0
@@ -207,16 +219,19 @@ async def magisk(message):
                 f'<a href="{data["uninstaller"]["link"]}">Uninstaller</a>\n'
                 f'<a href="{data["magisk"]["note"]}">Changelog</a>\n'
             )
+
+    await http.aclose()
     await message.reply(releases, disable_web_page_preview=True)
 
 
 @register(cmds="phh")
 @disableable_dec("phh")
 async def phh(message):
-    fetch = get(
-        "https://api.github.com/repos/phhusson/treble_experimentations/releases/latest"
-    )
-    usr = json.loads(fetch.content)
+    async with httpx.AsyncClient(http2=True) as http:
+        fetch = await http.get(
+            "https://api.github.com/repos/phhusson/treble_experimentations/releases/latest"
+        )
+        usr = json.loads(fetch.content)
     text = "<b>Phh's latest GSI release(s):</b>\n"
     for i in range(len(usr)):
         try:
@@ -225,16 +240,19 @@ async def phh(message):
             text += f"<a href='{url}'>{name}</a>\n"
         except IndexError:
             continue
+
+    await http.aclose()
     await message.reply(text)
 
 
 @register(cmds="phhmagisk")
 @disableable_dec("phhmagisk")
 async def phh_magisk(message):
-    fetch = get(
-        "https://api.github.com/repos/expressluke/phh-magisk-builder/releases/latest"
-    )
-    usr = json.loads(fetch.content)
+    async with httpx.AsyncClient(http2=True) as http:
+        fetch = await http.get(
+            "https://api.github.com/repos/expressluke/phh-magisk-builder/releases/latest"
+        )
+        usr = json.loads(fetch.content)
     text = "<b>Phh's latest Magisk release(s):</b>\n"
     for i in range(len(usr)):
         try:
@@ -249,6 +267,8 @@ async def phh_magisk(message):
             button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
         except IndexError:
             continue
+
+    await http.aclose()
     await message.reply(text, reply_markup=button)
     return
 
@@ -263,7 +283,8 @@ async def twrp(message):
         await message.reply(m)
         return
 
-    url = get(f"https://eu.dl.twrp.me/{device}/")
+    async with httpx.AsyncClient(http2=True) as http:
+        url = await http.get(f"https://eu.dl.twrp.me/{device}/")
     if url.status_code == 404:
         m = f"TWRP is not available for <code>{device}</code>"
         await message.reply(m)
@@ -286,6 +307,8 @@ async def twrp(message):
         m += f"📦 <b>File:</b> <code>{dl_file.lower()}</code>"
         btn = "Click here to download!"
         button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=dl_link))
+
+        await http.aclose()
         await message.reply(m, reply_markup=button)
 
 
@@ -302,12 +325,13 @@ async def check(message):
         return
 
     model = "sm-" + temp if not temp.upper().startswith("SM-") else temp
-    fota = get(
-        f"http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.xml"
-    )
-    test = get(
-        f"http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.test.xml"
-    )
+    async with httpx.AsyncClient(http2=True) as http:
+        fota = await http.get(
+            f"http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.xml"
+        )
+        test = await http.get(
+            f"http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.test.xml"
+        )
     if test.status_code != 200:
         m = f"Couldn't find any firmwares for {temp.upper()} - {csc.upper()}, please refine your search or try again later!"
         await message.reply(m)
@@ -341,6 +365,7 @@ async def check(message):
         md5 = page2.find("latest").text.strip()
         m += f"• Hash: <code>{md5}</code>\n• Android: <code>{os2}</code>\n\n"
 
+    await http.aclose()
     await message.reply(m)
 
 
