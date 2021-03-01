@@ -17,6 +17,7 @@ import aioanilist
 import requests
 import time
 import html
+import httpx
 import bs4
 from jikanpy import AioJikan
 
@@ -185,9 +186,11 @@ async def site_search(message, site: str):
 
     if site == "kaizoku":
         search_url = f"https://animekaizoku.com/?s={search_query}"
-        html_text = requests.get(search_url).text
-        soup = bs4.BeautifulSoup(html_text, "html.parser")
+        async with httpx.AsyncClient(http2=True) as http:
+            html_text = await http.get(search_url)
+        soup = bs4.BeautifulSoup(html_text.text, "html.parser")
         search_result = soup.find_all("h2", {"class": "post-title"})
+        await http.aclose()
 
         if search_result:
             result = f"<b>Search results for</b> <code>{html.escape(search_query)}</code> <b>on</b> <code>AnimeKaizoku</code>: \n"
@@ -201,9 +204,11 @@ async def site_search(message, site: str):
 
     elif site == "kayo":
         search_url = f"https://animekayo.com/?s={search_query}"
-        html_text = requests.get(search_url).text
-        soup = bs4.BeautifulSoup(html_text, "html.parser")
+        async with httpx.AsyncClient(http2=True) as http:
+            html_text = await http.get(search_url)
+        soup = bs4.BeautifulSoup(html_text.text, "html.parser")
         search_result = soup.find_all("h2", {"class": "title"})
+        await http.aclose()
 
         result = f"<b>Search results for</b> <code>{html.escape(search_query)}</code> <b>on</b> <code>AnimeKayo</code>: \n"
         for entry in search_result:
