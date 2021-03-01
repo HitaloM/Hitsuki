@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import asyncio
 import html
 import sys
 import os
@@ -142,6 +143,26 @@ async def restart_bot(message):
     await message.reply("Hitsuki will be restarted...")
     args = [sys.executable, "-m", "hitsuki"]
     os.execl(sys.executable, *args)
+
+
+@register(cmds="upgrade", is_owner=True)
+async def upgrade(message):
+    m = await message.reply("Upgrading sources...")
+    proc = await asyncio.create_subprocess_shell("git pull --no-edit",
+                                                 stdout=asyncio.subprocess.PIPE,
+                                                 stderr=asyncio.subprocess.STDOUT)
+    stdout = (await proc.communicate())[0]
+    if proc.returncode == 0:
+        if "Already up to date." in stdout.decode():
+            await m.edit_text("There's nothing to upgrade.")
+        else:
+            await m.edit_text("Restarting...")
+            args = [sys.executable, "-m", "hitsuki"]
+            os.execl(sys.executable, *args)
+    else:
+        await m.edit_text(f"Upgrade failed (process exited with {proc.returncode}):\n{stdout.decode()}")
+        proc = await asyncio.create_subprocess_shell("git merge --abort")
+        await proc.communicate()
 
 
 @register(cmds="upload", is_owner=True)
