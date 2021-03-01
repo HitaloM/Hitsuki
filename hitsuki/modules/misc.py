@@ -10,6 +10,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 
+import httpx
 import wikipediaapi
 from contextlib import suppress
 from datetime import datetime
@@ -21,11 +22,10 @@ from aiogram.utils.exceptions import BadRequest, MessageNotModified, MessageToDe
 
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec
-from .utils.httpx import http
 from .utils.language import get_strings_dec
 from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
-from .utils.message import get_args_str
+from .utils.message import get_args_str, get_args
 
 
 @register(cmds='buttonshelp', no_args=True, only_pm=True)
@@ -114,9 +114,11 @@ async def wiki(message):
 @register(cmds='github')
 @disableable_dec('github')
 async def github(message):
-    text = message.text[len('/github '):]
-    response = await http.get(f'https://api.github.com/users/{text}')
-    usr = response.json()
+    args = message.text[len('/github '):]
+
+    async with httpx.AsyncClient(http2=True) as http:
+        r = await http.get(f'https://api.github.com/users/{args}')
+        usr = r.json()
 
     if usr.get('login'):
         text = f"<b>Username:</b> <a href='https://github.com/{usr['login']}'>{usr['login']}</a>"
@@ -155,6 +157,8 @@ async def github(message):
         reply_text = text
     else:
         reply_text = "User not found. Make sure you entered valid username!"
+
+    http.aclose
     await message.reply(reply_text, disable_web_page_preview=True)
 
 
