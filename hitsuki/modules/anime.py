@@ -15,10 +15,10 @@
 
 import aioanilist
 import requests
-import jikanpy
 import time
 import html
 import bs4
+from jikanpy import AioJikan
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from hitsuki.decorator import register
@@ -156,8 +156,11 @@ async def anilist_manga(message):
 @register(cmds="upcoming")
 @disableable_dec("upcoming")
 async def upcoming(message):
-    jikan = jikanpy.jikan.Jikan()
-    upcoming = jikan.top("anime", page=1, subtype="upcoming")
+    async with AioJikan() as jikan:
+        pass
+
+    upcoming = await jikan.top("anime", page=1, subtype="upcoming")
+    await jikan.close()
 
     upcoming_list = [entry["title"] for entry in upcoming["top"]]
     upcoming_message = ""
