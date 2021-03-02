@@ -161,8 +161,11 @@ async def github(message):
     else:
         reply_text = "User not found. Make sure you entered valid username!"
 
-    await http.aclose
-    await message.reply(reply_text, disable_web_page_preview=True)
+    http.aclose
+    if usr["avatar_url"]:
+        await message.reply_photo(photo=usr["avatar_url"], caption=reply_text)
+    else:
+        await message.reply(reply_text, disable_web_page_preview=True)
 
 
 @register(cmds='ping')
