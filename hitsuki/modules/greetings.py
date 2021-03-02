@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import io
+import html
 import random
 import re
 from contextlib import suppress
@@ -32,7 +33,7 @@ from babel.dates import format_timedelta
 from captcha.image import ImageCaptcha
 from telethon.tl.custom import Button
 
-from hitsuki import BOT_USERNAME, BOT_ID, bot, dp
+from hitsuki import BOT_USERNAME, BOT_ID, LOGS_CHANNEL_ID, bot, dp
 from hitsuki.config import get_str_key
 from hitsuki.decorator import register
 from hitsuki.services.apscheduller import scheduler
@@ -475,6 +476,7 @@ async def welcome_security_handler(message: Message, strings):
     user_id = new_user.id
 
     if user_id == BOT_ID:
+        await bot.send_message(chat_id=LOGS_CHANNEL_ID, text=f"I was added to the group <b>{html.escape(message.chat.title)}</b> (<code>{message.chat.id}</code>)")
         return
 
     db_item = await get_greetings_data(message.chat.id)
