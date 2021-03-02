@@ -20,12 +20,13 @@ from datetime import datetime
 from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.exceptions import BadRequest, MessageNotModified, MessageToDeleteNotFound
 
+from hitsuki import decorator
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
-from .utils.message import get_args_str, get_args
+from .utils.message import get_args_str, get_args, need_args_dec, get_cmd
 
 
 @register(cmds='buttonshelp', no_args=True, only_pm=True)
@@ -92,7 +93,8 @@ Variables are special words which will be replaced by actual info
     )
 
 
-@register(cmds='wiki')
+@decorator.register(cmds=['wiki', 'wikipedia'])
+@need_args_dec()
 @disableable_dec('wiki')
 async def wiki(message):
     args = get_args_str(message)
@@ -111,10 +113,11 @@ async def wiki(message):
     )
 
 
-@register(cmds='github')
+@decorator.register(cmds=['github', 'git'])
+@need_args_dec()
 @disableable_dec('github')
 async def github(message):
-    args = message.text[len('/github '):]
+    args = get_args_str(message)
 
     async with httpx.AsyncClient(http2=True) as http:
         r = await http.get(f'https://api.github.com/users/{args}')
@@ -158,7 +161,7 @@ async def github(message):
     else:
         reply_text = "User not found. Make sure you entered valid username!"
 
-    http.aclose
+    await http.aclose
     await message.reply(reply_text, disable_web_page_preview=True)
 
 

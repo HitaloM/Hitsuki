@@ -15,7 +15,6 @@
 
 from datetime import timedelta
 
-
 # elif raw_button[1] == 'note':
 # t = InlineKeyboardButton(raw_button[0], callback_data='get_note_{}_{}'.format(chat_id, raw_button[2]))
 # elif raw_button[1] == 'alert':
@@ -85,7 +84,7 @@ def need_args_dec(num=1):
             if len(message.text.split(" ")) > num:
                 return await func(*args, **kwargs)
             else:
-                await message.reply("No enoff args!")
+                await message.reply("Give me args!")
 
         return wrapped_1
 
