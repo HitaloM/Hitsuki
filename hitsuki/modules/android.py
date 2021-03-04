@@ -407,14 +407,16 @@ async def orangefox(message):
 
     async with httpx.AsyncClient(http2=True) as http:
         data = await http.get(
-            API_HOST + f"releases/?codename={codename}&sort=date_desc&limit=1"
+            API_HOST + f"releases/?codename={codename}&sort=date_desc&limit=10"
         )
         if data.status_code == 404:
             await message.reply("Release is not found!")
             return
         find_id = json.loads(data.text)
         await http.aclose()
-        file_id = find_id["data"][0]["_id"]
+        for build in find_id["data"]:
+            if build["type"] == "stable":
+                file_id = build["_id"]
 
     async with httpx.AsyncClient(http2=True) as http:
         data = await http.get(API_HOST + f"releases/get?_id={file_id}")
