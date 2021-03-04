@@ -496,12 +496,6 @@ async def welcome_security_handler(message: Message, strings):
     if new_user.is_bot and await is_user_admin(chat_id, message.from_user.id):
         return
 
-    # Mute user
-    try:
-        await mute_user(chat_id, user_id)
-    except BadRequest as error:
-        return await message.reply(f'welcome security failed due to {error.args[0]}')
-
     if 'security_note' not in db_item:
         db_item['security_note'] = {}
         db_item['security_note']['text'] = strings['default_security_note']
@@ -515,7 +509,17 @@ async def welcome_security_handler(message: Message, strings):
     kwargs['buttons'] = [] if not kwargs['buttons'] else kwargs['buttons']
     kwargs['buttons'] += [Button.inline(strings['click_here'], f'ws_{chat_id}_{user_id}')]
 
-    msg = await send_note(chat_id, text, **kwargs)
+    # FIXME: Better workaround
+    if not (msg := await send_note(chat_id, text, **kwargs)):
+        # Wasn't able to sent message
+        return
+
+    # Mute user
+    try:
+        await mute_user(chat_id, user_id)
+    except BadRequest as error:
+        # TODO: Delete the "sent" message ^
+        return await message.reply(f'welcome security failed due to {error.args[0]}')
 
     redis.set(f'welcome_security_users:{user_id}:{chat_id}', msg.id)
 
