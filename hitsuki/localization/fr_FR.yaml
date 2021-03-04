@@ -552,7 +552,8 @@ STRINGS:
   #havent_set_rules_note: "You haven't set the rules note yet."
   #success_remove_rules_note: "Successfully removed rules note in <b>{}</b>."
   greetings:
-    default_welcome: "Bienvenue {mention}! Comment ça va ?"
+    default_welcome: "Welcome {mention}! How are you?"
+    thank_for_add: "Thanks for adding me to your group! Take a look at /help and follow my news channel @HitsukiNews."
     default_security_note: "Welcome {mention}! Please press button below to verify yourself as human!"
     bool_invalid_arg: Argument invalide, attendu <code>sur</code>/<code>off</code>.
     #/setwelcome

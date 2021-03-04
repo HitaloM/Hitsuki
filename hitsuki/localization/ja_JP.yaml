@@ -552,7 +552,8 @@ STRINGS:
   #havent_set_rules_note: "You haven't set the rules note yet."
   #success_remove_rules_note: "Successfully removed rules note in <b>{}</b>."
   greetings:
-    default_welcome: "{mention}さん、こんにちは！"
+    default_welcome: "Welcome {mention}! How are you?"
+    thank_for_add: "Thanks for adding me to your group! Take a look at /help and follow my news channel @HitsukiNews."
     default_security_note: "ようこそ {mention}! ボタンを押して、人間としての認証を行ってください!"
     bool_invalid_arg: 引数が無効です。 <code>が</code>/<code></code> に期待されています。
     #/setwelcome
