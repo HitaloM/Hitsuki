@@ -417,6 +417,13 @@ async def orangefox(message):
         for build in find_id["data"]:
             if build["type"] == "stable":
                 file_id = build["_id"]
+            else:
+                await message.reply(
+                    f"⚠️ There is no Stable releases for {device['full_name']}."
+                    f"Check out all releases at <a href='https://orangefox.download/device/{device['codename']}'>device's page</a>",
+                    disable_web_page_preview=True,
+                )
+                return
 
     async with httpx.AsyncClient(http2=True) as http:
         data = await http.get(API_HOST + f"releases/get?_id={file_id}")
