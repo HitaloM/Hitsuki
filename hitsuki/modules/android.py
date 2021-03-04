@@ -24,7 +24,7 @@ from hitsuki import decorator
 from hitsuki.decorator import register
 from .utils.android import GetDevice
 from .utils.disable import disableable_dec
-from .utils.message import get_arg, need_args_dec
+from .utils.message import get_arg, need_args_dec, get_cmd
 
 MIUI_FIRM = "https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml"
 REALME_FIRM = "https://raw.githubusercontent.com/RealmeUpdater/realme-updates-tracker/master/data/latest.yml"
@@ -313,7 +313,7 @@ async def twrp(message):
         await message.reply(m, reply_markup=button)
 
 
-@register(cmds="samcheck")
+@decorator.register(cmds=["samcheck", "samget"])
 @disableable_dec("samcheck")
 async def check(message):
     try:
@@ -333,6 +333,7 @@ async def check(message):
         test = await http.get(
             f"http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.test.xml"
         )
+    await http.aclose()
     if test.status_code != 200:
         m = f"Couldn't find any firmwares for {temp.upper()} - {csc.upper()}, please refine your search or try again later!"
         await message.reply(m)
@@ -366,8 +367,34 @@ async def check(message):
         md5 = page2.find("latest").text.strip()
         m += f"• Hash: <code>{md5}</code>\n• Android: <code>{os2}</code>\n\n"
 
-    await http.aclose()
-    await message.reply(m)
+    if get_cmd(message) == "samcheck":
+        await message.reply(m)
+
+    elif get_cmd(message) == "samget":
+        m += "\n<b>Download from below:</b>\n"
+        buttons = InlineKeyboardMarkup()
+        buttons.add(
+            InlineKeyboardButton(
+                "SamMobile",
+                url="https://www.sammobile.com/samsung/firmware/{}/{}/".format(
+                    model.upper(), csc.upper()
+                ),
+            ),
+            InlineKeyboardButton(
+                "SamFw",
+                url="https://samfw.com/firmware/{}/{}/".format(
+                    model.upper(), csc.upper()
+                ),
+            ),
+            InlineKeyboardButton(
+                "SamFrew",
+                url="https://samfrew.com/model/{}/region/{}/".format(
+                    model.upper(), csc.upper()
+                ),
+            ),
+        )
+
+        await message.reply(m, reply_markup=buttons)
 
 
 @register(cmds="ofox")
