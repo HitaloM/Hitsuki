@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
 import httpx
 import rapidjson as json
 from yaml import load, Loader
@@ -369,6 +370,91 @@ async def check(message):
     await message.reply(m)
 
 
+@register(cmds="ofox")
+@disableable_dec("ofox")
+async def orangefox(message):
+    API_HOST = "https://api.orangefox.download/v3/"
+    try:
+        codename = get_arg(message).lower()
+    except Exception:
+        codename = ""
+
+    if codename == "":
+        reply_text = "<b>OrangeFox Recovery is currently avaible for:</b>"
+
+        async with httpx.AsyncClient(http2=True) as http:
+            data = await http.get(API_HOST + "devices/")
+            devices = json.loads(data.text)
+            await http.aclose()
+        for device in devices["data"]:
+            reply_text += (
+                f"\n • {device['full_name']} (<code>{device['codename']}</code>)"
+            )
+
+        reply_text += (
+            "\n\n" + "You can get latest release by using <code>/ofox (codename)</code>"
+        )
+        await message.reply(reply_text)
+        return
+
+    async with httpx.AsyncClient(http2=True) as http:
+        data = await http.get(API_HOST + f"devices/get?codename={codename}")
+        device = json.loads(data.text)
+        await http.aclose()
+    if data.status_code == 404:
+        await message.reply("Device is not found!")
+        return
+
+    async with httpx.AsyncClient(http2=True) as http:
+        data = await http.get(
+            API_HOST + f"releases/?codename={codename}&sort=date_desc&limit=1"
+        )
+        if data.status_code == 404:
+            await message.reply("Release is not found!")
+            return
+        find_id = json.loads(data.text)
+        await http.aclose()
+        file_id = find_id["data"][0]["_id"]
+
+    async with httpx.AsyncClient(http2=True) as http:
+        data = await http.get(API_HOST + f"releases/get?_id={file_id}")
+        release = json.loads(data.text)
+        await http.aclose()
+    if data.status_code == 404:
+        await message.reply("Release is not found!")
+        return
+
+    reply_text = "<u><b>OrangeFox Recovery <i>stable</i> release</b></u>\n"
+    reply_text += ("  <b>Device:</b> {fullname} (<code>{codename}</code>)\n").format(
+        fullname=device["full_name"], codename=device["codename"]
+    )
+    reply_text += ("  <b>Version:</b> {}\n").format(release["version"])
+    reply_text += ("  <b>Release date:</b> {}\n").format(
+        time.strftime("%d/%m/%Y", time.localtime(release["date"]))
+    )
+
+    reply_text += (
+        "  <b>Maintainer:</b> <a href='https://t.me/{username}'>{name}</a>\n"
+    ).format(
+        name=device["maintainer"]["name"], username=device["maintainer"]["username"]
+    )
+    changelog = release["changelog"]
+    try:
+        reply_text += "  <u><b>Changelog:</b></u>\n"
+        for entry_num in range(len(changelog)):
+            if entry_num == 10:
+                break
+            reply_text += f"    - {changelog[entry_num]}\n"
+    except BaseException:
+        pass
+
+    btn = "⬇️ Download"
+    url = release["mirrors"]["DL"]
+    button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
+    await message.reply(reply_text, reply_markup=button, disable_web_page_preview=True)
+    return
+
+
 __mod_name__ = "Android"
 
 __help__ = """
@@ -383,7 +469,9 @@ __help__ = """
 
 <b>Misc</b>
 - /magisk: Get latest Magisk releases.
-- /twrp (codename): Gets latest twrp for the android device using the codename.
+- /twrp (codename): Gets latest TWRP for the android device using the codename.
+- /ofox (codename): Gets latest OFRP for the android device using the codename.
+- /ofox: Sends the list of devices supported by OFRP.
 - /models (codename): Search for Android device models using codename.
 - /whatis (codename): Find out which smartphone is using the codename.
 """
