@@ -24,7 +24,7 @@ from hitsuki import decorator
 from hitsuki.decorator import register
 from .utils.android import GetDevice
 from .utils.disable import disableable_dec
-from .utils.message import get_arg
+from .utils.message import get_arg, need_args_dec
 
 MIUI_FIRM = "https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml"
 REALME_FIRM = "https://raw.githubusercontent.com/RealmeUpdater/realme-updates-tracker/master/data/latest.yml"
@@ -375,9 +375,17 @@ async def check(message):
 async def orangefox(message):
     API_HOST = "https://api.orangefox.download/v3/"
     try:
-        codename = get_arg(message).lower()
-    except Exception:
+        args = message.text.split()
+        codename = args[1].lower()
+    except BaseException:
         codename = ""
+    try:
+        build_type = args[2].lower()
+    except BaseException:
+        build_type = ""
+
+    if build_type == "":
+        build_type = "stable"
 
     if codename == "":
         reply_text = "<b>OrangeFox Recovery is currently avaible for:</b>"
@@ -407,23 +415,23 @@ async def orangefox(message):
 
     async with httpx.AsyncClient(http2=True) as http:
         data = await http.get(
-            API_HOST + f"releases/?codename={codename}&sort=date_desc&limit=10"
+            API_HOST
+            + f"releases/?codename={codename}&type={build_type}&sort=date_desc&limit=1"
         )
         if data.status_code == 404:
-            await message.reply("Release is not found!")
+            btn = "Device's page"
+            url = f"https://orangefox.download/device/{device['codename']}"
+            button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
+            await message.reply(
+                f"⚠️ There is no '<b>{build_type}</b>' releases for <b>{device['full_name']}</b>.",
+                reply_markup=button,
+                disable_web_page_preview=True,
+            )
             return
         find_id = json.loads(data.text)
         await http.aclose()
         for build in find_id["data"]:
-            if build["type"] == "stable":
-                file_id = build["_id"]
-            else:
-                await message.reply(
-                    f"⚠️ There is no Stable releases for {device['full_name']}."
-                    f"Check out all releases at <a href='https://orangefox.download/device/{device['codename']}'>device's page</a>",
-                    disable_web_page_preview=True,
-                )
-                return
+            file_id = build["_id"]
 
     async with httpx.AsyncClient(http2=True) as http:
         data = await http.get(API_HOST + f"releases/get?_id={file_id}")
@@ -433,7 +441,7 @@ async def orangefox(message):
         await message.reply("Release is not found!")
         return
 
-    reply_text = "<u><b>OrangeFox Recovery <i>stable</i> release</b></u>\n"
+    reply_text = f"<u><b>OrangeFox Recovery <i>{build_type}</i> release</b></u>\n"
     reply_text += ("  <b>Device:</b> {fullname} (<code>{codename}</code>)\n").format(
         fullname=device["full_name"], codename=device["codename"]
     )
@@ -442,10 +450,8 @@ async def orangefox(message):
         time.strftime("%d/%m/%Y", time.localtime(release["date"]))
     )
 
-    reply_text += (
-        "  <b>Maintainer:</b> <a href='https://t.me/{username}'>{name}</a>\n"
-    ).format(
-        name=device["maintainer"]["name"], username=device["maintainer"]["username"]
+    reply_text += ("  <b>Maintainer:</b> {name}\n").format(
+        name=device["maintainer"]["name"]
     )
     changelog = release["changelog"]
     try:
