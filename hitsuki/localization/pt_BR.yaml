@@ -440,8 +440,8 @@ STRINGS:
     u_not_admin: Você deveria ser um administrador para fazer isso!
     #Rights
     "bot_no_right:not_admin": Não sou administrador!
-    bot_no_right: "Eu não tenho permissão autorizado para fazer isso! \nPermissão pendente: <b>%s</b>"
-    user_no_right: "Você deveria ter permissão autorizado para fazer isso! \nPermissão pendente: <b>%s</b>"
+    bot_no_right: "Eu não tenho permissão autorizado para fazer isso!"
+    user_no_right: "Você deveria ter permissão autorizado para fazer isso!"
     "user_no_right:not_admin": Você deveria ser administrador para fazer isso!
     #is chat creator
     unable_identify_creator: "O criador do chat anônimo não pôde ser identificado. Uma assinatura duplicada (títulos) foi encontrada!"

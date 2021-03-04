@@ -476,6 +476,7 @@ async def welcome_security_handler(message: Message, strings):
     user_id = new_user.id
 
     if user_id == BOT_ID:
+        await message.reply(strings['thank_for_add'])
         await bot.send_message(chat_id=LOGS_CHANNEL_ID, text=f"I was added to the group <b>{html.escape(message.chat.title)}</b> (<code>{message.chat.id}</code>)")
         return
 

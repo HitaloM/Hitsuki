@@ -21,7 +21,7 @@ import os
 import requests
 import rapidjson
 
-from hitsuki import OWNER_ID, OPERATORS, HITSUKI_VERSION, bot,dp
+from hitsuki import OWNER_ID, OPERATORS, HITSUKI_VERSION, bot, dp
 from hitsuki.decorator import REGISTRED_COMMANDS, COMMANDS_ALIASES, register
 from hitsuki.modules import LOADED_MODULES
 from hitsuki.services.mongo import db, mongodb
@@ -29,7 +29,7 @@ from hitsuki.services.redis import redis
 from hitsuki.services.telethon import tbot
 from .utils.covert import convert_size
 from .utils.language import get_strings_dec
-from .utils.message import get_args, need_args_dec
+from .utils.message import need_args_dec
 from .utils.notes import BUTTONS, get_parsed_note_list, t_unparse_note_item, send_note
 from .utils.term import chat_term
 
