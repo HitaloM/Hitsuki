@@ -397,7 +397,7 @@ async def check(message):
         await message.reply(m, reply_markup=buttons)
 
 
-@register(cmds="ofox")
+@decorator.register(cmds=["ofox", "of"])
 @disableable_dec("ofox")
 async def orangefox(message):
     API_HOST = "https://api.orangefox.download/v3/"
@@ -414,21 +414,38 @@ async def orangefox(message):
     if build_type == "":
         build_type = "stable"
 
-    if codename == "":
-        reply_text = "<b>OrangeFox Recovery is currently avaible for:</b>"
+    if codename == "devices" or codename == "":
+        reply_text = (
+            f"<b>OrangeFox Recovery <i>{build_type}</i> is currently avaible for:</b>"
+        )
 
         async with httpx.AsyncClient(http2=True) as http:
-            data = await http.get(API_HOST + "devices/")
+            data = await http.get(
+                API_HOST + f"devices/?release_type={build_type}&sort=device_name_asc"
+            )
             devices = json.loads(data.text)
             await http.aclose()
-        for device in devices["data"]:
-            reply_text += (
-                f"\n • {device['full_name']} (<code>{device['codename']}</code>)"
+        try:
+            for device in devices["data"]:
+                reply_text += (
+                    f"\n - {device['full_name']} (<code>{device['codename']}</code>)"
+                )
+        except BaseException:
+            await message.reply(
+                f"'<b>{build_type}</b>' is not a type of build available, the types are just '<b>beta</b>' or '<b>stable</b>'."
             )
+            return
 
-        reply_text += (
-            "\n\n" + "You can get latest release by using <code>/ofox (codename)</code>"
-        )
+        if build_type == "stable":
+            reply_text += (
+                "\n\n"
+                + f"To get the latest Stable release use <code>/ofox (codename)</code>, for example: <code>/ofox raphael</code>"
+            )
+        elif build_type == "beta":
+            reply_text += (
+                "\n\n"
+                + f"To get the latest Beta release use <code>/ofox (codename) beta</code>, for example: <code>/ofox raphael beta</code>"
+            )
         await message.reply(reply_text)
         return
 
@@ -513,7 +530,7 @@ __help__ = """
 - /magisk: Get latest Magisk releases.
 - /twrp (codename): Gets latest TWRP for the android device using the codename.
 - /ofox (codename): Gets latest OFRP for the android device using the codename.
-- /ofox: Sends the list of devices supported by OFRP.
+- /ofox devices: Sends the list of devices with stable releases supported by OFRP.
 - /models (codename): Search for Android device models using codename.
 - /whatis (codename): Find out which smartphone is using the codename.
 """
