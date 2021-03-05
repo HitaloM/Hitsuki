@@ -292,10 +292,11 @@ async def twrp(message):
         return
 
     else:
-        m = f"<b>Latest TWRP for {device}</b>\n"
+        m = "<b><u>TeamWin Recovery <i>official</i> release</u></b>\n"
+        m += f"  <b>Device:</b> {device}\n"
         page = BeautifulSoup(url.content, "lxml")
         date = page.find("em").text.strip()
-        m += f"📅 <b>Updated:</b> <code>{date}</code>\n"
+        m += f"  <b>Updated:</b> <code>{date}</code>\n"
         trs = page.find("table").find_all("tr")
         row = 2 if trs[0].find("a").text.endswith("tar") else 1
 
@@ -304,9 +305,9 @@ async def twrp(message):
             dl_link = f"https://dl.twrp.me{download['href']}"
             dl_file = download.text
             size = trs[i].find("span", {"class": "filesize"}).text
-        m += f"📥 <b>Size:</b> <code>{size}</code>\n"
-        m += f"📦 <b>File:</b> <code>{dl_file.lower()}</code>"
-        btn = "Click here to download!"
+        m += f"  <b>Size:</b> <code>{size}</code>\n"
+        m += f"  <b>File:</b> <code>{dl_file.lower()}</code>"
+        btn = "⬇️ Download"
         button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=dl_link))
 
         await http.aclose()
@@ -321,7 +322,7 @@ async def check(message):
         temp = msg_args[1]
         csc = msg_args[2]
     except IndexError:
-        m = "Please type your device <b>MODEL</b> and <b>CSC</b> into it!\ni.e <code>/samcheck SM-J710MN ZTO</code>!"
+        m = f"Please type your device <b>MODEL</b> and <b>CSC</b> into it!\ni.e <code>/{get_cmd(message)} SM-J710MN ZTO</code>!"
         await message.reply(m)
         return
 
@@ -346,7 +347,7 @@ async def check(message):
     if page1.find("latest").text.strip():
         pda1, csc1, phone1 = page1.find("latest").text.strip().split("/")
         m = f"<b>MODEL:</b> <code>{model.upper()}</code>\n<b>CSC:</b> <code>{csc.upper()}</code>\n\n"
-        m += "<b>Latest Avaliable Firmware:</b>\n"
+        m += "<b>Latest available firmware:</b>\n"
         m += f"• PDA: <code>{pda1}</code>\n• CSC: <code>{csc1}</code>\n"
         if phone1:
             m += f"• Phone: <code>{phone1}</code>\n"
@@ -355,7 +356,7 @@ async def check(message):
         m += "\n"
     else:
         m = f"<b>No public release found for {model.upper()} and {csc.upper()}.</b>\n\n"
-    m += "<b>Latest Test Firmware:</b>\n"
+    m += "<b>Latest test firmware:</b>\n"
     if len(page2.find("latest").text.strip().split("/")) == 3:
         pda2, csc2, phone2 = page2.find("latest").text.strip().split("/")
         m += f"• PDA: <code>{pda2}</code>\n• CSC: <code>{csc2}</code>\n"
@@ -365,7 +366,7 @@ async def check(message):
             m += f"• Android: <code>{os2}</code>\n"
     else:
         md5 = page2.find("latest").text.strip()
-        m += f"• Hash: <code>{md5}</code>\n• Android: <code>{os2}</code>\n\n"
+        m += f"• Hash: <code>{md5}</code>\n• Android: <code>{os2}</code>\n"
 
     if get_cmd(message) == "samcheck":
         await message.reply(m)
