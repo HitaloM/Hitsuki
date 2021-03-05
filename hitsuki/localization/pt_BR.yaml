@@ -551,8 +551,8 @@ STRINGS:
   #havent_set_rules_note: "You haven't set the rules note yet."
   #success_remove_rules_note: "Successfully removed rules note in <b>{}</b>."
   greetings:
-    default_welcome: "Welcome {mention}! How are you?"
-    thank_for_add: "Thanks for adding me to your group! Take a look at /help and follow my news channel @HitsukiNews."
+    default_welcome: "Bem-vindo {mention}! Tudo bem?"
+    thank_for_add: "Obrigado por me adicionar ao seu grupo! Dê uma olhada em /help e siga o meu canal de notícias @HitsukiNews."
     default_security_note: "Bem-vindo(a) {mention}! Por favor, clique no botão abaixo para verificar-se como humano!"
     bool_invalid_arg: Argumento inválido, espera-se <code>on</code>/<code>off</code>.
     #/setwelcome
