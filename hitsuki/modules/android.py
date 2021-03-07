@@ -16,7 +16,6 @@
 import time
 import httpx
 import rapidjson as json
-from yaml import load, Loader
 from bs4 import BeautifulSoup
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -89,97 +88,6 @@ async def variants(message):
 
     await http.aclose()
     await message.reply(m)
-
-
-@register(cmds="miui")
-@disableable_dec("miui")
-async def miui(message):
-    codename = get_arg(message)
-    if not codename:
-        m = "Please write a codename, example: <code>/miui whyred</code>"
-        await message.reply(m)
-        return
-
-    async with httpx.AsyncClient(http2=True) as http:
-        yaml_data = await http.get(MIUI_FIRM)
-        db = load(yaml_data.content, Loader=Loader)
-
-    data = [i for i in db if codename in i["codename"]]
-
-    if len(data) < 1:
-        await message.reply("Provide a valid codename!")
-        return
-
-    for fw in data:
-        av = fw["android"]
-        branch = fw["branch"]
-        method = fw["method"]
-        link = fw["link"]
-        fname = fw["name"]
-        version = fw["version"]
-        size = fw["size"]
-        date = fw["date"]
-        md5 = fw["md5"]
-        codename = fw["codename"]
-
-        btn = branch + " | " + method + " | " + version
-
-        button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=link))
-
-    text = f"<b>MIUI - Last build for {codename}:</b>"
-    text += f"\n\n<b>Name:</b> <code>{fname}</code>"
-    text += f"\n<b>Android:</b> <code>{av}</code>"
-    text += f"\n<b>Size:</b> <code>{size}</code>"
-    text += f"\n<b>Date:</b> <code>{date}</code>"
-    text += f"\n<b>MD5:</b> <code>{md5}</code>"
-
-    await http.aclose()
-    await message.reply(text, reply_markup=button)
-
-
-@register(cmds="realmeui")
-@disableable_dec("realmeui")
-async def realmeui(message):
-    codename = get_arg(message)
-    if not codename:
-        m = "Please write a codename, example: <code>/realmeui RMX2061</code>"
-        await message.reply(m)
-        return
-
-    async with httpx.AsyncClient(http2=True) as http:
-        yaml_data = await http.get(REALME_FIRM)
-        db = load(yaml_data.content, Loader=Loader)
-
-    data = [i for i in db if codename in i["codename"]]
-
-    if len(data) < 1:
-        await message.reply("Provide a valid codename!")
-        return
-
-    for fw in data:
-        reg = fw["region"]
-        link = fw["download"]
-        device = fw["device"]
-        version = fw["version"]
-        cdn = fw["codename"]
-        sys = fw["system"]
-        size = fw["size"]
-        date = fw["date"]
-        md5 = fw["md5"]
-
-        btn = reg + " | " + version
-
-        button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=link))
-
-    text = f"<b>RealmeUI - Last build for {codename}:</b>"
-    text += f"\n\n<b>Device:</b> <code>{device}</code>"
-    text += f"\n<b>System:</b> <code>{sys}</code>"
-    text += f"\n<b>Size:</b> <code>{size}</code>"
-    text += f"\n<b>Date:</b> <code>{date}</code>"
-    text += f"\n<b>MD5:</b> <code>{md5}</code>"
-
-    await http.aclose()
-    await message.reply(text, reply_markup=button)
 
 
 @register(cmds="magisk")
@@ -525,9 +433,8 @@ Module specially made for Android users.
 - /phhmagisk: Get the latest PHH Magisk.
 
 <b>Device firmware:</b>
-- /miui (codename): Xiaomi only - gets latest MIUI download links for the given device.
-- /realmeui (codename): Realme only - gets latest RealmeUI download links for the given device.
 - /samcheck (model) (csc): Samsung only - shows the latest firmware info for the given device, taken from samsung servers.
+- /samget (model) (csc): Similar to the <code>/samcheck</code> command but having download buttons.
 
 <b>Misc</b>
 - /magisk: Get latest Magisk releases.

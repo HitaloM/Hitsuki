@@ -34,5 +34,4 @@ bs4
 lxml
 spamwatch
 httpx[http2]
-wikipedia-api
 git+https://github.com/aioanilist/aioanilist

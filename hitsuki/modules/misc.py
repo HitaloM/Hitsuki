@@ -11,7 +11,6 @@
 # GNU Affero General Public License for more details.
 
 import httpx
-import wikipediaapi
 from contextlib import suppress
 from datetime import datetime
 
@@ -90,26 +89,6 @@ Variables are special words which will be replaced by actual info
 <code>{chatname}</code>: Chat name
 <code>{chatnick}</code>: Chat username
     """
-    )
-
-
-@decorator.register(cmds=['wiki', 'wikipedia'])
-@need_args_dec()
-@disableable_dec('wiki')
-async def wiki(message):
-    args = get_args_str(message)
-    wiki = wikipediaapi.Wikipedia("en")
-
-    page = wiki.page(args)
-
-    if page.exists() is False:
-        await message.reply("No results were found!")
-        return
-
-    button = InlineKeyboardMarkup().add(InlineKeyboardButton(text="Read more...", url=page.fullurl))
-    await message.reply(
-        ("The result of {} is:\n\n<b>{}</b>\n{}...").format(args, page.title, page.summary[0:500]),
-        reply_markup=button,
     )
 
 
@@ -261,7 +240,6 @@ A module with some useful commands but without a specific category.
 - /direct (url): Generates direct links from the sourceforge.net
 - /github (username): Returns info about a GitHub user or organization.
 - /repo (username): Similar to the <code>/github</code> command but also having the list of user repositories.
-- /wiki (keywords): Get wikipedia articles just using this bot.
 - /cancel: Disables current state. Can help in cases if Hitsuki not responing on your message.
 - /id: get the current group id. If used by replying to a message, gets that user's id.
 - /info: get information about a user.
