@@ -389,8 +389,9 @@ __help__ = """
 Filter module is great for everything! filter in here is used to filter words or sentences in your chat - send notes, warn, ban those!
 
 <b>General (Admins):</b>
-- /addfilter (word/sentence)
-As in command this is used to add filter. To avoid hassle when setting up the the filter, Hitsuki will take you through an interactive setup!
+- /addfilter (word/sentence): This is used to add filters.
+- /delfilter (word/sentence): Use this command to remove a specific filter.
+- /delallfilters: As in command this is used to remove all filters of group.
 
 <b>As of now, there is 6 actions that you can do:</b>
 - <code>Send a note</code>

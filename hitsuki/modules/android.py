@@ -518,6 +518,8 @@ async def orangefox(message):
 __mod_name__ = "Android"
 
 __help__ = """
+Module specially made for Android users.
+
 <b>GSI</b>
 - /phh: Get the latest PHH AOSP GSIs.
 - /phhmagisk: Get the latest PHH Magisk.

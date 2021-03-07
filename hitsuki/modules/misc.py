@@ -255,11 +255,12 @@ __filters__ = {
 __mod_name__ = "Misc"
 
 __help__ = """
-An "odds and ends" module for small, simple commands which don't really fit anywhere.
+A module with some useful commands but without a specific category.
 
 <b>Available commands:</b>
 - /direct (url): Generates direct links from the sourceforge.net
 - /github (username): Returns info about a GitHub user or organization.
+- /repo (username): Similar to the <code>/github</code> command but also having the list of user repositories.
 - /wiki (keywords): Get wikipedia articles just using this bot.
 - /cancel: Disables current state. Can help in cases if Hitsuki not responing on your message.
 - /id: get the current group id. If used by replying to a message, gets that user's id.
