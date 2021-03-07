@@ -16,7 +16,7 @@ from datetime import datetime
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import Message
 from aiogram.utils.exceptions import BadRequest, MessageNotModified, MessageToDeleteNotFound
 
 from hitsuki import decorator
@@ -25,7 +25,7 @@ from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
-from .utils.message import get_args_str, get_args, need_args_dec, get_cmd
+from .utils.message import get_args_str, need_args_dec, get_cmd
 
 
 @register(cmds='buttonshelp', no_args=True, only_pm=True)
