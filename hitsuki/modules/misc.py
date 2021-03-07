@@ -113,7 +113,7 @@ async def wiki(message):
     )
 
 
-@decorator.register(cmds=['github', 'git'])
+@decorator.register(cmds=['github', 'git', 'repo'])
 @need_args_dec()
 @disableable_dec('github')
 async def github(message):
@@ -158,14 +158,24 @@ async def github(message):
                     else:
                         text += ("\n<b>{}:</b> <code>{}</code>".format(x, y))
         reply_text = text
-    else:
-        reply_text = "User not found. Make sure you entered valid username!"
+    elif not usr.get('login'):
+        await http.aclose()
+        await message.reply("User not found. Make sure you entered valid username!")
+        return
 
-    http.aclose
-    if usr["avatar_url"]:
-        await message.reply_photo(photo=usr["avatar_url"], caption=reply_text)
-    else:
-        await message.reply(reply_text, disable_web_page_preview=True)
+    await http.aclose()
+    if get_cmd(message) == "repo":
+        async with httpx.AsyncClient(http2=True) as http:
+            r = await http.get(f'https://api.github.com/users/{args}/repos?per_page=40')
+            response = r.json()
+            reply_text += "<b>\n\nRepositories:</b>\n"
+            for i in range(len(response)):
+                if i == 40:
+                    break
+                reply_text += f"{i + 1}. <a href='https://github.com/{response[i]['html_url']}'>{response[i]['name']}</a>\n"
+            await http.aclose()
+
+    await message.reply(reply_text, disable_web_page_preview=True)
 
 
 @register(cmds='ping')
