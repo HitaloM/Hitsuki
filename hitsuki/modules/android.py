@@ -23,7 +23,7 @@ from hitsuki import decorator
 from hitsuki.decorator import register
 from .utils.android import GetDevice
 from .utils.disable import disableable_dec
-from .utils.message import get_arg, need_args_dec, get_cmd
+from .utils.message import get_arg, get_cmd
 
 MIUI_FIRM = "https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml"
 REALME_FIRM = "https://raw.githubusercontent.com/RealmeUpdater/realme-updates-tracker/master/data/latest.yml"

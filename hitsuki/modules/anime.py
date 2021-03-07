@@ -14,7 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import aioanilist
-import requests
 import time
 import html
 import httpx
