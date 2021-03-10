@@ -196,11 +196,11 @@ STRINGS:
     enable_all_done: "Todos os (<code>{num}</code>) comandos foram habilitados no <b>{chat_name}</b>!"
   bot_rights:
     change_info: "Eu não tenho o direito de mudar informações do grupo, por favor, faça-me administrador com esse direito."
-    edit_messages: "Não tenho o direito de editar mensagens!"
-    delete_messages: "Não tenho o direito de apagar mensagens aqui."
-    ban_user: "Eu não tenho o direito de banir usuários, por favor, faça-me administrador com esse direito."
-    pin_messages: "Eu não tenho direitos para fixar mensagens, por favor, me torne administrador com esse direito."
-    add_admins: "Não tenho direitos para adicionar administradores, por favor, me torne administrador com esse direito."
+    edit_messages: "Eu não tenho permissão para editar mensagens!"
+    delete_messages: "Eu não tenho permissão para apagar mensagens aqui."
+    ban_user: "Eu não tenho permissão para banir usuários, por favor me torne um administrador com esta permissão."
+    pin_messages: "Eu não tenho permissão para fixar mensagens, por favor me torne um administrador com esta permissão."
+    add_admins: "Eu não tenho permissão para adicionar administradores, por favor me torne um administrador com esta permissão."
   feds:
     #decorators
     need_fed_admin: "Você não é um administrador na federação <b>{name}</b>"
@@ -440,8 +440,8 @@ STRINGS:
     u_not_admin: Você deveria ser um administrador para fazer isso!
     #Rights
     "bot_no_right:not_admin": Não sou administrador!
-    bot_no_right: "Eu não tenho permissão autorizado para fazer isso! \nPermissão pendente: <b>%s</b>"
-    user_no_right: "Você deveria ter permissão autorizado para fazer isso! \nPermissão pendente: <b>%s</b>"
+    bot_no_right: "Eu não tenho permissão para {permission} aqui!"
+    user_no_right: "Você não tem permissão {permission} aqui!"
     "user_no_right:not_admin": Você deveria ser administrador para fazer isso!
     #is chat creator
     unable_identify_creator: "O criador do chat anônimo não pôde ser identificado. Uma assinatura duplicada (títulos) foi encontrada!"
