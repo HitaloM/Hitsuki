@@ -13,52 +13,58 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import aioanilist
 import time
 import html
 import httpx
 import bs4
+import anilist
 from jikanpy import AioJikan
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec
-from .utils.message import get_args_str
+from .utils.message import get_args_str, need_args_dec
 
 
 @register(cmds="anime")
+@need_args_dec()
 @disableable_dec("anime")
 async def anilist_anime(message):
     query = get_args_str(message)
 
     try:
-        async with aioanilist.Client() as client:
-            results = await client.search("anime", query, limit=5)
-            anime = await client.get("anime", results[0].id)
+        async with anilist.AsyncClient() as client:
+            results = await client.search(query, "anime", 1)
+            anime = await client.get(results[0].id, "anime")
     except IndexError:
         return await message.reply(
             "Something went wrong, check your search and try again!"
         )
 
-    d = anime.description
-    if len(d) > 700:
-        d_short = d[0:500] + "..."
-        desc = f"<b>Description:</b> {d_short}".replace("<br>", "")
+    if len(anime.description) > 700:
+        desc = f"<b>Short description:</b> <i>{anime.description_short}</i>..."
     else:
-        desc = f"<b>Description:</b> {d}".replace("<br>", "")
+        desc = f"<b>Description:</b> <i>{anime.description}</i>"
 
     text = f"<b>{anime.title.romaji}</b> (<code>{anime.title.native}</code>)\n"
     text += f"<b>Type:</b> <code>{anime.format}</code>\n"
-    text += f"<b>Status:</b> <code>{anime.status}</code>\n"
-    text += f"<b>Episodes:</b> <code>{anime.episodes}</code>\n"
-    text += f"<b>Duration:</b> <code>{anime.duration}</code> Por Ep.\n"
-    text += f"<b>Score:</b> <code>{anime.score.average}</code>\n"
-    text += f"<b>Genres:</b> <code>{', '.join(str(x) for x in anime.genres)}</code>\n"
-    studio = "".join(i.name + ", " for i in anime.studios.nodes)
-    if len(studio) > 0:
-        studio = studio[:-2]
-    text += f"<b>Studios:</b> <code>{studio}</code>\n"
-    text += f"\n{desc}"
+    if hasattr(anime, "status"):
+        text += f"<b>Status:</b> <code>{anime.status}</code>\n"
+    if hasattr(anime, "episodes"):
+        text += f"<b>Episodes:</b> <code>{anime.episodes}</code>\n"
+    if hasattr(anime, "duration"):
+        text += f"<b>Duration:</b> <code>{anime.duration}</code> Por Ep.\n"
+    if hasattr(anime.score, "average"):
+        text += f"<b>Score:</b> <code>{anime.score.average}</code>\n"
+    if hasattr(anime, "genres"):
+        text += (
+            f"<b>Genres:</b> <code>{', '.join(str(x) for x in anime.genres)}</code>\n"
+        )
+    if hasattr(anime, "studios"):
+        text += (
+            f"<b>Studio:</b> <code>{', '.join(str(x) for x in anime.studios)}</code>\n"
+        )
+    text += f"\n{desc.replace('<br>', '')}"
 
     keyboard = InlineKeyboardMarkup().add(
         InlineKeyboardButton(text="More Info", url=anime.url)
@@ -77,14 +83,15 @@ async def anilist_anime(message):
 
 
 @register(cmds="airing")
+@need_args_dec()
 @disableable_dec("airing")
 async def anilist_airing(message):
     query = get_args_str(message)
 
     try:
-        async with aioanilist.Client() as client:
-            results = await client.search("anime", query, limit=5)
-            anime = await client.get("anime", results[0].id)
+        async with anilist.AsyncClient() as client:
+            results = await client.search(query, "anime", 1)
+            anime = await client.get(results[0].id, "anime")
     except IndexError:
         return await message.reply(
             "Something went wrong, check your search and try again!"
@@ -93,64 +100,65 @@ async def anilist_airing(message):
     text = f"<b>{anime.title.romaji}</b> (<code>{anime.title.native}</code>)\n"
     text += f"<b>ID:</b> <code>{anime.id}</code>\n"
     text += f"<b>Type:</b> <code>{anime.format}</code>\n"
-    if anime.next_airing:
+    if hasattr(anime, "next_airing"):
         text += f"<b>Episode:</b> <code>{anime.next_airing.episode}</code>\n"
         text += f"<b>Airing in:</b> <code>{time.strftime('%H:%M:%S - %d/%m/%Y', time.localtime(anime.next_airing.at))}</code>"
     else:
         text += f"<b>Episode:</b> <code>{anime.episodes}</code>\n"
         text += "<b>Airing in:</b> <code>N/A</code>"
 
-    if anime.banner:
+    if hasattr(anime, "banner"):
         await message.reply_photo(photo=anime.banner, caption=text)
     else:
         await message.reply(text)
 
 
 @register(cmds="manga")
+@need_args_dec()
 @disableable_dec("manga")
 async def anilist_manga(message):
     query = get_args_str(message)
 
     try:
-        async with aioanilist.Client() as client:
-            results = await client.search("manga", query, limit=5)
-            manga = await client.get("manga", results[0].id)
+        async with anilist.AsyncClient() as client:
+            results = await client.search(query, "manga", 1)
+            manga = await client.get(results[0].id, "manga")
     except IndexError:
         return await message.reply(
             "Something went wrong, check your search and try again!"
         )
 
-    d = manga.description
-    if len(d) > 700:
-        d_short = d[0:500] + "..."
-        desc = f"<b>Description:</b> {d_short}".replace("<br>", "")
+    if len(manga.description) > 700:
+        desc = f"<b>Short description:</b> <i>{manga.description_short}</i>..."
     else:
-        desc = f"<b>Description:</b> {d}".replace("<br>", "")
+        desc = f"<b>Description:</b> <i>{manga.description}</i>"
 
     text = f"<b>{manga.title.romaji}</b> (<code>{manga.title.native}</code>)\n"
-    if manga.start_date.year:
-        text += f"<b>Start Date:</b> <code>{manga.start_date.year}</code>\n"
-    text += f"<b>Status:</b> <code>{manga.status}</code>\n"
-    if manga.chapters:
+    if hasattr(manga.start_date, "year"):
+        text += f"<b>Date:</b> <code>{manga.start_date.year}</code>\n"
+    if hasattr(manga, "status"):
+        text += f"<b>Status:</b> <code>{manga.status}</code>\n"
+    if hasattr(manga, "chapters"):
         text += f"<b>Chapters:</b> <code>{manga.chapters}</code>\n"
-    if manga.volumes:
+    if hasattr(manga, "chapters"):
         text += f"<b>Volumes:</b> <code>{manga.volumes}</code>\n"
-    text += f"<b>Score:</b> <code>{manga.score.average}</code>\n"
-    text += f"<b>Genres:</b> <code>{', '.join(str(x) for x in manga.genres)}</code>\n"
-    text += f"\n{desc}"
+    if hasattr(manga.score, "average"):
+        text += f"<b>Score:</b> <code>{manga.score.average}</code>\n"
+    if hasattr(manga, "genres"):
+        text += (
+            f"<b>Genres:</b> <code>{', '.join(str(x) for x in manga.genres)}</code>\n"
+        )
+    text += f"\n{desc.replace('<br>', '')}"
 
     keyboard = InlineKeyboardMarkup().add(
         InlineKeyboardButton(text="More Info", url=manga.url)
     )
 
-    if manga.banner:
-        await message.reply_photo(
-            photo=f"https://img.anili.st/media/{manga.id}",
-            caption=text,
-            reply_markup=keyboard,
-        )
-    else:
-        await message.reply(text)
+    await message.reply_photo(
+        photo=f"https://img.anili.st/media/{manga.id}",
+        caption=text,
+        reply_markup=keyboard,
+    )
 
 
 @register(cmds="upcoming")
@@ -176,12 +184,7 @@ async def upcoming(message):
 async def site_search(message, site: str):
     args = message.text.split(" ", 1)
     more_results = True
-
-    try:
-        search_query = args[1]
-    except IndexError:
-        await message.reply("Give something to search")
-        return
+    search_query = args[1]
 
     if site == "kaizoku":
         search_url = f"https://animekaizoku.com/?s={search_query}"
@@ -232,12 +235,14 @@ async def site_search(message, site: str):
 
 
 @register(cmds="kaizoku")
+@need_args_dec()
 @disableable_dec("kaizoku")
 async def kaizoku(message):
     await site_search(message, "kaizoku")
 
 
 @register(cmds="kayo")
+@need_args_dec()
 @disableable_dec("kayo")
 async def kayo(message):
     await site_search(message, "kayo")

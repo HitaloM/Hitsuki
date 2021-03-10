@@ -34,4 +34,4 @@ bs4
 lxml
 spamwatch
 httpx[http2]
-git+https://github.com/aioanilist/aioanilist
+git+https://github.com/AmanoTeam/python-anilist
