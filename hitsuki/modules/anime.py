@@ -26,6 +26,23 @@ from .utils.message import get_args_str, need_args_dec
 from .utils.http import http
 
 
+def t(milliseconds: int) -> str:
+    """Inputs time in milliseconds, to get beautified time,
+    as string"""
+    seconds, milliseconds = divmod(int(milliseconds), 1000)
+    minutes, seconds = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+    tmp = (
+        ((str(days) + " Days, ") if days else "")
+        + ((str(hours) + " Hours, ") if hours else "")
+        + ((str(minutes) + " Minutes, ") if minutes else "")
+        + ((str(seconds) + " Seconds, ") if seconds else "")
+        + ((str(milliseconds) + " ms, ") if milliseconds else "")
+    )
+    return tmp[:-2]
+
+
 @register(cmds="anime")
 @need_args_dec()
 @disableable_dec("anime")
@@ -101,8 +118,9 @@ async def anilist_airing(message):
     text += f"<b>ID:</b> <code>{anime.id}</code>\n"
     text += f"<b>Type:</b> <code>{anime.format}</code>\n"
     if hasattr(anime, "next_airing"):
+        airing_time = anime.next_airing.time_until * 1000
         text += f"<b>Episode:</b> <code>{anime.next_airing.episode}</code>\n"
-        text += f"<b>Airing in:</b> <code>{time.strftime('%H:%M:%S - %d/%m/%Y', time.localtime(anime.next_airing.at))}</code>"
+        text += f"<b>Airing in:</b> <code>{t(airing_time)}</code>"
     else:
         text += f"<b>Episode:</b> <code>{anime.episodes}</code>\n"
         text += "<b>Airing in:</b> <code>N/A</code>"
