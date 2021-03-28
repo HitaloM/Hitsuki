@@ -10,7 +10,6 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 
-import httpx
 from contextlib import suppress
 from datetime import datetime
 
@@ -26,6 +25,7 @@ from .utils.language import get_strings_dec
 from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
 from .utils.message import get_args_str, need_args_dec, get_cmd
+from .utils.http import http
 
 
 @register(cmds='buttonshelp', no_args=True, only_pm=True)
@@ -98,9 +98,8 @@ Variables are special words which will be replaced by actual info
 async def github(message):
     args = get_args_str(message)
 
-    async with httpx.AsyncClient(http2=True) as http:
-        r = await http.get(f'https://api.github.com/users/{args}')
-        usr = r.json()
+    r = await http.get(f'https://api.github.com/users/{args}')
+    usr = r.json()
 
     if usr.get('login'):
         text = f"<b>Username:</b> <a href='https://github.com/{usr['login']}'>{usr['login']}</a>"
@@ -138,22 +137,18 @@ async def github(message):
                         text += ("\n<b>{}:</b> <code>{}</code>".format(x, y))
         reply_text = text
     elif not usr.get('login'):
-        await http.aclose()
         await message.reply("User not found. Make sure you entered valid username!")
         return
 
-    await http.aclose()
     if get_cmd(message) == "repo":
-        async with httpx.AsyncClient(http2=True) as http:
-            r = await http.get(f'https://api.github.com/users/{args}/repos?per_page=40')
-            response = r.json()
-            reply_text += "<b>\n\nRepositories:</b>\n"
-            for i in range(len(response)):
-                if i == 40:
-                    break
-                reply_text += f"{i + 1}. <a href='https://github.com/{response[i]['html_url']}'>{response[i]['name']}</a>\n"
-            await http.aclose()
-
+        r = await http.get(f'https://api.github.com/users/{args}/repos?per_page=40')
+        response = r.json()
+        reply_text += "<b>\n\nRepositories:</b>\n"
+        for i in range(len(response)):
+            if i == 40:
+                break
+            reply_text += f"{i + 1}. <a href='https://github.com/{response[i]['html_url']}'>{response[i]['name']}</a>\n"
+ 
     await message.reply(reply_text, disable_web_page_preview=True)
 
 

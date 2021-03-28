@@ -17,6 +17,8 @@ import time
 import httpx
 import rapidjson as json
 from bs4 import BeautifulSoup
+from hurry.filesize import size as get_size
+from urllib.parse import quote_plus
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from hitsuki import decorator
@@ -24,9 +26,111 @@ from hitsuki.decorator import register
 from .utils.android import GetDevice
 from .utils.disable import disableable_dec
 from .utils.message import get_arg, get_cmd
+from .utils.http import http
 
-MIUI_FIRM = "https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml"
-REALME_FIRM = "https://raw.githubusercontent.com/RealmeUpdater/realme-updates-tracker/master/data/latest.yml"
+# Commands /evo and /los ported from Haruka Aya
+# Commands /twrp, /samcheck and /samget ported from Samsung Geeks
+
+
+@register(cmds="los")
+@disableable_dec("los")
+async def los(message):
+
+    try:
+        device = get_arg(message)
+    except IndexError:
+        device = ''
+
+    if device == '':
+        text = "Please type your device <b>codename</b>!\nFor example, <code>/{} tissot</code>".format("los")
+        await message.reply(text, disable_web_page_preview=True)
+        return
+
+    fetch = await http.get(f'https://download.lineageos.org/api/v1/{device}/nightly/*')
+    if fetch.status_code == 200 and len(fetch.json()['response']) != 0:
+        usr = json.loads(fetch.content)
+        response = usr['response'][0]
+        filename = response['filename']
+        url = response['url']
+        buildsize_a = response['size']
+        buildsize_b = get_size(int(buildsize_a))
+        version = response['version']
+
+        text = ("<b>Download:</b> <a href='{}'>{}</a>\n").format(url, filename)
+        text += ("<b>Build Size:</b> <code>{}</code>\n").format(buildsize_b)
+        text += ("<b>Version:</b> <code>{}</code>\n").format(version)
+
+        btn = ("Click here to download!")
+        keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
+        await message.reply(text, reply_markup=keyboard, disable_web_page_preview=True)
+        return
+
+    else:
+        text = ("Couldn't find any results matching your query.")
+    await message.reply(text, disable_web_page_preview=True)
+
+
+@register(cmds="evo")
+@disableable_dec("evo")
+async def evo(message):
+
+    try:
+        device = get_arg(message)
+    except IndexError:
+        device = ''
+
+    if device == "x00t":
+        device = "X00T"
+
+    if device == "x01bd":
+        device = "X01BD"
+
+    if device == '':
+        text = ("Please type your device <b>codename</b>!\nFor example, <code>/{} tissot</code>").format("evo")
+        await message.reply(text, disable_web_page_preview=True)
+        return
+
+    fetch = await http.get(
+        f'https://raw.githubusercontent.com/Evolution-X-Devices/official_devices/master/builds/{device}.json'
+    )
+
+    if fetch.status_code in [500, 504, 505]:
+        await message.reply(
+            "Hitsuki have been trying to connect to GitHub User Content, It seem like GitHub User Content is down"
+        )
+        return
+
+    if fetch.status_code == 200:
+        try:
+            usr = json.loads(fetch.content)
+            filename = usr['filename']
+            url = usr['url']
+            version = usr['version']
+            maintainer = usr['maintainer']
+            maintainer_url = usr['telegram_username']
+            size_a = usr['size']
+            size_b = get_size(int(size_a))
+
+            text = ("<b>Download:</b> <a href='{}'>{}</a>\n").format(url, filename)
+            text += ("<b>Build Size:</b> <code>{}</code>\n").format(size_b)
+            text += ("<b>Android Version:</b> <code>{}</code>\n").format(version)
+            text += ("<b>Maintainer:</b> {}\n").format(
+                f"<a href='{maintainer_url}'>{maintainer}</a>")
+
+            btn = ("Clich here to download!")
+            keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
+            await message.reply(text, reply_markup=keyboard, disable_web_page_preview=True)
+            return
+
+        except ValueError:
+            text = ("Tell the rom maintainer to fix their OTA json. I'm sure this won't work with OTA and it won't work with this bot too :P")
+            await message.reply(text, disable_web_page_preview=True)
+            return
+
+    elif fetch.status_code == 404:
+        text = ("Couldn't find any results matching your query.")
+        await message.reply(text, disable_web_page_preview=True)
+        return
 
 
 @register(cmds="whatis")
@@ -71,11 +175,10 @@ async def variants(message):
         await message.reply(m)
         return
 
-    async with httpx.AsyncClient(http2=True) as http:
-        data = await http.get(
-            "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json"
-        )
-        db = json.loads(data.content)
+    data = await http.get(
+        "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json"
+    )
+    db = json.loads(data.content)
     device = db[device]
     m = f"<b>{name}</b> variants:\n\n"
 
@@ -86,7 +189,6 @@ async def variants(message):
             model, name
         )
 
-    await http.aclose()
     await message.reply(m)
 
 
@@ -97,9 +199,8 @@ async def magisk(message):
     releases = "<b>Latest Magisk Releases:</b>\n"
     variant = ["master/stable", "master/beta", "canary/canary"]
     for variants in variant:
-        async with httpx.AsyncClient(http2=True) as http:
-            fetch = await http.get(url + variants + ".json")
-            data = json.loads(fetch.content)
+        fetch = await http.get(url + variants + ".json")
+        data = json.loads(fetch.content)
         if variants == "master/stable":
             name = "<b>Stable</b>"
             cc = 0
@@ -129,18 +230,16 @@ async def magisk(message):
                 f'<a href="{data["magisk"]["note"]}">Changelog</a>\n'
             )
 
-    await http.aclose()
     await message.reply(releases, disable_web_page_preview=True)
 
 
 @register(cmds="phh")
 @disableable_dec("phh")
 async def phh(message):
-    async with httpx.AsyncClient(http2=True) as http:
-        fetch = await http.get(
-            "https://api.github.com/repos/phhusson/treble_experimentations/releases/latest"
-        )
-        usr = json.loads(fetch.content)
+    fetch = await http.get(
+        "https://api.github.com/repos/phhusson/treble_experimentations/releases/latest"
+    )
+    usr = json.loads(fetch.content)
     text = "<b>Phh's latest GSI release(s):</b>\n"
     for i in range(len(usr)):
         try:
@@ -150,18 +249,16 @@ async def phh(message):
         except IndexError:
             continue
 
-    await http.aclose()
     await message.reply(text)
 
 
 @register(cmds="phhmagisk")
 @disableable_dec("phhmagisk")
 async def phh_magisk(message):
-    async with httpx.AsyncClient(http2=True) as http:
-        fetch = await http.get(
-            "https://api.github.com/repos/expressluke/phh-magisk-builder/releases/latest"
-        )
-        usr = json.loads(fetch.content)
+    fetch = await http.get(
+        "https://api.github.com/repos/expressluke/phh-magisk-builder/releases/latest"
+    )
+    usr = json.loads(fetch.content)
     text = "<b>Phh's latest Magisk release(s):</b>\n"
     for i in range(len(usr)):
         try:
@@ -177,7 +274,6 @@ async def phh_magisk(message):
         except IndexError:
             continue
 
-    await http.aclose()
     await message.reply(text, reply_markup=button)
     return
 
@@ -192,8 +288,7 @@ async def twrp(message):
         await message.reply(m)
         return
 
-    async with httpx.AsyncClient(http2=True) as http:
-        url = await http.get(f"https://eu.dl.twrp.me/{device}/")
+    url = await http.get(f"https://eu.dl.twrp.me/{device}/")
     if url.status_code == 404:
         m = f"TWRP is not available for <code>{device}</code>"
         await message.reply(m)
@@ -218,7 +313,6 @@ async def twrp(message):
         btn = "⬇️ Download"
         button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=dl_link))
 
-        await http.aclose()
         await message.reply(m, reply_markup=button)
 
 
@@ -235,14 +329,12 @@ async def check(message):
         return
 
     model = "sm-" + temp if not temp.upper().startswith("SM-") else temp
-    async with httpx.AsyncClient(http2=True) as http:
-        fota = await http.get(
-            f"http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.xml"
-        )
-        test = await http.get(
-            f"http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.test.xml"
-        )
-    await http.aclose()
+    fota = await http.get(
+        f"http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.xml"
+    )
+    test = await http.get(
+        f"http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.test.xml"
+    )
     if test.status_code != 200:
         m = f"Couldn't find any firmwares for {temp.upper()} - {csc.upper()}, please refine your search or try again later!"
         await message.reply(m)
@@ -324,19 +416,16 @@ async def orangefox(message):
         build_type = "stable"
 
     if codename == "devices" or codename == "":
-        reply_text = (
+        text = (
             f"<b>OrangeFox Recovery <i>{build_type}</i> is currently avaible for:</b>"
         )
-
-        async with httpx.AsyncClient(http2=True) as http:
-            data = await http.get(
-                API_HOST + f"devices/?release_type={build_type}&sort=device_name_asc"
-            )
-            devices = json.loads(data.text)
-            await http.aclose()
+        data = await http.get(
+            API_HOST + f"devices/?release_type={build_type}&sort=device_name_asc"
+        )
+        devices = json.loads(data.text)
         try:
             for device in devices["data"]:
-                reply_text += (
+                text += (
                     f"\n - {device['full_name']} (<code>{device['codename']}</code>)"
                 )
         except BaseException:
@@ -346,80 +435,75 @@ async def orangefox(message):
             return
 
         if build_type == "stable":
-            reply_text += (
+            text += (
                 "\n\n"
                 + f"To get the latest Stable release use <code>/ofox (codename)</code>, for example: <code>/ofox raphael</code>"
             )
         elif build_type == "beta":
-            reply_text += (
+            text += (
                 "\n\n"
                 + f"To get the latest Beta release use <code>/ofox (codename) beta</code>, for example: <code>/ofox raphael beta</code>"
             )
-        await message.reply(reply_text)
+        await message.reply(text)
         return
 
-    async with httpx.AsyncClient(http2=True) as http:
-        data = await http.get(API_HOST + f"devices/get?codename={codename}")
-        device = json.loads(data.text)
-        await http.aclose()
+    data = await http.get(API_HOST + f"devices/get?codename={codename}")
+    device = json.loads(data.text)
     if data.status_code == 404:
         await message.reply("Device is not found!")
         return
 
-    async with httpx.AsyncClient(http2=True) as http:
-        data = await http.get(
-            API_HOST
-            + f"releases/?codename={codename}&type={build_type}&sort=date_desc&limit=1"
+    data = await http.get(
+        API_HOST
+        + f"releases/?codename={codename}&type={build_type}&sort=date_desc&limit=1"
+    )
+    if data.status_code == 404:
+        btn = "Device's page"
+        url = f"https://orangefox.download/device/{device['codename']}"
+        button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
+        await message.reply(
+            f"⚠️ There is no '<b>{build_type}</b>' releases for <b>{device['full_name']}</b>.",
+            reply_markup=button,
+            disable_web_page_preview=True,
         )
-        if data.status_code == 404:
-            btn = "Device's page"
-            url = f"https://orangefox.download/device/{device['codename']}"
-            button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
-            await message.reply(
-                f"⚠️ There is no '<b>{build_type}</b>' releases for <b>{device['full_name']}</b>.",
-                reply_markup=button,
-                disable_web_page_preview=True,
-            )
-            return
-        find_id = json.loads(data.text)
-        await http.aclose()
-        for build in find_id["data"]:
-            file_id = build["_id"]
+        return
 
-    async with httpx.AsyncClient(http2=True) as http:
-        data = await http.get(API_HOST + f"releases/get?_id={file_id}")
-        release = json.loads(data.text)
-        await http.aclose()
+    find_id = json.loads(data.text)
+    for build in find_id["data"]:
+        file_id = build["_id"]
+
+    data = await http.get(API_HOST + f"releases/get?_id={file_id}")
+    release = json.loads(data.text)
     if data.status_code == 404:
         await message.reply("Release is not found!")
         return
 
-    reply_text = f"<u><b>OrangeFox Recovery <i>{build_type}</i> release</b></u>\n"
-    reply_text += ("  <b>Device:</b> {fullname} (<code>{codename}</code>)\n").format(
+    text = f"<u><b>OrangeFox Recovery <i>{build_type}</i> release</b></u>\n"
+    text += ("  <b>Device:</b> {fullname} (<code>{codename}</code>)\n").format(
         fullname=device["full_name"], codename=device["codename"]
     )
-    reply_text += ("  <b>Version:</b> {}\n").format(release["version"])
-    reply_text += ("  <b>Release date:</b> {}\n").format(
+    text += ("  <b>Version:</b> {}\n").format(release["version"])
+    text += ("  <b>Release date:</b> {}\n").format(
         time.strftime("%d/%m/%Y", time.localtime(release["date"]))
     )
 
-    reply_text += ("  <b>Maintainer:</b> {name}\n").format(
+    text += ("  <b>Maintainer:</b> {name}\n").format(
         name=device["maintainer"]["name"]
     )
     changelog = release["changelog"]
     try:
-        reply_text += "  <u><b>Changelog:</b></u>\n"
+        text += "  <u><b>Changelog:</b></u>\n"
         for entry_num in range(len(changelog)):
             if entry_num == 10:
                 break
-            reply_text += f"    - {changelog[entry_num]}\n"
+            text += f"    - {changelog[entry_num]}\n"
     except BaseException:
         pass
 
     btn = "⬇️ Download"
     url = release["mirrors"]["DL"]
     button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
-    await message.reply(reply_text, reply_markup=button, disable_web_page_preview=True)
+    await message.reply(text, reply_markup=button, disable_web_page_preview=True)
     return
 
 

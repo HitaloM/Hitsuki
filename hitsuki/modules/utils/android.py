@@ -13,8 +13,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import httpx
 import rapidjson as json
+from .http import http
 
 # This file is an adaptation / port from the Galaxy Helper Bot.
 # Copyright (C) KassemSYR. All rights reserved.
@@ -27,12 +27,10 @@ class GetDevice:
 
     async def get(self):
         if self.device.lower().startswith("sm-"):
-            async with httpx.AsyncClient(http2=True) as http:
-                data = await http.get(
-                    "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_model.json"
-                )
-                db = json.loads(data.content)
-                await http.aclose()
+            data = await http.get(
+                "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_model.json"
+            )
+            db = json.loads(data.content)
             try:
                 name = db[self.device.upper()][0]["name"]
                 device = db[self.device.upper()][0]["device"]
@@ -42,12 +40,10 @@ class GetDevice:
             except KeyError:
                 return False
         else:
-            async with httpx.AsyncClient(http2=True) as http:
-                data = await http.get(
-                    "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json"
-                )
-                db = json.loads(data.content)
-                await http.aclose()
+            data = await http.get(
+                "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json"
+            )
+            db = json.loads(data.content)
             newdevice = (
                 self.device.strip("lte").lower()
                 if self.device.startswith("beyond")
