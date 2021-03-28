@@ -55,7 +55,7 @@ STRINGS:
     enabled_successfully: "Notas privadas foram <b>ativadas</b> em %s com sucesso!"
     disabled_successfully: "Notas privadas foram <b>desativadas</b> em %s com sucesso!"
     not_enabled: "As notas privadas não estão habilitadas."
-    privatenotes_notif: "Você tem sido conectado com sucesso às notas de <b>{chat}</b>! Para se desconectar, por favor use o comando <code>/disconnect</code>!"
+    privatenotes_notif: "Você foi conectado com sucesso às notas de <b>{chat}</b>! Para se desconectar, por favor use o comando <code>/disconnect</code>!"
     enabled: 'Ativado'
     disabled: 'Desativado'
     #/cleannotes
@@ -306,7 +306,7 @@ STRINGS:
     fbanned_subs_process: "\n<b>Status:</b> Banindo em <code>{feds}</code> feds inscritas..."
     fbanned_subs_done: "\n<b>Estado:</b> Pronto! Banido em <code>{chats}</code> chats desta federação e <code>{subs_chats}</code> chats de <code>{feds}</code> federações subscritas"
     fban_usr_rmvd: |
-      O usuário {user} está atualmente banido na federação <b>{fed}</b> e tem sido removido!
+      O usuário {user} está atualmente banido na federação <b>{fed}</b> e foi removido!
       Motivo: <code>{rsn}</code>
     fban_log_fed_log: |
       <b>Baniu um usuário na fed</b> #FedBan
@@ -363,8 +363,8 @@ STRINGS:
     importing_process: <b>Importando fbans...</b>
     import_done: Importação de banidos da federação finalizada! {num} banidos foram importados.
     #def
-    automatic_ban: O usuário {user} está banido na atual federação <b>{fed_name}</b> e tem sido removido!
-    automatic_ban_sfed: O usuário {user} está banido na subfederação <b>{fed_name}</b> e tem sido removido!
+    automatic_ban: O usuário {user} está banido na atual federação <b>{fed_name}</b> e foi removido!
+    automatic_ban_sfed: O usuário {user} está banido na subfederação <b>{fed_name}</b> e foi removido removido!
     automatic_ban_reason: "Motivo: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>Informações de banimento da federação:</b>\n"
@@ -406,8 +406,8 @@ STRINGS:
     see_translators: '👥 Veja os tradutores'
     back: Voltar
   connections:
-    pm_connected: "Seu chat privado tem sido conectado com sucesso a <b>{chat_name}</b>!"
-    connected_pm_to_me: "Seu chat privado tem sido conectado com sucesso a <b>{chat_name}</b>! Por favor, me envie uma mensagem para iniciar a conexão."
+    pm_connected: "O seu PM foi conectado com sucesso para o chat <b>{chat_name}</b>!"
+    connected_pm_to_me: "O seu PM foi conectado com sucesso ao chat <b>{chat_name}</b>! Por favor, inicie uma conversa comigo para poder usar a conexão."
     chat_connection_tlt: "<b>Conexão via chat</b>"
     connected_chat: |
       <b>Chat conectado atualmente:</b>
