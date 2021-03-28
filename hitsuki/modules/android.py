@@ -539,6 +539,10 @@ __mod_name__ = "Android"
 __help__ = """
 Module specially made for Android users.
 
+<b>Device Specific ROM for a device</b>
+- /evo (device): Get the latest Evolution X ROM for a device
+- /los (device): Get the latest LineageOS ROM for a device
+
 <b>GSI</b>
 - /phh: Get the latest PHH AOSP GSIs.
 - /phhmagisk: Get the latest PHH Magisk.

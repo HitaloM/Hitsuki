@@ -33,5 +33,6 @@ regex
 bs4
 lxml
 spamwatch
+hurry-filesize
 httpx[http2]
 git+https://github.com/AmanoTeam/python-anilist
