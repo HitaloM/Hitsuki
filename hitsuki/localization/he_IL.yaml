@@ -105,19 +105,19 @@ STRINGS:
     "max_warn_exceeded:tmute": Warnings has been exceeded! {user} has been tmuted for {time}!
     #warn rmv callback
     warn_no_admin_alert: "⚠ You are NOT admin and cannot remove warnings!"
-    warn_btn_rmvl_success: "✅ Warning removed by {admin}!"
+    warn_btn_rmvl_success: "✅ האזהרה נמחקה על ידי {admin}!"
     #/warns
-    warns_header: "Here are your warns in this chat \n\n"
+    warns_header: "הנה האזהרות שלך בצ'אט זה\n\n"
     warns: "{count} : <code>{reason}</code> על ידי {admin}\n"
     no_warns: "ל{user} אין אזהרות."
     #/warnlimit
-    warn_limit: "Warn limit in <b>{chat_name}</b> is currently: <code>{num}</code>"
-    warnlimit_short: 'Warnlimit should be at least 2!'
-    warnlimit_long: 'Warnlimit should be shorter than 1 000!'
-    warnlimit_updated: '✅ Warnlimit successfully updated to {num}'
+    warn_limit: "מגבלת האזהרות ב <b>{chat_name}</b> היא: <code>{num}</code>"
+    warnlimit_short: 'מגבלת האזהרות חייבת להיות לפחות 2!'
+    warnlimit_long: 'מגבלת האזהרות לא יכולה להיות גדולה מ1000!'
+    warnlimit_updated: '✅ מגבלת האזהרות הוגבלה ל{num}'
     #/delwarns
-    purged_warns: "{admin} reset <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
-    usr_no_wrn: "{user} doesn't have any warns to reset."
+    purged_warns: "{admin} איפס את <code>{num}</code> האזהרות של {user} ב <b>{chat_title}</b>!"
+    usr_no_wrn: "למשתמש {user} אין אזהרות בשביל לאפס."
     rst_wrn_sofi: 'Hitsuki never had warns to reset.'
     not_digit: Warnlimits should be digits!
     #/warnmode
@@ -211,11 +211,11 @@ STRINGS:
     can_only_1_fed: "Users can only create 1 federation, please remove one."
     name_not_avaible: "Federation with name <code>{name}</code> already exits! Please use another name."
     created_fed: |
-      Congrats, you have successfully created a federation.
-      <b>Name:</b> {name}
+      מזל טוב! יצרת פדרציה.
+      <b>שם:</b> {name}
       <b>ID:</b> <code>{id}</code>
-      <b>Creator:</b> {creator}
-      Use <code>/fjoin {id}</code> to connect federation to chat\
+      <b>יוצר:</b> {creator}
+      תשתמש בפקודה <code>/fjoin {id}</code> בשביל לחבר את הפדרציה לצ'אט\
     disallow_anon: As an anonymous admin you cannot create new federation!
     #/fjoin
     only_creators: "You must be the chat creator to be able to connect chat to a federation."
@@ -223,16 +223,16 @@ STRINGS:
     joined_fed_already: "This chat has already joined a federation! Please use /fleave to leave that federation"
     join_fed_success: "Great! Chat <b>{chat}</b> is now a part of <b>{fed}</b> federation!"
     join_chat_fed_log: |
-      <b>Chat joined federation</b> #ChatJoined
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
+      <b>צ'אט הצטרף לפדרציה</b> #ChatJoined
+      <b>פדרציה:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>צ'אט:</b> {chat_name} (<code>{chat_id}</code>)
     #/leavefed
     chat_not_in_fed: "This chat is not in any federation yet."
     leave_fed_success: "Chat <b>{chat}</b> left the <b>{fed}</b> federation."
     leave_chat_fed_log: |
-      <b>Chat left Federation</b> #ChatLeaved
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
+      <b>צ'אט עזב את הפדרציה</b> #ChatLeaved
+      <b>פדרציה:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>צ'אט:</b> {chat_name} (<code>{chat_id}</code>)
     #/fsub
     already_subsed: "Federation <b>{name}</b> already subscribed to <b>{name2}</b>"
     subsed_success: "Federation <b>{name}</b> subscribed to <b>{name2}</b>!"
@@ -243,17 +243,17 @@ STRINGS:
     #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
     admin_added_to_fed: "User {user} added to <b>{name}</b> federation admins."
     promote_user_fed_log: |
-      <b>User promoted to the fed admins</b> #UserPromoted
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} (<code>{user_id}</code>)
+      <b>משתמש קודם להיות מנהל בפדרציה</b> #UserPromoted
+      <b>פדרציה:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>משתמש:</b> {user} (<code>{user_id}</code>)
     "restricted_user:promote": This user is restricted from being federation admin!
     #/fdemote
     #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
     admin_demoted_from_fed: "User {user} demoted from <b>{name}</b> federation admins."
     demote_user_fed_log: |
-      <b>User demoted from the fed admins</b> #UserDemoted
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} (<code>{user_id}</code>)
+      <b>משתמש הוסר מניהול בפדרציה</b> #UserDemoted
+      <b>פדרציה:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>משתמש:</b> {user} (<code>{user_id}</code>)
     #/fsetlog
     already_have_chatlog: "<b>{name}</b> federation already has logging enabled in another chat/channel!"
     set_chat_log: |
@@ -277,12 +277,12 @@ STRINGS:
     too_large: "Output too large, sending as file"
     #/finfo
     finfo_text: |
-      <b>Federation info</b>
-      <b>Name:</b> {name}
+      <b>מידע על הפדרציה</b>
+      <b>שם:</b> {name}
       <b>ID:</b> <code>{fed_id}</code>
-      <b>Creator:</b> {creator}
-      <b>Chats in the fed:</b> {chats}
-      <b>Banned users in the fed:</b> {fbanned}
+      <b>יוצר:</b> {creator}
+      <b>צ'אטים בפדרציה:</b> {chats}
+      <b>משתמשים שחסומים בפדרציה:</b> {fbanned}
     finfo_subs_title: "<b>Federations subscribed to this feds:</b>\n"
     #/fadminlist
     fadmins_header: "מנהלים בפדרציה <b>{fed_name}</b>:\n"
@@ -296,9 +296,9 @@ STRINGS:
     already_fbanned: "{user} כבר חסום בפדרציה הזאת."
     fbanned_header: "<b>חסימת פדרציה חדשה</b>\n"
     fban_info: |
-      <b>Federation:</b> {fed}
-      <b>Fed admin:</b> {fadmin}
-      <b>User:</b> {user} (<code>{user_id}</code>)
+      <b>פדרציה:</b> {fed}
+      <b>מנהל בפדרציה:</b> {fadmin}
+      <b>משתמש:</b> {user} (<code>{user_id}</code>)
     fbanned_reason: "<b>סיבה:</b> <code>{reason}</code>"
     fbanned_process: "\n<b>Status:</b> Banning in <code>{num}</code> fed chats..."
     fbanned_done: "\n<b>Status:</b> Done! banned in <code>{num}</code> chats!"
@@ -309,11 +309,11 @@ STRINGS:
       User {user} is currently banned in <b>{fed}</b> federation and have been removed!
       Reason: <code>{rsn}</code>
     fban_log_fed_log: |
-      <b>Ban user in the fed</b> #FedBan
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} ({user_id})
-      <b>By:</b> {by}
-      <b>Chats banned:</b> user banned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
+      <b>חסימת משתמש בפדרציה</b> #FedBan
+      <b>פדרציה:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>משתמש:</b> {user} ({user_id})
+      <b>על ידי:</b> {by}
+      <b>צ'אטים:</b> המשתמש נחסם ב <code>{chat_count}</code>/<code>{all_chats}</code> צ'אטים
     fban_reason_fed_log: "<b>סיבה:</b> <code>{reason}</code>\n"
     fban_subs_fed_log: "\n<b>Subscribed feds:</b> banned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
     #/unfban
@@ -325,11 +325,11 @@ STRINGS:
     un_fbanned_subs_process: "\n<b>Status:</b> Unbanning in <code>{feds}</code> subscribed feds..."
     un_fbanned_subs_done: "\n<b>Status:</b> Done! Unbanned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
     un_fban_log_fed_log: |
-      <b>Unban user in the fed</b> #FedUnBan
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} ({user_id})
-      <b>By:</b> {by}
-      <b>Chats:</b> user unbanned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
+      <b>ביטול חסימה בפדרציה</b> #FedUnBan
+      <b>פדרציה:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>משתמש:</b> {user} ({user_id})
+      <b>על ידי:</b> {by}
+      <b>צ'אטים:</b> המשתמש כבר לא חסום ב <code>{chat_count}</code>/<code>{all_chats}</code> צ'אטים
     un_fban_subs_fed_log: "\n<b>Subscribed feds:</b> unbanned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
     #/delfed
     delfed_btn_yes: כן מחק את הפדרציה
@@ -367,8 +367,8 @@ STRINGS:
     automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b and has been removed!
     automatic_ban_reason: "\nסיבה: <code>{text}</code>"
     #/fcheck
-    fcheck_header: "<b>Federation ban info:</b>\n"
-    fbanned_count_pm: "You are fbanned in {count} federation(s)!\n"
+    fcheck_header: "<b>מידע על חסימת פדרציה:</b>\n"
+    fbanned_count_pm: "אתה נחסמת ב {count} פדרציות!\n"
     "fban_info:fcheck": "You have been fbanned in {fed} federation on {date}, No reason was given!"
     "fban_info:fcheck:reason": "You have been fbanned in {fed} federation on {date} because of reason -\n {reason}\n"
     fbanned_data: "{user} has been fbanned in {count} federation(s).\n"
@@ -393,7 +393,7 @@ STRINGS:
     reports_already_on: "<b>Reports are already turned on.</b>"
     reports_turned_on: "Reports turned <b>on.</b>"
     reports_already_off: "<b>Reports are already turned off.</b>"
-    wrong_argument: "<b> Wrong argument. </b>"
+    wrong_argument: "<b> משתנה שגוי. </b>"
   language:
     your_lang: "השפה שלך הצ'אט כרגע: <b>{lang}</b>"
     chat_lang: "השפה של הצ'אט כרגע: <b>{lang}</b>"
@@ -402,7 +402,7 @@ STRINGS:
     crowdin_btn: "🌎 עזרו לנו עם התרגום"
     help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukix\">🌎 עזור לנו בשיפור התרגום</a>"
     not_supported_lang: השפה לא נתמכת!
-    lang_changed: Language was changed to <b>{lang_name}</b>.
+    lang_changed: השפה שונתה ל <b>{lang_name}</b>.
     see_translators: '👥 ראה את המתרגמים'
     back: חזור
   connections:
@@ -509,7 +509,7 @@ STRINGS:
     ban_hitsuki: No, I won't do it! Ask the chat creator to do it!
     ban_admin: Haha, let's <code>/demote</code> him first.
     ban_self: Why are you trying to ban yourself?
-    user_banned: "{user} was banned by {admin} in {chat_name}."
+    user_banned: "{user} נחסם על ידי {admin} ב {chat_name}."
     unban_hitsuki: Actually, I'm not banned.
     unban_admin: Haha no, try banning him first!
     unban_self: אני צריך לחסום אותך קודם?
@@ -568,34 +568,34 @@ STRINGS:
     wlcm_security_enabled: "מאופשר, מוגדר ל {level}"
     wlcm_mutes_enabled: "מאופשר, מוגדר ל {time}"
     welcome_info: |
-      <b>Welcome settings in {chat_name}:</b>
-      Welcomes are <code>{welcomes_status}</code>
-      Welcome security is <code>{wlcm_security}</code>
-      Welcome mutes is <code>{wlcm_mutes}</code>
-      Deleting old welcomes is <code>{clean_welcomes}</code>
-      Deleting service messages is <code>{clean_service}</code>
+      <b>הגדרות ברוכים הבאים ב {chat_name}:</b>
+      הודעות ברוכים הבאים <code>{welcomes_status}</code>
+      אבטחת הברוכים הבאים <code>{wlcm_security}</code>
+      השתקה בעת כניסה <code>{wlcm_mutes}</code>
+      מחיקת הודעות ברוכים הבאים ישנות <code>{clean_welcomes}</code>
+      מחיקת הודעות שירות <code>{clean_service}</code>
     wlcm_note: "\n\nWelcome note is:"
     raw_wlcm_note: "Raw welcome note is:"
-    security_note: "Welcome security text is:"
+    security_note: "טקסט אבטחת הברוכים הבאים הוא:"
     #/setsecuritynote
-    security_note_saved: "Custom security text was saved <b>%s</b>"
-    security_note_updated: "Custom security text was updated <b>%s</b>"
+    security_note_saved: "טקסט אבטחת הברוכים הבאים המותאם אישית נשמר <b>%s</b>"
+    security_note_updated: "טקסט אבטחת הברוכים הבאים המותאם אישית עודכן <b>%s</b>"
     #/delsecuritynote
     security_note_not_found: Security text in <b>%s</b> has not been set before
     del_security_note_ok: Security text was reset to default in <b>%s</b>
     #/cleanwelcome
-    cleanwelcome_enabled: Cleaning welcomes enabled in <b>%s</b>
-    cleanwelcome_disabled: Cleaning welcomes disabled in <b>%s</b>
-    cleanwelcome_status: Cleaning welcomes is <code>{status}</code> in <b>{chat_name}</b>
+    cleanwelcome_enabled: מחיקת הודעות הברוכים הבאים מופעל ב <b>%s</b>
+    cleanwelcome_disabled: מחיקת הודעות הברוכים הבאים מושבת ב <b>%s</b>
+    cleanwelcome_status: מחיקת הודעות ברוכים הבאים <code>{status}</code> ב <b>{chat_name}</b>
     #/cleanservice
-    cleanservice_enabled: Cleaning service messages enabled in <b>%s</b>
-    cleanservice_disabled: Cleaning service messages disabled in <b>%s</b>
-    cleanservice_status: Cleaning service messages is <code>{status}</code> in <b>{chat_name}</b>
+    cleanservice_enabled: מחיקת הודעות שירות מאופשר ב <b>%s</b>
+    cleanservice_disabled: מחיקת הודעות שירות מושבת ב <b>%s</b>
+    cleanservice_status: מחיקת הודעות שירות <code>{status}</code> ב <b>{chat_name}</b>
     #/welcomemute
     welcomemute_invalid_arg: Invalid argument, expected a time.
-    welcomemute_enabled: Welcome mute enabled in <b>%s</b>
-    welcomemute_disabled: Welcome mute disabled in <b>%s</b>
-    welcomemute_status: Welcome mute is <code>{status}</code> in <b>{chat_name}</b>
+    welcomemute_enabled: השתקה בעת כניסה מאופשרת ב <b>%s</b>
+    welcomemute_disabled: השתקה בעת כניסה מושבתת ב <b>%s</b>
+    welcomemute_status: השתקה בעת כניסה <code>{status}</code> ב <b>{chat_name}</b>
     #/welcomesecurity
     welcomesecurity_enabled: Welcome security enabled in <b>{chat_name}</b> to <code>{level}</code>.
     "welcomesecurity_enabled:customized_time": |
@@ -646,7 +646,7 @@ STRINGS:
     unlocked_successfully: '{lock} כבר לא נעול ב {chat}!'
   antiflood:
     #enforcer
-    flood_exceeded: "{action} {user} for flooding!"
+    flood_exceeded: "{action} {user} על הצפה!"
     #/setflood
     "invalid_args:setflood": "Expected a number!"
     overflowed_count: Maximum count should be less than 200!
@@ -674,14 +674,14 @@ STRINGS:
     err_twrp: "TWRP is not available for <code>{device}</code>"
     err_sam: "Couldn't find any firmwares for {model} - {csc}, please refine your search or try again later!"
     err_sam_pub: "<b>No public release found for {model} and {csc}.</b>\n\n"
-    dl_btn: "Click here to download!"
-    download: "<b>Download:</b> <a href='{url}'>{filename}</a>\n"
+    dl_btn: "לחץ כאן להורדה!"
+    download: "<b>מוריד:</b> <a href='{url}'>{filename}</a>\n"
     build_size: "<b>Build Size:</b> <code>{size}</code>\n"
-    version: "<b>Version:</b> <code>{version}</code>\n"
-    android_version: "<b>Android Version:</b> <code>{version}</code>\n"
+    version: "<b>גרסה:</b> <code>{version}</code>\n"
+    android_version: "<b>גרסת אנדרואיד:</b> <code>{version}</code>\n"
     maintainer: "<b>Maintainer:</b> {name}\n"
     whatis: "<b>{device}</b> is <code>{brand} {name}</code>\n"
-    variants: "<b>Model</b>: <code>{model}</code> \n<b>Name:</b> <code>{name}</code>\n\n"
+    variants: "<b>דגם</b>: <code>{model}</code> \n<b>שם:</b> <code>{name}</code>\n\n"
     magisk: "<b>Latest Magisk Releases:</b>\n"
     phh: "<b>Phh's latest GSI release(s):</b>\n"
     phhmagisk: "<b>Phh's latest Magisk release(s):</b>\n"
