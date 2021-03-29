@@ -258,7 +258,7 @@ async def list_filters(message, chat, strings):
         await message.reply(strings['no_filters_found'].format(chat_name=chat['chat_title']))
         return
 
-    await message.reply(text + filters_text)
+    await message.reply(text + filters.text, disable_web_page_preview=True)
 
 
 @register(cmds='delfilter', is_admin=True)
