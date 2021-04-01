@@ -5,8 +5,8 @@ language_info:
 STRINGS:
   notes:
     #/save
-    note_saved: "🗒 Note <code>{note_name}</code> saved in <b>{chat_title}</b>!"
-    note_updated: "🗒 Note <code>{note_name}</code> updated in <b>{chat_title}</b>!"
+    note_saved: "🗒 הפתק <code>{note_name}</code> נשמר ב <b>{chat_title}</b>!"
+    note_updated: "🗒 הפתק <code>{note_name}</code> עודכן ב <b>{chat_title}</b>!"
     you_can_get_note: "\nYou can retrieve this note by using <code>/get {note_name}</code>, or <code>#{note_name}</code>"
     #Translator note: please keep sure that you don't have space in the end of string
     note_aliases: "\nכינויי הפתקים:"
@@ -15,15 +15,15 @@ STRINGS:
     #/get
     cant_find_note: I can't find this note in <b>{chat_name}</b>!
     no_note: "הפתק לא נמצא."
-    no_notes_pattern: "No notes found by pattern <code>%s</code>"
-    u_mean: "\nDid you mean <code>#{note_name}</code>?"
+    no_notes_pattern: "לא נמצאו פתקים המתאימים לתבנית <code>%s</code>"
+    u_mean: "\nהאם התכוונת <code>#{note_name}</code>?"
     #/notes
-    notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
+    notelist_no_notes: "אין פתקים שמורים ב<b>{chat_title}</b>!"
     notelist_header: "<b>פתקים ב {chat_name}</b>:"
-    notes_in_private: "Click below button to get notes list."
+    notes_in_private: "לחצו על הכפתור למטה בשביל לקבל את רשימת הפתקים."
     notelist_search: |
-      <b>Pattern:</b> <code>{request}</code>
-      <b>Matched notes:</b>
+      <b>תבנית:</b> <code>{request}</code>
+      <b>פתקים המתאימים לתבנית זאת:</b>
     #/clear
     note_removed: "Note <code>#{note_name}</code> removed in <b>{chat_name}</b>!"
     note_removed_multiple: |
@@ -34,19 +34,19 @@ STRINGS:
     clear_all_text: "This will remove all notes from {chat_name}. Are you sure?"
     clearall_btn_yes: "כן, מחק את כל הפתקים!"
     clearall_btn_no: "לא!"
-    clearall_done: "All (<code>{num}</code>) notes in {chat_name} were removed!"
+    clearall_done: "כל (<code>{num}</code>) הפתקים ב{chat_name} הוסרו!"
     #/search
     search_header: |
-      <b>Search request in {chat_name}</b>:
-      <b>Pattern:</b> <code>{request}</code>
-      <b>Matched notes:</b>
+      <b>חיפוש ב {chat_name}</b>:
+      <b>תבנית:</b> <code>{request}</code>
+      <b>פתקים המתאימים לתבנית הזאת:</b>
     #/noteinfo
     note_info_title: "<b>פרטי הפתק</b>\n"
     note_info_note: "שמות הפתקים: %s\n"
     note_info_content: "תוכן הפתק: %s\n"
     note_info_parsing: "פורמט הטקסט: <code>%s</code>\n"
-    note_info_created: "Was created in: <code>{date}</code> by {user}\n"
-    note_info_updated: "Last updated in: <code>{date}</code> by {user}\n"
+    note_info_created: "נוצר ב: <code>{date}</code> על ידי {user}\n"
+    note_info_updated: "עודכן לאחרונה ב:<code>{date}</code> על ידי {user}\n"
     user_blocked: "תשלח לי /start בפרטי!"
     #/privatenotes
     private_notes_false_args: "You have 2 options <code>Disable</code> and <code>Enable</code>!"
@@ -69,7 +69,7 @@ STRINGS:
   #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
   #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
   filters:
-    no_filters_found: "No filters was found in <b>{chat_name}</b>!"
+    no_filters_found: "לא נמצאו פילטרים ב <b>{chat_name}</b>!"
     #/addfilter
     anon_detected: Being anonymous admin, you cannot add new filters, use connections instead.
     regex_too_slow: "Your regex pattern matches too slowly (more than the half of second) and it can't be added!"
@@ -156,9 +156,9 @@ STRINGS:
     promote_title: "\nWith custom role <code>{role}</code>!"
     rank_to_loong: "Custom role text cannot be longer than 16 symbols."
     promote_failed: "Promotion failed! Check if I have rights to."
-    demote_success: "{user} was successfully demoted in {chat_name}!"
+    demote_success: "{user} הוסר מניהול בהצלחה ב {chat_name}!"
     demote_not_admin: "המשתמש הזה לא מנהל."
-    demote_failed: "Demotion failed. Maybe I can't demote or the person is promoted by someone else?"
+    demote_failed: "אני לא יכול להסיר מנהל שנוסף על ידי מישהו אחר"
     cant_get_user: "I couldn't get the user! If you mind, please reply to his message and try again."
     cant_promote_yourself: "אתה לא יכול להוסיף את עצמך כמנהל."
     emoji_not_allowed: "I'm sorry, but admin roles can't have emojis 😞"
@@ -172,7 +172,7 @@ STRINGS:
     btn_group_help: "לחץ כאן לעזרה!"
     back: חזור
     #/help
-    help_header: "Hey! My name is <b>Hitsuki</b>. I am a group management bot, here to help you get around and keep the order in your groups!\nI have lots of handy features, such as flood control, a warning system, a note keeping system, and even predetermined replies on certain keywords."
+    help_header: "היי! השם שלי הוא <b>Hitsuki</b>. ואני בוט לניהול קבוצות, אני יכול לעזו לך לשמור על הסדר בקבוצות שלך!\nיש לי הרבה תכונות שימושיות, כמו שליטה על הצפות, אזהרות, פתקים, ואפשרות ליצור טריגרים על מילים מסוימות."
     click_btn: לחץ כאן
   disable:
     #/disableable
@@ -437,12 +437,12 @@ STRINGS:
       Please click below button to connect!
     click_here: לחץ כאן!
   global:
-    u_not_admin: You should be an admin to do this!
+    u_not_admin: אתה צריך להיות מנהל בשביל לעשות את זה!
     #Rights
     "bot_no_right:not_admin": אני לא מנהל!
-    bot_no_right: "I dont have permission to {permission} here!"
-    user_no_right: "You don't have permission to {permission} here!"
-    "user_no_right:not_admin": You should be admin to-do it!
+    bot_no_right: "אין לי כאן הרשאה ל {permission}!"
+    user_no_right: "אין לך כאן הרשאה ל {permission}!"
+    "user_no_right:not_admin": אתה צריך להיות מנהל בשביל לעשות את זה!
     #is chat creator
     unable_identify_creator: "Unable to identify anonymous chat creator, duplicate signature (titles) found!"
   owner_stuff:
@@ -640,7 +640,7 @@ STRINGS:
     no_lock_args: Give me some args to lock!
     already_locked: This is already locked bruh
     no_such_lock: See /locks to find out what can be locked and unlocked!
-    locked_successfully: Locked {lock} in {chat} sucessfully!
+    locked_successfully: '{lock} ננעל בהצלחה ב {chat}!'
     no_unlock_args: תביא לי משתנים בשביל לבטל את הנעילה!
     not_locked: אני לא יכול לבטל את הנעילה של זה כי זה לא נעול.
     unlocked_successfully: '{lock} כבר לא נעול ב {chat}!'
@@ -676,7 +676,7 @@ STRINGS:
     err_sam_pub: "<b>No public release found for {model} and {csc}.</b>\n\n"
     dl_btn: "לחץ כאן להורדה!"
     download: "<b>מוריד:</b> <a href='{url}'>{filename}</a>\n"
-    build_size: "<b>Build Size:</b> <code>{size}</code>\n"
+    build_size: "<b>גודל:</b> <code>{size}</code>\n"
     version: "<b>גרסה:</b> <code>{version}</code>\n"
     android_version: "<b>גרסת אנדרואיד:</b> <code>{version}</code>\n"
     maintainer: "<b>Maintainer:</b> {name}\n"
@@ -690,3 +690,45 @@ STRINGS:
     sam_down_from: "\n<b>Download from below:</b>\n"
     sam_latest: "<b>Latest available firmware:</b>\n"
     sam_test: "<b>Latest test firmware:</b>\n"
+    phh_tag: "<b>Tag:</b> <code>{tag}</code>\n"
+    phh_size: "<b>Size</b>: <code>{size} MB</code>\n\n"
+    twrp_device: "  <b>Device:</b> {device}\n"
+    twrp_udpated: "  <b>Updated:</b> <code>{date}</code>\n"
+    twrp_size: "  <b>Size:</b> <code>{size}</code>\n"
+    twrp_file: "  <b>File:</b> <code>{dl_file}</code>"
+    of_available: "<b>OrangeFox Recovery <i>{build_type}</i> is currently avaible for:</b>"
+    of_invalid_type: "'<b>{build_type}</b>' is not a type of build available, the types are just '<b>beta</b>' or '<b>stable</b>'."
+    of_stable_ex: "To get the latest Stable release use <code>/ofox (codename)</code>, for example: <code>/ofox raphael</code>"
+    of_beta_ex: "To get the latest Beta release use <code>/ofox (codename) beta</code>, for example: <code>/ofox raphael beta</code>"
+    of_no_releases: "There is no '<b>{build_type}</b>' releases for <b>{device}</b>."
+    of_device_page: "Device's page"
+    of_header: "<u><b>OrangeFox Recovery <i>{build_type}</i> release</b></u>\n"
+    of_device: "  <b>Device:</b> {fullname} (<code>{codename}</code>)\n"
+    of_version: "  <b>Version:</b> {version}\n"
+    of_release_date: "  <b>Release date:</b> {date}\n"
+    of_maintainer: "  <b>Maintainer:</b> {name}\n"
+    of_changelog: "  <u><b>Changelog:</b></u>\n"
+  anime:
+    search_err: "Something went wrong, check your search and try again!"
+    short_desc: "<b>Short description:</b> <i>{desc}</i>..."
+    desc: "<b>Description:</b> <i>{desc}</i>"
+    score: "<b>Score:</b> <code>{score}</code>\n"
+    status: "<b>Status:</b> <code>{status}</code>\n"
+    genres: "<b>Genres:</b>"
+    more_info: "More Info"
+    trailer: "Trailer"
+    airing_id: "<b>ID:</b> <code>{id}</code>\n"
+    airing_episode: "<b>Episode:</b> <code>{ep}</code>\n"
+    airing_time: "<b>Airing in:</b> <code>{time}</code>"
+    anime_type: "<b>Type:</b> <code>{type}</code>\n"
+    anime_episodes: "<b>Episodes:</b> <code>{ep}</code>\n"
+    anime_duration: "<b>Duration:</b> <code>{time}</code> Per Ep.\n"
+    anime_studios: "<b>Studio:</b>"
+    manga_start: "<b>Date:</b> <code>{date}</code>\n"
+    manga_chapters: "<b>Chapters:</b> <code>{chapters}</code>\n"
+    manga_volumes: "<b>Volumes:</b> <code>{vol}</code>\n"
+    search_kaizoku: "<b>Search results for</b> <code>{query}</code> <b>on</b> <code>AnimeKaizoku</code>:\n"
+    kaizoku_err: "<b>No result found for</b> <code>{query}</code> <b>on</b> <code>AnimeKaizoku</code>"
+    search_kayo: "<b>Search results for</b> <code>{query}</code> <b>on</b> <code>AnimeKayo</code>:\n"
+    kayo_err: "<b>No result found for</b> <code>{query}</code> <b>on</b> <code>AnimeKayo</code>"
+    all_results: "See all results"
