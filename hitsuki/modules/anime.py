@@ -23,6 +23,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec
 from .utils.message import get_args_str, need_args_dec
+from .utils.language import get_strings_dec
 from .utils.http import http
 
 
@@ -46,7 +47,8 @@ def t(milliseconds: int) -> str:
 @register(cmds="anime")
 @need_args_dec()
 @disableable_dec("anime")
-async def anilist_anime(message):
+@get_strings_dec("anime")
+async def anilist_anime(message, strings):
     query = get_args_str(message)
 
     try:
@@ -54,41 +56,41 @@ async def anilist_anime(message):
             results = await client.search(query, "anime", 1)
             anime = await client.get(results[0].id, "anime")
     except IndexError:
-        return await message.reply(
-            "Something went wrong, check your search and try again!"
-        )
+        return await message.reply(strings["search_err"])
 
     if len(anime.description) > 700:
-        desc = f"<b>Short description:</b> <i>{anime.description_short}</i>..."
+        desc = strings["short_desc"].format(desc=anime.description_short)
     else:
-        desc = f"<b>Description:</b> <i>{anime.description}</i>"
+        desc = strings["desc"].format(desc=anime.description)
 
     text = f"<b>{anime.title.romaji}</b> (<code>{anime.title.native}</code>)\n"
-    text += f"<b>Type:</b> <code>{anime.format}</code>\n"
+    text += strings["anime_type"].format(type=anime.format)
     if hasattr(anime, "status"):
-        text += f"<b>Status:</b> <code>{anime.status}</code>\n"
+        text += strings["status"].format(status=anime.status)
     if hasattr(anime, "episodes"):
-        text += f"<b>Episodes:</b> <code>{anime.episodes}</code>\n"
+        text += strings["anime_episodes"].format(ep=anime.episodes)
     if hasattr(anime, "duration"):
-        text += f"<b>Duration:</b> <code>{anime.duration}</code> Per Ep.\n"
+        text += strings["anime_duration"].format(time=anime.duration)
     if hasattr(anime.score, "average"):
-        text += f"<b>Score:</b> <code>{anime.score.average}</code>\n"
+        text += strings["score"].format(score=anime.score.average)
     if hasattr(anime, "genres"):
-        text += (
-            f"<b>Genres:</b> <code>{', '.join(str(x) for x in anime.genres)}</code>\n"
+        text += strings["genres"].format(
+            genres=f" <code>{', '.join(str(x) for x in anime.genres)}</code>\n"
         )
     if hasattr(anime, "studios"):
-        text += (
-            f"<b>Studio:</b> <code>{', '.join(str(x) for x in anime.studios)}</code>\n"
+        text += strings["anime_studios"].format(
+            studios=f" <code>{', '.join(str(x) for x in anime.studios)}</code>\n"
         )
     text += f"\n{desc.replace('<br>', '')}"
 
     keyboard = InlineKeyboardMarkup().add(
-        InlineKeyboardButton(text="More Info", url=anime.url)
+        InlineKeyboardButton(text=strings["more_info"], url=anime.url)
     )
 
     try:
-        keyboard.insert(InlineKeyboardButton(text="Trailer 🎬", url=anime.trailer.url))
+        keyboard.insert(
+            InlineKeyboardButton(text=strings["trailer"] + " 🎬", url=anime.trailer.url)
+        )
     except BaseException:
         pass
 
@@ -102,7 +104,8 @@ async def anilist_anime(message):
 @register(cmds="airing")
 @need_args_dec()
 @disableable_dec("airing")
-async def anilist_airing(message):
+@get_strings_dec("anime")
+async def anilist_airing(message, strings):
     query = get_args_str(message)
 
     try:
@@ -110,20 +113,18 @@ async def anilist_airing(message):
             results = await client.search(query, "anime", 1)
             anime = await client.get(results[0].id, "anime")
     except IndexError:
-        return await message.reply(
-            "Something went wrong, check your search and try again!"
-        )
+        return await message.reply(strings["search_err"])
 
     text = f"<b>{anime.title.romaji}</b> (<code>{anime.title.native}</code>)\n"
-    text += f"<b>ID:</b> <code>{anime.id}</code>\n"
-    text += f"<b>Type:</b> <code>{anime.format}</code>\n"
+    text += strings["airing_id"].format(id=anime.id)
+    text += strings["anime_type"].format(type=anime.format)
     if hasattr(anime, "next_airing"):
         airing_time = anime.next_airing.time_until * 1000
-        text += f"<b>Episode:</b> <code>{anime.next_airing.episode}</code>\n"
-        text += f"<b>Airing in:</b> <code>{t(airing_time)}</code>"
+        text += strings["airing_episode"].format(ep=anime.next_airing.episode)
+        text += strings["airing_time"].format(time=t(airing_time))
     else:
-        text += f"<b>Episode:</b> <code>{anime.episodes}</code>\n"
-        text += "<b>Airing in:</b> <code>N/A</code>"
+        text += strings["airing_episode"].format(ep=anime.episodes)
+        text += strings["airing_time"].format(time="<code>N/A</code>")
 
     if hasattr(anime, "banner"):
         await message.reply_photo(photo=anime.banner, caption=text)
@@ -134,7 +135,8 @@ async def anilist_airing(message):
 @register(cmds="manga")
 @need_args_dec()
 @disableable_dec("manga")
-async def anilist_manga(message):
+@get_strings_dec("anime")
+async def anilist_manga(message, strings):
     query = get_args_str(message)
 
     try:
@@ -142,34 +144,32 @@ async def anilist_manga(message):
             results = await client.search(query, "manga", 1)
             manga = await client.get(results[0].id, "manga")
     except IndexError:
-        return await message.reply(
-            "Something went wrong, check your search and try again!"
-        )
+        return await message.reply(strings["search_err"])
 
     if len(manga.description) > 700:
-        desc = f"<b>Short description:</b> <i>{manga.description_short}</i>..."
+        desc = strings["short_desc"].format(desc=manga.description_short)
     else:
-        desc = f"<b>Description:</b> <i>{manga.description}</i>"
+        desc = strings["desc"].format(desc=manga.description)
 
     text = f"<b>{manga.title.romaji}</b> (<code>{manga.title.native}</code>)\n"
     if hasattr(manga.start_date, "year"):
-        text += f"<b>Date:</b> <code>{manga.start_date.year}</code>\n"
+        text += strings["manga_start"].format(date=manga.start_date.year)
     if hasattr(manga, "status"):
-        text += f"<b>Status:</b> <code>{manga.status}</code>\n"
+        text += strings["status"].format(status=manga.status)
     if hasattr(manga, "chapters"):
-        text += f"<b>Chapters:</b> <code>{manga.chapters}</code>\n"
+        text += strings["manga_chapters"].format(chapters=manga.chapters)
     if hasattr(manga, "volumes"):
-        text += f"<b>Volumes:</b> <code>{manga.volumes}</code>\n"
+        text += strings["manga_volumes"].format(vol=manga.volumes)
     if hasattr(manga.score, "average"):
-        text += f"<b>Score:</b> <code>{manga.score.average}</code>\n"
+        text += strings["score"].format(score=manga.score.average)
     if hasattr(manga, "genres"):
-        text += (
-            f"<b>Genres:</b> <code>{', '.join(str(x) for x in manga.genres)}</code>\n"
+        text += strings["genres"].format(
+            genres=f" <code>{', '.join(str(x) for x in manga.genres)}</code>\n"
         )
     text += f"\n{desc.replace('<br>', '')}"
 
     keyboard = InlineKeyboardMarkup().add(
-        InlineKeyboardButton(text="More Info", url=manga.url)
+        InlineKeyboardButton(text=strings["more_info"], url=manga.url)
     )
 
     await message.reply_photo(
@@ -199,7 +199,7 @@ async def upcoming(message):
     await message.reply(upcoming_message)
 
 
-async def site_search(message, site: str):
+async def site_search(message, strings, site: str):
     args = message.text.split(" ", 1)
     more_results = True
     search_query = args[1]
@@ -211,14 +211,14 @@ async def site_search(message, site: str):
         search_result = soup.find_all("h2", {"class": "post-title"})
 
         if search_result:
-            result = f"<b>Search results for</b> <code>{html.escape(search_query)}</code> <b>on</b> <code>AnimeKaizoku</code>: \n"
+            result = strings["search_kaizoku"].format(query=html.escape(search_query))
             for entry in search_result:
                 post_link = entry.a["href"]
                 post_name = html.escape(entry.text)
                 result += f"• <a href='{post_link}'>{post_name}</a>\n"
         else:
             more_results = False
-            result = f"<b>No result found for</b> <code>{html.escape(search_query)}</code> <b>on</b> <code>AnimeKaizoku</code>"
+            result = strings["kaizoku_err"].format(query=html.escape(search_query))
 
     elif site == "kayo":
         search_url = f"https://animekayo.com/?s={search_query}"
@@ -226,11 +226,11 @@ async def site_search(message, site: str):
         soup = bs4.BeautifulSoup(html_text.text, "html.parser")
         search_result = soup.find_all("h2", {"class": "title"})
 
-        result = f"<b>Search results for</b> <code>{html.escape(search_query)}</code> <b>on</b> <code>AnimeKayo</code>: \n"
+        result = strings["search_kayo"].format(query=html.escape(search_query))
         for entry in search_result:
 
             if entry.text.strip() == "Nothing Found":
-                result = f"<b>No result found for</b> <code>{html.escape(search_query)}</code> <b>on</b> <code>AnimeKayo</code>"
+                result = strings["kayo_err"].format(query=html.escape(search_query))
                 more_results = False
                 break
 
@@ -239,7 +239,7 @@ async def site_search(message, site: str):
             result += f"• <a href='{post_link}'>{post_name}</a>\n"
 
     buttons = InlineKeyboardMarkup().add(
-        InlineKeyboardButton(text="See all results", url=search_url)
+        InlineKeyboardButton(text=strings["all_results"], url=search_url)
     )
 
     if more_results:
@@ -251,15 +251,17 @@ async def site_search(message, site: str):
 @register(cmds="kaizoku")
 @need_args_dec()
 @disableable_dec("kaizoku")
-async def kaizoku(message):
-    await site_search(message, "kaizoku")
+@get_strings_dec("anime")
+async def kaizoku(message, strings):
+    await site_search(message, strings, "kaizoku")
 
 
 @register(cmds="kayo")
 @need_args_dec()
 @disableable_dec("kayo")
-async def kayo(message):
-    await site_search(message, "kayo")
+@get_strings_dec("anime")
+async def kayo(message, strings):
+    await site_search(message, strings, "kayo")
 
 
 __mod_name__ = "Anime"
