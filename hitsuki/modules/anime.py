@@ -70,7 +70,7 @@ async def anilist_anime(message):
     if hasattr(anime, "episodes"):
         text += f"<b>Episodes:</b> <code>{anime.episodes}</code>\n"
     if hasattr(anime, "duration"):
-        text += f"<b>Duration:</b> <code>{anime.duration}</code> Por Ep.\n"
+        text += f"<b>Duration:</b> <code>{anime.duration}</code> Per Ep.\n"
     if hasattr(anime.score, "average"):
         text += f"<b>Score:</b> <code>{anime.score.average}</code>\n"
     if hasattr(anime, "genres"):
@@ -88,7 +88,7 @@ async def anilist_anime(message):
     )
 
     try:
-        keyboard.add(InlineKeyboardButton(text="Trailer 🎬", url=anime.trailer.url))
+        keyboard.insert(InlineKeyboardButton(text="Trailer 🎬", url=anime.trailer.url))
     except BaseException:
         pass
 
@@ -158,7 +158,7 @@ async def anilist_manga(message):
         text += f"<b>Status:</b> <code>{manga.status}</code>\n"
     if hasattr(manga, "chapters"):
         text += f"<b>Chapters:</b> <code>{manga.chapters}</code>\n"
-    if hasattr(manga, "chapters"):
+    if hasattr(manga, "volumes"):
         text += f"<b>Volumes:</b> <code>{manga.volumes}</code>\n"
     if hasattr(manga.score, "average"):
         text += f"<b>Score:</b> <code>{manga.score.average}</code>\n"

@@ -64,7 +64,11 @@ def sourceforge(url: str) -> str:
     file_path = re.findall(r"/files(.*)/download", link)
     if not file_path:
         file_path = re.findall(r"/files(.*)", link)
-    file_path = file_path[0]
+    try:
+        file_path = file_path[0]
+    except IndexError:
+        reply = "Something is wrong in this link! Check and try again..."
+        return reply
     reply = f"Mirrors for <code>{file_path.split('/')[-1]}</code>\n"
     project = re.findall(r"projects?/(.*?)/files", link)[0]
     mirrors = (

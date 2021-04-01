@@ -289,8 +289,8 @@ async def phh_magisk(message, strings):
             tag = usr["tag_name"]
             size_bytes = usr["assets"][i]["size"]
             size = float("{:.2f}".format((size_bytes / 1024) / 1024))
-            text += f"<b>Tag:</b> <code>{tag}</code>\n"
-            text += f"<b>Size</b>: <code>{size} MB</code>\n\n"
+            text += strings["phh_tag"].format(tag=tag)
+            text += strings["phh_size"].format(size=size)
             btn = strings["dl_btn"]
             button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
         except IndexError:
@@ -319,10 +319,10 @@ async def twrp(message, strings):
 
     else:
         text = strings["twrp_header"]
-        text += f"  <b>Device:</b> {device}\n"
+        text += strings["twrp_device"].format(device=device)
         page = BeautifulSoup(url.content, "lxml")
         date = page.find("em").text.strip()
-        text += f"  <b>Updated:</b> <code>{date}</code>\n"
+        text += strings["twrp_udpated"].format(date=date)
         trs = page.find("table").find_all("tr")
         row = 2 if trs[0].find("a").text.endswith("tar") else 1
 
@@ -331,8 +331,8 @@ async def twrp(message, strings):
             dl_link = f"https://dl.twrp.me{download['href']}"
             dl_file = download.text
             size = trs[i].find("span", {"class": "filesize"}).text
-        text += f"  <b>Size:</b> <code>{size}</code>\n"
-        text += f"  <b>File:</b> <code>{dl_file.lower()}</code>"
+        text += strings["twrp_size"].format(size=size)
+        text += strings["twrp_file"].format(dl_file=dl_file.lower())
         btn = strings["dl_btn"]
         button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=dl_link))
 
@@ -445,9 +445,7 @@ async def orangefox(message, strings):
         build_type = "stable"
 
     if codename == "devices" or codename == "":
-        text = (
-            f"<b>OrangeFox Recovery <i>{build_type}</i> is currently avaible for:</b>"
-        )
+        text = strings["of_available"].format(build_type=build_type)
         data = await http.get(
             API_HOST + f"devices/?release_type={build_type}&sort=device_name_asc"
         )
@@ -459,27 +457,21 @@ async def orangefox(message, strings):
                 )
         except BaseException:
             await message.reply(
-                f"'<b>{build_type}</b>' is not a type of build available, the types are just '<b>beta</b>' or '<b>stable</b>'."
+                strings["of_invalid_type"].format(build_type=build_type)
             )
             return
 
         if build_type == "stable":
-            text += (
-                "\n\n"
-                + f"To get the latest Stable release use <code>/ofox (codename)</code>, for example: <code>/ofox raphael</code>"
-            )
+            text += "\n\n" + strings["of_stable_ex"]
         elif build_type == "beta":
-            text += (
-                "\n\n"
-                + f"To get the latest Beta release use <code>/ofox (codename) beta</code>, for example: <code>/ofox raphael beta</code>"
-            )
+            text += "\n\n" + strings["of_beta_ex"]
         await message.reply(text)
         return
 
     data = await http.get(API_HOST + f"devices/get?codename={codename}")
     device = json.loads(data.text)
     if data.status_code == 404:
-        await message.reply("Device is not found!")
+        await message.reply(strings["err_query"])
         return
 
     data = await http.get(
@@ -487,11 +479,14 @@ async def orangefox(message, strings):
         + f"releases/?codename={codename}&type={build_type}&sort=date_desc&limit=1"
     )
     if data.status_code == 404:
-        btn = "Device's page"
+        btn = strings["of_device_page"]
         url = f"https://orangefox.download/device/{device['codename']}"
         button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
         await message.reply(
-            f"⚠️ There is no '<b>{build_type}</b>' releases for <b>{device['full_name']}</b>.",
+            "⚠️ "
+            + strings["of_no_releases"].format(
+                build_type=build_type, device=device["full_name"]
+            ),
             reply_markup=button,
             disable_web_page_preview=True,
         )
@@ -504,22 +499,22 @@ async def orangefox(message, strings):
     data = await http.get(API_HOST + f"releases/get?_id={file_id}")
     release = json.loads(data.text)
     if data.status_code == 404:
-        await message.reply("Release is not found!")
+        await message.reply(strings["err_query"])
         return
 
-    text = f"<u><b>OrangeFox Recovery <i>{build_type}</i> release</b></u>\n"
-    text += ("  <b>Device:</b> {fullname} (<code>{codename}</code>)\n").format(
+    text = strings["of_header"].format(build_type=build_type)
+    text += (strings["of_device"]).format(
         fullname=device["full_name"], codename=device["codename"]
     )
-    text += ("  <b>Version:</b> {}\n").format(release["version"])
-    text += ("  <b>Release date:</b> {}\n").format(
-        time.strftime("%d/%m/%Y", time.localtime(release["date"]))
+    text += (strings["of_version"]).format(version=release["version"])
+    text += (strings["of_release_date"]).format(
+        date=time.strftime("%d/%m/%Y", time.localtime(release["date"]))
     )
 
-    text += ("  <b>Maintainer:</b> {name}\n").format(name=device["maintainer"]["name"])
+    text += (strings["of_maintainer"]).format(name=device["maintainer"]["name"])
     changelog = release["changelog"]
     try:
-        text += "  <u><b>Changelog:</b></u>\n"
+        text += strings["of_changelog"]
         for entry_num in range(len(changelog)):
             if entry_num == 10:
                 break
