@@ -143,7 +143,7 @@ STRINGS:
     your_id: "הID שלך: <code>{id}</code>\n"
     chat_id: "הID של הקבוצה: <code>{id}</code>\n"
     user_id: "{user}'s ID: <code>{id}</code>\n"
-    conn_chat_id: "Current connected chat ID: <code>{id}</code>"
+    conn_chat_id: "הID של הצ'אט המחובר: <code>{id}</code>"
     help_btn: "לחץ כאן לעזרה!"
     help_txt: "לחץ על הכפתור מלמטה בשביל עזרה!"
     delmsg_filter_title: 'מחק את ההודעה'
@@ -388,11 +388,11 @@ STRINGS:
     report_whitedlisted: "You <b>cannot</b> report a whitelisted user."
     reported_user: "<b>Reported</b> {user} to admins."
     reported_reason: "\n<b>סיבה:</b>\n<code>{reason}</code>"
-    reports_on: "Reports are turned <b>on</b> in this group."
-    reports_off: "Reports are turned <b>off</b> in this group."
-    reports_already_on: "<b>Reports are already turned on.</b>"
-    reports_turned_on: "Reports turned <b>on.</b>"
-    reports_already_off: "<b>Reports are already turned off.</b>"
+    reports_on: "אפשרות לדיווח למנהלים <b>הופעלה</b> בקבוצה הזאת."
+    reports_off: "אפשרות לדיווח למנהלים <b>הושבתה</b> בקבוצה הזאת."
+    reports_already_on: "<b>האפשרות לדיווח למנהלים כבר מופעלת.</b>"
+    reports_turned_on: "אפשרות הדיווח למנהלים <b>הופעלה.</b>"
+    reports_already_off: "<b>האפשרות לדיווח למנהלים כבר מושבתת.</b>"
     wrong_argument: "<b> משתנה שגוי. </b>"
   language:
     your_lang: "השפה שלך הצ'אט כרגע: <b>{lang}</b>"
@@ -657,7 +657,7 @@ STRINGS:
     invalid_time: זמן לא חוקי!
     #/antiflood | /flood
     not_configured: Antiflood isn't configured in this chat yet!
-    turned_off: Disabled antiflood in <b>{chat_title}</b>!
+    turned_off: המנגנון נגד הצפות הושבת <b>{chat_title}</b>!
     "configuration_info:with_time": Antiflood is configured in this chat, those who send {count} message within {time} will be {action}!
     configuration_info: Antiflood is configured in this chat, those who send {count} consecutively will be {action}!
     ban: נחסם
