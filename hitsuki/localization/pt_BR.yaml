@@ -55,7 +55,7 @@ STRINGS:
     enabled_successfully: "Notas privadas foram <b>ativadas</b> em %s com sucesso!"
     disabled_successfully: "Notas privadas foram <b>desativadas</b> em %s com sucesso!"
     not_enabled: "As notas privadas não estão habilitadas."
-    privatenotes_notif: "Você tem sido conectado com sucesso às notas de <b>{chat}</b>! Para se desconectar, por favor use o comando <code>/disconnect</code>!"
+    privatenotes_notif: "Você foi conectado com sucesso às notas de <b>{chat}</b>! Para se desconectar, por favor use o comando <code>/disconnect</code>!"
     enabled: 'Ativado'
     disabled: 'Desativado'
     #/cleannotes
@@ -306,7 +306,7 @@ STRINGS:
     fbanned_subs_process: "\n<b>Status:</b> Banindo em <code>{feds}</code> feds inscritas..."
     fbanned_subs_done: "\n<b>Estado:</b> Pronto! Banido em <code>{chats}</code> chats desta federação e <code>{subs_chats}</code> chats de <code>{feds}</code> federações subscritas"
     fban_usr_rmvd: |
-      O usuário {user} está atualmente banido na federação <b>{fed}</b> e tem sido removido!
+      O usuário {user} está atualmente banido na federação <b>{fed}</b> e foi removido!
       Motivo: <code>{rsn}</code>
     fban_log_fed_log: |
       <b>Baniu um usuário na fed</b> #FedBan
@@ -363,8 +363,8 @@ STRINGS:
     importing_process: <b>Importando fbans...</b>
     import_done: Importação de banidos da federação finalizada! {num} banidos foram importados.
     #def
-    automatic_ban: O usuário {user} está banido na atual federação <b>{fed_name}</b> e tem sido removido!
-    automatic_ban_sfed: O usuário {user} está banido na subfederação <b>{fed_name}</b> e tem sido removido!
+    automatic_ban: O usuário {user} está banido na atual federação <b>{fed_name}</b> e foi removido!
+    automatic_ban_sfed: O usuário {user} está banido na subfederação <b>{fed_name}</b> e foi removido removido!
     automatic_ban_reason: "Motivo: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>Informações de banimento da federação:</b>\n"
@@ -406,8 +406,8 @@ STRINGS:
     see_translators: '👥 Veja os tradutores'
     back: Voltar
   connections:
-    pm_connected: "Seu chat privado tem sido conectado com sucesso a <b>{chat_name}</b>!"
-    connected_pm_to_me: "Seu chat privado tem sido conectado com sucesso a <b>{chat_name}</b>! Por favor, me envie uma mensagem para iniciar a conexão."
+    pm_connected: "O seu PM foi conectado com sucesso para o chat <b>{chat_name}</b>!"
+    connected_pm_to_me: "O seu PM foi conectado com sucesso ao chat <b>{chat_name}</b>! Por favor, inicie uma conversa comigo para poder usar a conexão."
     chat_connection_tlt: "<b>Conexão via chat</b>"
     connected_chat: |
       <b>Chat conectado atualmente:</b>
@@ -666,3 +666,69 @@ STRINGS:
     #/setfloodaction
     invalid_args: "Ação não suportada, esperava-se {supported_actions}!"
     setfloodaction_success: "Atualizado com sucesso a ação anti-flood para <b>{action}</b>!"
+  android:
+    cmd_example: "Digite o <b>codinome</b> do seu dispositivo!\nPor exemplo, <code>/{cmd} whyred</code>"
+    err_github: "Hitsuki tem tentado se conectar ao GitHub, parece que o GitHub está offline"
+    err_query: "Não foi possível encontrar nenhum resultado correspondente à sua consulta."
+    err_ota: "Diga ao mantenedor da ROM para consertar seu json OTA. Tenho certeza de que isso não funciona com OTA e que também não funcionará com este bot :P"
+    err_twrp: "O TWRP não está disponível para <code>{device}</code>"
+    err_sam: "Não foi possível encontrar firmwares para {model} - {csc}, por favor refine sua pesquisa ou tente novamente mais tarde!"
+    err_sam_pub: "<b>Nenhuma versão pública encontrada para {model} e {csc}.</b>\n\n"
+    dl_btn: "Clique aqui para baixar!"
+    download: "<b>Baixar:</b> <a href='{url}'>{filename}</a>\n"
+    build_size: "<b>Tamanho da compilação:</b> <code>{size}</code>\n"
+    version: "<b>Versão:</b> <code>{version}</code>\n"
+    android_version: "<b>Versão do Android:</b> <code>{version}</code>\n"
+    maintainer: "<b>Mantedor:</b> {name}\n"
+    whatis: "<b>{device}</b> é <code>{brand} {name}</code>\n"
+    variants: "<b>Modelo</b>: <code>{model}</code> \n<b>Nome:</b> <code>{name}</code>\n\n"
+    magisk: "<b>Últimas Versões do Magisk:</b>\n"
+    phh: "<b>Último(s) lançamento(s) de GSI do Phh:</b>\n"
+    phhmagisk: "<b>Último lançamento do Magisk do Phh:</b>\n"
+    twrp_header: "<b><u>TeamWin Recovery versão <i>oficial</i></u></b>\n"
+    sam_cmd_example: "Por favor, digite seu dispositivo <b>MODELO</b> e <b>CSC</b> nele!\nex: <code>/{cmd} SM-J710MN ZTO</code>!"
+    sam_down_from: "\n<b>Baixar abaixo:</b>\n"
+    sam_latest: "<b>Último firmware disponível:</b>\n"
+    sam_test: "<b>Último firmware em teste:</b>\n"
+    phh_tag: "<b>Tag:</b> <code>{tag}</code>\n"
+    phh_size: "<b>Tamanho</b>: <code>{size} MB</code>\n\n"
+    twrp_device: "  <b>Dispositivo:</b> {device}\n"
+    twrp_udpated: "  <b>Atualizado:</b> <code>{date}</code>\n"
+    twrp_size: "  <b>Tamanho:</b> <code>{size}</code>\n"
+    twrp_file: "  <b>Arquivo:</b> <code>{dl_file}</code>"
+    of_available: "<b>OrangeFox Recovery <i>{build_type}</i> está atualmente disponível para:</b>"
+    of_invalid_type: "'<b>{build_type}</b>' não é um tipo de compilação disponível, os tipos são apenas '<b>beta</b>' ou '<b>stable</b>'."
+    of_stable_ex: "Para obter a versão mais recente do stable use <code>/ofox (codinome)</code>, por exemplo: <code>/ofox raphael</code>"
+    of_beta_ex: "Para obter a última versão Beta use <code>/ofox (codinome) beta</code>, por exemplo: <code>/ofox raphael beta</code>"
+    of_no_releases: "Não há nenhuma release '<b>{build_type}</b>para <b>{device}</b>."
+    of_device_page: "Página do dispositivo"
+    of_header: "<u><b>OrangeFox Recovery <i>{build_type}</i> release</b></u>\n"
+    of_device: "  <b>Dispositivo:</b> {fullname} (<code>{codename}</code>)\n"
+    of_version: "  <b>Versão:</b> {version}\n"
+    of_release_date: "  <b>Data de lançamento:</b> {date}\n"
+    of_maintainer: "  <b>Mantedor:</b> {name}\n"
+    of_changelog: "  <u><b>Mudanças:</b></u>\n"
+  anime:
+    search_err: "Algo deu errado, verifique sua pesquisa e tente novamente!"
+    short_desc: "<b>Descrição curta:</b> <i>{desc}</i>..."
+    desc: "<b>Descrição:</b> <i>{desc}</i>"
+    score: "<b>Pontuação:</b> <code>{score}</code>\n"
+    status: "<b>Estado:</b> <code>{status}</code>\n"
+    genres: "<b>Gêneros:</b>"
+    more_info: "Mais informações"
+    trailer: "Trailer"
+    airing_id: "<b>ID:</b> <code>{id}</code>\n"
+    airing_episode: "<b>Episódio:</b> <code>{ep}</code>\n"
+    airing_time: "<b>Exibição em:</b> <code>{time}</code>"
+    anime_type: "<b>Tipo:</b> <code>{type}</code>\n"
+    anime_episodes: "<b>Episódios:</b> <code>{ep}</code>\n"
+    anime_duration: "<b>Duração:</b> <code>{time}</code> Por Ep.\n"
+    anime_studios: "<b>Estúdio:</b>"
+    manga_start: "<b>Data:</b> <code>{date}</code>\n"
+    manga_chapters: "<b>Capítulos:</b> <code>{chapters}</code>\n"
+    manga_volumes: "<b>Volumes:</b> <code>{vol}</code>\n"
+    search_kaizoku: "<b>Resultados da pesquisa para</b> <code>{query}</code> <b>em</b> <code>AnimeKaizoku</code>:\n"
+    kaizoku_err: "<b>Nenhum resultado encontrado para</b> <code>{query}</code> <b>em</b> <code>AnimeKaizoku</code>"
+    search_kayo: "<b>Resultados da pesquisa para</b> <code>{query}</code> <b>em</b> <code>AnimeKayo</code>:\n"
+    kayo_err: "<b>Nenhum resultado encontrado para</b> <code>{query}</code> <b>em</b> <code>AnimeKayo</code>"
+    all_results: "Ver todos os resultados"
