@@ -379,7 +379,7 @@ STRINGS:
     contact_in_pm: "\n\n¡Para más información sobre sus baneos, por favor envíenme un mensaje directo para mayor privacidad!"
     too_long_fbaninfo: "¡Bien! ¡Tu fbaninfo requiere un archivo!"
     didnt_fbanned: "Usted no está baneado en esta federación."
-    not_fbanned_in_fed: Él/Ellos no está/án baneado/s en la federación <b>{fed_name}</b>
+    not_fbanned_in_fed: No está baneado en la federación <b>{fed_name}</b>
   reports:
     user_user_admin: "Eres un administrador aquí, ¿por qué necesitarías reportar a alguien?.."
     user_is_whitelisted: "Eres un usuario de la whitelist, ¿por qué necesitarías reportar a alguien?.."
@@ -401,7 +401,7 @@ STRINGS:
     select_pm_lang: "\n<b>Selecciona tu nuevo idioma:</b>"
     select_chat_lang: "\n<b>Seleccionar nuevo idioma del chat:</b>"
     crowdin_btn: "🌎 Ayúdanos con la traducción"
-    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukibot\">🌎 Ayúdanos a mejorar nuestras traducciones</a>"
+    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukix\">🌎 Ayúdanos a mejorar nuestras traducciones</a>"
     not_supported_lang: '¡Este idioma no está soportado!'
     lang_changed: Idioma cambiado a <b>{lang_name}</b>.
     see_translators: '👥 Ver traductores'
@@ -552,7 +552,7 @@ STRINGS:
   #havent_set_rules_note: "You haven't set the rules note yet."
   #success_remove_rules_note: "Successfully removed rules note in <b>{}</b>."
   greetings:
-    default_welcome: "Welcome {mention}! How are you?"
+    default_welcome: "¡Bienvenido/a {mention}! ¿Cómo estás?"
     thank_for_add: "Thanks for adding me to your group! Take a look at /help and follow my news channel @HitsukiNews."
     default_security_note: "¡Bienvenido/a {mention}! ¡Por favor, haz clic en el botón de abajo para verificar que eres un ser humano!"
     bool_invalid_arg: Argumento inválido, se esperaba <code>on</code>/<code>off</code>.
