@@ -1,549 +1,551 @@
 ---
 language_info:
-  flag: "🇺🇸"
-  code: en
+  flag: "🇺🇦"
+  code: uk
 STRINGS:
   notes:
     #/save
-    note_saved: "🗒 Note <code>{note_name}</code> saved in <b>{chat_title}</b>!"
-    note_updated: "🗒 Note <code>{note_name}</code> updated in <b>{chat_title}</b>!"
-    you_can_get_note: "\nYou can retrieve this note by using <code>/get {note_name}</code>, or <code>#{note_name}</code>"
+    note_saved: "🗒 Примітка<code>{note_name}</code> збережена в <b>{chat_title}</b>!"
+    note_updated: "🗒 Примітка <code>{note_name}</code> оновлена в <b>{chat_title}</b>!"
+    you_can_get_note: "\nВи можете отримати цю примітку, використовуючи <code>/get {note_name}</code>, або <code>#{note_name}</code>"
     #Translator note: please keep sure that you don't have space in the end of string
-    note_aliases: "\nNote aliases:"
-    blank_note: "Saving blank note is not allowed!"
-    notename_cant_contain: "Note name can't contain \"<code>{symbol}</code>\"!"
+    note_aliases: "\nПсевдоніми примітки:"
+    blank_note: "Збереження порожньої примітки не допускається!"
+    notename_cant_contain: "Ім'я примітки не може містити \"<code>{symbol}</code>\"!"
     #/get
-    cant_find_note: I can't find this note in <b>{chat_name}</b>!
-    no_note: "Can't find that note."
-    no_notes_pattern: "No notes found by pattern <code>%s</code>"
-    u_mean: "\nDid you mean <code>#{note_name}</code>?"
+    cant_find_note: Я не можу знайти цю примітку в <b>{chat_name}</b>!
+    no_note: "Не можу знайти цю примітку."
+    no_notes_pattern: "Не знайдено приміток за шаблоном <code>%s</code>"
+    u_mean: "\nВи мали на увазі <code>#{note_name}</code>?"
     #/notes
-    notelist_no_notes: "There aren't any notes in <b>{chat_title}</b>!"
-    notelist_header: "<b>Notes in {chat_name}</b>:"
-    notes_in_private: "Click below button to get notes list."
+    notelist_no_notes: "Нема ніяких приміток в <b>{chat_title}</b>!"
+    notelist_header: "<b>Примітки в {chat_name}</b>:"
+    notes_in_private: "Натисніть на кнопку нижче, щоб отримати список приміток."
     notelist_search: |
-      <b>Pattern:</b> <code>{request}</code>
-      <b>Matched notes:</b>
+      <b>Шаблон:</b> <code>{request}</code>
+      <b>Відповідні примітки:</b>
     #/clear
-    note_removed: "Note <code>#{note_name}</code> removed in <b>{chat_name}</b>!"
+    note_removed: "Примітка <code>#{note_name}</code> видалена в <b>{chat_name}</b>!"
     note_removed_multiple: |
-      Removed multiple notes in <b>{chat_name}</b>
-      <b>Removed:</b><code>{removed}</code>
-    not_removed_multiple: "<b>Not removed:</b><code>{not_removed}</code>"
+      Видалено кілька приміток в <b>{chat_name}</b>
+      <b>Видалено:</b><code>{removed}</code>
+    not_removed_multiple: "<b>Не видалено:</b><code>{not_removed}</code>"
     #/clearall
-    clear_all_text: "This will remove all notes from {chat_name}. Are you sure?"
-    clearall_btn_yes: "Yes. Remove all my notes!"
-    clearall_btn_no: "No!"
-    clearall_done: "All (<code>{num}</code>) notes in {chat_name} were removed!"
+    clear_all_text: "Всі примітки будуть видалені з {chat_name}. Ви впевнені?"
+    clearall_btn_yes: "Так. Видаліть всі мої примітки!"
+    clearall_btn_no: "Ні!"
+    clearall_done: "Всі (<code>{num}</code>) примітки в {chat_name} були видалені!"
     #/search
     search_header: |
-      <b>Search request in {chat_name}</b>:
-      <b>Pattern:</b> <code>{request}</code>
-      <b>Matched notes:</b>
+      <b>Пошуковий запит в {chat_name}</b>:
+      <b>Шаблон:</b> <code>{request}</code>
+      <b>Відповідні примітки:</b>
     #/noteinfo
-    note_info_title: "<b>Note info</b>\n"
-    note_info_note: "Note names: %s\n"
-    note_info_content: "Note content: %s\n"
-    note_info_parsing: "Parse mode: <code>%s</code>\n"
-    note_info_created: "Was created in: <code>{date}</code> by {user}\n"
-    note_info_updated: "Last updated in: <code>{date}</code> by {user}\n"
-    user_blocked: "Write /start in my PM!"
+    note_info_title: "<b>Інформація про примітку</b>\n"
+    note_info_note: "Назва примітки: %s\n"
+    note_info_content: "Вміст примітки: %s\n"
+    note_info_parsing: "Режим обробки: <code>%s</code>\n"
+    note_info_created: "Примітка створена: <code>{date}</code> користувачем {user}\n"
+    note_info_updated: "Останнє оновлення: <code>{date}</code> користувачем {user}\n"
+    user_blocked: "Напишіть /start мені в особисті повідомлення!"
     #/privatenotes
-    private_notes_false_args: "You have 2 options <code>Disable</code> and <code>Enable</code>!"
-    already_enabled: "Private notes are already enabled in %s"
-    current_state_info: "Private notes are currently <code>{state}</code> in <b>{chat}</b>!"
-    enabled_successfully: "Private notes are <b>Enabled</b> in %s successfully!"
-    disabled_successfully: "Private notes are <b>Disabled</b> in %s successfully!"
-    not_enabled: "Private notes are not enabled."
-    privatenotes_notif: "You have been successfully connected to <b>{chat}</b> notes! To disconnect please use command <code>/disconnect</code>!"
-    enabled: 'Enabled'
-    disabled: 'Disabled'
+    private_notes_false_args: "У вас є 2 варіанта <code>Disable</code> (відключити) та <code>Enable</code> (включити)!"
+    already_enabled: "Приватні примітки вже включені в %s"
+    current_state_info: "Приватні примітки зараз <code>{state}</code> в <b>{chat}</b>!"
+    enabled_successfully: "Приватні примітки <b>Включені</b> в %s успішно!"
+    disabled_successfully: "Приватні примітки <b>Відключені</b> в %s успішно!"
+    not_enabled: "Приватні примітки не включені."
+    privatenotes_notif: "Ви успішно підключилися до приміток чату <b>{chat}</b>! Для відключення використовуйте команду <code>/disconnect</code>!"
+    enabled: 'Включені'
+    disabled: 'Виключені'
     #/cleannotes
-    clean_notes_enable: "Cleaning notes successfully enabled in <b>{chat_name}</b>"
-    clean_notes_disable: "Cleaning notes successfully disabled in <b>{chat_name}</b>"
-    clean_notes_enabled: "Cleaning notes currently is <b>enabled</b> in <b>{chat_name}</b>"
-    clean_notes_disabled: "Cleaning notes currently is <b>disabled</b> in <b>{chat_name}</b>"
+    clean_notes_enable: "Очищення приміток успішно включено в <b>{chat_name}</b>"
+    clean_notes_disable: "Очищення приміток успішно відключено в <b>{chat_name}</b>"
+    clean_notes_enabled: "Очищення приміток успішно <b>включено</b> в <b>{chat_name}</b>"
+    clean_notes_disabled: "Очищення приміток успішно <b>відключено</b> в <b>{chat_name}</b>"
     #Filter
-    filters_title: 'Send a note'
-    filters_setup_start: 'Please send a note name.'
+    filters_title: 'Відправити примітку'
+    filters_setup_start: 'Будь ласка, відправте назву примітки.'
   #delmsg_no_arg: "deletemsg button can contain only 'admin' or 'user' argument!"
   #bot_msg: "I'm sorry, I am not able to get this message, probably this a other bot's message, so I can't save it."
   filters:
-    no_filters_found: "No filters was found in <b>{chat_name}</b>!"
+    no_filters_found: "Фільтри не були знайдені в <b>{chat_name}</b>!"
     #/addfilter
-    anon_detected: Being anonymous admin, you cannot add new filters, use connections instead.
-    regex_too_slow: "Your regex pattern matches too slowly (more than the half of second) and it can't be added!"
-    cancel_btn: "🛑 Cancel"
+    anon_detected: Будучи анонімним адміном, Ви не можете додавати нові фільтри. Натомість використовуйте з'єднання.
+    regex_too_slow: "Ваш шаблон regex надто повільний (виконання більше ніж 500 мс), він не може бути доданий!"
+    cancel_btn: "🛑 Скасувати"
     adding_filter: |
-      Adding filter <code>{handler}</code> in <b>{chat_name}</b>
-      Select action below:
-    saved: "New filter was successfully saved!"
+      Додавання фільтру <code>{handler}</code> в <b>{chat_name}</b>
+      Оберіть нижче дію:
+    saved: "Новий фільтр успішно збережений!"
     #/filters
-    list_filters: "Filters in <b>{chat_name}</b>:\n"
+    list_filters: "Фільтри в <b>{chat_name}</b>:\n"
     #/delfilter
-    no_such_filter: I can't find that filter in <b>{chat_name}</b>, you can check what filters are enabled with the <code>/filters</code> command.
-    del_filter: "Filter with handler '<code>{handler}</code>' was successfully removed!"
+    no_such_filter: Я не можу знайти цей фільтр в <b>{chat_name}</b>, перевірте включені фільтри за допомогою команди <code>/filters</code>.
+    del_filter: "Фільтр '<code>{handler}</code>' був успішно видалений!"
     select_filter_to_remove: |
-      I have found many filters with handler '<code>{handler}</code>'.
-      Please select one to remove:
+      Я знайшла багато фільтрів '<code>{handler}</code>'.
+      Будь ласка, оберіть один для видалення:
     #/delfilters or /delallfilters
-    not_chat_creator: Only chat creators can use this command!
-    delall_header: This would delete all filters in this chat. This IS irreversible.
-    confirm_yes: '⚠ Delete all'
-    confirm_no: '❌ Cancel'
-    delall_success: Successfully deleted all ({count}) filters in this chat!
+    not_chat_creator: Тільки творці чату можуть використовувати цю команду!
+    delall_header: Це видалить всі фільтри в цьому чаті. Дія незворотня.
+    confirm_yes: '⚠ Видалити все'
+    confirm_no: '❌ Скасувати'
+    delall_success: Успішно видалені всі ({count}) фільтри в цьому чаті!
   warns:
     #/warn
-    warn_sofi: "Haha no way to warn myself!"
-    warn_self: "Do you wanna warn yourself? Just leave the chat then."
-    warn_admin: "Well.. you are wrong. You can't warn an admin."
-    warn: "{admin} has warned {user} in <b>{chat_name}</b>\n"
-    warn_bun: "Warnings has been exceeded! {user} has been banned!"
-    warn_num: "Warns: {curr_warns}/{max_warns}\n"
-    warn_rsn: "Reason: <code>{reason}</code>\n"
-    max_warn_exceeded: Warnings has been exceeded! {user} has been {action}!
-    "max_warn_exceeded:tmute": Warnings has been exceeded! {user} has been tmuted for {time}!
+    warn_sofi: "Хаха, неможливо дати попередження собі ж!"
+    warn_self: "Ви хочете дати попередження собі? Просто покиньте чат."
+    warn_admin: "Ви серйозно? Ви не можете дати попередження адміну."
+    warn: "{admin} попередив {user} в <b>{chat_name}</b>\n"
+    warn_bun: "Попередження перевищені! {user} був забанений!"
+    warn_num: "Попередження: {curr_warns}/{max_warns}\n"
+    warn_rsn: "Причина: <code>{reason}</code>\n"
+    max_warn_exceeded: Попередження перевищені! {user} був {action}!
+    "max_warn_exceeded:tmute": Попередження перевищені! {user} було обмежено на {time}!
     #warn rmv callback
-    warn_no_admin_alert: "⚠ You are NOT admin and cannot remove warnings!"
-    warn_btn_rmvl_success: "✅ Warning removed by {admin}!"
+    warn_no_admin_alert: "⚠ Ви НЕ адміністратор, щоб скасовувати попередження!"
+    warn_btn_rmvl_success: "✅ Попередження скасоване {admin}!"
     #/warns
-    warns_header: "Here are your warns in this chat \n\n"
+    warns_header: "Ось ваші попередження у цьому чаті \n\n"
     warns: "{count} : <code>{reason}</code> by {admin}\n"
-    no_warns: "Well, {user} doesn't have any warns."
+    no_warns: "Що ж, у {user} немає попереджень."
     #/warnlimit
-    warn_limit: "Warn limit in <b>{chat_name}</b> is currently: <code>{num}</code>"
-    warnlimit_short: 'Warnlimit should be at least 2!'
-    warnlimit_long: 'Warnlimit should be shorter than 1 000!'
-    warnlimit_updated: '✅ Warnlimit successfully updated to {num}'
+    warn_limit: "Ліміт попереджень у <b>{chat_name}</b> наразі: <code>{num}</code>"
+    warnlimit_short: 'Ліміт попереджень повинен бути не менше 2!'
+    warnlimit_long: 'Ліміт попереджень повинен бути не більше 1 000!'
+    warnlimit_updated: '✅ Ліміт попереджень успішно оновлено до {num}'
     #/delwarns
-    purged_warns: "{admin} reset <code>{num}</code> warns of {user} in <b>{chat_title}</b>!"
-    usr_no_wrn: "{user} doesn't have any warns to reset."
-    rst_wrn_sofi: 'Hitsuki never had warns to reset.'
-    not_digit: Warnlimits should be digits!
+    purged_warns: "{admin} скасував <code>{num}</code> попереджень {user} у <b>{chat_title}</b>!"
+    usr_no_wrn: "У {user} поки нема попереджень."
+    rst_wrn_sofi: 'У Софії ніколи не було попереджень.'
+    not_digit: Ліміт попереджень повинен бути у форматі чисел!
     #/warnmode
-    same_mode: This is the current mode! How can I change it?
-    no_time: For selecting mode 'tmute' you have to mention time!
-    invalid_time: Invalid time!
-    warnmode_success: Warn mode of <b>%s</b> has successfully changed to <b>%s</b>!
+    same_mode: Це поточний режим! Як я можу його змінити?
+    no_time: Для вибору режиму 'tmute' ви повинні задати час!
+    invalid_time: Недійсний час!
+    warnmode_success: Режим попереджень <b>%s</b> успішно змінено на <b>%s</b>!
     wrng_args: |
-      These are the available options:
+      Ось доступні варіанти:
     mode_info: |
-      Current mode in this chat is <b>%s</b>.
-    banned: banned
-    muted: muted
-    filters_title: Warn the user
-    filter_handle_rsn: Automated filter action!
+      Поточний режим у цьому чаті <b>%s</b>.
+    banned: забанений
+    muted: заглушений
+    filters_title: Попередити користувача
+    filter_handle_rsn: Автоматична дія фільтру!
   msg_deleting:
-    no_rights_purge: "You don't have enough rights to purge in this group!"
-    reply_to_msg: "Reply to a message to delete!"
-    purge_error: "I can't continue purge, mostly because you started purge from a message that was sent older than 2 days."
-    fast_purge_done: "<b>Fast purge completed!</b>\nThis message will be removed in 5 seconds."
-    purge_user_done: "All messages from {user} were successfully deleted!"
+    no_rights_purge: "Ви не маєте достатньо прав, щоб очистити цю групу!"
+    reply_to_msg: "Щоб видалити повідомлення, потрібно відповісти на нього!"
+    purge_error: "Я не можу продовжувати очищення через те, що Ви почали очищати з повідомлення, яке було надіслано більше двох днів назад."
+    fast_purge_done: "<b>Швидке очищення завершено!</b>\nЦе повідомлення буде видалено через 5 секунд."
+    purge_user_done: "Всі повідомлення від {user} були успішно видалені!"
   misc:
-    your_id: "Your ID: <code>{id}</code>\n"
-    chat_id: "Group ID: <code>{id}</code>\n"
-    user_id: "{user}'s ID: <code>{id}</code>\n"
-    conn_chat_id: "Current connected chat ID: <code>{id}</code>"
-    help_btn: "Click me for help!"
-    help_txt: "Click the button below for help!"
-    delmsg_filter_title: 'Delete the message'
-    send_text: Please send the reply message!
-    replymsg_filter_title: 'Reply to message'
-    send_customised_reason: Send the <i>reason</i> you want to include in action message. "<code>None</code>" for <i>no reason</i> to be given!
-    expected_text: Expected a text message!
+    your_id: "Ваш ID: <code>{id}</code>\n"
+    chat_id: "ID групи: <code>{id}</code>\n"
+    user_id: "{user} ID: <code>{id}</code>\n"
+    conn_chat_id: "ID поточного підключеного чату: <code>{id}</code>"
+    help_btn: "Натисніть на мене, щоб отримати допомогу!"
+    help_txt: "Натисніть кнопку нижче для допомоги!"
+    delmsg_filter_title: 'Видалити повідомлення'
+    send_text: Будь-ласка, відправте у відповідь слово/речення!
+    replymsg_filter_title: 'Відповісти на повідомлення'
+    send_customised_reason: Надішліть <i>причину</i>, яку хочете додати до повідомлення дії. Використовуйте "<code>Немає</code>" для <i>відсутності причини</i>!
+    expected_text: Очікувалось текстове повідомлення!
   promotes:
-    promote_success: "{user} was successfully promoted in {chat_name}!"
-    promote_title: "\nWith custom role <code>{role}</code>!"
-    rank_to_loong: "Custom role text cannot be longer than 16 symbols."
-    promote_failed: "Promotion failed! Check if I have rights to."
-    demote_success: "{user} was successfully demoted in {chat_name}!"
-    demote_not_admin: "That user isn't admin."
-    demote_failed: "Demotion failed. Maybe I can't demote or the person is promoted by someone else?"
-    cant_get_user: "I couldn't get the user! If you mind, please reply to his message and try again."
-    cant_promote_yourself: "You can't promote yourself."
-    emoji_not_allowed: "I'm sorry, but admin roles can't have emojis 😞"
+    promote_success: "{user} був успішно підвищений в {chat_name}!"
+    promote_title: "\nЗ роллю користувача <code>{role}</code>!"
+    rank_to_loong: "Назва ролі користувача не може бути довшою, ніж 16 символів."
+    promote_failed: "Підвищення не вдалося! Перевірте чи я маю право на це."
+    demote_success: "{user} був успішно понижений в {chat_name}!"
+    demote_not_admin: "Цей користувач не є адміністратором."
+    demote_failed: "Пониження не вдалось. Можливо, я не маю прав або користувач підвищений кимось іншим?"
+    cant_get_user: "Я не змогла отримати користувача! Будь ласка, дайте відповідь на його повідомлення і повторіть спробу."
+    cant_promote_yourself: "Ви не можете підвищити себе."
+    emoji_not_allowed: "Вибачте, але ролі адміністратора не можуть містити емодзі 😞"
   pm_menu:
-    start_hi_group: 'Hey there! My name is Hitsuki'
-    start_hi: "Hey there! My name is <b>Hitsuki.</b>\nI can help manage your groups with useful features, feel free to add me to your groups!"
+    start_hi_group: 'Привіт! Мене звати Софі'
+    start_hi: "Привіт! Мене звати Софі, я допоможу Вам ефективно керувати Вашою групою!"
     btn_source: "📦 Source code"
-    btn_help: "❔ Help"
-    btn_lang: "🇺🇸 Language"
-    btn_channel: "📬 Hitsuki News"
+    btn_help: "❔ Допомога"
+    btn_lang: "🇺🇦 Мова"
+    btn_channel: "📡 Новини Софі"
     btn_group_help: "Click me for help!"
-    back: Back
+    back: Назад
     #/help
-    help_header: "Hey! My name is <b>Hitsuki</b>. I am a group management bot, here to help you get around and keep the order in your groups!\nI have lots of handy features, such as flood control, a warning system, a note keeping system, and even predetermined replies on certain keywords."
-    click_btn: Click here
+    help_header: "Хей! Загляньте у нашу Wiki для отримання допомоги"
+    click_btn: Натисніть тут
   disable:
     #/disableable
-    disablable: "<b>Disable-able commands:</b>\n"
+    disablable: "<b>Команди, доступні для відключення:</b>\n"
     #/disabled
-    no_disabled_cmds: No disabled commands in <b>{chat_name}</b>!
-    disabled_list: "<b>Disabled commands in {chat_name}:</b>\n"
+    no_disabled_cmds: Немає відключених команд в чаті <b>{chat_name}</b>!
+    disabled_list: "<b>Відключені команди в чаті {chat_name}:</b>\n"
     #/disable
-    wot_to_disable: "What do you want to disable?"
-    already_disabled: "This command is already disabled!"
-    disabled: "Command <code>{cmd}</code> was disabled in <b>{chat_name}</b>!"
+    wot_to_disable: "Що Ви хочете виключити?"
+    already_disabled: "Ця команда вже відключена!"
+    disabled: "Команда <code>{cmd}</code> була відключена в <b>{chat_name}</b>!"
     #/enable
-    wot_to_enable: "What do you want to enable?"
-    already_enabled: "This command isn't disabled!"
-    enabled: "Command <code>{cmd}</code> was enabled in <b>{chat_name}</b>!"
+    wot_to_enable: "Що Ви хочете включити?"
+    already_enabled: "Ця команда не відключена!"
+    enabled: "Команда <code>{cmd}</code> була включена в <b>{chat_name}</b>!"
     #/enableall
-    not_disabled_anything: "Nothing was disabled in <b>{chat_title}</b>!"
-    enable_all_text: "This will enable all commands in the <b>{chat_name}</b>. Are you sure?"
-    enable_all_btn_yes: "Yes. Enable all commands!"
-    enable_all_btn_no: "No!"
-    enable_all_done: "All (<code>{num}</code>) commands were enabled in the <b>{chat_name}</b>!"
+    not_disabled_anything: "Нічого не було відключено в <b>{chat_title}</b>!"
+    enable_all_text: "Це включить всі команди в чаті <b>{chat_name}</b>. Ви впевнені?"
+    enable_all_btn_yes: "Так. Включити всі команди!"
+    enable_all_btn_no: "Ні!"
+    enable_all_done: "Усі (<code>{num}</code>) команди було ввімкнено у <b>{chat_name}</b>!"
   bot_rights:
-    change_info: "I don't have rights to change group info, please make me admin with that right."
-    edit_messages: "I don't have rights to edit messages!"
-    delete_messages: "I don't have rights to delete messages here."
-    ban_user: "I don't have rights to ban users, please make me admin with that right."
-    pin_messages: "I don't have rights to pin messages, please make me admin with that right."
-    add_admins: "I don't have rights to add admins, please make me admin with that right."
+    change_info: "Я не маю прав для зміни інформації групи, будь ласка, зробіть мене адміністратором з цим правом."
+    edit_messages: "В мене немає прав редагувати повідомлення!"
+    delete_messages: "Я не маю прав, щоб видаляти повідомлення тут."
+    ban_user: "Я не маю прав, щоб блокувати користувачів, будь ласка, зробіть мене адміністратором з цим правом."
+    pin_messages: "Я не маю прав, щоб закріплювати повідомлення, будь ласка, зробіть мене адміністратором з цим правом."
+    add_admins: "У мене немає прав, щоб додавати адміністраторів, будь ласка, надайте мені це право."
   feds:
     #decorators
-    need_fed_admin: "You are not an admin in <b>{name}</b> federation"
-    need_fed_owner: "You are not an owner of <b>{name}</b> federation"
-    cant_get_user: "Sorry, I can't get that user, try using their user ID"
+    need_fed_admin: "Ви не адмін в федерації <b>{name}</b>"
+    need_fed_owner: "Ви не власник федерації <b>{name}</b>"
+    cant_get_user: "Вибачте, я не можу отримати дані цього користувача, спробуйте використати його ID"
     #/fnew
-    fed_name_long: "Federation name can't be longer than 60 symbols!"
-    can_only_1_fed: "Users can only create 1 federation, please remove one."
-    name_not_avaible: "Federation with name <code>{name}</code> already exits! Please use another name."
+    fed_name_long: "Ім'я федерації не може бути довше за 60 символів!"
+    can_only_1_fed: "Користувачі можуть створити лише 1 федерацію, будь ласка, видаліть раніше створену."
+    name_not_avaible: "Федерація з ім'ям <code>{name}</code> вже існує! Будь ласка, оберіть інше ім'я."
     created_fed: |
-      Congrats, you have successfully created a federation.
-      <b>Name:</b> {name}
+      Вітаємо! Ви успішно створили федерацію.
+      <b>Ім'я:</b> {name}
       <b>ID:</b> <code>{id}</code>
-      <b>Creator:</b> {creator}
-      Use <code>/fjoin {id}</code> to connect federation to chat\
-    disallow_anon: As an anonymous admin you cannot create new federation!
+      <b>Творець:</b> {creator}
+      Використовуйте <code>/fjoin {id}</code> для підключення федерації до чату\
+    disallow_anon: Як анонімний адміністратор Ви не можете створити нову федерацію!
     #/fjoin
-    only_creators: "You must be the chat creator to be able to connect chat to a federation."
-    fed_id_invalid: "The given federation ID is invalid! Please give me a valid ID."
-    joined_fed_already: "This chat has already joined a federation! Please use /fleave to leave that federation"
-    join_fed_success: "Great! Chat <b>{chat}</b> is now a part of <b>{fed}</b> federation!"
+    only_creators: "Ви маєте бути творцем чату, щоб мати можливість підключити чат до федерації."
+    fed_id_invalid: "Неправильний ID федерації! Будь ласка, дайте мені правильний ID."
+    joined_fed_already: "Цей чат вже приєднався до федерації! Будь ласка використайте /fleave щоб покинути цю федерацію"
+    join_fed_success: "Чудово! Чат <b>{chat}</b> тепер є частиною федерації <b>{fed}</b>!"
     join_chat_fed_log: |
-      <b>Chat joined federation</b> #ChatJoined
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
+      <b>Чат підключено до федерації</b> #ChatJoined
+      <b>Федерація:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Чат:</b> {chat_name} (<code>{chat_id}</code>)
     #/leavefed
-    chat_not_in_fed: "This chat is not in any federation yet."
-    leave_fed_success: "Chat <b>{chat}</b> left the <b>{fed}</b> federation."
+    chat_not_in_fed: "Цей чат ще не підключений до жодної федерації."
+    leave_fed_success: "Чат <b>{chat}</b> залишив федерацію <b>{fed}</b>."
     leave_chat_fed_log: |
-      <b>Chat left Federation</b> #ChatLeaved
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>Chat:</b> {chat_name} (<code>{chat_id}</code>)
+      <b>Чат вийшов з федерації</b> #ChatLeft
+      <b>Федерація:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Чат:</b> {chat_name} (<code>{chat_id}</code>)
     #/fsub
-    already_subsed: "Federation <b>{name}</b> already subscribed to <b>{name2}</b>"
-    subsed_success: "Federation <b>{name}</b> subscribed to <b>{name2}</b>!"
+    already_subsed: "Федерація <b>{name}</b> вже підписана на <b>{name2}</b>"
+    subsed_success: "Федерація <b>{name}</b> підписана на <b>{name2}</b>!"
     #/funsub
-    not_subsed: "Federation <b>{name}</b> is not subscribed to <b>{name2}</b>"
-    unsubsed_success: "Federation <b>{name}</b> unsubscribed from <b>{name2}</b>!"
+    not_subsed: "Федерація <b>{name}</b> не підписана на <b>{name2}</b>"
+    unsubsed_success: "Федерація <b>{name}</b> відписалася від <b>{name2}</b>!"
     #/fpromote
     #admin_already_in_fed: "User {user} is already a fed admin in <b>{name}</b> Federation."
-    admin_added_to_fed: "User {user} added to <b>{name}</b> federation admins."
+    admin_added_to_fed: "Користувач {user} доданий до адміністраторів федерації <b>{name}</b>."
     promote_user_fed_log: |
-      <b>User promoted to the fed admins</b> #UserPromoted
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} (<code>{user_id}</code>)
-    "restricted_user:promote": This user is restricted from being federation admin!
+      <b>Користувач підвищений до адміністратора федерації</b> #UserPromoted
+      <b>Федерація:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Користувач: </b> {user} (<code>{user_id}</code>)
+    "restricted_user:promote": Цей користувач не може бути адміністратором федерації!
     #/fdemote
     #admin_not_in_fed: "User {user} is not <b>{name}</b> Federation admin."
-    admin_demoted_from_fed: "User {user} demoted from <b>{name}</b> federation admins."
+    admin_demoted_from_fed: "Користувач {user} понижений із адміністраторів федерації <b>{name}</b>."
     demote_user_fed_log: |
-      <b>User demoted from the fed admins</b> #UserDemoted
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} (<code>{user_id}</code>)
+      <b>Користувач понижений із адміністраторів федерації</b> #UserDemoted
+      <b>Федерація:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Користувач: </b> {user} (<code>{user_id}</code>)
     #/fsetlog
-    already_have_chatlog: "<b>{name}</b> federation already has logging enabled in another chat/channel!"
+    already_have_chatlog: "Федерація <b>{name}</b> вже веде журнал аудиту в іншому чаті/каналі!"
     set_chat_log: |
-      This chat is now logging all actions in <b>{name}</b> federation
+      Цей чат тепер зберігає лог всіх дій федерації <b>{name}</b>
 
-      Federation logging is used for internal assessment of the federation and its performance.
-      The federation should <b>NOT</b> be used as a public wall of shame thereby respecting user data and our privacy guidelines.
+      Журнал аудиту використовується для внутрішньої оцінки федерації.
+      Журнал федерації <b>НЕ</b> призначений для використання в якості стіни позору, тим самим поважаючи конфеденційність користувачів та їх даних.
     set_log_fed_log: |
-      <b>Enabled logging</b> #LoggingEnabled
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-    no_right_to_post: I don't have rights to post messages in that channel!
+      <b>Логування включене</b> #LoggingEnabled
+      <b>Федерація:</b> {fed_name} (<code>{fed_id}</code>)
+    no_right_to_post: У мене немає прав надсилати повідомлення у цьому каналі!
     #/funsetlog
-    not_logging: "<b>{name}</b> federation isn't logging to any chat/channel!"
-    logging_removed: "Successfully removed logging from <b>{name}</b> federation."
+    not_logging: "Федерація <b>{name}</b> не веде журнал аудиту в жодному чаті/каналі!"
+    logging_removed: "Успішно виключений журнал аудиту у федерації <b>{name}</b>."
     unset_log_fed_log: |
-      <b>Disabled logging</b> #LoggingDisabled
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Логування відключене</b> #LoggingDisabled
+      <b>Федерація:</b> {fed_name} (<code>{fed_id}</code>)
     #/fchatlist
-    no_chats: "There's no chats joined this <b>{name}</b> federation"
-    chats_in_fed: "<b>Chats connected to {name} federation:</b>\n"
-    too_large: "Output too large, sending as file"
+    no_chats: "В федерації <b>{name}</b> немає чатів"
+    chats_in_fed: "<b>Чати приєднані до федерації {name}:</b>\n"
+    too_large: "Вивід занадто великий, відправляю у вигляді файлу"
     #/finfo
     finfo_text: |
-      <b>Federation info</b>
-      <b>Name:</b> {name}
+      <b>Інформація про Федерацію</b>
+      <b>Ім'я:</b> {name}
       <b>ID:</b> <code>{fed_id}</code>
-      <b>Creator:</b> {creator}
-      <b>Chats in the fed:</b> {chats}
-      <b>Banned users in the fed:</b> {fbanned}
-    finfo_subs_title: "<b>Federations subscribed to this feds:</b>\n"
+      <b>Творець:</b> {creator}
+      <b>Чати у федерації:</b> {chats}
+      <b>Заблоковані користувачі у федерації:</b> {fbanned}
+    finfo_subs_title: "<b>Федерація підписана на ці федерації:</b>\n"
     #/fadminlist
-    fadmins_header: "Admins in <b>{fed_name}</b> fed:\n"
+    fadmins_header: "Адміністратори в федерації <b>{fed_name}</b>:\n"
     #no_fbanned_in_fed: "There isn't any banned users in {fed_name} Federation!"
     #/fban
-    user_wl: "This user is whitelisted from banning."
-    fban_self: "That's a nice show!"
-    fban_creator: "How can I ban the federation creator?! I don't think it's gonna be funny."
-    fban_fed_admin: "I'm not going to ban a federation admin from their own fed!"
-    update_fban: "This user was already fbanned therefore I am updating the reason to <code>{reason}</code>"
-    already_fbanned: "{user} already banned in this federation."
-    fbanned_header: "<b>New FedBan</b>\n"
+    user_wl: "Цей користувач у білому списку."
+    fban_self: "Яке гарне шоу!"
+    fban_creator: "Як можна заблокувати засновника федерації?! Я не думаю, що це буде смішно."
+    fban_fed_admin: "Я не збираюся блокувати адміна федерацій у власній же федерації!"
+    update_fban: "Цей користувач вже був заблокований, тому я оновлюю причину на <code>{reason}</code>"
+    already_fbanned: "{user} вже заблокований в цій федерації."
+    fbanned_header: "<b>Нові блокування у федерації</b>\n"
     fban_info: |
-      <b>Federation:</b> {fed}
-      <b>Fed admin:</b> {fadmin}
-      <b>User:</b> {user} (<code>{user_id}</code>)
-    fbanned_reason: "<b>Reason:</b> <code>{reason}</code>"
-    fbanned_process: "\n<b>Status:</b> Banning in <code>{num}</code> fed chats..."
-    fbanned_done: "\n<b>Status:</b> Done! banned in <code>{num}</code> chats!"
-    fbanned_silence: "This message will be purged in 5 seconds"
-    fbanned_subs_process: "\n<b>Status:</b> Banning in <code>{feds}</code> subscribed feds..."
-    fbanned_subs_done: "\n<b>Status:</b> Done! Banned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
+      <b>Федерація:</b> {fed}
+      <b>Адміністратор федерації:</b> {fadmin}
+      <b>Користувач:</b> {user} (<code>{user_id}</code>)
+    fbanned_reason: "<b>Причина:</b> <code>{reason}</code>"
+    fbanned_process: "\n<b>Статус:</b> Блокування в <code>{num}</code> чатах федерації..."
+    fbanned_done: "\n<b>Статус:</b> Готово! Заблокований в <code>{num}</code> чатах!"
+    fbanned_silence: "Це повідомлення буде очищено через 5 секунд"
+    fbanned_subs_process: "\n<b>Статус:</b> Блокування в <code>{feds}</code> підписаних федераціях..."
+    fbanned_subs_done: "\n<b>Статус:</b> Готово! Заблокований в <code>{chats}</code> чатах цієї федерації та <code>{subs_chats}</code> чатах <code>{feds}</code> підписаних федерацій"
     fban_usr_rmvd: |
-      User {user} is currently banned in <b>{fed}</b> federation and have been removed!
-      Reason: <code>{rsn}</code>
+      Користувач {user} заблокований у федерації <b>{fed}</b> та був видалений!
+      Причина: <code>{rsn}</code>
     fban_log_fed_log: |
-      <b>Ban user in the fed</b> #FedBan
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} ({user_id})
-      <b>By:</b> {by}
-      <b>Chats banned:</b> user banned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
-    fban_reason_fed_log: "<b>Reason:</b> <code>{reason}</code>\n"
-    fban_subs_fed_log: "\n<b>Subscribed feds:</b> banned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
+      <b>Блокування у федерації</b> #FedBan
+      <b>Федерація:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Користувач:</b> {user} ({user_id})
+      <b>Ким заблоковано:</b> {by}
+      <b>Заблокований в:</b> користувач заблокований в
+      <code>{chat_count}</code>/<code>{all_chats}</code> чатах
+    fban_reason_fed_log: "<b>Причина:</b> <code>{reason}</code>\n"
+    fban_subs_fed_log: "\n<b>Підписані федерації:</b> заблокований в <code>{subs_chats}</code> чатах <code>{feds}</code> федерації"
     #/unfban
-    unfban_self: "Think of something else to have fun with instead of this."
-    user_not_fbanned: "{user} isn't banned in this federation."
-    un_fbanned_header: "<b>New Un-FedBan</b>\n"
-    un_fbanned_process: "\n<b>Status:</b> Unbanning in <code>{num}</code> chats..."
-    un_fbanned_done: "\n<b>Status:</b> Done! Unbanned in <code>{num}</code> chats!"
-    un_fbanned_subs_process: "\n<b>Status:</b> Unbanning in <code>{feds}</code> subscribed feds..."
-    un_fbanned_subs_done: "\n<b>Status:</b> Done! Unbanned in <code>{chats}</code> chats of this federation and <code>{subs_chats}</code> chats of <code>{feds}</code> subscribed feds"
+    unfban_self: "Вигадайте собі іншу забаву."
+    user_not_fbanned: "{user} не заблокований в цій федерації."
+    un_fbanned_header: "<b>Нові розблокування у федерації</b>\n"
+    un_fbanned_process: "\n<b>Статус:</b> Розблокування в <code>{num}</code> чатах..."
+    un_fbanned_done: "\n<b>Статус:</b> Готово! Розблокований в <code>{num}</code> чатах!"
+    un_fbanned_subs_process: "\n<b>Статус:</b> Розблокування в <code>{feds}</code> підписаних федераціях..."
+    un_fbanned_subs_done: "\n<b>Статус:</b> Готово! Розблокований в <code>{chats}</code> чатах цієї федерації та <code>{subs_chats}</code> чатах <code>{feds}</code> підписаних федерацій"
     un_fban_log_fed_log: |
-      <b>Unban user in the fed</b> #FedUnBan
-      <b>Fed:</b> {fed_name} (<code>{fed_id}</code>)
-      <b>User:</b> {user} ({user_id})
-      <b>By:</b> {by}
-      <b>Chats:</b> user unbanned in <code>{chat_count}</code>/<code>{all_chats}</code> chats
-    un_fban_subs_fed_log: "\n<b>Subscribed feds:</b> unbanned in <code>{subs_chats}</code> chats of <code>{feds}</code> federations"
+      <b>Розблокування у федерації</b> #FedBan
+      <b>Федерація:</b> {fed_name} (<code>{fed_id}</code>)
+      <b>Користувач:</b> {user} ({user_id})
+      <b>Ким розблоковано:</b> {by}
+      <b>Чати:</b> користувач розлокований в
+      <code>{chat_count}</code>/<code>{all_chats}</code> чатах
+    un_fban_subs_fed_log: "\n<b>Підписані федерації:</b> розблокований в <code>{subs_chats}</code> чатах <code>{feds}</code> федерацій"
     #/delfed
-    delfed_btn_yes: Yes. Delete federation
-    delfed_btn_no: No.
+    delfed_btn_yes: Так. Видалити федерацію
+    delfed_btn_no: Немає.
     delfed: |
-      Are you sure you want to delete the <b>%s</b> federation?
+      Ви впевнені, що хочете видалити <b>%s</b> федерацію?
 
-      <i>Disclaimer: Deleting this federation will remove all data associated with it from our database!
-      This action is permanent and cannot be reversed!</i>
-    delfed_success: Successfully deleted the federation!
+      <i>Відмова від відповідальності: Видалення цієї федерації призведе до видалення всіх даних з нашої бази даних!
+      Ця дія незворотня і не може бути скасована!</i>
+    delfed_success: Федерацію успішно видалено!
     #/frename
-    frename_same_name: Please enter a different name, not the same one!
-    frename_success: The federation <b>{old_name}</b> renamed to <b>{new_name}</b> successfully!
+    frename_same_name: Будь ласка, введіть інше ім'я!
+    frename_success: Федерація <b>{old_name}</b> успішно перейменована на <b>{new_name}</b>!
     #/fbanlist
-    fbanlist_locked: Please wait until %s to use fbanlist again.
-    creating_fbanlist: Creating fban list! Please wait ..
-    fbanlist_done: Fbanlist of federation <b>%s</b>!
+    fbanlist_locked: Будь ласка, зачекайте %s для повторного використання fbanlist.
+    creating_fbanlist: Створення списку заблокованих користувачів! Будь ласка, зачекайте ..
+    fbanlist_done: Список заблокованих у федерації <b>%s</b>!
     #/importfbans
     send_import_file: |
-      Send the import file!
+      Надішліть мені файл імпорту!
 
-      To cancel this process use /cancel
-    rpl_to_file: Please reply to a file!
-    importfbans_locked: Importing fbans is locked for %s in this federation.
-    big_file_csv: Only supports import csv files less {num} megabytes!
+      Щоб скасувати цей процес, використовуйте /cancel
+    rpl_to_file: Будь ласка, дайте відповідь на файл!
+    importfbans_locked: Імпортування fbans заблоковано на %s в цій федерації.
+    big_file_csv: Підтримується імпорт сsv-файлів менше {num} мегабайт!
     big_file_json: |
-      Currently json files are limited to {num} megabytes!
-      Use the csv format if you want to import bigger files.
-    invalid_file: "The file is invalid"
-    wrong_file_ext: "Wrong file format! Currently support are: json, csv"
-    importing_process: <b>Importing federation bans...</b>
-    import_done: Importing fed bans finished! {num} bans were imported.
+      Наразі розмір json обмежений {num} мегабайтами!
+      Використовуйте формат csv для імпорту більших файлів.
+    invalid_file: "Неприпустимий файл"
+    wrong_file_ext: "Неправильний формат файлу! Наразі підтримуються: json, csv"
+    importing_process: <b>Імпорт заборон федерації...</b>
+    import_done: Імпорт заблокованих користувачів завершено! Імпортовано {num} банів.
     #def
-    automatic_ban: User {user} is banned in the current federation <b>{fed_name}</b> and has been removed!
-    automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b and has been removed!
-    automatic_ban_reason: "\nReason: <code>{text}</code>"
+    automatic_ban: Користувач {user} заблокований в даній федерації <b>{fed_name}</b> і тому був видалений!
+    automatic_ban_sfed: Користувач {user} заблокований в підфедерації <b>{fed_name}</b> і тому був видалений!
+    automatic_ban_reason: "\nПричина: <code>{text}</code>"
     #/fcheck
-    fcheck_header: "<b>Federation ban info:</b>\n"
-    fbanned_count_pm: "You are fbanned in {count} federation(s)!\n"
-    "fban_info:fcheck": "You have been fbanned in {fed} federation on {date}, No reason was given!"
-    "fban_info:fcheck:reason": "You have been fbanned in {fed} federation on {date} because of reason -\n {reason}\n"
-    fbanned_data: "{user} has been fbanned in {count} federation(s).\n"
-    fbanned_nowhere: "{user} isn't fbanned anywhere!\n"
-    fbanned_in_fed: "Including the <b>{fed}</b> federation!\n"
-    "fbanned_in_fed:reason": "Including the <b>{fed}</b> federation for reason of -\n <code>{reason}</code>"
-    contact_in_pm: "\n\nFor more info on your fbans, please send me a direct message for privacy!"
-    too_long_fbaninfo: "Well! your fbaninfo requires a file!"
-    didnt_fbanned: "You aren't fbanned in this fed."
-    not_fbanned_in_fed: They aren't fbanned in the <b>{fed_name}</b> fed
+    fcheck_header: "<b>Інформація про блокування у федерації:</b>\n"
+    fbanned_count_pm: "Ви були заблоковані в {count} федерації(ях)!\n"
+    "fban_info:fcheck": "Ви були заблоковані в федерації {fed} {date}, причини не надано!"
+    "fban_info:fcheck:reason": "Ви були заблоковані в федерації {fed} {date} з причини -\n {reason}\n"
+    fbanned_data: "{user} був заблокований в {count} федерації(ях).\n"
+    fbanned_nowhere: "{user} ніде не заблокований!\n"
+    fbanned_in_fed: "Включаючи цю <b>{fed}</b> федерацію!\n"
+    "fbanned_in_fed:reason": "Включаючи федерацію <b>{fed}</b> з причини -\n <code>{reason}</code>"
+    contact_in_pm: "\n\nДля отримання додаткової інформації про ваші бани, будь ласка, надішліть мені пряме повідомлення для збереження конфіденційності!"
+    too_long_fbaninfo: "Ну, ваш fbaninfo вимагає створення файлу!"
+    didnt_fbanned: "Ви не заблоковані в цій федерації."
+    not_fbanned_in_fed: Користувач не заблокований в федерації <b>{fed_name}</b>
   reports:
-    user_user_admin: "You're an admin here, why'd you need to report someone?.."
-    user_is_whitelisted: "You're a whitelisted user, why'd you need to report someone?.."
-    reports_disabled: "Reports are currently <b>disabled</b> in this group."
-    no_user_to_report: "Which user you want to report?"
-    report_admin: "You <b>cannot</b> report admins."
-    report_whitedlisted: "You <b>cannot</b> report a whitelisted user."
-    reported_user: "<b>Reported</b> {user} to admins."
-    reported_reason: "\n<b>Reason:</b>\n<code>{reason}</code>"
-    reports_on: "Reports are turned <b>on</b> in this group."
-    reports_off: "Reports are turned <b>off</b> in this group."
-    reports_already_on: "<b>Reports are already turned on.</b>"
-    reports_turned_on: "Reports turned <b>on.</b>"
-    reports_already_off: "<b>Reports are already turned off.</b>"
-    wrong_argument: "<b> Wrong argument. </b>"
+    user_user_admin: "Ви адміністратор, чому Ви скаржитеся на когось?.."
+    user_is_whitelisted: "Ви в білому списку, чому Ви скаржитеся на когось?.."
+    reports_disabled: "Скарги в цій групі <b>виключені</b>."
+    no_user_to_report: "На кого Ви хочете поскаржитися?"
+    report_admin: "Ви <b>не можете</b> поскажитися на адміністратора."
+    report_whitedlisted: "Ви <b>не можете</b> поскаржитися на користувача з білого списку."
+    reported_user: "<b>Я поскаржився на</b> {user} адміністраторам."
+    reported_reason: "\n<b>Причина:</b>\n<code>{reason}</code>"
+    reports_on: "Скарги в цій групі <b>включені</b>."
+    reports_off: "Скарги в цій групі <b>виключено</b>."
+    reports_already_on: "<b>Скарги вже включені.</b>"
+    reports_turned_on: "Скарги <b>включені.</b>"
+    reports_already_off: "<b>Скарги вже виключено.</b>"
+    wrong_argument: "<b> Неправильний аргумент. </b>"
   language:
-    your_lang: "Your current language: <b>{lang}</b>"
-    chat_lang: "Current chat language: <b>{lang}</b>"
-    select_pm_lang: "\n<b>Select your new language:</b>"
-    select_chat_lang: "\n<b>Select new chat language:</b>"
-    crowdin_btn: "🌎 Help us with translation"
-    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukix\">🌎 Help us improve our translations</a>"
-    not_supported_lang: This language is not supported!
-    lang_changed: Language was changed to <b>{lang_name}</b>.
-    see_translators: '👥 See translators'
-    back: Back
+    your_lang: "Ваша поточна мова: <b>{lang}</b>"
+    chat_lang: "Поточна мова чату: <b>{lang}</b>"
+    select_pm_lang: "\n<b>Виберіть нову мову:</b>"
+    select_chat_lang: "\n<b>Виберіть нову мову чату:</b>"
+    crowdin_btn: "🌎 Допоможіть нам з перекладом"
+    help_us_translate: "\n\n<a href=\"https://crowdin.com/project/hitsukix\">🌎 Допоможіть нам покращити переклад</a>"
+    not_supported_lang: Ця мова не підтримується!
+    lang_changed: Мова була змінена на <b>{lang_name}</b>.
+    see_translators: '👥 Список перекладачів'
+    back: Назад
   connections:
-    pm_connected: "Your PM has been successfully connected to <b>{chat_name}</b>!"
-    connected_pm_to_me: "Your PM has been successfully connected to <b>{chat_name}</b>! Please pm me to start using connection."
-    chat_connection_tlt: "<b>Chat connection</b>\n"
+    pm_connected: "Ви були успішно підключені до <b>{chat_name}</b>!"
+    connected_pm_to_me: "Ви були успішно підключені до <b>{chat_name}</b>! Будь ласка, напишіть мені в особисті повідомлення, щоб почати використовувати з'єднання."
+    chat_connection_tlt: "<b>З'єднання з чатом</b>\n"
     connected_chat: |
-      <b>Current connected chat:</b>
+      <b>Підключений чат:</b>
       {chat_name}
-      Write /disconnect to disconnect from chat
+      Напишіть /disconect для відключення від чату
     "connected_chat:cmds": |
-      <b>Current connected chat:</b>
-      {chat_name}, (bridged commands are {commands}),
-      ⚠ <i>You can only access bridged commands of the connected chat! All other commands would be treated as Local chat</i>
-      Write /disconect to disconnect from chat.
-    u_wasnt_connected: "You were not connected to any chat before!"
-    select_chat_to_connect: "\n<b>Select a chat to connect:</b>"
-    disconnected: "You were disconnected from <b>{chat_name}</b>."
-    cant_find_chat: "I can't find this chat."
-    cant_find_chat_use_id: "I can't find this chat. Use chat ID."
-    bad_arg_bool: "Bad choice: supported only <code>on</code>/<code>off</code> <code>enable</code>/<code>disable</code>"
-    enabled: enabled
-    disabled: disabled
-    chat_users_connections_info: "Connections for normal users currently is <b>{status}</b> for <b>{chat_name}</b>"
-    chat_users_connections_cng: "Connections for normal users changed to <b>{status}</b> for <b>{chat_name}</b>"
-    not_in_group: "You're not in the group you're trying to connect to, join and send a message."
-    history_empty: "You're not connected to any chat for history, connect via `/connect (chat id)`"
-    not_in_chat: "You're not in this chat anymore, I'll disconnect you."
-    u_should_be_admin: "You should be an admin in {}!"
-    usage_only_in_groups: "Usage limited only in groups!"
+      <b>Поточний підключений чат:</b>
+      {chat_name}, (підключені команди: {commands}),
+      ⚠ <i>Ви можете отримати доступ тільки до команд підключеного чату! Всі інші команди будуть розглядатися як локальні</i>
+      Напишіть /disconect для відключення від чату.
+    u_wasnt_connected: "Ви не підключалися до будь-якого чату раніше!"
+    select_chat_to_connect: "\n<b>Виберіть чат для підключення:</b>"
+    disconnected: "Ви були відключені від <b>{chat_name}</b>."
+    cant_find_chat: "Я не можу знайти цей чат."
+    cant_find_chat_use_id: "Я не можу знайти цей чат. Використайте ID чату."
+    bad_arg_bool: "Невірний аргумент: дозволено тільки <code>on</code>/<code>off</code> <code>enable</code>/<code>disable</code>"
+    enabled: включено
+    disabled: виключено
+    chat_users_connections_info: "З'єднання для звичайних користувачів нині <b>{status}</b> для <b>{chat_name}</b>"
+    chat_users_connections_cng: "З'єднання для звичайних користувачів змінені на <b>{status}</b> для чату <b>{chat_name}</b>"
+    not_in_group: "Твине приєдналися до групи, до якої хочете підключитися! Приєднайтеся та напишіть повідомлення там."
+    history_empty: "Ви не підключеныі ні до якого чату для історії, підключіться, використовуючи `/connect (chat id)`"
+    not_in_chat: "Ви більше не в цьому чаті, я відключу Вас."
+    u_should_be_admin: "Ви повинні бути адміністратором {}!"
+    usage_only_in_groups: "Використання лімітоване тільки в групах!"
     anon_admin_conn: |
-      Please click below button to connect!
-    click_here: Click here!
+      Будь ласка, натисніть кнопку нижче, щоб підключитися!
+    click_here: Натисніть тут!
   global:
-    u_not_admin: You should be an admin to do this!
+    u_not_admin: Ви повинні бути адміністратором, щоб зробити це!
     #Rights
-    "bot_no_right:not_admin": I'm not a admin!
-    bot_no_right: "I dont have permission to {permission} here!"
-    user_no_right: "You don't have permission to {permission} here!"
-    "user_no_right:not_admin": You should be admin to-do it!
+    "bot_no_right:not_admin": Я не адмін!
+    bot_no_right: "Я не маю дозволу на {permission} тут!"
+    user_no_right: "У вас немає дозволу на {permission} тут!"
+    "user_no_right:not_admin": Ви повинні бути адміністратором, щоб зробити це!
     #is chat creator
-    unable_identify_creator: "Unable to identify anonymous chat creator, duplicate signature (titles) found!"
+    unable_identify_creator: "Не вдалось ідентифікувати анонімного творця чату, знайдено дублікат підпису (назви)!"
   owner_stuff:
-    father: "\nHe is my creator."
-    sudo_crown: "\nHey! Look, that user has a crown, let me see it... Wow, it has an engraving - <b>'sudo user'</b>!"
+    father: "\nВін мій творець."
+    sudo_crown: "\nО, дивись, у цього користувача на голові корона. Зараз подивлюся.... Вау, там гравіювання - <b>'sudo user'</b>!"
   stickers:
-    rpl_to_sticker: "Reply to a sticker!"
+    rpl_to_sticker: "Дайте відповідь на стікер!"
     ur_sticker: |
-      <b>Emoji:</b> <code>{emoji}</code>
-      <b>Sticker ID:</b> <code>{id}</code>
+      <b>Емодзі:</b> <code>{emoji}</code>
+      <b>ID стікера:</b> <code>{id}</code>
   pins:
-    no_reply_msg: "Reply to a message to pin!"
-    chat_not_modified_pin: "That message is already pinned!"
-    chat_not_modified_unpin: "There isn't any pinned message to unpin!"
-    pinned_success: "Successfully pinned!"
-    unpin_success: "Successfully unpinned!"
+    no_reply_msg: "Щоб закріпити повідомлення, потрібно відповісти на нього!"
+    chat_not_modified_pin: "Це повідомлення вже закріплене!"
+    chat_not_modified_unpin: "Немає жодного закріпленого повідомлення, щоб відкріпити!"
+    pinned_success: "Успішно закріплено!"
+    unpin_success: "Успішно відкріплено!"
   users:
-    user_info: "<b>User info:</b>\n"
+    user_info: "<b>Інформація про користувача:</b>\n"
     info_id: "ID: <code>{id}</code>"
-    info_first: "\nFirst name: {first_name}"
-    info_last: "\nLast name: {last_name}"
-    info_username: "\nUsername: {username}"
-    info_link: "\nUser link: {user_link}"
-    info_saw: "\nI saw them in <code>{num}</code> groups"
+    info_first: "\nІм'я: {first_name}"
+    info_last: "\nПрізвище: {last_name}"
+    info_username: "\nІм'я користувача: {username}"
+    info_link: "\nПосилання на користувача: {user_link}"
+    info_saw: "\nЯ бачила їх у <code>{num}</code> групах"
     info_sw_ban: "\nThis user is banned in @SpamWatch!"
     info_sw_ban_reason: "\nReason: <code>{sw_reason}</code>"
-    info_fbanned: "\nBanned in current Federation: "
-    info_admeme: "\nUser has admin rights in this chat."
-    upd_cache: "Updating cache now..."
-    upd_cache_done: "Admins cache was updated."
-    admins: "<b>Admin in this group:</b>\n"
+    info_fbanned: "\nЗаблокований в поточній Федерації: "
+    info_admeme: "\nКористувач має права адміністратора в цьому чаті."
+    upd_cache: "Оновлення кешу..."
+    upd_cache_done: "Кеш адмінів було оновлено."
+    admins: "<b>Адміністратор у цій групі:</b>\n"
   imports_exports:
     #Exporting
-    started_exporting: Exporting started! Please wait...
-    export_done: Export from <b>{chat_name}</b> done!
-    exports_locked: Please wait %s before using exports again!
+    started_exporting: Експорт розпочато! Будь ласка, зачекайте...
+    export_done: Експорт з <b>{chat_name}</b> виконано!
+    exports_locked: Будь ласка, зачекайте %s перед використанням експорту знову!
     #Importing
-    invalid_file: "The file is invalid"
-    send_import_file: Please send a file for importing!
-    rpl_to_file: Please reply to a file!
-    big_file: Only files under 50 MB are supported!
-    started_importing: Importing started! Please wait...
-    bad_file: Bad file! Expected <code>'general'</code> column.
-    file_version_so_new: Exported file version is newer than what Hitsuki currently supports!
-    imports_locked: Please wait %s before using imports again!
-    import_done: Import done!
+    invalid_file: "Неприпустимий файл"
+    send_import_file: Будь ласка, надішліть файл для імпорту!
+    rpl_to_file: Будь ласка, дайте відповідь на файл!
+    big_file: Підтримуються файли не більше 50 Мб!
+    started_importing: Імпортування розпочато! Будь ласка, зачекайте...
+    bad_file: Некоректний файл! Очікувався стовпець <code>'Загальні'</code>.
+    file_version_so_new: Експортована версія файлу новіша, ніж та, яку зараз підтримує Софі!
+    imports_locked: Будь ласка, зачекайте %s перед використанням імпорту знову!
+    import_done: Імпорт завершено!
   restrictions:
-    user_not_in_chat: User is not in this chat!
+    user_not_in_chat: Користувач не в цьому чаті!
     #Kicks
-    kick_hitsuki: Instead of trying kick me you could spend your time better. Thats just boring.
-    kick_admin: Kicking admin is not best idea thought.
-    kick_self: If you want to kick yourself - just leave this chat. I would rather not see you than look at these pathetic attempts at self-punishment.
-    user_kicked: "{user} was kicked by {admin} in {chat_name}."
+    kick_hitsuki: Замість того, щоб намагатися виштовхнути мене, Ви можете провести свій час краще.
+    kick_admin: Викинути адміна — це не краща ідея.
+    kick_self: Якщо ви хочете вигнати себе - просто залиште цей чат. Я б не бажав дивитися на ці жалюгідні спроби самопокарання.
+    user_kicked: "{user} був викинутий {admin} у {chat_name}."
     #Mutes
-    mute_hitsuki: Actually, I'll be happy to shut up you instead.
-    mute_admin: If you think you can shut up an admin, you are wrong!
-    mute_self: If you want to mute yourself - just stop talking! Better to thought a fool than open your mouth and remove all doubt.
-    user_muted: "{user} was muted by {admin} in {chat_name}."
-    unmute_hitsuki: Actually, I'm not muted.
-    unmute_admin: Haha no, try muting him first!
-    unmute_self: Should I mute you first?
-    user_unmuted: "{user} was unmuted by {admin} in {chat_name}."
+    mute_hitsuki: Насправді, я буду радиа вас заткнути замість цього.
+    mute_admin: Якщо Ви думаєте, що можете заткнути адміністратора, то Ви сильно помиляєтеся!
+    mute_self: Якщо Ви хочете заткнути себе - просто припиніть розмовляти! Краще помовчати і подумати, ніж відкривати ротяку.
+    user_muted: "{user} був приглушений {admin} у {chat_name}."
+    unmute_hitsuki: На справді, мене не заткнути.
+    unmute_admin: Ха-ха ні, спробуйте спершу заткнути його!
+    unmute_self: Може я спочатку заткну тебе?
+    user_unmuted: "{admin} зняв мут з {user} у {chat_name}."
     #Bans
-    ban_hitsuki: No, I won't do it! Ask the chat creator to do it!
-    ban_admin: Haha, let's <code>/demote</code> him first.
-    ban_self: Why are you trying to ban yourself?
-    user_banned: "{user} was banned by {admin} in {chat_name}."
-    unban_hitsuki: Actually, I'm not banned.
-    unban_admin: Haha no, try banning him first!
-    unban_self: Should I ban you first?
-    user_unband: "{user} was unbanned by {admin} in {chat_name}."
-    invalid_time: Invalid time!
-    enter_time: Please specify a time!
-    on_time: "\nFor <code>%s</code>"
-    reason: "\nReason: <code>%s</code>"
-    purge: "\nMessages will be purged in 5 seconds!"
-    filter_title_ban: Ban the user
-    filter_action_rsn: <code>Automated filter action!</code>
-    filtr_ban_success: '%s banned %s for %s'
-    filtr_mute_success: '%s muted %s for %s'
+    ban_hitsuki: Ні, я не буду робити цього! Попросіть творця чату зробити це!
+    ban_admin: Хаха, спочатку давайте зробимо йому <code>/demote</code>.
+    ban_self: Навіщо Ви намагаєтеся заблокувати самого себе?
+    user_banned: "{user} був заблокований {admin} в {chat_name}."
+    unban_hitsuki: Я, на справді, не заблокований.
+    unban_admin: Хаха ні, спробуйте спочатку його заблокувати!
+    unban_self: Може я спочатку заблокую тебе?
+    user_unband: "{user} був розблокований {admin} в {chat_name}."
+    invalid_time: Невiрний час!
+    enter_time: Будь ласка, вкажіть час!
+    on_time: "\nНа <code>%s</code>"
+    reason: "\nПричина: <code>%s</code>"
+    purge: "\nПовідомлення будуть видалені через 5 секунд!"
+    filter_title_ban: Заблокувати користувача
+    filter_action_rsn: <code>Автоматична дія фільтру</code>
+    filtr_ban_success: '%s заблокували %s на %s'
+    filtr_mute_success: '%s заглушили %s за %s'
     filtr_tmute_success: |
-      %s muted %s for %s
-      reason is %s
-    time_setup_start: Please specify a time!
+      %s заглушив %s на %s
+      Причина: %s
+    time_setup_start: Будь ласка, вкажіть час!
     filtr_tban_success: |
-      %s banned %s for %s
-      reason is %s
-    filter_title_tmute: tMute the user
-    filter_title_mute: Mute the user
-    filter_title_tban: tBan the user
-    filter_title_kick: Kick user
+      %s заблокували %s на %s
+      Причина: %s
+    filter_title_tmute: тимчасово заглушити користувача
+    filter_title_mute: Заглушити користувача
+    filter_title_tban: тимчасово заблокувати користувача
+    filter_title_kick: Викинути користувача
   rules:
     #Set
-    saved: Rules were saved in <b>%s</b>
-    updated: Rules were updated in <b>%s</b>
+    saved: Правила збережено у <b>%s</b>
+    updated: Правила було оновлено в <b>%s</b>
     #Reset
-    deleted: Rules were deleted!
-    not_found: Rules were not found!
+    deleted: Правила були видалені!
+    not_found: Правила не знайдені!
     #Callback
-    user_blocked: "Write /start in my PM!"
-    rules_was_pmed: Rules were sent to your PM!
+    user_blocked: "Напишіть /start мені в особисті повідомлення!"
+    rules_was_pmed: Правила були відправлені в особисті повідомлення!
   #cannot_find_note: "I can't find the note <code>{}</code>"
   #set_note: "Successfully set the rules note to <code>{}</code>"
   #didnt_set_note: "This group doesn't have rules note set."
@@ -551,121 +553,121 @@ STRINGS:
   #havent_set_rules_note: "You haven't set the rules note yet."
   #success_remove_rules_note: "Successfully removed rules note in <b>{}</b>."
   greetings:
-    default_welcome: "Welcome {mention}! How are you?"
+    default_welcome: "Ласкаво просимо, {mention}! Як справи?"
     thank_for_add: "Thanks for adding me to your group! Take a look at /help and follow my news channel @HitsukiNews."
-    default_security_note: "Welcome {mention}! Please press button below to verify yourself as human!"
-    bool_invalid_arg: Invalid argument, expected <code>on</code>/<code>off</code>.
+    default_security_note: "Вітаємо вас в {mention}! Будь ласка, натисніть кнопку нижче, щоб підтвердити, що Ви людина!"
+    bool_invalid_arg: Неприпустимий аргумент, очікується <code>on</code> (включити)/<code>off</code> (виключити).
     #/setwelcome
-    saved: Welcome message was saved in <b>%s</b>
-    updated: Welcome message was updated in <b>%s</b>
+    saved: Привітальне повідомлення збережено у <b>%s</b>
+    updated: Привітальне повідомлення оновлено в <b>%s</b>
     #/turnwelcome
-    turnwelcome_status: Welcomes are <code>{status}</code> in <b>{chat_name}</b>
-    turnwelcome_enabled: Welcomes enabled in <b>%s</b>
-    turnwelcome_disabled: Welcomes disabled in <b>%s</b>
+    turnwelcome_status: 'Привітання: <code>{status}</code> в <b>{chat_name}</b>'
+    turnwelcome_enabled: Привітання включені у <b>%s</b>
+    turnwelcome_disabled: Привітання виключені у <b>%s</b>
     #/welcome
-    enabled: enabled
-    disabled: disabled
-    wlcm_security_enabled: "enabled, set to {level}"
-    wlcm_mutes_enabled: "enabled, set to {time}"
+    enabled: включені
+    disabled: виключені
+    wlcm_security_enabled: "включено, встановлено на рівень {level}"
+    wlcm_mutes_enabled: "включено, встановлено на час {time}"
     welcome_info: |
-      <b>Welcome settings in {chat_name}:</b>
-      Welcomes are <code>{welcomes_status}</code>
-      Welcome security is <code>{wlcm_security}</code>
-      Welcome mutes is <code>{wlcm_mutes}</code>
-      Deleting old welcomes is <code>{clean_welcomes}</code>
-      Deleting service messages is <code>{clean_service}</code>
-    wlcm_note: "\n\nWelcome note is:"
-    raw_wlcm_note: "Raw welcome note is:"
-    security_note: "Welcome security text is:"
+      <b>Налаштування привітань в {chat_name}:</b>
+      Привітання <code>{welcomes_status}</code>
+      Безпека під час привітання <code>{wlcm_security}</code>
+      Приглушення під час привітання<code>{wlcm_mutes}</code>
+      Видалення старих привітань <code>{clean_welcomes}</code>
+      Видалення службових повідомлень <code>{clean_service}</code>
+    wlcm_note: "\n\nЗапис для привітання:"
+    raw_wlcm_note: "Початковий запис привітання:"
+    security_note: "Текст привітання безпеки:"
     #/setsecuritynote
-    security_note_saved: "Custom security text was saved <b>%s</b>"
-    security_note_updated: "Custom security text was updated <b>%s</b>"
+    security_note_saved: "Користувацький текст безпеки був збережений <b>%s</b>"
+    security_note_updated: "Користувацький текст безпеки був оновлений <b>%s</b>"
     #/delsecuritynote
-    security_note_not_found: Security text in <b>%s</b> has not been set before
-    del_security_note_ok: Security text was reset to default in <b>%s</b>
+    security_note_not_found: Текст безпеки у <b>%s</b> не було встановлено раніше
+    del_security_note_ok: Текст безпеки скинутий до стандартного значення у <b>%s</b>
     #/cleanwelcome
-    cleanwelcome_enabled: Cleaning welcomes enabled in <b>%s</b>
-    cleanwelcome_disabled: Cleaning welcomes disabled in <b>%s</b>
-    cleanwelcome_status: Cleaning welcomes is <code>{status}</code> in <b>{chat_name}</b>
+    cleanwelcome_enabled: Очищення привітань включене в <b>%s</b>
+    cleanwelcome_disabled: Очищення привітань виключене в <b>%s</b>
+    cleanwelcome_status: 'Очищення привітань: <code>{status}</code> в <b>{chat_name}</b>'
     #/cleanservice
-    cleanservice_enabled: Cleaning service messages enabled in <b>%s</b>
-    cleanservice_disabled: Cleaning service messages disabled in <b>%s</b>
-    cleanservice_status: Cleaning service messages is <code>{status}</code> in <b>{chat_name}</b>
+    cleanservice_enabled: Очищення службових повідомлень включене в <b>%s</b>
+    cleanservice_disabled: Очищення службових повідомлень виключене в <b>%s</b>
+    cleanservice_status: Очищення службових повідомлень <code>{status}</code> в <b>{chat_name}</b>
     #/welcomemute
-    welcomemute_invalid_arg: Invalid argument, expected a time.
-    welcomemute_enabled: Welcome mute enabled in <b>%s</b>
-    welcomemute_disabled: Welcome mute disabled in <b>%s</b>
-    welcomemute_status: Welcome mute is <code>{status}</code> in <b>{chat_name}</b>
+    welcomemute_invalid_arg: Неприпустимий аргумент, очікувався час.
+    welcomemute_enabled: Приглушення під час привітання включене в <b>%s</b>
+    welcomemute_disabled: Приглушення під час привітання виключене в <b>%s</b>
+    welcomemute_status: 'Приглушення під час привітання: <code>{status}</code> в <b>{chat_name}</b>'
     #/welcomesecurity
-    welcomesecurity_enabled: Welcome security enabled in <b>{chat_name}</b> to <code>{level}</code>.
+    welcomesecurity_enabled: Безпека привітання включена в <b>{chat_name}</b> на рівні <code>{level}</code>.
     "welcomesecurity_enabled:customized_time": |
-      Welcome security enabled in <b>{chat_name}</b> to <code>{level}</code>, and kick users which aren't verified within {time}.
+      Безпека привітання включена в <b>{chat_name}</b> - <code>{level}</code>, и користувачі, які не підтверджені, будуть видалені протягом {time}.
     ask_for_time_customization: |
-      Do you want to customize the time period to kick unverified user? (by default it's {time})
-    send_time: Please specify a time.
-    invalid_time: "Invalid time!"
-    welcomesecurity_enabled_word: enabled, set to level {level}
-    welcomesecurity_disabled: Welcome security disabled in <b>%s</b>.
-    welcomesecurity_invalid_arg: Invalid argument, expected <code>button</code>/<code>captcha</code>.
-    welcomesecurity_status: Welcome security is <code>{status}</code> in <b>{chat_name}</b>
-    yes_btn: "Yes"
-    no_btn: "No"
+      Ви хочете налаштувати період часу, щоб викидувати неперевірених користувачів? (за замовчуванням він ={time})
+    send_time: Будь ласка, вкажіть час.
+    invalid_time: "Невiрний час!"
+    welcomesecurity_enabled_word: включено, встановлено на рівень {level}
+    welcomesecurity_disabled: Захист входу виключено в <b>%s</b>.
+    welcomesecurity_invalid_arg: Неприпустимий аргумент, очікується <code>button</code>/<code>captcha</code>.
+    welcomesecurity_status: Захист входу <code>{status}</code> в <b>{chat_name}</b>
+    yes_btn: "Так"
+    no_btn: "Ні"
     #Welcomesecurity handler
-    click_here: Click here!
-    not_allowed: You are not allowed to use this!
-    ws_captcha_text: Hi {user}, please enter the captcha's number to be unmuted in the chat.
-    regen_captcha_btn: '🔄 Change captcha'
-    num_is_not_digit: Please enter only numbers!
-    bad_num: Wrong number! Please try again.
-    passed: Verification passed, you were unmuted in <b>%s</b>!
-    passed_no_frm: Verification passed, you was unmuted in %s!
-    last_chance: You have a last chance to enter captcha!
-    btn_button_text: "Please click button below to prove yourself."
+    click_here: Натисніть тут!
+    not_allowed: Ви не можете використовувати це!
+    ws_captcha_text: Привіт {user}, будь ласка, введіть число капчі, щоб мати можливість писати в чаті.
+    regen_captcha_btn: '🔄 Змінити капчу'
+    num_is_not_digit: Будь ласка, введіть тільки цифри!
+    bad_num: Неправильний номер! Спробуйте ще раз.
+    passed: Верифікація пройшла, Ви можете писати в <b>%s</b>!
+    passed_no_frm: Верифікація пройшла, Ви можете писати в %s!
+    last_chance: У вас є останній шанс ввести капчу!
+    btn_button_text: "Будь ласка, натисніть кнопку нижче, щоб підтвердити себе."
     btn_wc_text: |
-      Please press right button matched on this expression:
+      Будь ласка, натисніть кнопку, яка відповідає цьому виразу:
       %s
-    math_wc_rtr_text: "You have last chance! Be careful.\n"
-    math_wc_wrong: Wrong, please try again!
-    math_wc_sry: Sorry you used the last attempt. Ask chat administrators.
-    not_admin_wm: I can't restrict people here, so I won't use welcome mute!
-    not_admin_ws: I can't restrict people here, so I won't use welcome security!
-    not_admin_wsr: I can't delete messages here, so I won't delete service messages!
+    math_wc_rtr_text: "У вас останній шанс! Будьте обережні.\n"
+    math_wc_wrong: Неправильно, будь ласка, спробуйте ще раз!
+    math_wc_sry: Вибачте, але Ви використовували останню спробу. Запитайте адміністраторів чату.
+    not_admin_wm: Я не можу обмежувати людей тут, тому я не буду використовувати приглушення під час вітання!
+    not_admin_ws: Я не можу обмежувати людей тут, тому я не буду використовувати перевірку нових користувачів!
+    not_admin_wsr: Я не можу видалити повідомлення тут, тому я не буду видаляти службові повідомлення!
     #/resetwelcome
-    deleted: Successfully reset greetings in <b>{chat}</b>!
-    not_found: There's nothing to reset!
+    deleted: Успішно скинуті привітання в <b>{chat}</b>!
+    not_found: Немає чого скидати!
     #...
-    verification_done: Verification is done! You have been unmuted.
+    verification_done: Перевірка завершена! Тепер Ви можете спілкуватися.
   locks:
-    locks_header: "Here is the current lock settings in {chat_title} \n\n"
-    no_lock_args: Give me some args to lock!
-    already_locked: This is already locked bruh
-    no_such_lock: See /locks to find out what can be locked and unlocked!
-    locked_successfully: Locked {lock} in {chat} sucessfully!
-    no_unlock_args: Give me some args to unlock!
-    not_locked: Bruh, its not locked to unlock.
-    unlocked_successfully: Unlocked {lock} in {chat} successfully!
+    locks_header: "Поточні налаштування блокування в {chat_title} \n\n"
+    no_lock_args: Дайте мені аргументи для блокування!
+    already_locked: Це вже заблоковано
+    no_such_lock: Перегляньте /locks, щоб дізнатись, що можна заблокувати та розблоковувати!
+    locked_successfully: '{lock} успішно заблокований в {chat}!'
+    no_unlock_args: Спочатку дайте мені аргументи для розблокування!
+    not_locked: Трясця, це не заборонено у чаті.
+    unlocked_successfully: Розблоковано {lock} в {chat} успішно!
   antiflood:
     #enforcer
-    flood_exceeded: "{action} {user} for flooding!"
+    flood_exceeded: "{action} {user} для флуду!"
     #/setflood
-    "invalid_args:setflood": "Expected a number!"
-    overflowed_count: Maximum count should be less than 200!
-    config_proc_1: Please send expiration time, '0' (zero) for not being expired.
-    cancel: '❌ Cancel'
-    setup_success: Successfully configured antiflood, now enforces against those who send {count} messages within {time}!
-    "setup_success:no_exp": Successfully configured antiflood, allows {count} messages consecutively!
-    invalid_time: Invalid time!
+    "invalid_args:setflood": "Очікувалося ціле число!"
+    overflowed_count: Максимальна кількість повинна бути менше 200!
+    config_proc_1: Будь ласка, надішліть термін дії, '0' (нуль) для постійних.
+    cancel: '❌ Скасувати'
+    setup_success: Конфігурація антифлуду успішно налаштована для тих, хто надсилає {count} повідомлень протягом {time}!
+    "setup_success:no_exp": Успішно налаштовано антифлуд, дозволяється писати {count} повідомлень підряд!
+    invalid_time: Недійсний час!
     #/antiflood | /flood
-    not_configured: Antiflood isn't configured in this chat yet!
-    turned_off: Disabled antiflood in <b>{chat_title}</b>!
-    "configuration_info:with_time": Antiflood is configured in this chat, those who send {count} message within {time} will be {action}!
-    configuration_info: Antiflood is configured in this chat, those who send {count} consecutively will be {action}!
-    ban: banned
-    mute: muted
-    kick: kicked
+    not_configured: Антифлуд ще не налаштований у цьому чаті!
+    turned_off: Вимкнено антифлуд в <b>{chat_title}</b>!
+    "configuration_info:with_time": Антифлуд налаштований у цьому чаті. Ті, хто відправить {count} повідомлення в межах {time} будуть {action}!
+    configuration_info: Антифлуд налаштований у цьому чаті. Ті, хто відправить {count} повідомлень підряд, будуть {action}!
+    ban: забанений
+    mute: заглушений
+    kick: виключений
     #/setfloodaction
-    invalid_args: "Unsupported action, expected {supported_actions}!"
-    setfloodaction_success: "Successfully updated flood action to <b>{action}</b>!"
+    invalid_args: "Непідтримувана дію, очікується {supported_actions}!"
+    setfloodaction_success: "Дію антифлуду успішно оновлено до <b>{action}</b>!"
   android:
     cmd_example: "Please type your device <b>codename</b>!\nFor example, <code>/{cmd} whyred</code>"
     err_github: "Hitsuki have been trying to connect to GitHub User Content, It seem like GitHub User Content is down"
