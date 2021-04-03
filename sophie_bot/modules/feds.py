@@ -66,10 +66,10 @@ delfed_cb = CallbackData('delfed_cb', 'fed_id', 'creator_id')
 # functions
 
 
-async def get_fed_f(message):
+async def get_fed_f(message, disable_self_fed_check: bool = False):
     chat = await get_connected_chat(message, admin=True)
     if 'err_msg' not in chat:
-        if chat['status'] == 'private':
+        if chat['status'] == 'private' and not disable_self_fed_check:
             # return fed which user is created
             fed = await get_fed_by_creator(chat['chat_id'])
         else:
@@ -102,7 +102,7 @@ def get_current_chat_fed(func):
     return wrapped_1
 
 
-def get_fed_user_text(skip_no_fed=False, self=False):
+def get_fed_user_text(skip_no_fed=False, check_self_user=False, disable_self_fed_check: bool = False):
     def wrapped(func):
         async def wrapped_1(*args, **kwargs):
             fed = None
@@ -117,7 +117,7 @@ def get_fed_user_text(skip_no_fed=False, self=False):
                 user = {'user_id': int(data[0])}
                 text = ' '.join(data[1:]) if len(data) > 1 else None
             elif not user:
-                if self is True:
+                if check_self_user is True:
                     user = await db.user_list.find_one({'user_id': message.from_user.id})
                 else:
                     await message.reply(strings['cant_get_user'])
@@ -137,7 +137,7 @@ def get_fed_user_text(skip_no_fed=False, self=False):
                         text = " ".join(text_args)
 
             if not fed:
-                if not (fed := await get_fed_f(message)):
+                if not (fed := await get_fed_f(message, disable_self_fed_check)):
                     if not skip_no_fed:
                         await message.reply(strings['chat_not_in_fed'])
                         return
@@ -1131,7 +1131,7 @@ async def check_fbanned(message: Message, chat, strings):
 
 
 @decorator.register(cmds=['fcheck', 'fbanstat'])
-@get_fed_user_text(skip_no_fed=True, self=True)
+@get_fed_user_text(skip_no_fed=True, check_self_user=True, disable_self_fed_check=True)
 @get_strings_dec('feds')
 async def fedban_check(message, fed, user, _, strings):
     fbanned_fed = False  # A variable to find if user is banned in current fed of chat
