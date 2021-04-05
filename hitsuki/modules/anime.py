@@ -255,7 +255,7 @@ async def anilist_character(message, strings):
     text += strings["id"].format(id=character.id)
     text += strings["favorites"].format(favs=character.favorites)
     if hasattr(character, "description"):
-        text += f"\n{desc}"
+        text += f"\n\n{desc}"
 
     keyboard = InlineKeyboardMarkup().add(
         InlineKeyboardButton(text=strings["more_info"], url=character.url)
@@ -365,6 +365,7 @@ Get information about anime, manga or anime characters.
 - /anime (anime): returns information about the anime.
 - /manga (manga): returns information about the manga.
 - /airing (anime): returns anime airing info.
+- /character (character): returns information about the character.
 - /kaizoku (anime): search an anime on animekaizoku.com
 - /kayo (anime): search an anime on animekayo.com
 - /upcoming: returns a list of new anime in the upcoming seasons.

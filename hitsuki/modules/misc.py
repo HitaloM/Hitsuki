@@ -92,11 +92,12 @@ Variables are special words which will be replaced by actual info
     )
 
 
-@decorator.register(cmds=['github', 'git', 'repo'])
+@decorator.register(cmds=['github', 'git'])
 @need_args_dec()
 @disableable_dec('github')
+@get_strings_dec('misc')
 async def github(message):
-    args = get_args_str(message)
+    args = get_args_str(message, strings)
 
     r = await http.get(f'https://api.github.com/users/{args}')
     usr = r.json()
@@ -137,18 +138,9 @@ async def github(message):
                         text += ("\n<b>{}:</b> <code>{}</code>".format(x, y))
         reply_text = text
     elif not usr.get('login'):
-        await message.reply("User not found. Make sure you entered valid username!")
+        await message.reply(strings['github_err'])
         return
 
-    if get_cmd(message) == "repo":
-        r = await http.get(f'https://api.github.com/users/{args}/repos?per_page=40')
-        response = r.json()
-        reply_text += "<b>\n\nRepositories:</b>\n"
-        for i in range(len(response)):
-            if i == 40:
-                break
-            reply_text += f"{i + 1}. <a href='https://github.com/{response[i]['html_url']}'>{response[i]['name']}</a>\n"
- 
     await message.reply(reply_text, disable_web_page_preview=True)
 
 
@@ -234,7 +226,6 @@ A module with some useful commands but without a specific category.
 <b>Available commands:</b>
 - /direct (url): Generates direct links from the sourceforge.net
 - /github (username): Returns info about a GitHub user or organization.
-- /repo (username): Similar to the <code>/github</code> command but also having the list of user repositories.
 - /cancel: Disables current state. Can help in cases if Hitsuki not responing on your message.
 - /id: get the current group id. If used by replying to a message, gets that user's id.
 - /info: get information about a user.

@@ -169,6 +169,8 @@ STRINGS:
     help_btn: "Click me for help!"
     help_txt: "Click the button below for help!"
 
+    github_err: "User not found. Make sure you entered valid username!"
+
     delmsg_filter_title: 'Delete the message'
     send_text: Please send the reply message!
     replymsg_filter_title: 'Reply to message'
@@ -812,7 +814,7 @@ STRINGS:
     id: "\n<b>ID:</b> <code>{id}</code>\n"
     short_desc: "<b>Short description:</b> <i>{desc}[...]</i>"
     desc: "<b>Description:</b> <i>{desc}</i>"
-    char_desc: "<b>About:</b>\n<i>{desc}</i>"
+    char_desc: "<b>About:</b>\n{desc}"
     score: "<b>Score:</b> <code>{score}</code>\n"
     favorites: "<b>Favorite:</b> <code>{favs}</code>"
     status: "<b>Status:</b> <code>{status}</code>\n"
