@@ -51,19 +51,32 @@ def t(milliseconds: int) -> str:
 async def anilist_anime(message, strings):
     query = get_args_str(message)
 
-    try:
-        async with anilist.AsyncClient() as client:
-            results = await client.search(query, "anime", 1)
-            anime = await client.get(results[0].id, "anime")
-    except IndexError:
-        return await message.reply(strings["search_err"])
-
-    if len(anime.description) > 700:
-        desc = strings["short_desc"].format(desc=anime.description_short)
+    if query.isdecimal():
+        anime_id = int(query)
     else:
-        desc = strings["desc"].format(desc=anime.description)
+        try:
+            async with anilist.AsyncClient() as client:
+                results = await client.search(query, "anime", 1)
+                anime_id = results[0].id
+        except IndexError:
+            return await message.reply(strings["search_err"])
 
-    text = f"<b>{anime.title.romaji}</b> (<code>{anime.title.native}</code>)\n"
+    async with anilist.AsyncClient() as client:
+        anime = await client.get(anime_id)
+
+    if not anime:
+        return await message.reply(
+            strings["search_get_err"].format(type="anime", id=anime_id)
+        )
+
+    if hasattr(anime, "description"):
+        if len(anime.description) > 700:
+            desc = strings["short_desc"].format(desc=anime.description_short)
+        else:
+            desc = strings["desc"].format(desc=anime.description)
+
+    text = f"<b>{anime.title.romaji}</b> (<code>{anime.title.native}</code>)"
+    text += strings["id"].format(id=anime.id)
     text += strings["anime_type"].format(type=anime.format)
     if hasattr(anime, "status"):
         text += strings["status"].format(status=anime.status)
@@ -81,7 +94,8 @@ async def anilist_anime(message, strings):
         text += strings["anime_studios"].format(
             studios=f" <code>{', '.join(str(x) for x in anime.studios)}</code>\n"
         )
-    text += f"\n{desc.replace('<br>', '')}"
+    if hasattr(anime, "description"):
+        text += f"\n{desc.replace('<br>', '')}"
 
     keyboard = InlineKeyboardMarkup().add(
         InlineKeyboardButton(text=strings["more_info"], url=anime.url)
@@ -108,15 +122,26 @@ async def anilist_anime(message, strings):
 async def anilist_airing(message, strings):
     query = get_args_str(message)
 
-    try:
-        async with anilist.AsyncClient() as client:
-            results = await client.search(query, "anime", 1)
-            anime = await client.get(results[0].id, "anime")
-    except IndexError:
-        return await message.reply(strings["search_err"])
+    if query.isdecimal():
+        anime_id = int(query)
+    else:
+        try:
+            async with anilist.AsyncClient() as client:
+                results = await client.search(query, "anime", 1)
+                anime_id = results[0].id
+        except IndexError:
+            return await message.reply(strings["search_err"])
 
-    text = f"<b>{anime.title.romaji}</b> (<code>{anime.title.native}</code>)\n"
-    text += strings["airing_id"].format(id=anime.id)
+    async with anilist.AsyncClient() as client:
+        anime = await client.get(anime_id)
+
+    if not anime:
+        return await message.reply(
+            strings["search_get_err"].format(type="anime", id=anime_id)
+        )
+
+    text = f"<b>{anime.title.romaji}</b> (<code>{anime.title.native}</code>)"
+    text += strings["id"].format(id=anime.id)
     text += strings["anime_type"].format(type=anime.format)
     if hasattr(anime, "next_airing"):
         airing_time = anime.next_airing.time_until * 1000
@@ -139,19 +164,32 @@ async def anilist_airing(message, strings):
 async def anilist_manga(message, strings):
     query = get_args_str(message)
 
-    try:
-        async with anilist.AsyncClient() as client:
-            results = await client.search(query, "manga", 1)
-            manga = await client.get(results[0].id, "manga")
-    except IndexError:
-        return await message.reply(strings["search_err"])
-
-    if len(manga.description) > 700:
-        desc = strings["short_desc"].format(desc=manga.description_short)
+    if query.isdecimal():
+        manga_id = int(query)
     else:
-        desc = strings["desc"].format(desc=manga.description)
+        try:
+            async with anilist.AsyncClient() as client:
+                results = await client.search(query, "manga", 1)
+                manga_id = results[0].id
+        except IndexError:
+            return await message.reply(strings["search_err"])
 
-    text = f"<b>{manga.title.romaji}</b> (<code>{manga.title.native}</code>)\n"
+    async with anilist.AsyncClient() as client:
+        manga = await client.get(manga_id, "manga")
+
+    if not manga:
+        return await message.reply(
+            strings["search_get_err"].format(type="manga", id=manga_id)
+        )
+
+    if hasattr(manga, "description"):
+        if len(manga.description) > 700:
+            desc = strings["short_desc"].format(desc=manga.description_short)
+        else:
+            desc = strings["desc"].format(desc=manga.description)
+
+    text = f"<b>{manga.title.romaji}</b> (<code>{manga.title.native}</code>)"
+    text += strings["id"].format(id=manga.id)
     if hasattr(manga.start_date, "year"):
         text += strings["manga_start"].format(date=manga.start_date.year)
     if hasattr(manga, "status"):
@@ -166,7 +204,8 @@ async def anilist_manga(message, strings):
         text += strings["genres"].format(
             genres=f" <code>{', '.join(str(x) for x in manga.genres)}</code>\n"
         )
-    text += f"\n{desc.replace('<br>', '')}"
+    if hasattr(manga, "description"):
+        text += f"\n{desc.replace('<br>', '')}"
 
     keyboard = InlineKeyboardMarkup().add(
         InlineKeyboardButton(text=strings["more_info"], url=manga.url)
@@ -177,6 +216,59 @@ async def anilist_manga(message, strings):
         caption=text,
         reply_markup=keyboard,
     )
+
+
+@register(cmds="character")
+@need_args_dec()
+@disableable_dec("character")
+@get_strings_dec("anime")
+async def anilist_character(message, strings):
+    query = get_args_str(message)
+
+    if query.isdecimal():
+        character_id = int(query)
+    else:
+        try:
+            async with anilist.AsyncClient() as client:
+                results = await client.search(query, "char", 1)
+                character_id = results[0].id
+        except IndexError:
+            return await message.reply(strings["search_err"])
+
+    async with anilist.AsyncClient() as client:
+        character = await client.get(character_id, "char")
+
+    if not character:
+        return await message.reply(
+            strings["search_get_err"].format(type="character", id=character_id)
+        )
+
+    if hasattr(character, "description"):
+        if len(character.description) > 700:
+            desc = strings["char_desc"].format(
+                desc=f"{character.description[0:500]}[...]"
+            )
+        else:
+            desc = strings["char_desc"].format(desc=character.description)
+
+    text = f"<b>{character.name.full}</b> (<code>{character.name.native}</code>)"
+    text += strings["id"].format(id=character.id)
+    text += strings["favorites"].format(favs=character.favorites)
+    if hasattr(character, "description"):
+        text += f"\n{desc}"
+
+    keyboard = InlineKeyboardMarkup().add(
+        InlineKeyboardButton(text=strings["more_info"], url=character.url)
+    )
+
+    if hasattr(character, "image"):
+        await message.reply_photo(
+            photo=character.image.large,
+            caption=text,
+            reply_markup=keyboard,
+        )
+    else:
+        await message.reply(text, reply_markup=keyboard)
 
 
 @register(cmds="upcoming")
