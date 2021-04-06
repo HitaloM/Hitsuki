@@ -146,6 +146,7 @@ STRINGS:
     conn_chat_id: "ID do atual grupo conectado no momento: <code>{id}</code>"
     help_btn: "Clique em mim para obter ajuda!"
     help_txt: "Clique no botão abaixo para obter ajuda!"
+    github_err: "User not found. Make sure you entered valid username!"
     delmsg_filter_title: 'Apagar a mensagem'
     send_text: Por favor, responda uma mensagem!
     replymsg_filter_title: 'Responda uma mensagem'
@@ -714,7 +715,7 @@ STRINGS:
     id: "\n<b>ID:</b> <code>{id}</code>\n"
     short_desc: "<b>Descrição curta:</b> <i>{desc}[...]</i>"
     desc: "<b>Descrição:</b> <i>{desc}</i>"
-    char_desc: "<b>Sobre:</b>\n<i>{desc}</i>"
+    char_desc: "<b>About:</b>\n{desc}"
     score: "<b>Pontuação:</b> <code>{score}</code>\n"
     favorites: "<b>Favoritos:</b> <code>{favs}</code>"
     status: "<b>Estado:</b> <code>{status}</code>\n"
