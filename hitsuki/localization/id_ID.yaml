@@ -146,6 +146,7 @@ STRINGS:
     conn_chat_id: "ID percakapan yang terhubung saat ini: <code>{id}</code>"
     help_btn: "Tekan saya untuk mendapatkan bantuan!"
     help_txt: "Klik tombol dibawah untuk mendapatkan bantuan!"
+    github_err: "User not found. Make sure you entered valid username!"
     delmsg_filter_title: 'Hapus pesan'
     send_text: Mohon kirim pesan balasan!
     replymsg_filter_title: 'Balas pesan'
@@ -714,7 +715,7 @@ STRINGS:
     id: "\n<b>ID:</b> <code>{id}</code>\n"
     short_desc: "<b>Short description:</b> <i>{desc}[...]</i>"
     desc: "<b>Description:</b> <i>{desc}</i>"
-    char_desc: "<b>About:</b>\n<i>{desc}</i>"
+    char_desc: "<b>About:</b>\n{desc}"
     score: "<b>Score:</b> <code>{score}</code>\n"
     favorites: "<b>Favorite:</b> <code>{favs}</code>"
     status: "<b>Status:</b> <code>{status}</code>\n"
