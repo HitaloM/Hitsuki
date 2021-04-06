@@ -147,6 +147,7 @@ STRINGS:
     conn_chat_id: "ID actuel du chat connecté : <code>{id}</code>"
     help_btn: "Cliquez pour obtenir de l'aide !"
     help_txt: "Cliquez sur le bouton ci-dessous pour obtenir de l'aide !"
+    github_err: "User not found. Make sure you entered valid username!"
     delmsg_filter_title: 'Supprimer le message'
     send_text: Veuillez envoyer le message de réponse !
     replymsg_filter_title: 'Répondre au message'
@@ -715,7 +716,7 @@ STRINGS:
     id: "\n<b>ID:</b> <code>{id}</code>\n"
     short_desc: "<b>Short description:</b> <i>{desc}[...]</i>"
     desc: "<b>Description:</b> <i>{desc}</i>"
-    char_desc: "<b>About:</b>\n<i>{desc}</i>"
+    char_desc: "<b>About:</b>\n{desc}"
     score: "<b>Score:</b> <code>{score}</code>\n"
     favorites: "<b>Favorite:</b> <code>{favs}</code>"
     status: "<b>Status:</b> <code>{status}</code>\n"
