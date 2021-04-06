@@ -96,8 +96,8 @@ Variables are special words which will be replaced by actual info
 @need_args_dec()
 @disableable_dec('github')
 @get_strings_dec('misc')
-async def github(message):
-    args = get_args_str(message, strings)
+async def github(message, strings):
+    args = get_args_str(message)
 
     r = await http.get(f'https://api.github.com/users/{args}')
     usr = r.json()
