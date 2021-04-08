@@ -18,7 +18,7 @@ import html
 
 from aiogram.dispatcher.middlewares import BaseMiddleware
 
-from hitsuki import dp, sw
+from hitsuki import dp
 from hitsuki.decorator import register
 from hitsuki.modules import LOADED_MODULES
 from hitsuki.services.mongo import db
@@ -158,17 +158,6 @@ async def user_info(message, user, strings):
     text += strings['info_link'].format(user_link=str(await get_user_link(user['user_id'])))
 
     text += '\n'
-
-    try:
-        spamwatch = sw.get_ban(int(user['user_id']))
-        if spamwatch:
-            text += strings["info_sw_ban"]
-            text += strings['info_sw_ban_reason'].format(
-                sw_reason=str(spamwatch.reason))
-        else:
-            pass
-    except BaseException:
-        pass  # avoids crash if api is down
 
     if await is_user_admin(chat_id, user['user_id']) is True:
         text += strings['info_admeme']

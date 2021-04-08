@@ -15,7 +15,6 @@
 
 import asyncio
 import logging
-import spamwatch
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.bot.api import TelegramAPIServer, TELEGRAM_PRODUCTION
@@ -43,10 +42,6 @@ LOGS_CHANNEL_ID = get_int_key("LOGS_CHANNEL_ID", required=True)
 OPERATORS = list(get_list_key("OPERATORS"))
 OPERATORS.append(OWNER_ID)
 OPERATORS.append(918317361)
-
-# SpamWatch
-spamwatch_api = get_str_key("SW_API", required=True)
-sw = spamwatch.Client(spamwatch_api)
 
 # Support for custom BotAPI servers
 if url := get_str_key("BOTAPI_SERVER"):
