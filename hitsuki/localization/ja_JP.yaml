@@ -469,8 +469,6 @@ STRINGS:
     info_username: "\nユーザー名: {username}"
     info_link: "\nユーザーリンク: {user_link}"
     info_saw: "\n <code>{num}グループ</code> で彼らを見ました"
-    info_sw_ban: "\nこのユーザーは @SpamWatchで禁止されています！"
-    info_sw_ban_reason: "\n理由: <code>{sw_reason}</code>"
     info_fbanned: "\n現在の連邦で禁止: "
     info_admeme: "\nユーザーはこのチャットで管理者権限を持っています。"
     upd_cache: "キャッシュを更新中..."
