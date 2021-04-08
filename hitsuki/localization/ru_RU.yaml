@@ -465,8 +465,6 @@ STRINGS:
     info_username: "\nИмя пользователя: {username}"
     info_link: "\nСсылка на пользователя: {user_link}"
     info_saw: "\nЯ видела их в <code>{num}</code> группах"
-    info_sw_ban: "\nThis user is banned in @SpamWatch!"
-    info_sw_ban_reason: "\nReason: <code>{sw_reason}</code>"
     info_fbanned: "\nЗабанен в текущей Федерации: "
     info_admeme: "\nПользователь имеет права админа в этом чате."
     upd_cache: "Обновление кэша..."
