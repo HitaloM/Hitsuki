@@ -147,6 +147,7 @@ STRINGS:
     conn_chat_id: "ID de chat conectado actualmente: <code>{id}</code>"
     help_btn: "¡Haz clic para ayuda!"
     help_txt: "¡Haz clic en el botón de abajo para obtener ayuda!"
+    github_err: "User not found. Make sure you entered valid username!"
     delmsg_filter_title: 'Eliminar el mensaje'
     send_text: Por favor, ¡envíe el mensaje de respuesta!
     replymsg_filter_title: 'Responder al mensaje'
@@ -468,8 +469,6 @@ STRINGS:
     info_username: "\nNombre de usuario: {username}"
     info_link: "\nEnlace de usuario: {user_link}"
     info_saw: "\nLos vi en <code>{num}</code> grupos"
-    info_sw_ban: "\nThis user is banned in @SpamWatch!"
-    info_sw_ban_reason: "\nReason: <code>{sw_reason}</code>"
     info_fbanned: "\nBaneado en la Federación actual: "
     info_admeme: "\nEl usuario tiene derechos de administrador en este chat."
     upd_cache: "Actualizando caché ahora..."
@@ -715,7 +714,7 @@ STRINGS:
     id: "\n<b>ID:</b> <code>{id}</code>\n"
     short_desc: "<b>Short description:</b> <i>{desc}[...]</i>"
     desc: "<b>Description:</b> <i>{desc}</i>"
-    char_desc: "<b>About:</b>\n<i>{desc}</i>"
+    char_desc: "<b>About:</b>\n{desc}"
     score: "<b>Score:</b> <code>{score}</code>\n"
     favorites: "<b>Favorite:</b> <code>{favs}</code>"
     status: "<b>Status:</b> <code>{status}</code>\n"

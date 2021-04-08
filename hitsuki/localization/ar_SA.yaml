@@ -147,6 +147,7 @@ STRINGS:
     conn_chat_id: "معرف الدردشة المتصلة: <code>{id}</code>"
     help_btn: "اضغط للمساعدة!"
     help_txt: "اضغط الزر أدناه للمساعدة!"
+    github_err: "User not found. Make sure you entered valid username!"
     delmsg_filter_title: 'حذف الرسالة'
     send_text: الرجاء إرسال رسالة الرد!
     replymsg_filter_title: 'الرد على الرسالة'
@@ -468,8 +469,6 @@ STRINGS:
     info_username: "\nاسم المستخدم: {username}"
     info_link: "\nرابط المستخدم: {user_link}"
     info_saw: "\nرأيتهم في <code>{num}</code> مجموعات"
-    info_sw_ban: "\nThis user is banned in @SpamWatch!"
-    info_sw_ban_reason: "\nReason: <code>{sw_reason}</code>"
     info_fbanned: "\nمحظور في الاتحاد الحالي: "
     info_admeme: "\nللمستخدم حقوق المشرف في هذه المحادثة."
     upd_cache: "تحديث ذاكرة التخزين المؤقت الآن..."
@@ -715,7 +714,7 @@ STRINGS:
     id: "\n<b>ID:</b> <code>{id}</code>\n"
     short_desc: "<b>Short description:</b> <i>{desc}[...]</i>"
     desc: "<b>Description:</b> <i>{desc}</i>"
-    char_desc: "<b>About:</b>\n<i>{desc}</i>"
+    char_desc: "<b>About:</b>\n{desc}"
     score: "<b>Score:</b> <code>{score}</code>\n"
     favorites: "<b>Favorite:</b> <code>{favs}</code>"
     status: "<b>Status:</b> <code>{status}</code>\n"
