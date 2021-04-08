@@ -104,7 +104,7 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
                 message.conf['cmds'] = cmds
 
             if allow_kwargs is False:
-                def_kwargs = dict()
+                def_kwargs = {}
 
             with configure_scope() as scope:
                 parsed_update = parse_update(dict(message))
