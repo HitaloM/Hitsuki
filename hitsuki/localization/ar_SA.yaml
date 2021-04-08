@@ -469,8 +469,6 @@ STRINGS:
     info_username: "\nاسم المستخدم: {username}"
     info_link: "\nرابط المستخدم: {user_link}"
     info_saw: "\nرأيتهم في <code>{num}</code> مجموعات"
-    info_sw_ban: "\nThis user is banned in @SpamWatch!"
-    info_sw_ban_reason: "\nReason: <code>{sw_reason}</code>"
     info_fbanned: "\nمحظور في الاتحاد الحالي: "
     info_admeme: "\nللمستخدم حقوق المشرف في هذه المحادثة."
     upd_cache: "تحديث ذاكرة التخزين المؤقت الآن..."
