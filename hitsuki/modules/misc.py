@@ -24,7 +24,7 @@ from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.notes import get_parsed_note_list, send_note, t_unparse_note_item
 from .utils.user_details import is_user_admin
-from .utils.message import get_args_str, need_args_dec, get_cmd
+from .utils.message import get_args_str, need_args_dec
 from .utils.http import http
 
 
