@@ -470,8 +470,6 @@ STRINGS:
     info_username: "\nІм'я користувача: {username}"
     info_link: "\nПосилання на користувача: {user_link}"
     info_saw: "\nЯ бачила їх у <code>{num}</code> групах"
-    info_sw_ban: "\nThis user is banned in @SpamWatch!"
-    info_sw_ban_reason: "\nReason: <code>{sw_reason}</code>"
     info_fbanned: "\nЗаблокований в поточній Федерації: "
     info_admeme: "\nКористувач має права адміністратора в цьому чаті."
     upd_cache: "Оновлення кешу..."
