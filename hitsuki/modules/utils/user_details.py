@@ -261,7 +261,7 @@ async def is_chat_creator(event: Union[Message, CallbackQuery], chat_id, user_id
 
 async def get_user_by_text(message, text: str):
     # Get all entities
-    entities = filter(lambda ent: ent['type'] == 'text_mention' or ent['type'] == 'mention', message.entities)
+    entities = filter(lambda ent: ent['type'] in ('text_mention', 'mention'), message.entities)
     for entity in entities:
         # If username matches entity's text
         if text in entity.get_text(message.text):

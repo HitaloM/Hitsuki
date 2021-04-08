@@ -444,7 +444,7 @@ async def orangefox(message, strings):
     if build_type == "":
         build_type = "stable"
 
-    if codename == "devices" or codename == "":
+    if codename in ("devices", ""):
         text = strings["of_available"].format(build_type=build_type)
         data = await http.get(
             API_HOST + f"devices/?release_type={build_type}&sort=device_name_asc"

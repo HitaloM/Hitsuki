@@ -64,7 +64,7 @@ async def welcome(message, chat, strings):
     send_id = message.chat.id
 
     if len(args := message.get_args().split()) > 0:
-        no_format = True if 'no_format' == args[0] or 'raw' == args[0] else False
+        no_format = True if args[0] in ('no_format', 'raw') else False
     else:
         no_format = None
 
