@@ -34,6 +34,15 @@ from .utils.notes import BUTTONS, get_parsed_note_list, t_unparse_note_item, sen
 from .utils.term import chat_term
 
 
+@register(cmds='botchanges', is_op=True)
+async def botchanges(message):
+    command = "git log --pretty=format:\"%an: %s\" -30"
+    text = "<b>Bot changes:</b>\n"
+    text += "<i>Showed last 30 commits</i>\n"
+    text += await chat_term(message, command)
+    await message.reply(text, disable_web_page_preview=True)
+
+
 @register(cmds='allcommands', is_op=True)
 async def all_commands_list(message):
     text = ""
