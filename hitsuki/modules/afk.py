@@ -1,17 +1,19 @@
 # Copyright © 2018, 2019 MrYacha
-# This file is part of SophieBot.
-#
-# SophieBot is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# SophieBot is distributed in the hope that it will be useful,
+# Copyright © 2021 HitaloSama
+# This file is part of Hitsuki (Telegram Bot)
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
 
@@ -51,13 +53,20 @@ async def user_link(user_id):
 @disableable_dec("afk")
 async def afk(event):
     arg = get_arg(event)
+
+    # dont support AFK as anon admin
+    if event.from_user.id == 1087968824:
+        return
+
     if not arg:
         reason = "No reason"
     else:
         reason = get_arg(event)
+
     user_afk = await db.afk.find_one({"user": event.from_user.id})
     if user_afk:
         return
+
     await db.afk.insert_one({"user": event.from_user.id, "reason": reason})
     text = "{} is AFK!".format(await user_link(event.from_user.id))
     if reason:
@@ -66,6 +75,8 @@ async def afk(event):
 
 
 async def get_user(event):
+    if event.sender_id == 1087968824:
+        return
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         replied_user = await event.client(
@@ -103,6 +114,8 @@ async def get_user(event):
 @insurgent()
 async def check_afk(event):
     user_afk = await db.afk.find_one({"user": event.sender_id})
+    if event.sender_id == 1087968824:
+        return
     if user_afk:
         afk_cmd = re.findall("[!/]afk(.*)", event.text)
         if not afk_cmd:
