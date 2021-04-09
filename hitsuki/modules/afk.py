@@ -25,7 +25,7 @@ from hitsuki.decorator import register
 from hitsuki.services.mongo import db
 from hitsuki.services.telethon import tbot
 from .utils.disable import disableable_dec
-from .utils.message import get_arg
+from .utils.message import get_args_str
 
 
 def insurgent():
@@ -52,7 +52,7 @@ async def user_link(user_id):
 @register(cmds="afk")
 @disableable_dec("afk")
 async def afk(event):
-    arg = get_arg(event)
+    arg = get_args_str(event)
 
     # dont support AFK as anon admin
     if event.from_user.id == 1087968824:
@@ -61,7 +61,7 @@ async def afk(event):
     if not arg:
         reason = "No reason"
     else:
-        reason = get_arg(event)
+        reason = arg
 
     user_afk = await db.afk.find_one({"user": event.from_user.id})
     if user_afk:
@@ -113,9 +113,9 @@ async def get_user(event):
 
 @insurgent()
 async def check_afk(event):
-    user_afk = await db.afk.find_one({"user": event.sender_id})
     if event.sender_id == 1087968824:
         return
+    user_afk = await db.afk.find_one({"user": event.sender_id})
     if user_afk:
         afk_cmd = re.findall("[!/]afk(.*)", event.text)
         if not afk_cmd:
