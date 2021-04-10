@@ -92,6 +92,41 @@ Variables are special words which will be replaced by actual info
     )
 
 
+@register(cmds='paste')
+@disableable_dec('paste')
+@get_strings_dec('misc')
+async def paste_deldog(message, strings, **kwargs):
+    DOGBIN_URL = "https://del.dog/"
+    dogbin_final_url = None
+    to_paste = None
+
+    if 'reply_to_message' in message:
+        to_paste = message.reply_to_message.text
+    else:
+        to_paste = get_args_str(message)
+
+    if not to_paste:
+        await message.reply(strings['paste_no_text'])
+        return
+
+    resp = await http.post(DOGBIN_URL + "documents", data=to_paste.encode('utf-8'))
+
+    if resp.status_code == 200:
+        response = resp.json()
+        key = response['key']
+        dogbin_final_url = DOGBIN_URL + key
+
+        if response['isUrl']:
+            full_url = "{}v/{}".format(DOGBIN_URL, key)
+            reply_text = (strings["paste_success_extra"].format(dogbin_final_url, full_url))
+        else:
+            reply_text = (strings["paste_success"].format(dogbin_final_url))
+    else:
+        reply_text = (strings["paste_fail"])
+
+    await message.reply(reply_text, disable_web_page_preview=True)
+
+
 @decorator.register(cmds=['github', 'git'])
 @need_args_dec()
 @disableable_dec('github')
@@ -230,4 +265,5 @@ A module with some useful commands but without a specific category.
 - /id: get the current group id. If used by replying to a message, gets that user's id.
 - /info: get information about a user.
 - /afk (reason): Mark yourself as AFK. When marked as AFK, any mentions will be replied to with a message stating that you're not available!
+- /paste (text) or reply: Paste a text into <code>del.dog</code>.
 """

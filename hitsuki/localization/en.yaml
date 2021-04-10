@@ -171,6 +171,11 @@ STRINGS:
 
     github_err: "User not found. Make sure you entered valid username!"
 
+    paste_success_extra: "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}"
+    paste_success: "<b>Pasted successfully!</b>\nDogbin URL: {}"
+    paste_fail: "Failed to reach Dogbin!"
+    paste_no_text: "You haven't supplied text to paste!"
+
     delmsg_filter_title: 'Delete the message'
     send_text: Please send the reply message!
     replymsg_filter_title: 'Reply to message'
