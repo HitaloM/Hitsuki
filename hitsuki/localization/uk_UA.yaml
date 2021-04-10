@@ -147,6 +147,10 @@ STRINGS:
     help_btn: "Натисніть на мене, щоб отримати допомогу!"
     help_txt: "Натисніть кнопку нижче для допомоги!"
     github_err: "User not found. Make sure you entered valid username!"
+    paste_success_extra: "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}"
+    paste_success: "<b>Pasted successfully!</b>\nDogbin URL: {}"
+    paste_fail: "Failed to reach Dogbin!"
+    paste_no_text: "You haven't supplied text to paste!"
     delmsg_filter_title: 'Видалити повідомлення'
     send_text: Будь-ласка, відправте у відповідь слово/речення!
     replymsg_filter_title: 'Відповісти на повідомлення'
@@ -736,3 +740,8 @@ STRINGS:
     search_kayo: "<b>Search results for</b> <code>{query}</code> <b>on</b> <code>AnimeKayo</code>:\n"
     kayo_err: "<b>No result found for</b> <code>{query}</code> <b>on</b> <code>AnimeKayo</code>"
     all_results: "See all results"
+  afk:
+    is_afk: "{user} is AFK!\nReason: {reason}"
+    unafk: "{user} is not AFK anymore!"
+    afk_reason: "\nReason: {reason}"
+    set_afk: "{user} is AFK!"
