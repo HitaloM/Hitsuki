@@ -147,10 +147,10 @@ STRINGS:
     help_btn: "Clique em mim para obter ajuda!"
     help_txt: "Clique no botão abaixo para obter ajuda!"
     github_err: "Usuário não encontrado. Verifique se digitou um nome de usuário válido!"
-    paste_success_extra: "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}"
-    paste_success: "<b>Pasted successfully!</b>\nDogbin URL: {}"
-    paste_fail: "Failed to reach Dogbin!"
-    paste_no_text: "You haven't supplied text to paste!"
+    paste_success_extra: "<b>Colado com sucesso!</b>\nURL curta: {}\nURL Original do Dogbin: {}"
+    paste_success: "<b>Colado com sucesso!</b>\nURL do Dogbin: {}"
+    paste_fail: "Falha ao acessar Dogbin!"
+    paste_no_text: "Você não forneceu texto para colar!"
     delmsg_filter_title: 'Apagar a mensagem'
     send_text: Por favor, responda uma mensagem!
     replymsg_filter_title: 'Responda uma mensagem'
@@ -739,7 +739,7 @@ STRINGS:
     kayo_err: "<b>Nenhum resultado encontrado para</b> <code>{query}</code> <b>em</b> <code>AnimeKayo</code>"
     all_results: "Ver todos os resultados"
   afk:
-    is_afk: "{user} is AFK!\nReason: {reason}"
-    unafk: "{user} is not AFK anymore!"
-    afk_reason: "\nReason: {reason}"
-    set_afk: "{user} is AFK!"
+    is_afk: "{user} está AFK!\nMotivo: {reason}"
+    unafk: "{user} não está mais AFK!"
+    afk_reason: "\nMotivo: {reason}"
+    set_afk: "{user} está AFK!"
