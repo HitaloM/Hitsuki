@@ -28,6 +28,7 @@ from hitsuki.services.telethon import tbot
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.message import get_args_str
+from .utils.user_details import get_user_link
 
 
 def insurgent():
@@ -36,19 +37,6 @@ def insurgent():
         tbot.add_event_handler(func, events.MessageEdited(incoming=True))
 
     return decorator
-
-
-async def user_link(user_id):
-    user = await db.user_list.find_one({"user_id": user_id})
-    user_name = None
-
-    if user:
-        try:
-            user_name = user["first_name"]
-        except (ValueError, TypeError):
-            user_name = str(user_id)
-
-    return "<a href='tg://user?id={id}'>{name}</a>".format(name=user_name, id=user_id)
 
 
 @register(cmds="afk")
@@ -71,7 +59,7 @@ async def afk(event, strings):
         return
 
     await db.afk.insert_one({"user": event.from_user.id, "reason": reason})
-    text = strings["set_afk"].format(user=(await user_link(event.from_user.id)))
+    text = strings["set_afk"].format(user=(await get_user_link(event.from_user.id)))
     if reason:
         text += strings["afk_reason"].format(reason=reason)
     await event.reply(text)
@@ -80,6 +68,7 @@ async def afk(event, strings):
 async def get_user(event):
     if event.sender_id == 1087968824:
         return
+
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         replied_user = await event.client(
@@ -120,12 +109,13 @@ async def get_user(event):
 async def check_afk(event, strings):
     if event.sender_id == 1087968824:
         return
+
     user_afk = await db.afk.find_one({"user": event.sender_id})
     if user_afk:
         afk_cmd = re.findall("^[!/]afk(.*)", event.text)
         if not afk_cmd:
             await event.reply(
-                strings["unafk"].format(user=(await user_link(event.sender_id))),
+                strings["unafk"].format(user=(await get_user_link(event.sender_id))),
                 parse_mode="html",
             )
             await db.afk.delete_one({"_id": user_afk["_id"]})
@@ -133,11 +123,12 @@ async def check_afk(event, strings):
     user = await get_user(event)
     if not user:
         return
+
     user_afk = await db.afk.find_one({"user": user.user.id})
     if user_afk:
         await event.reply(
             strings["is_afk"].format(
-                user=(await user_link(user.user.id)), reason=user_afk["reason"]
+                user=(await get_user_link(user.user.id)), reason=user_afk["reason"]
             ),
             parse_mode="html",
         )
