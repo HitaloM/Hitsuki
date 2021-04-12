@@ -742,5 +742,4 @@ STRINGS:
   afk:
     is_afk: "{user} is AFK!\nReason: {reason}"
     unafk: "{user} is not AFK anymore!"
-    afk_reason: "\nReason: {reason}"
-    set_afk: "{user} is AFK!"
+    afk_anon: "AFK mode cannot be used as an anonymous administrator."
