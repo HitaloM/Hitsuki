@@ -694,7 +694,7 @@ STRINGS:
     sam_latest: "<b>Último firmware disponível:</b>\n"
     sam_test: "<b>Último firmware em teste:</b>\n"
     phh_tag: "<b>Tag:</b> <code>{tag}</code>\n"
-    phh_size: "<b>Size</b>: <code>{size}</code>\n\n"
+    phh_size: "<b>Tamanho</b>: <code>{size}</code>\n\n"
     twrp_device: "  <b>Dispositivo:</b> {device}\n"
     twrp_udpated: "  <b>Atualizado:</b> <code>{date}</code>\n"
     twrp_size: "  <b>Tamanho:</b> <code>{size}</code>\n"
@@ -741,4 +741,4 @@ STRINGS:
   afk:
     is_afk: "{user} está AFK!\nMotivo: {reason}"
     unafk: "{user} não está mais AFK!"
-    afk_anon: "AFK mode cannot be used as an anonymous administrator."
+    afk_anon: "Modo AFK não pode ser usado como um administrador anônimo."
