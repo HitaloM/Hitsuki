@@ -24,7 +24,7 @@ from hitsuki.services.mongo import db
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.message import get_args_str
-from .utils.user_details import get_user_link, get_user
+from .utils.user_details import get_user_link, get_user, get_user_by_id
 
 
 @register(cmds="afk")
@@ -35,7 +35,7 @@ async def afk(message, strings):
 
     # dont support AFK as anon admin
     if message.from_user.id == 1087968824:
-        await message.reply(string["afk_anon"])
+        await message.reply(strings["afk_anon"])
         return
 
     if not arg:
@@ -43,13 +43,14 @@ async def afk(message, strings):
     else:
         reason = arg
 
-    user_afk = await db.afk.find_one({"user": message.from_user.id})
+    user = await get_user_by_id(message.from_user.id)
+    user_afk = await db.afk.find_one({"user": user["user_id"]})
     if user_afk:
         return
 
-    await db.afk.insert_one({"user": message.from_user.id, "reason": reason})
+    await db.afk.insert_one({"user": user["user_id"], "reason": reason})
     text = strings["is_afk"].format(
-        user=(await get_user_link(message.from_user.id)), reason=reason
+        user=(await get_user_link(user["user_id"])), reason=reason
     )
     await message.reply(text)
 
@@ -57,9 +58,11 @@ async def afk(message, strings):
 @register()
 @get_strings_dec("afk")
 async def check_afk(message, strings):
+    if bool(message.reply_to_message):
+        if message.reply_to_message.from_user.id in (1087968824, 777000):
+            return
     if message.from_user.id in (1087968824, 777000):
         return
-
     user_afk = await db.afk.find_one({"user": message.from_user.id})
     if user_afk:
         afk_cmd = re.findall("^[!/]afk(.*)", message.text)
