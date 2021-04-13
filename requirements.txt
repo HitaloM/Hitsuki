@@ -32,6 +32,5 @@ async-timeout
 regex
 bs4
 lxml
-hurry-filesize
 httpx[http2]
 python-anilist

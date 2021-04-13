@@ -1,4 +1,6 @@
-# Copyright (C) 2019 Aiogram
+# Copyright (C) KassemSYR. All rights reserved.
+# Copyright (C) 2019 Aiogram.
+# Copyright (C) 2021 HitaloSama.
 #
 # This file is part of Hitsuki (Telegram Bot)
 #
@@ -19,7 +21,6 @@ import rapidjson as json
 from .http import http
 
 # This file is an adaptation / port from the Galaxy Helper Bot.
-# Copyright (C) KassemSYR. All rights reserved.
 
 
 class GetDevice:

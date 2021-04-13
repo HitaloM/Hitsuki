@@ -1,3 +1,4 @@
+# Copyright (C) 2021 HitaloSama.
 # Copyright (C) 2019 Aiogram.
 #
 # This file is part of Hitsuki (Telegram Bot)

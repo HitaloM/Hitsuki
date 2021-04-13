@@ -24,6 +24,8 @@ import os
 import requests
 import rapidjson
 
+from aiogram.utils.exceptions import Unauthorized
+
 from hitsuki import OWNER_ID, OPERATORS, HITSUKI_VERSION, bot, dp
 from hitsuki.decorator import REGISTRED_COMMANDS, COMMANDS_ALIASES, register
 from hitsuki.modules import LOADED_MODULES
@@ -35,6 +37,7 @@ from .utils.language import get_strings_dec
 from .utils.message import need_args_dec
 from .utils.notes import BUTTONS, get_parsed_note_list, t_unparse_note_item, send_note
 from .utils.term import chat_term
+from .utils.user_details import get_chat_dec
 
 
 @register(cmds='botchanges', is_op=True)
@@ -92,12 +95,16 @@ async def cmd_term(message):
 
 
 @register(cmds="leavechat", is_owner=True)
+@get_chat_dec()
 @need_args_dec()
-async def leave_chat(message):
-    arg = message.text.split()[1]
-    cname = message.chat.title
-    await bot.leave_chat(chat_id=arg)
-    await message.reply(f"Done, I left the group <b>{cname}</b>")
+async def leave_chat(message, chat):
+    c = await db.chat_list.find_one({"chat_id": chat["chat_id"]})
+    try:
+        await bot.leave_chat(chat_id=chat["chat_id"])
+    except Unauthorized:
+        await message.reply("I couldn't access chat/channel! Maybe I was kicked from there!")
+        return
+    await message.reply(f"Done, I left the group <b>{c['chat_title']}</b>")
 
 
 @register(cmds="sbroadcast", is_owner=True)
@@ -161,8 +168,9 @@ async def bot_stop(message):
 
 @register(cmds="restart", is_owner=True)
 async def restart_bot(message):
-    await message.reply("Hitsuki will be restarted...")
+    m = await message.reply("Hitsuki will be restarted...")
     args = [sys.executable, "-m", "hitsuki"]
+    await m.edit_text("See you later...")
     os.execl(sys.executable, *args)
 
 

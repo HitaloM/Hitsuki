@@ -1,4 +1,5 @@
 # Copyright (C) 2019 Aiogram.
+# Copyright (C) 2021 HitaloSama.
 #
 # This file is part of Hitsuki (Telegram Bot)
 #
@@ -18,7 +19,6 @@
 import time
 import rapidjson as json
 from bs4 import BeautifulSoup
-from hurry.filesize import size as get_size
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -29,6 +29,7 @@ from .utils.disable import disableable_dec
 from .utils.message import get_arg, get_cmd
 from .utils.language import get_strings_dec
 from .utils.http import http
+from .utils.covert import convert_size
 
 # Commands /evo and /los ported from Haruka Aya
 # Commands /twrp, /samcheck and /samget ported from Samsung Geeks
@@ -56,7 +57,7 @@ async def los(message, strings):
         filename = response["filename"]
         url = response["url"]
         buildsize_a = response["size"]
-        buildsize_b = get_size(int(buildsize_a))
+        buildsize_b = convert_size(int(buildsize_a))
         version = response["version"]
 
         text = (strings["download"]).format(url=url, filename=filename)
@@ -111,7 +112,7 @@ async def evo(message, strings):
             maintainer = usr["maintainer"]
             maintainer_url = usr["telegram_username"]
             size_a = usr["size"]
-            size_b = get_size(int(size_a))
+            size_b = convert_size(int(size_a))
 
             text = (strings["download"]).format(url=url, filename=filename)
             text += (strings["build_size"]).format(size=size_b)
@@ -291,9 +292,8 @@ async def phh_magisk(message, strings):
             url = usr["assets"][i]["browser_download_url"]
             tag = usr["tag_name"]
             size_bytes = usr["assets"][i]["size"]
-            size = float("{:.2f}".format((size_bytes / 1024) / 1024))
             text += strings["phh_tag"].format(tag=tag)
-            text += strings["phh_size"].format(size=size)
+            text += strings["phh_size"].format(size=convert_size(int(size_bytes)))
             btn = strings["dl_btn"]
             button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
         except IndexError:
