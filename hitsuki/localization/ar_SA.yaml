@@ -177,6 +177,8 @@ STRINGS:
     btn_channel: "📡 أخبار صوفي"
     btn_group_help: "Click me for help!"
     back: الرجوع
+    help_for: "Help for <b>{mod_name}</b> module:\n"
+    help_for_a: "Help for {mod_name}."
     #/help
     help_header: "مرحباً! تفقد الويكي الخاص بنا للحصول على المساعدة"
     click_btn: اضغط هنا

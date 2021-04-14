@@ -176,6 +176,8 @@ STRINGS:
     btn_channel: "📬 חדשות Hitsuki"
     btn_group_help: "לחץ כאן לעזרה!"
     back: חזור
+    help_for: "Help for <b>{mod_name}</b> module:\n"
+    help_for_a: "Help for {mod_name}."
     #/help
     help_header: "היי! השם שלי הוא <b>Hitsuki</b>. ואני בוט לניהול קבוצות, אני יכול לעזו לך לשמור על הסדר בקבוצות שלך!\nיש לי הרבה תכונות שימושיות, כמו שליטה על הצפות, אזהרות, פתקים, ואפשרות ליצור טריגרים על מילים מסוימות."
     click_btn: לחץ כאן

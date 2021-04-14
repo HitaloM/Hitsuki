@@ -177,6 +177,8 @@ STRINGS:
     btn_channel: "📬 Hitsuki News"
     btn_group_help: "Click me for help!"
     back: Retour
+    help_for: "Help for <b>{mod_name}</b> module:\n"
+    help_for_a: "Help for {mod_name}."
     #/help
     help_header: "Hey! Je m'appelle <b>Hitsuki</b>. Je suis un robot de gestion de groupe, là pour vous aider à vous déplacer et à garder l'ordre dans vos groupes!\nJ'ai beaucoup de fonctionnalités pratiques, telles que le contrôle des inondations, un système d'alerte, un système de conservation de notes et même des réponses prédéterminées sur certains mots clés."
     click_btn: Cliquez ici
