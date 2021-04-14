@@ -382,7 +382,7 @@ async def check(message, strings):
             text += f"• Android: <code>{os1}</code>\n"
         text += "\n"
     else:
-        text = strings["err_pub_sam"].format(model=model.upper(), csc=csc.upper())
+        text = strings["err_sam_pub"].format(model=model.upper(), csc=csc.upper())
     text += strings["sam_test"]
     if len(page2.find("latest").text.strip().split("/")) == 3:
         pda2, csc2, phone2 = page2.find("latest").text.strip().split("/")
