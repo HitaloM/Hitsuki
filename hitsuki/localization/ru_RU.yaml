@@ -691,7 +691,7 @@ STRINGS:
     sam_latest: "<b>Latest available firmware:</b>\n"
     sam_test: "<b>Latest test firmware:</b>\n"
     phh_tag: "<b>Tag:</b> <code>{tag}</code>\n"
-    phh_size: "<b>Size</b>: <code>{size} MB</code>\n\n"
+    phh_size: "<b>Size</b>: <code>{size}</code>\n\n"
     twrp_device: "  <b>Device:</b> {device}\n"
     twrp_udpated: "  <b>Updated:</b> <code>{date}</code>\n"
     twrp_size: "  <b>Size:</b> <code>{size}</code>\n"
