@@ -147,9 +147,8 @@ STRINGS:
     help_btn: "Натисніть на мене, щоб отримати допомогу!"
     help_txt: "Натисніть кнопку нижче для допомоги!"
     github_err: "User not found. Make sure you entered valid username!"
-    paste_success_extra: "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}"
-    paste_success: "<b>Pasted successfully!</b>\nDogbin URL: {}"
-    paste_fail: "Failed to reach Dogbin!"
+    paste_success: "<b>Pasted successfully!</b>\nNekobin URL: {}"
+    paste_fail: "Failed to reach Nekobin!"
     paste_no_text: "You haven't supplied text to paste!"
     delmsg_filter_title: 'Видалити повідомлення'
     send_text: Будь-ласка, відправте у відповідь слово/речення!
