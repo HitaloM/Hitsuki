@@ -147,9 +147,8 @@ STRINGS:
     help_btn: "Clique em mim para obter ajuda!"
     help_txt: "Clique no botão abaixo para obter ajuda!"
     github_err: "Usuário não encontrado. Verifique se digitou um nome de usuário válido!"
-    paste_success_extra: "<b>Colado com sucesso!</b>\nURL curta: {}\nURL Original do Dogbin: {}"
-    paste_success: "<b>Colado com sucesso!</b>\nURL do Dogbin: {}"
-    paste_fail: "Falha ao acessar Dogbin!"
+    paste_success: "<b>Pasted successfully!</b>\nNekobin URL: {}"
+    paste_fail: "Failed to reach Nekobin!"
     paste_no_text: "Você não forneceu texto para colar!"
     delmsg_filter_title: 'Apagar a mensagem'
     send_text: Por favor, responda uma mensagem!
