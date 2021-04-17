@@ -147,8 +147,8 @@ STRINGS:
     help_btn: "Clique em mim para obter ajuda!"
     help_txt: "Clique no botão abaixo para obter ajuda!"
     github_err: "Usuário não encontrado. Verifique se digitou um nome de usuário válido!"
-    paste_success: "<b>Pasted successfully!</b>\nNekobin URL: {}"
-    paste_fail: "Failed to reach Nekobin!"
+    paste_success: "<b>Colado com sucesso!</b>\nURL Nekobin: {}"
+    paste_fail: "Falha ao alcançar Nekobin!"
     paste_no_text: "Você não forneceu texto para colar!"
     delmsg_filter_title: 'Apagar a mensagem'
     send_text: Por favor, responda uma mensagem!
