@@ -148,9 +148,8 @@ STRINGS:
     help_btn: "ヘルプのためにクリックしてください!"
     help_txt: "ヘルプのために下のボタンをクリックしてください!"
     github_err: "User not found. Make sure you entered valid username!"
-    paste_success_extra: "<b>Pasted successfully!</b>\nShortened url: {}\nOriginal Dogbin URL: {}"
-    paste_success: "<b>Pasted successfully!</b>\nDogbin URL: {}"
-    paste_fail: "Failed to reach Dogbin!"
+    paste_success: "<b>Pasted successfully!</b>\nNekobin URL: {}"
+    paste_fail: "Failed to reach Nekobin!"
     paste_no_text: "You haven't supplied text to paste!"
     delmsg_filter_title: 'メッセージを削除する'
     send_text: 返信メッセージを送信してください！
