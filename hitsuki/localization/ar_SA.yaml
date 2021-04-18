@@ -715,6 +715,7 @@ STRINGS:
     of_changelog: "  <u><b>Changelog:</b></u>\n"
   anime:
     search_err: "Something went wrong, check your search and try again!"
+    unknown_search_err: "An unknown error occurred in the search attempt!"
     search_get_err: "Sorry! No <b>{type}</b> with id <code>{id}</code> was found..."
     id: "\n<b>ID:</b> <code>{id}</code>\n"
     short_desc: "<b>Short description:</b> <i>{desc}[...]</i>"
