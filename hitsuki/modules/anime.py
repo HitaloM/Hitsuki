@@ -16,12 +16,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import html
+import re
 import bs4
+import html
 import anilist
+from markdown import markdown
 from jikanpy import AioJikan
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec
 from .utils.message import get_args_str, need_args_dec
@@ -30,8 +33,8 @@ from .utils.http import http
 
 
 def t(milliseconds: int) -> str:
-    """Inputs time in milliseconds, to get beautified time,
-    as string"""
+    """Inputs time in milliseconds,
+    to get beautified time, as string"""
     seconds, milliseconds = divmod(int(milliseconds), 1000)
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
@@ -44,6 +47,23 @@ def t(milliseconds: int) -> str:
         + ((str(milliseconds) + " ms, ") if milliseconds else "")
     )
     return tmp[:-2]
+
+
+def markdown_to_text(markdown_string: str) -> str:
+    """ Converts a markdown string to plaintext """
+
+    # md -> html -> text since BeautifulSoup can extract text cleanly
+    html = markdown(markdown_string)
+
+    # remove code snippets
+    html = re.sub(r"<pre>(.*?)</pre>", " ", html)
+    html = re.sub(r"<code>(.*?)</code >", " ", html)
+
+    # extract text
+    soup = bs4.BeautifulSoup(html, "html.parser")
+    text = "".join(soup.findAll(text=True))
+
+    return text
 
 
 @register(cmds="anime")
@@ -248,10 +268,12 @@ async def anilist_character(message, strings):
     if hasattr(character, "description"):
         if len(character.description) > 700:
             desc = strings["char_desc"].format(
-                desc=f"{character.description[0:500]}[...]"
+                desc=f"{markdown_to_text(character.description)[0:500]}[...]"
             )
         else:
-            desc = strings["char_desc"].format(desc=character.description)
+            desc = strings["char_desc"].format(
+                desc=markdown_to_text(character.description)
+            )
 
     text = f"<b>{character.name.full}</b> (<code>{character.name.native}</code>)"
     text += strings["id"].format(id=character.id)
@@ -294,14 +316,17 @@ async def upcoming(message):
 
 
 async def site_search(message, strings, site: str):
-    args = message.text.split(" ", 1)
+    search_query = get_args_str(message)
     more_results = True
-    search_query = args[1]
 
     if site == "kaizoku":
         search_url = f"https://animekaizoku.com/?s={search_query}"
         html_text = await http.get(search_url)
-        soup = bs4.BeautifulSoup(html_text.text, "html.parser")
+        if html_text.status_code == 500:
+            await message.reply(strings["unknown_search_err"])
+            return
+
+        soup = bs4.BeautifulSoup(html_text.text, "lxml")
         search_result = soup.find_all("h2", {"class": "post-title"})
 
         if search_result:
@@ -317,7 +342,11 @@ async def site_search(message, strings, site: str):
     elif site == "kayo":
         search_url = f"https://animekayo.com/?s={search_query}"
         html_text = await http.get(search_url)
-        soup = bs4.BeautifulSoup(html_text.text, "html.parser")
+        if html_text.status_code == 500:
+            await message.reply(strings["unknown_search_err"])
+            return
+
+        soup = bs4.BeautifulSoup(html_text.text, "lxml")
         search_result = soup.find_all("h2", {"class": "title"})
 
         result = strings["search_kayo"].format(query=html.escape(search_query))
@@ -339,7 +368,7 @@ async def site_search(message, strings, site: str):
     if more_results:
         await message.reply(result, reply_markup=buttons, disable_web_page_preview=True)
     else:
-        await message.reply(result)
+        await message.reply(result, disable_web_page_preview=True)
 
 
 @register(cmds="kaizoku")

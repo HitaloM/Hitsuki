@@ -263,5 +263,5 @@ A module with some useful commands but without a specific category.
 - /id: get the current group id. If used by replying to a message, gets that user's id.
 - /info: get information about a user.
 - /afk (reason): Mark yourself as AFK. When marked as AFK, any mentions will be replied to with a message stating that you're not available!
-- /paste (text) or reply: Paste a text into <code>nekobim.com</code>.
+- /paste (text) or reply: Paste a text into <code>nekobin.com</code>.
 """
