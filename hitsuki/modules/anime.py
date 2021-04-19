@@ -322,7 +322,7 @@ async def site_search(message, strings, site: str):
     if site == "kaizoku":
         search_url = f"https://animekaizoku.com/?s={search_query}"
         html_text = await http.get(search_url)
-        if html_text.status_code == 500:
+        if html_text.status_code in (500, 521):
             await message.reply(strings["unknown_search_err"])
             return
 
@@ -342,7 +342,7 @@ async def site_search(message, strings, site: str):
     elif site == "kayo":
         search_url = f"https://animekayo.com/?s={search_query}"
         html_text = await http.get(search_url)
-        if html_text.status_code == 500:
+        if html_text.status_code in (500, 521):
             await message.reply(strings["unknown_search_err"])
             return
 
