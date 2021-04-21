@@ -204,9 +204,9 @@ async def variants(message, strings):
 @disableable_dec("magisk")
 @get_strings_dec("android")
 async def magisk(message, strings):
-    url = "https://raw.githubusercontent.com/topjohnwu/magisk_files/"
+    url = "https://raw.githubusercontent.com/topjohnwu/magisk-files/"
     releases = strings["magisk"]
-    variant = ["master/stable", "master/beta", "canary/canary"]
+    variant = ["master/stable", "master/beta", "master/canary"]
     for variants in variant:
         fetch = await http.get(url + variants + ".json")
 
@@ -217,32 +217,13 @@ async def magisk(message, strings):
         data = json.loads(fetch.content)
         if variants == "master/stable":
             name = "<b>Stable</b>"
-            cc = 0
-            branch = "master"
         elif variants == "master/beta":
             name = "<b>Beta</b>"
-            cc = 0
-            branch = "master"
-        elif variants == "canary/canary":
+        elif variants == "master/canary":
             name = "<b>Canary</b>"
-            cc = 1
-            branch = "canary"
 
-        if variants == "canary/canary":
-            releases += f'{name}: <a href="{url}{branch}/{data["magisk"]["link"]}">v{data["magisk"]["version"]}</a> (<code>{data["magisk"]["versionCode"]}</code>) | '
-        else:
-            releases += f'{name}: <a href="{data["magisk"]["link"]}">v{data["magisk"]["version"]}</a> (<code>{data["magisk"]["versionCode"]}</code>) | '
-
-        if cc == 1:
-            releases += (
-                f'<a href="{url}{branch}/{data["uninstaller"]["link"]}">Uninstaller</a> | '
-                f'<a href="{url}{branch}/{data["magisk"]["note"]}">Changelog</a>\n'
-            )
-        else:
-            releases += (
-                f'<a href="{data["uninstaller"]["link"]}">Uninstaller</a>\n'
-                f'<a href="{data["magisk"]["note"]}">Changelog</a>\n'
-            )
+        releases += f'{name}: <a href="{data["magisk"]["link"]}">v{data["magisk"]["version"]}</a> (<code>{data["magisk"]["versionCode"]}</code>) | '
+        releases += f'<a href="{data["magisk"]["note"]}">Changelog</a>\n'
 
     await message.reply(releases, disable_web_page_preview=True)
 
