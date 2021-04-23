@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
+import html
 
 from hitsuki.decorator import register
 from hitsuki.services.mongo import db
@@ -50,7 +51,7 @@ async def afk(message, strings):
 
     await db.afk.insert_one({"user": user["user_id"], "reason": reason})
     text = strings["is_afk"].format(
-        user=(await get_user_link(user["user_id"])), reason=reason
+        user=(await get_user_link(user["user_id"])), reason=html.escape(reason)
     )
     await message.reply(text)
 
@@ -82,6 +83,7 @@ async def check_afk(message, strings):
     if user_afk:
         await message.reply(
             strings["is_afk"].format(
-                user=(await get_user_link(user["user_id"])), reason=user_afk["reason"]
+                user=(await get_user_link(user["user_id"])),
+                reason=html.escape(user_afk["reason"]),
             )
         )
