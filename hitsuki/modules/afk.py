@@ -56,7 +56,7 @@ async def afk(message, strings):
     await message.reply(text)
 
 
-@register()
+@register(f="text", allow_edited=False)
 @get_strings_dec("afk")
 async def check_afk(message, strings):
     if bool(message.reply_to_message):
