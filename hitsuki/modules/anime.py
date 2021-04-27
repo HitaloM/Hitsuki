@@ -24,6 +24,7 @@ from markdown import markdown
 from jikanpy import AioJikan
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.utils.markdown import quote_html
 
 from hitsuki.decorator import register
 from .utils.disable import disableable_dec

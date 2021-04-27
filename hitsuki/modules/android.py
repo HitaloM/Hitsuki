@@ -53,7 +53,7 @@ async def los(message, strings):
     fetch = await http.get(f"https://download.lineageos.org/api/v1/{device}/nightly/*")
     if fetch.status_code == 200 and len(fetch.json()["response"]) != 0:
         usr = json.loads(fetch.content)
-        response = usr["response"][0]
+        response = usr["response"][-1]
         filename = response["filename"]
         url = response["url"]
         buildsize_a = response["size"]
