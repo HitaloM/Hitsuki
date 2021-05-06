@@ -687,7 +687,7 @@ async def fed_ban_user(message, fed, user, reason, strings):
                 'origin_fed': fed['fed_id'],
                 'by': message.from_user.id
             }
-            for chat_id in s_fed['chats']:
+            for chat_id in s_fed.get('chats', []):
                 if not user:
                     continue
 

@@ -324,7 +324,7 @@ async def search_in_note(message, chat, strings):
     return await message.reply(text)
 
 
-@register(cmds=['clear', 'delnote'])
+@register(cmds=['clear', 'delnote'], user_admin=True)
 @chat_connection(admin=True)
 @need_args_dec()
 @get_strings_dec('notes')
@@ -364,7 +364,7 @@ async def clear_note(message, chat, strings):
         await message.reply(strings['note_removed'].format(note_name=note_name, chat_name=chat['chat_title']))
 
 
-@register(cmds='clearall')
+@register(cmds='clearall', user_admin=True)
 @chat_connection(admin=True)
 @get_strings_dec('notes')
 async def clear_all_notes(message, chat, strings):
