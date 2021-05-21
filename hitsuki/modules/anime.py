@@ -16,21 +16,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import re
-import bs4
 import html
-import anilist
-from markdown import markdown
-from jikanpy import AioJikan
+import re
 
+import anilist
+import bs4
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.markdown import quote_html
+from jikanpy import AioJikan
+from markdown import markdown
 
 from hitsuki.decorator import register
+
 from .utils.disable import disableable_dec
-from .utils.message import get_args_str, need_args_dec
-from .utils.language import get_strings_dec
 from .utils.http import http
+from .utils.language import get_strings_dec
+from .utils.message import get_args_str, need_args_dec
 
 
 def t(milliseconds: int) -> str:
@@ -51,7 +52,7 @@ def t(milliseconds: int) -> str:
 
 
 def markdown_to_text(markdown_string: str) -> str:
-    """ Converts a markdown string to plaintext """
+    """Converts a markdown string to plaintext"""
 
     # md -> html -> text since BeautifulSoup can extract text cleanly
     html = markdown(markdown_string)
