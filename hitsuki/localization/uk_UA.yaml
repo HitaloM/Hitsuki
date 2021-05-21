@@ -746,3 +746,8 @@ STRINGS:
     is_afk: "{user} is AFK!\nReason: {reason}"
     unafk: "{user} is not AFK anymore!"
     afk_anon: "AFK mode cannot be used as an anonymous administrator."
+  direct_links:
+    cmd_example: "<b>Usage:</b> <code>/{cmd} (url)</code>"
+    no_link: "No links found!"
+    no_sf_link: "No SourceForge links found\n"
+    sf_link_error: "Something is wrong in this link! Check and try again..."

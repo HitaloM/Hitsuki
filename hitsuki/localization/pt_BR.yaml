@@ -704,7 +704,7 @@ STRINGS:
     of_invalid_type: "'<b>{build_type}</b>' não é um tipo de compilação disponível, os tipos são apenas '<b>beta</b>' ou '<b>stable</b>'."
     of_stable_ex: "Para obter a versão mais recente do stable use <code>/ofox (codinome)</code>, por exemplo: <code>/ofox raphael</code>"
     of_beta_ex: "Para obter a última versão Beta use <code>/ofox (codinome) beta</code>, por exemplo: <code>/ofox raphael beta</code>"
-    of_no_releases: "Não há nenhuma release '<b>{build_type}</b>para <b>{device}</b>."
+    of_no_releases: "Não há nenhuma build '<b>{build_type}</b>' para <b>{device}</b>."
     of_device_page: "Página do dispositivo"
     of_header: "<u><b>OrangeFox Recovery <i>{build_type}</i> release</b></u>\n"
     of_device: "  <b>Dispositivo:</b> {fullname} (<code>{codename}</code>)\n"
@@ -744,3 +744,8 @@ STRINGS:
     is_afk: "{user} está AFK!\nMotivo: {reason}"
     unafk: "{user} não está mais AFK!"
     afk_anon: "Modo AFK não pode ser usado como um administrador anônimo."
+  direct_links:
+    cmd_example: "<b>Usage:</b> <code>/{cmd} (url)</code>"
+    no_link: "No links found!"
+    no_sf_link: "No SourceForge links found\n"
+    sf_link_error: "Something is wrong in this link! Check and try again..."
