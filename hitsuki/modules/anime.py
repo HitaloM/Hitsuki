@@ -18,7 +18,6 @@
 
 import html
 import re
-from contextlib import suppress
 
 import anilist
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -64,10 +63,11 @@ async def anilist_anime(message, strings):
     if query.isdecimal():
         anime_id = int(query)
     else:
-        async with anilist.AsyncClient() as client:
-            results = await client.search(query, "anime", 1)
-            anime_id = results[0].id
-        with suppress(IndexError):
+        try:
+            async with anilist.AsyncClient() as client:
+                results = await client.search(query, "anime", 1)
+                anime_id = results[0].id
+        except IndexError:
             return await message.reply(strings["search_err"])
 
     async with anilist.AsyncClient() as client:
@@ -134,10 +134,11 @@ async def anilist_airing(message, strings):
     if query.isdecimal():
         anime_id = int(query)
     else:
-        async with anilist.AsyncClient() as client:
-            results = await client.search(query, "anime", 1)
-            anime_id = results[0].id
-        with suppress(IndexError):
+        try:
+            async with anilist.AsyncClient() as client:
+                results = await client.search(query, "anime", 1)
+                anime_id = results[0].id
+        except IndexError:
             return await message.reply(strings["search_err"])
 
     async with anilist.AsyncClient() as client:
@@ -175,10 +176,11 @@ async def anilist_manga(message, strings):
     if query.isdecimal():
         manga_id = int(query)
     else:
-        async with anilist.AsyncClient() as client:
-            results = await client.search(query, "manga", 1)
-            manga_id = results[0].id
-        with suppress(IndexError):
+        try:
+            async with anilist.AsyncClient() as client:
+                results = await client.search(query, "manga", 1)
+                manga_id = results[0].id
+        except IndexError:
             return await message.reply(strings["search_err"])
 
     async with anilist.AsyncClient() as client:
@@ -235,10 +237,11 @@ async def anilist_character(message, strings):
     if query.isdecimal():
         character_id = int(query)
     else:
-        async with anilist.AsyncClient() as client:
-            results = await client.search(query, "char", 1)
-            character_id = results[0].id
-        with suppress(IndexError):
+        try:
+            async with anilist.AsyncClient() as client:
+                results = await client.search(query, "char", 1)
+                character_id = results[0].id
+        except IndexError:
             return await message.reply(strings["search_err"])
 
     async with anilist.AsyncClient() as client:

@@ -46,7 +46,7 @@ async def direct_link_generator(message, strings):
 
     for link in links:
         if "sourceforge.net" in link:
-            reply.append(sourceforge(link, strings))
+            reply.append(await sourceforge(link, strings))
         else:
             reply.append(
                 re.findall(r"\bhttps?://(.*?[^/]+)", link)[0] + " is not supported"
