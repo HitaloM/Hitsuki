@@ -744,7 +744,7 @@ STRINGS:
     is_afk: "{user} está AFK!\nMotivo: {reason}"
     unafk: "{user} não está mais AFK!"
     afk_anon: "Modo AFK não pode ser usado como um administrador anônimo."
-  dirwct_links:
+  direct_links:
     cmd_example: "<b>Usage:</b> <code>/{cmd} (url)</code>"
     no_link: "No links found!"
     no_sf_link: "No SourceForge links found\n"
