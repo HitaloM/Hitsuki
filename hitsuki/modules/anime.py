@@ -266,7 +266,8 @@ async def anilist_character(message, strings):
 
     text = f"<b>{character.name.full}</b> (<code>{character.name.native}</code>)"
     text += strings["id"].format(id=character.id)
-    text += strings["favorites"].format(favs=character.favorites)
+    if hasattr(character, "favorites"):
+        text += strings["favorites"].format(favs=character.favorites)
     if hasattr(character, "description"):
         text += f"\n\n{desc}"
 
