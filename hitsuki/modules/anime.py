@@ -20,9 +20,9 @@ import html
 import re
 
 import anilist
-import bs4
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.markdown import quote_html
+from bs4 import BeautifulSoup
 from jikanpy import AioJikan
 from markdown import markdown
 
@@ -35,8 +35,12 @@ from .utils.message import get_args_str, need_args_dec
 
 
 def t(milliseconds: int) -> str:
-    """Inputs time in milliseconds,
-    to get beautified time, as string"""
+    """
+    Inputs time in milliseconds, to get beautified time, as string.
+
+    Arguments:
+        `milliseconds`: time in milliseconds.
+    """
     seconds, milliseconds = divmod(int(milliseconds), 1000)
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
@@ -49,23 +53,6 @@ def t(milliseconds: int) -> str:
         + ((str(milliseconds) + " ms, ") if milliseconds else "")
     )
     return tmp[:-2]
-
-
-def markdown_to_text(markdown_string: str) -> str:
-    """Converts a markdown string to plaintext"""
-
-    # md -> html -> text since BeautifulSoup can extract text cleanly
-    html = markdown(markdown_string)
-
-    # remove code snippets
-    html = re.sub(r"<pre>(.*?)</pre>", " ", html)
-    html = re.sub(r"<code>(.*?)</code >", " ", html)
-
-    # extract text
-    soup = bs4.BeautifulSoup(html, "html.parser")
-    text = "".join(soup.findAll(text=True))
-
-    return text
 
 
 @register(cmds="anime")
@@ -268,14 +255,16 @@ async def anilist_character(message, strings):
         )
 
     if hasattr(character, "description"):
+        desc = character.description
+        desc = desc.replace("__", "")
+        desc = desc.replace("**", "")
+        desc = desc.replace("~", "")
+        desc = re.sub(re.compile(r"<.*?>"), "", desc)
         if len(character.description) > 700:
-            desc = strings["char_desc"].format(
-                desc=f"{markdown_to_text(character.description)[0:500]}[...]"
-            )
+            desc = desc[0:500] + "[...]"
+            desc = strings["char_desc"].format(desc=desc)
         else:
-            desc = strings["char_desc"].format(
-                desc=markdown_to_text(character.description)
-            )
+            desc = strings["char_desc"].format(desc=desc)
 
     text = f"<b>{character.name.full}</b> (<code>{character.name.native}</code>)"
     text += strings["id"].format(id=character.id)
@@ -328,7 +317,7 @@ async def site_search(message, strings, site: str):
             await message.reply(strings["unknown_search_err"])
             return
 
-        soup = bs4.BeautifulSoup(html_text.text, "lxml")
+        soup = BeautifulSoup(html_text.text, "lxml")
         search_result = soup.find_all("h2", {"class": "post-title"})
 
         if search_result:
@@ -348,7 +337,7 @@ async def site_search(message, strings, site: str):
             await message.reply(strings["unknown_search_err"])
             return
 
-        soup = bs4.BeautifulSoup(html_text.text, "lxml")
+        soup = BeautifulSoup(html_text.text, "lxml")
         search_result = soup.find_all("h2", {"class": "title"})
 
         result = strings["search_kayo"].format(query=html.escape(search_query))
