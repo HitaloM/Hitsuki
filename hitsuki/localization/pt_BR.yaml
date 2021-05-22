@@ -735,11 +735,6 @@ STRINGS:
     manga_start: "<b>Data:</b> <code>{date}</code>\n"
     manga_chapters: "<b>Capítulos:</b> <code>{chapters}</code>\n"
     manga_volumes: "<b>Volumes:</b> <code>{vol}</code>\n"
-    search_kaizoku: "<b>Resultados da pesquisa para</b> <code>{query}</code> <b>em</b> <code>AnimeKaizoku</code>:\n"
-    kaizoku_err: "<b>Nenhum resultado encontrado para</b> <code>{query}</code> <b>em</b> <code>AnimeKaizoku</code>"
-    search_kayo: "<b>Resultados da pesquisa para</b> <code>{query}</code> <b>em</b> <code>AnimeKayo</code>:\n"
-    kayo_err: "<b>Nenhum resultado encontrado para</b> <code>{query}</code> <b>em</b> <code>AnimeKayo</code>"
-    all_results: "Ver todos os resultados"
   afk:
     is_afk: "{user} está AFK!\nMotivo: {reason}"
     unafk: "{user} não está mais AFK!"
