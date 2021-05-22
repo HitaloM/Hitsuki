@@ -735,11 +735,6 @@ STRINGS:
     manga_start: "<b>תאריך:</b> <code>{date}</code>\n"
     manga_chapters: "<b>Chapters:</b> <code>{chapters}</code>\n"
     manga_volumes: "<b>Volumes:</b> <code>{vol}</code>\n"
-    search_kaizoku: "<b>Search results for</b> <code>{query}</code> <b>on</b> <code>AnimeKaizoku</code>:\n"
-    kaizoku_err: "<b>No result found for</b> <code>{query}</code> <b>on</b> <code>AnimeKaizoku</code>"
-    search_kayo: "<b>Search results for</b> <code>{query}</code> <b>on</b> <code>AnimeKayo</code>:\n"
-    kayo_err: "<b>No result found for</b> <code>{query}</code> <b>on</b> <code>AnimeKayo</code>"
-    all_results: "הצג את כל התוצאות"
   afk:
     is_afk: "{user} is AFK!\nReason: {reason}"
     unafk: "{user} is not AFK anymore!"
