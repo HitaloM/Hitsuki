@@ -21,13 +21,11 @@ import re
 
 import anilist
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from bs4 import BeautifulSoup
 from jikanpy import AioJikan
 
 from hitsuki.decorator import register
 
 from .utils.disable import disableable_dec
-from .utils.http import http
 from .utils.language import get_strings_dec
 from .utils.message import get_args_str, need_args_dec
 
@@ -305,78 +303,6 @@ async def upcoming(message):
     await message.reply(upcoming_message)
 
 
-async def site_search(message, strings, site: str):
-    search_query = get_args_str(message)
-    more_results = True
-
-    if site == "kaizoku":
-        search_url = f"https://animekaizoku.com/?s={search_query}"
-        html_text = await http.get(search_url)
-        if html_text.status_code in (500, 521):
-            await message.reply(strings["unknown_search_err"])
-            return
-
-        soup = BeautifulSoup(html_text.text, "lxml")
-        search_result = soup.find_all("h2", {"class": "post-title"})
-
-        if search_result:
-            result = strings["search_kaizoku"].format(query=html.escape(search_query))
-            for entry in search_result:
-                post_link = entry.a["href"]
-                post_name = html.escape(entry.text)
-                result += f"• <a href='{post_link}'>{post_name}</a>\n"
-        else:
-            more_results = False
-            result = strings["kaizoku_err"].format(query=html.escape(search_query))
-
-    elif site == "kayo":
-        search_url = f"https://animekayo.com/?s={search_query}"
-        html_text = await http.get(search_url)
-        if html_text.status_code in (500, 521):
-            await message.reply(strings["unknown_search_err"])
-            return
-
-        soup = BeautifulSoup(html_text.text, "lxml")
-        search_result = soup.find_all("h2", {"class": "title"})
-
-        result = strings["search_kayo"].format(query=html.escape(search_query))
-        for entry in search_result:
-
-            if entry.text.strip() == "Nothing Found":
-                result = strings["kayo_err"].format(query=html.escape(search_query))
-                more_results = False
-                break
-
-            post_link = entry.a["href"]
-            post_name = html.escape(entry.text.strip())
-            result += f"• <a href='{post_link}'>{post_name}</a>\n"
-
-    buttons = InlineKeyboardMarkup().add(
-        InlineKeyboardButton(text=strings["all_results"], url=search_url)
-    )
-
-    if more_results:
-        await message.reply(result, reply_markup=buttons, disable_web_page_preview=True)
-    else:
-        await message.reply(result, disable_web_page_preview=True)
-
-
-@register(cmds="kaizoku")
-@need_args_dec()
-@disableable_dec("kaizoku")
-@get_strings_dec("anime")
-async def kaizoku(message, strings):
-    await site_search(message, strings, "kaizoku")
-
-
-@register(cmds="kayo")
-@need_args_dec()
-@disableable_dec("kayo")
-@get_strings_dec("anime")
-async def kayo(message, strings):
-    await site_search(message, strings, "kayo")
-
-
 __mod_name__ = "Anime"
 
 __help__ = """
@@ -387,7 +313,5 @@ Get information about anime, manga or anime characters.
 - /manga (manga): returns information about the manga.
 - /airing (anime): returns anime airing info.
 - /character (character): returns information about the character.
-- /kaizoku (anime): search an anime on animekaizoku.com
-- /kayo (anime): search an anime on animekayo.com
 - /upcoming: returns a list of new anime in the upcoming seasons.
 """
