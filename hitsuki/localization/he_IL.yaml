@@ -684,6 +684,8 @@ STRINGS:
     version: "<b>גרסה:</b> <code>{version}</code>\n"
     android_version: "<b>גרסת אנדרואיד:</b> <code>{version}</code>\n"
     maintainer: "<b>Maintainer:</b> {name}\n"
+    release_time: "<b>Date:</b> <code>{date}</code>\n"
+    build_type: "<b>Type:</b> {type}\n"
     whatis: "<b>{device}</b> is <code>{brand} {name}</code>\n"
     variants: "<b>דגם</b>: <code>{model}</code> \n<b>שם:</b> <code>{name}</code>\n\n"
     magisk: "<b>Latest Magisk Releases:</b>\n"
