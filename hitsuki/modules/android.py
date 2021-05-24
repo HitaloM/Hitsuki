@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
+from babel.dates import format_datetime
 
 import rapidjson as json
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -64,6 +65,49 @@ async def los(message, strings):
         text = (strings["download"]).format(url=url, filename=filename)
         text += (strings["build_size"]).format(size=buildsize_b)
         text += (strings["version"]).format(version=version)
+
+        btn = strings["dl_btn"]
+        keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
+        await message.reply(text, reply_markup=keyboard, disable_web_page_preview=True)
+        return
+
+    else:
+        text = strings["err_query"]
+    await message.reply(text, disable_web_page_preview=True)
+
+
+@register(cmds=["statix", "sxos"])
+@disableable_dec("statix")
+@get_strings_dec("android")
+async def statix(message, strings):
+
+    try:
+        device = get_arg(message)
+    except IndexError:
+        device = ""
+
+    if device == "":
+        text = strings["cmd_example"].format(cmd=get_cmd(message))
+        await message.reply(text, disable_web_page_preview=True)
+        return
+
+    fetch = await http.get(f"https://downloads.statixos.com/json/{device}.json")
+    if fetch.status_code == 200 and len(fetch.json()["response"]) != 0:
+        usr = json.loads(fetch.content)
+        response = usr["response"]
+        filename = response[0]["filename"]
+        url = response[0]["url"]
+        buildsize_a = response[0]["size"]
+        buildsize_b = convert_size(int(buildsize_a))
+        version = response[0]["version"]
+        build_time = response[0]["datetime"]
+        romtype = response[0]["romtype"]
+
+        text = (strings["download"]).format(url=url, filename=filename)
+        text += (strings["build_type"]).format(type=romtype)
+        text += (strings["build_size"]).format(size=buildsize_b)
+        text += (strings["version"]).format(version=version)
+        text += (strings["release_time"]).format(date=format_datetime(build_time))
 
         btn = strings["dl_btn"]
         keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
@@ -520,8 +564,9 @@ __help__ = """
 Module specially made for Android users.
 
 <b>Device Specific ROM for a device</b>
-- /evo (device): Get the latest Evolution X ROM for a device
-- /los (device): Get the latest LineageOS ROM for a device
+- /evo (device): Get the latest Evolution X ROM for a device.
+- /los (device): Get the latest LineageOS ROM for a device.
+- /statix (device): Get the latest StatixOS ROM for a device.
 
 <b>GSI</b>
 - /phh: Get the latest PHH AOSP GSIs.

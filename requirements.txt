@@ -20,7 +20,6 @@ envparse
 hypercorn
 aiocron
 apscheduler
-requests
 python-rapidjson
 PyYAML>5.0
 coloredlogs
