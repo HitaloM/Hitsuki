@@ -37,7 +37,7 @@ from .utils.message import get_arg, get_cmd
 # Commands /twrp, /samcheck and /samget ported from Samsung Geeks
 
 
-@register(cmds="los")
+@register(cmds=["los", "lineageos"])
 @disableable_dec("los")
 @get_strings_dec("android")
 async def los(message, strings):
@@ -117,6 +117,75 @@ async def statix(message, strings):
     else:
         text = strings["err_query"]
     await message.reply(text, disable_web_page_preview=True)
+
+
+@decorator.register(cmds=["crdroid", "crd"])
+@disableable_dec("crdroid")
+@get_strings_dec("android")
+async def crdroid(message, strings):
+
+    try:
+        device = get_arg(message)
+    except IndexError:
+        device = ""
+
+    if device == "x00t":
+        device = "X00T"
+
+    if device == "x01bd":
+        device = "X01BD"
+
+    if device == "":
+        text = strings["cmd_example"].format(cmd=get_cmd(message))
+        await message.reply(text, disable_web_page_preview=True)
+        return
+
+    fetch = await http.get(
+        f"https://raw.githubusercontent.com/crdroidandroid/android_vendor_crDroidOTA/11.0/{device}.json"
+    )
+
+    if fetch.status_code in [500, 504, 505]:
+        await message.reply(strings["err_github"])
+        return
+
+    if fetch.status_code == 200:
+        try:
+            usr = json.loads(fetch.content)
+            response = usr["response"]
+            filename = response[0]["filename"]
+            url = response[0]["download"]
+            version = response[0]["version"]
+            maintainer = response[0]["maintainer"]
+            size_a = response[0]["size"]
+            size_b = convert_size(int(size_a))
+            build_time = response[0]["timestamp"]
+            romtype = response[0]["buildtype"]
+
+            text = (strings["download"]).format(url=url, filename=filename)
+            text += (strings["build_type"]).format(type=romtype)
+            text += (strings["build_size"]).format(size=size_b)
+            text += (strings["version"]).format(version=version)
+            text += (strings["release_time"]).format(date=format_datetime(build_time))
+            text += (strings["maintainer"]).format(name=maintainer)
+
+            btn = strings["dl_btn"]
+            keyboard = InlineKeyboardMarkup().add(
+                InlineKeyboardButton(text=btn, url=url)
+            )
+            await message.reply(
+                text, reply_markup=keyboard, disable_web_page_preview=True
+            )
+            return
+
+        except ValueError:
+            text = strings["err_ota"]
+            await message.reply(text, disable_web_page_preview=True)
+            return
+
+    elif fetch.status_code == 404:
+        text = strings["err_query"]
+        await message.reply(text, disable_web_page_preview=True)
+        return
 
 
 @decorator.register(cmds=["evo", "evox"])
@@ -567,6 +636,7 @@ Module specially made for Android users.
 - /evo (device): Get the latest Evolution X ROM for a device.
 - /los (device): Get the latest LineageOS ROM for a device.
 - /statix (device): Get the latest StatixOS ROM for a device.
+- /crdroid (device): Get the latest crDroid ROM for a device.
 
 <b>GSI</b>
 - /phh: Get the latest PHH AOSP GSIs.
