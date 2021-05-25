@@ -49,7 +49,7 @@ async def los(message, strings):
 
     if device == "":
         text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text, disable_web_page_preview=True)
+        await message.reply(text)
         return
 
     fetch = await http.get(f"https://download.lineageos.org/api/v1/{device}/nightly/*")
@@ -61,10 +61,14 @@ async def los(message, strings):
         buildsize_a = response["size"]
         buildsize_b = convert_size(int(buildsize_a))
         version = response["version"]
+        build_time = response["datetime"]
+        romtype = response["romtype"]
 
         text = (strings["download"]).format(url=url, filename=filename)
+        text += (strings["build_type"]).format(type=romtype)
         text += (strings["build_size"]).format(size=buildsize_b)
         text += (strings["version"]).format(version=version)
+        text += (strings["release_time"]).format(date=format_datetime(build_time))
 
         btn = strings["dl_btn"]
         keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
@@ -73,7 +77,7 @@ async def los(message, strings):
 
     else:
         text = strings["err_query"]
-    await message.reply(text, disable_web_page_preview=True)
+    await message.reply(text)
 
 
 @register(cmds="pe")
@@ -94,7 +98,7 @@ async def pixel_experience(message, strings):
 
     if device == "":
         text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text, disable_web_page_preview=True)
+        await message.reply(text)
         return
 
     fetch = await http.get(
@@ -119,12 +123,12 @@ async def pixel_experience(message, strings):
 
         btn = strings["dl_btn"]
         keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
-        await message.reply(text, reply_markup=keyboard, disable_web_page_preview=True)
+        await message.reply(text, reply_markup=keyboard)
         return
 
     else:
         text = strings["err_query"]
-    await message.reply(text, disable_web_page_preview=True)
+    await message.reply(text)
 
 
 @register(cmds=["statix", "sxos"])
@@ -139,7 +143,7 @@ async def statix(message, strings):
 
     if device == "":
         text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text, disable_web_page_preview=True)
+        await message.reply(text)
         return
 
     fetch = await http.get(f"https://downloads.statixos.com/json/{device}.json")
@@ -167,7 +171,7 @@ async def statix(message, strings):
 
     else:
         text = strings["err_query"]
-    await message.reply(text, disable_web_page_preview=True)
+    await message.reply(text)
 
 
 @decorator.register(cmds=["crdroid", "crd"])
@@ -188,7 +192,7 @@ async def crdroid(message, strings):
 
     if device == "":
         text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text, disable_web_page_preview=True)
+        await message.reply(text)
         return
 
     fetch = await http.get(
@@ -230,12 +234,12 @@ async def crdroid(message, strings):
 
         except ValueError:
             text = strings["err_ota"]
-            await message.reply(text, disable_web_page_preview=True)
+            await message.reply(text)
             return
 
     elif fetch.status_code == 404:
         text = strings["err_query"]
-        await message.reply(text, disable_web_page_preview=True)
+        await message.reply(text)
         return
 
 
@@ -257,7 +261,7 @@ async def evo(message, strings):
 
     if device == "":
         text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text, disable_web_page_preview=True)
+        await message.reply(text)
         return
 
     fetch = await http.get(
@@ -297,12 +301,12 @@ async def evo(message, strings):
 
         except ValueError:
             text = strings["err_ota"]
-            await message.reply(text, disable_web_page_preview=True)
+            await message.reply(text)
             return
 
     elif fetch.status_code == 404:
         text = strings["err_query"]
-        await message.reply(text, disable_web_page_preview=True)
+        await message.reply(text)
         return
 
 
@@ -321,7 +325,6 @@ async def whatis(message, strings):
         name = data["name"]
         device = data["device"]
         brand = data["brand"]
-        model = data["model"]
     else:
         text = strings["err_query"]
         await message.reply(text)
@@ -415,7 +418,7 @@ async def phh(message, strings):
         except IndexError:
             continue
 
-    await message.reply(text)
+    await message.reply(text, disable_web_page_preview=True)
 
 
 @register(cmds="phhmagisk")
@@ -438,6 +441,7 @@ async def phh_magisk(message, strings):
             url = usr["assets"][i]["browser_download_url"]
             tag = usr["tag_name"]
             size_bytes = usr["assets"][i]["size"]
+            text += strings["download"].format(url=url, filename=name)
             text += strings["phh_tag"].format(tag=tag)
             text += strings["phh_size"].format(size=convert_size(int(size_bytes)))
             btn = strings["dl_btn"]
@@ -446,7 +450,6 @@ async def phh_magisk(message, strings):
             continue
 
     await message.reply(text, reply_markup=button)
-    return
 
 
 @register(cmds="twrp")
@@ -675,7 +678,6 @@ async def orangefox(message, strings):
     url = release["mirrors"]["DL"]
     button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
     await message.reply(text, reply_markup=button, disable_web_page_preview=True)
-    return
 
 
 __mod_name__ = "Android"

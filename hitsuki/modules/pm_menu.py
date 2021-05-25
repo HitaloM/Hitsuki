@@ -114,7 +114,7 @@ async def help_cmd_g(message, strings):
 @get_strings_dec('pm_menu')
 async def helpmenu_callback(query, strings, callback_data=None, **kwargs):
     mod = callback_data['mod']
-    if not mod in MOD_HELP:
+    if mod not in MOD_HELP:
         await query.answer()
         return
     msg = strings["help_for"].format(mod_name=mod)
