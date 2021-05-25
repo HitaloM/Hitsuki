@@ -76,6 +76,57 @@ async def los(message, strings):
     await message.reply(text, disable_web_page_preview=True)
 
 
+@register(cmds="pe")
+@disableable_dec("pe")
+@get_strings_dec("android")
+async def pixel_experience(message, strings):
+
+    try:
+        args = message.text.split()
+        device = args[1]
+    except IndexError:
+        device = ""
+
+    try:
+        atype = args[2].lower()
+    except IndexError:
+        atype = "eleven"
+
+    if device == "":
+        text = strings["cmd_example"].format(cmd=get_cmd(message))
+        await message.reply(text, disable_web_page_preview=True)
+        return
+
+    fetch = await http.get(
+        f"https://download.pixelexperience.org/ota_v5/{device}/{atype}"
+    )
+    if fetch.status_code == 200:
+        response = json.loads(fetch.content)
+        if response["error"]:
+            await message.reply(strings["err_query"])
+            return
+        filename = response["filename"]
+        url = response["url"]
+        buildsize_a = response["size"]
+        buildsize_b = convert_size(int(buildsize_a))
+        version = response["version"]
+        build_time = response["datetime"]
+
+        text = (strings["download"]).format(url=url, filename=filename)
+        text += (strings["build_size"]).format(size=buildsize_b)
+        text += (strings["version"]).format(version=version)
+        text += (strings["release_time"]).format(date=format_datetime(build_time))
+
+        btn = strings["dl_btn"]
+        keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
+        await message.reply(text, reply_markup=keyboard, disable_web_page_preview=True)
+        return
+
+    else:
+        text = strings["err_query"]
+    await message.reply(text, disable_web_page_preview=True)
+
+
 @register(cmds=["statix", "sxos"])
 @disableable_dec("statix")
 @get_strings_dec("android")
@@ -637,6 +688,7 @@ Module specially made for Android users.
 - /los (device): Get the latest LineageOS ROM for a device.
 - /statix (device): Get the latest StatixOS ROM for a device.
 - /crdroid (device): Get the latest crDroid ROM for a device.
+- /pe (device) (?android version): Get the latest Pixel Experience ROM for a device.
 
 <b>GSI</b>
 - /phh: Get the latest PHH AOSP GSIs.
