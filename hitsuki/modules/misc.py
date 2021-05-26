@@ -111,7 +111,7 @@ async def paste_neko(message, strings, **kwargs):
         return
 
     url = "https://nekobin.com/api/documents"
-    resp = await http.post(url, data={'content': data})
+    resp = await http.post(url, json={'content': data})
 
     if resp.status_code == 201:
         response = resp.json()
