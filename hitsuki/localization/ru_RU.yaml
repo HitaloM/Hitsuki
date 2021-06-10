@@ -149,8 +149,8 @@ STRINGS:
     help_txt: "Нажмите кнопку ниже для помощи!"
     github_err: "User not found. Make sure you entered valid username!"
     paste_success: "<b>Pasted successfully!</b>\nNekobin URL: {}"
-    paste_fail: "Failed to reach Nekobin!"
-    paste_no_text: "You haven't supplied text to paste!"
+    paste_fail: "Проблема соединения с Dogbin!"
+    paste_no_text: "Вы не указали текст для вставки!"
     delmsg_filter_title: 'Удалить сообщение'
     send_text: Пожалуйста, отправьте в ответ слово/предложение !
     replymsg_filter_title: 'Ответить на сообщение'
