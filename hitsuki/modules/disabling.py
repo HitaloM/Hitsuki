@@ -158,13 +158,7 @@ async def __export__(chat_id):
 
 
 async def __import__(chat_id, data):
-    new = []
-    for cmd in data:
-        if cmd not in DISABLABLE_COMMANDS:
-            continue
-
-        new.append(cmd)
-
+    new = [cmd for cmd in data if cmd in DISABLABLE_COMMANDS]
     await db.disabled.update_one(
         {'chat_id': chat_id},
         {'$set': {'cmds': new}},

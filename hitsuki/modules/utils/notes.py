@@ -61,11 +61,7 @@ def tparse_ent(ent, text, as_html=True):
     if sys.maxunicode == 0xffff:
         return text[offset:offset + length]
 
-    if not isinstance(text, bytes):
-        entity_text = text.encode('utf-16-le')
-    else:
-        entity_text = text
-
+    entity_text = text.encode('utf-16-le') if not isinstance(text, bytes) else text
     entity_text = entity_text[offset * 2:(offset + length) * 2].decode('utf-16-le')
 
     if etype == 'bold':
@@ -104,11 +100,7 @@ def get_parsed_msg(message):
     text = message.caption or message.text
 
     mode = get_msg_parse(text)
-    if mode == 'html':
-        as_html = True
-    else:
-        as_html = False
-
+    as_html = mode == 'html'
     entities = message.caption_entities or message.entities
 
     if not entities:
@@ -125,11 +117,9 @@ def get_parsed_msg(message):
 
         if sys.maxunicode == 0xffff:
             part = text[offset:entity.offset]
-            result += part + entity_text
         else:
             part = text[offset * 2:entity.offset * 2].decode('utf-16-le')
-            result += part + entity_text
-
+        result += part + entity_text
         offset = entity.offset + entity.length
 
     if sys.maxunicode == 0xffff:
@@ -171,22 +161,17 @@ def parse_button(data, name):
     args = raw_button[1]
 
     if action in BUTTONS:
-        text = f"\n[{name}](btn{action}:{args}*!repl!*)"
+        return f"\n[{name}](btn{action}:{args}*!repl!*)"
+    elif args:
+        return f'\n[{name}].(btn{action}:{args})'
     else:
-        if args:
-            text = f'\n[{name}].(btn{action}:{args})'
-        else:
-            text = f'\n[{name}].(btn{action})'
-
-    return text
+        return f'\n[{name}].(btn{action})'
 
 
 def get_reply_msg_btns_text(message):
     text = ''
     for column in message.reply_markup.inline_keyboard:
-        btn_num = 0
-        for btn in column:
-            btn_num += 1
+        for btn_num, btn in enumerate(column, start=1):
             name = btn['text']
 
             if 'url' in btn:
@@ -291,7 +276,7 @@ async def t_unparse_note_item(message, db_item, chat_id, noformat=None, event=No
         db_item['parse_mode'] = None
 
     else:
-        pm = True if message.chat.type == 'private' else False
+        pm = message.chat.type == 'private'
         text, markup = button_parser(chat_id, text, pm=pm)
 
         if not text and not file_id:

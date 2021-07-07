@@ -25,9 +25,8 @@ from hitsuki.services.telethon import tbot
 async def chat_term(message, command):
     result = await term(command)
     if len(result) > 4096:
-        output = open("output.txt", "w+")
-        output.write(result)
-        output.close()
+        with open("output.txt", "w+") as output:
+            output.write(result)
         await tbot.send_file(
             message.chat.id,
             "output.txt",
@@ -45,5 +44,4 @@ async def term(command):
         stderr=asyncio.subprocess.PIPE
     )
     stdout, stderr = await process.communicate()
-    result = str(stdout.decode().strip()) + str(stderr.decode().strip())
-    return result
+    return str(stdout.decode().strip()) + str(stderr.decode().strip())

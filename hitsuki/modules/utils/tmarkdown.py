@@ -105,11 +105,7 @@ def parse(message, delimiters=None, url_re=None):
                     # If the end is after our start, it is affected
                     if ent.offset + ent.length > i:
                         # If the old start is also before ours, it is fully enclosed
-                        if ent.offset <= i:
-                            ent.length -= len(delim) * 2
-                        else:
-                            ent.length -= len(delim)
-
+                        ent.length -= len(delim) * 2 if ent.offset <= i else len(delim)
                 # Append the found entity
                 ent = delimiters[delim]
                 if ent == MessageEntityPre:
@@ -180,7 +176,7 @@ def unparse(text, entities, delimiters=None, url_fmt=None):
     for entity in entities:
         s = entity.offset
         e = entity.offset + entity.length
-        delimiter = delimiters.get(type(entity), None)
+        delimiter = delimiters.get(type(entity))
         if delimiter:
             insert_at.append((s, delimiter))
             insert_at.append((e, delimiter))

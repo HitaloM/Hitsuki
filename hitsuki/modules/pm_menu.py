@@ -29,7 +29,6 @@ from aiogram.types.inline_keyboard import (
 from hitsuki.decorator import register
 from hitsuki.modules.utils.disable import disableable_dec
 from . import MOD_HELP
-from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .language import select_lang_keyboard
 

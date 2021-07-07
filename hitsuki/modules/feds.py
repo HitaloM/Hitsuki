@@ -1268,7 +1268,7 @@ In both cases Hitsuki will help you.
 - /fsub (Fed ID): Subscibes your Federation over provided
 - /funsub (Fed ID): unsubscibes your Federation from provided
 - /fsetlog (? Fed ID) (? chat/channel id) or /setfedlog (? Fed ID) (? chat/channel id): Set's a log chat/channel for your Federation
-- /funsetlog (?Fed ID) or /unsetfedlog (?Fed ID): Unsets a Federation log chat\channel
+- /funsetlog (?Fed ID) or /unsetfedlog (?Fed ID): Unsets a Federation log chat/channel
 - /fexport (?Fed ID): Exports Federation bans
 - /fimport (?Fed ID) (file): Imports Federation bans
 

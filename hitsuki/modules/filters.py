@@ -377,11 +377,19 @@ async def __export__(chat_id):
 
 
 async def __import__(chat_id, data):
-    new = []
-    for filter in data:
-        new.append(UpdateOne({'chat_id': chat_id, 'handler': filter['handler'], 'action': filter['action']},
-                             {'$set': filter},
-                             upsert=True))
+    new = [
+        UpdateOne(
+            {
+                'chat_id': chat_id,
+                'handler': filter['handler'],
+                'action': filter['action'],
+            },
+            {'$set': filter},
+            upsert=True,
+        )
+        for filter in data
+    ]
+
     await db.filters.bulk_write(new)
     await update_handlers_cache(chat_id)
 

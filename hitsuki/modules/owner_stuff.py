@@ -51,9 +51,7 @@ async def botchanges(message):
 
 @register(cmds='allcommands', is_op=True)
 async def all_commands_list(message):
-    text = ""
-    for cmd in REGISTRED_COMMANDS:
-        text += "* /" + cmd + "\n"
+    text = "".join("* /" + cmd + "\n" for cmd in REGISTRED_COMMANDS)
     await message.reply(text)
 
 
