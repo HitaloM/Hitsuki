@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import html
 import asyncio
 import datetime  # noqa: F401
 from contextlib import suppress
@@ -63,7 +64,7 @@ async def kick_user_cmd(message, chat, user, args, strings):
 
     # Add reason
     if args:
-        text += strings['reason'] % args
+        text += strings['reason'] % html.escape(args)
 
     # Check if silent
     silent = False
@@ -130,14 +131,14 @@ async def mute_user_cmd(message, chat, user, args, strings):
 
             # Add reason
             if len(args) > 1:
-                text += strings['reason'] % ' '.join(args[1:])
+                text += strings['reason'] % html.escape(' '.join(args[1:]))
         else:
             await message.reply(strings['enter_time'])
             return
     else:
         # Add reason
         if args is not None and len(args := args.split()) > 0:
-            text += strings['reason'] % ' '.join(args[0:])
+            text += strings['reason'] % html.escape(' '.join(args[0:]))
 
     # Check if silent
     silent = False
@@ -235,14 +236,14 @@ async def ban_user_cmd(message, chat, user, args, strings):
 
             # Add reason
             if len(args) > 1:
-                text += strings['reason'] % ' '.join(args[1:])
+                text += strings['reason'] % html.escape(' '.join(args[1:]))
         else:
             await message.reply(strings['enter_time'])
             return
     else:
         # Add reason
         if args is not None and len(args := args.split()) > 0:
-            text += strings['reason'] % ' '.join(args[0:])
+            text += strings['reason'] % html.escape(' '.join(args[0:]))
 
     # Check if silent
     silent = False

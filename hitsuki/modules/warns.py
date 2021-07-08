@@ -15,6 +15,8 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import html
 import functools
 import re
 from contextlib import suppress
@@ -85,7 +87,7 @@ async def warn_func(message: Message, chat, user, text, strings, filter_action=F
         admin=admin, user=member, chat_name=chat_title)
 
     if reason:
-        text += strings['warn_rsn'].format(reason=reason)
+        text += strings['warn_rsn'].format(reason=html.escape(reason))
 
     warns_count = await db.warns.count_documents({'chat_id': chat_id, 'user_id': user_id})
 
@@ -162,7 +164,7 @@ async def warns(message, chat, user, strings):
         reason = f"<code>{rsn}</code>"
         if not rsn or rsn == 'None':
             reason = '<i>No Reason</i>'
-        text += strings['warns'].format(count=count, reason=reason, admin=by)
+        text += strings['warns'].format(count=count, reason=html.escape(reason), admin=by)
 
     if count == 0:
         await message.reply(strings['no_warns'].format(user=user_link))

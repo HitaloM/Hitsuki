@@ -64,9 +64,7 @@ async def all_cmds_aliases_list(message):
 
 @register(cmds='loadedmodules', is_op=True)
 async def all_modules_list(message):
-    text = ""
-    for module in LOADED_MODULES:
-        text += "* " + module.__name__ + "\n"
+    text = "".join("* " + module.__name__ + "\n" for module in LOADED_MODULES)
     await message.reply(text)
 
 

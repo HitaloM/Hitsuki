@@ -19,6 +19,9 @@
 
 import re
 import html
+from contextlib import suppress
+
+from telethon.errors import UserIdInvalidError
 
 from hitsuki.decorator import register
 from hitsuki.services.mongo import db
@@ -72,7 +75,9 @@ async def check_afk(message, strings):
             )
             await db.afk.delete_one({"_id": user_afk["_id"]})
 
-    user = await get_user(message)
+    with suppress(UserIdInvalidError):
+        user = await get_user(message)
+
     if not user:
         return
 

@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import html
+
 from hitsuki.decorator import register
 from hitsuki.services.mongo import db
 
@@ -31,9 +33,8 @@ from .utils.user_details import get_admins_rights, get_user_link, is_user_admin
 async def report1_cmd(message, chat, strings):
     # Checking whether report is disabled in chat!
     check = await db.disabled.find_one({'chat_id': chat['chat_id']})
-    if check:
-        if 'report' in check['cmds']:
-            return
+    if check and 'report' in check['cmds']:
+        return
     await report(message, chat, strings)
 
 
@@ -66,7 +67,7 @@ async def report(message, chat, strings):
     try:
         if message.text.split(None, 2)[1]:
             reason = ' '.join(message.text.split(None, 2)[1:])
-            text += strings['reported_reason'].format(reason=reason)
+            text += strings['reported_reason'].format(reason=html.escape(reason))
     except IndexError:
         pass
 
