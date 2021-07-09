@@ -17,12 +17,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
+import shutil
 import html
 import sys
 import os
 
 import requests
 import rapidjson
+
+from time import gmtime, strftime
 
 from aiogram.utils.exceptions import Unauthorized
 
@@ -32,11 +35,12 @@ from hitsuki.modules import LOADED_MODULES
 from hitsuki.services.mongo import db, mongodb
 from hitsuki.services.redis import redis
 from hitsuki.services.telethon import tbot
+from hitsuki.config import get_str_key
 from .utils.covert import convert_size
 from .utils.language import get_strings_dec
 from .utils.message import need_args_dec
 from .utils.notes import BUTTONS, get_parsed_note_list, t_unparse_note_item, send_note
-from .utils.term import chat_term
+from .utils.term import chat_term, term
 from .utils.user_details import get_chat_dec
 
 
@@ -188,6 +192,45 @@ async def upgrade(message):
         await m.edit_text(f"Upgrade failed (process exited with {proc.returncode}):\n{stdout.decode()}")
         proc = await asyncio.create_subprocess_shell("git merge --abort")
         await proc.communicate()
+
+
+@register(cmds="backup", is_owner=True)
+async def backup_now(message):
+    await do_backup(message.chat.id, message.message_id)
+
+
+async def do_backup(chat_id, reply=False):
+    await bot.send_message(chat_id, "Dumping the DB, please wait...", reply_to_message_id=reply)
+    date = strftime("%Y-%m-%d_%H:%M:%S", gmtime())
+    file_name = f"backups/dump_{date}.7z"
+    if not os.path.exists("backups/tempbackup/"):
+        os.makedirs("backups/tempbackup/")
+    MONGO_URI = get_str_key("MONGO_URI")
+    await term(f'mongodump --uri "mongodb://{MONGO_URI}" --out=backups/tempbackup')
+
+    # Copy config file
+    shutil.copyfile('data/bot_conf.yaml', 'backups/tempbackup/bot_conf.yaml')
+
+    await bot.send_message(chat_id, "Compressing and uploading to Telegram...", reply_to_message_id=reply)
+    password = get_str_key("BACKUP_PASS")
+    await term(f"cd backups/tempbackup/; 7z a -mx9 ../../{file_name} * -p{password} -mhe=on")
+    shutil.rmtree('backups/tempbackup')
+
+    if not os.path.exists(file_name):
+        await bot.send_message(chat_id, "Error!", reply_to_message_id=reply)
+        return
+
+    text = "<b>Backup created!</b>"
+    size = convert_size(os.path.getsize(file_name))
+    text += f"\nBackup name: <code>{file_name}</code>"
+    text += f"\nSize: <code>{size}</code>"
+    await tbot.send_file(
+        chat_id,
+        file_name,
+        reply_to=reply,
+        caption=text,
+        parse_mode="html"
+    )
 
 
 @register(cmds="upload", is_owner=True)
