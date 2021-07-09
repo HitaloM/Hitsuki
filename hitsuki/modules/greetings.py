@@ -36,7 +36,7 @@ from babel.dates import format_timedelta
 from captcha.image import ImageCaptcha
 from telethon.tl.custom import Button
 
-from hitsuki import BOT_USERNAME, BOT_ID, LOGS_CHANNEL_ID, bot, dp
+from hitsuki import BOT_USERNAME, BOT_ID, bot, dp
 from hitsuki.config import get_str_key
 from hitsuki.decorator import register
 from hitsuki.services.apscheduller import scheduler
@@ -44,6 +44,7 @@ from hitsuki.services.mongo import db
 from hitsuki.services.redis import redis
 from hitsuki.services.telethon import tbot
 from hitsuki.stuff.fonts import ALL_FONTS
+from hitsuki.utils.channel_logs import channel_log
 from .utils.connections import chat_connection
 from .utils.language import get_strings_dec
 from .utils.message import need_args_dec, convert_time
@@ -480,7 +481,7 @@ async def welcome_security_handler(message: Message, strings):
 
     if user_id == BOT_ID:
         await message.reply(strings['thank_for_add'])
-        await bot.send_message(chat_id=LOGS_CHANNEL_ID, text=f"I was added to the group <b>{html.escape(message.chat.title)}</b> (<code>{message.chat.id}</code>)")
+        await channel_log(f"I was added to the group <b>{html.escape(message.chat.title)}</b> (<code>{message.chat.id}</code>)", info_log=False)
         return
 
     db_item = await get_greetings_data(message.chat.id)
@@ -575,7 +576,7 @@ async def ws_redirecter(message, strings):
     called_user_id = message.from_user.id
 
     url = f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}'
-    if not called_user_id == real_user_id:
+    if called_user_id != real_user_id:
         # The persons which are muted before wont have their signatures registered on cache
         if not redis.exists(f"welcome_security_users:{called_user_id}:{chat_id}"):
             await message.answer(strings['not_allowed'], show_alert=True)
@@ -777,7 +778,7 @@ async def wc_math_check_cb(event, strings, state=None, **kwargs):
             await event.message.delete()
             return
 
-    if not num == answer:
+    if num != answer:
         await send_btn_math(event.message, state, msg_id=event.message.message_id)
         await event.answer(strings['math_wc_wrong'], show_alert=True)
         return

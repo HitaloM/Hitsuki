@@ -36,6 +36,7 @@ from hitsuki.services.mongo import db, mongodb
 from hitsuki.services.redis import redis
 from hitsuki.services.telethon import tbot
 from hitsuki.config import get_str_key
+from hitsuki.utils.channel_logs import channel_log
 from .utils.covert import convert_size
 from .utils.language import get_strings_dec
 from .utils.message import need_args_dec
@@ -104,7 +105,8 @@ async def leave_chat(message, chat):
     except Unauthorized:
         await message.reply("I couldn't access chat/channel! Maybe I was kicked from there!")
         return
-    await message.reply(f"Done, I left the group <b>{c['chat_title']}</b>")
+    await message.reply("Done!")
+    await channel_log(f"I left the group <b>{c['chat_title']}</b>", info_log=False)
 
 
 @register(cmds="sbroadcast", is_owner=True)
