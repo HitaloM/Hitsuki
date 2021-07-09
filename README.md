@@ -2,7 +2,7 @@
 
 [![Crowdin](https://badges.crowdin.net/hitsukix/localized.svg)](https://crowdin.com/project/hitsukix)
 [![GitHub contributors](https://img.shields.io/github/contributors/HitsukiNetwork/HitsukiX.svg)](https://GitHub.com/HitsukiNetwork/HitsukiX/graphs/contributors/)
-[![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](HitsukiNetwork/HitsukiX)
+[![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/HitsukiNetwork/HitsukiX)
 
 > Hitsuki is a modern and fast Telegram Bot developed entirely to improve the chat experience,
 > Hitsuki contains commands related to Anime, Android, Administrative management and more!
