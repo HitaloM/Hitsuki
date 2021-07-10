@@ -203,7 +203,8 @@ async def backup_now(message):
 
 
 async def do_backup(chat_id, reply=False):
-    await bot.send_message(chat_id, "Dumping the DB, please wait...", reply_to_message_id=reply)
+    if reply:
+        await bot.send_message(chat_id, "Dumping the DB, please wait...", reply_to_message_id=reply)
     date = strftime("%Y-%m-%d_%H:%M:%S", gmtime())
     file_name = f"backups/dump_{date}.7z"
     if not os.path.exists("backups/tempbackup/"):
@@ -214,7 +215,8 @@ async def do_backup(chat_id, reply=False):
     # Copy config file
     shutil.copyfile('data/bot_conf.yaml', 'backups/tempbackup/bot_conf.yaml')
 
-    await bot.send_message(chat_id, "Compressing and uploading to Telegram...", reply_to_message_id=reply)
+    if reply:
+        await bot.send_message(chat_id, "Compressing and uploading to Telegram...", reply_to_message_id=reply)
     password = get_str_key("BACKUP_PASS")
     await term(f"cd backups/tempbackup/; 7z a -mx9 ../../{file_name} * -p{password} -mhe=on")
     shutil.rmtree('backups/tempbackup')

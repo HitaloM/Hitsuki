@@ -26,5 +26,4 @@ from hitsuki.config import get_bool_key, get_int_key
 async def backup():
     if get_bool_key("AUTO_BACKUP") is False:
         return
-    channel_id = get_int_key("LOGS_CHANNEL_ID")
-    await do_backup(channel_id)
+    await do_backup(get_int_key("BACKUP_DUMPS_ID"))
