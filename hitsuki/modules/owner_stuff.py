@@ -236,6 +236,7 @@ async def do_backup(chat_id, reply=False):
         caption=text,
         parse_mode="html"
     )
+    shutil.rmtree('backups')
 
 
 @register(cmds="upload", is_owner=True)
