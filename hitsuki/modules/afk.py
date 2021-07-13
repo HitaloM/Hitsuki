@@ -38,12 +38,16 @@ async def afk(message, strings):
     arg = get_args_str(message)
 
     # dont support AFK as anon admin
-    if message.from_user.id == 1087968824:
+    if message.from_user.id in (1087968824, 777000):
         await message.reply(strings["afk_anon"])
         return
 
+    if len(arg) > 100:
+        arg = arg[:100]
+
     reason = "No reason" if not arg else arg
     user = await get_user_by_id(message.from_user.id)
+
     user_afk = await db.afk.find_one({"user": user["user_id"]})
     if user_afk:
         return
