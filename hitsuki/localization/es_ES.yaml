@@ -147,7 +147,7 @@ STRINGS:
     conn_chat_id: "ID de chat conectado actualmente: <code>{id}</code>"
     help_btn: "¡Haz clic para ayuda!"
     help_txt: "¡Haz clic en el botón de abajo para obtener ayuda!"
-    github_err: "CADENAS -> misc -> github_err\nArchivo: en.yaml"
+    github_err: "Usuario no encontrado. ¡Asegúrese de que ha introducido un nombre de usuario válido!"
     paste_success: "<b>Pasted successfully!</b>\nNekobin URL: {}"
     paste_fail: "Failed to reach Nekobin!"
     paste_no_text: "You haven't supplied text to paste!"
