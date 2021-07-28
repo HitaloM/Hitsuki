@@ -16,16 +16,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import html
-
 from hitsuki import bot
 from hitsuki.config import get_int_key
 from hitsuki.utils.logger import log
 
 
 async def channel_log(msg, info_log=True):
-    chat_id = get_int_key('LOGS_CHANNEL_ID')
+    chat_id = get_int_key("LOGS_CHANNEL_ID")
     if info_log:
         log.info(msg)
 
-    await bot.send_message(chat_id, html.escape(msg), quote=False)
+    await bot.send_message(chat_id, msg, quote=False)
