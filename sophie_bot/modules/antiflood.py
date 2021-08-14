@@ -150,9 +150,9 @@ class AntifloodEnforcer(BaseMiddleware):
                 raise CancelHandler
 
 
-@register(cmds=["setflood"], user_can_restrict_members=True, bot_can_restrict_members=True)
+@register(cmds=["setflood"], is_admin=True, user_can_restrict_members=True, bot_can_restrict_members=True)
 @need_args_dec()
-@chat_connection()
+@chat_connection(admin=True)
 @get_strings_dec('antiflood')
 async def setflood_command(message: Message, chat: dict, strings: dict):
     try:
@@ -233,7 +233,7 @@ async def antiflood(message: Message, chat: dict, strings: dict):
     )
 
 
-@register(cmds=['setfloodaction'], user_can_restrict_members=True)
+@register(cmds=['setfloodaction'], is_admin=True, user_can_restrict_members=True)
 @need_args_dec()
 @chat_connection(admin=True)
 @get_strings_dec('antiflood')
