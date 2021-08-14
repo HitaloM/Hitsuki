@@ -141,18 +141,21 @@ async def get_admins_rights(chat_id, force_update=False):
         alist = {}
         admins = await bot.get_chat_administrators(chat_id)
         for admin in admins:
+            if not admin:
+                continue
+
             user_id = admin['user']['id']
             alist[user_id] = {
                 'status': admin['status'],
                 'admin': True,
                 'title': admin['custom_title'],
                 'anonymous': admin['is_anonymous'],
-                'can_change_info': admin['can_change_info'],
-                'can_delete_messages': admin['can_delete_messages'],
-                'can_invite_users': admin['can_invite_users'],
-                'can_restrict_members': admin['can_restrict_members'],
-                'can_pin_messages': admin['can_pin_messages'],
-                'can_promote_members': admin['can_promote_members']
+                'can_change_info': admin.can_change_info if admin.status != 'creator' else True,
+                'can_delete_messages': admin.can_delete_messages if admin.status != 'creator' else True,
+                'can_invite_users': admin.can_invite_users if admin.status != 'creator' else True,
+                'can_restrict_members': admin.can_restrict_members if admin.status != 'creator' else True,
+                'can_pin_messages': admin.can_pin_messages if admin.status != 'creator' else True,
+                'can_promote_members': admin.can_promote_members if admin.status != 'creator' else True
             }
 
             with suppress(KeyError):  # Optional permissions

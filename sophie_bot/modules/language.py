@@ -32,7 +32,7 @@ select_lang_cb = CallbackData('select_lang_cb', 'lang', 'back_btn')
 translators_lang_cb = CallbackData('translators_lang_cb', 'lang')
 
 
-@register(cmds='lang', no_args=True, user_can_change_info=True)
+@register(cmds='lang', no_args=True)
 async def select_lang_cmd(message):
     await select_lang_keyboard(message)
 
@@ -97,7 +97,7 @@ async def change_lang(message, lang, e=False, back_btn=False):
         await message.reply(text, reply_markup=markup, disable_web_page_preview=True)
 
 
-@register(cmds='lang', has_args=True, user_can_change_info=True)
+@register(cmds='lang', has_args=True)
 @get_strings_dec('language')
 async def select_lang_msg(message, strings):
     lang = get_arg(message).lower()
