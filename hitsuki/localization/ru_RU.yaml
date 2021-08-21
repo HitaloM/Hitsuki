@@ -147,7 +147,7 @@ STRINGS:
     conn_chat_id: "ID текущего подключённого чата: <code>{id}</code>"
     help_btn: "Нажмите на меня, чтобы получить помощь!"
     help_txt: "Нажмите кнопку ниже для помощи!"
-    github_err: "User not found. Make sure you entered valid username!"
+    github_err: "Пользователь не найден. Убедитесь, что вы ввели правильное имя пользователя!"
     paste_success: "<b>Pasted successfully!</b>\nNekobin URL: {}"
     paste_fail: "Проблема соединения с Dogbin!"
     paste_no_text: "Вы не указали текст для вставки!"
