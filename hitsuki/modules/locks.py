@@ -40,8 +40,8 @@ async def lock_types(message, chat, strings):
     await message.reply(text)
 
 
-@register(cmds="lock", user_can_restrict_members=True, bot_can_restrict_members=True)
-@chat_connection(only_groups=True)
+@register(cmds="lock", user_admin=True, user_can_restrict_members=True, bot_can_restrict_members=True)
+@chat_connection(admin=True, only_groups=True)
 @get_strings_dec('locks')
 async def lock_cmd(message, chat, strings):
     chat_id = chat['chat_id']
@@ -65,8 +65,8 @@ async def lock_cmd(message, chat, strings):
             await message.reply(strings['locked_successfully'].format(lock=lock[0], chat=chat_title))
 
 
-@register(cmds="unlock", user_can_restrict_members=True, bot_can_restrict_members=True)
-@chat_connection(only_groups=True)
+@register(cmds="unlock", user_admin=True, user_can_restrict_members=True, bot_can_restrict_members=True)
+@chat_connection(admin=True, only_groups=True)
 @get_strings_dec('locks')
 async def unlock_cmd(message, chat, strings):
     chat_id = chat['chat_id']
