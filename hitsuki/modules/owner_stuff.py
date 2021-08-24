@@ -163,7 +163,7 @@ async def purge_caches(message):
     await message.reply("Redis cache was cleaned.")
 
 
-@register(cmds="botstop", is_owner=True)
+@register(cmds="stopbot", is_owner=True)
 async def bot_stop(message):
     await message.reply("Goodbye...")
     sys.exit(1)
