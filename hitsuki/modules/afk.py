@@ -86,7 +86,10 @@ async def check_afk(message, strings):
         if not user:
             return
 
-    user_afk = await db.afk.find_one({"user": user["user_id"]})
+    try:
+        user_afk = await db.afk.find_one({"user": user["user_id"]})
+    except UnboundLocalError:
+        user_afk = None
     if user_afk:
         await message.reply(
             strings["is_afk"].format(

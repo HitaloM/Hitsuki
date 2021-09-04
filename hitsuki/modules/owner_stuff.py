@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
+import signal
 import shutil
 import html
 import sys
@@ -166,7 +167,7 @@ async def purge_caches(message):
 @register(cmds="stopbot", is_owner=True)
 async def bot_stop(message):
     await message.reply("Goodbye...")
-    sys.exit(1)
+    os.kill(os.getpid(), signal.SIGINT)
 
 
 @register(cmds="restart", is_owner=True)
