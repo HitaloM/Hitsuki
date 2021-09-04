@@ -154,7 +154,8 @@ async def anilist_airing(message, strings):
         text += strings["airing_episode"].format(ep=anime.next_airing.episode)
         text += strings["airing_time"].format(time=t(airing_time))
     else:
-        text += strings["airing_episode"].format(ep=anime.episodes)
+        episodes = anime.episodes if hasattr(anime, "episodes") else "N/A"
+        text += strings["airing_episode"].format(ep=episodes)
         text += strings["airing_time"].format(time="<code>N/A</code>")
 
     if hasattr(anime, "banner"):
