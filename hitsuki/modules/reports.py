@@ -18,8 +18,10 @@
 
 import html
 
+from hitsuki import bot
 from hitsuki.decorator import register
 from hitsuki.services.mongo import db
+from aiogram.utils.exceptions import BadRequest
 
 from .utils.connections import chat_connection
 from .utils.disable import disableable_dec
@@ -74,7 +76,10 @@ async def report(message, chat, strings):
     for admin in admins:
         text += await get_user_link(admin, custom_name="​")
 
-    await message.reply(text)
+    try:
+        await message.reply(text)
+    except BadRequest:
+        await bot.send_message(chat['chat_id'], text)
 
 
 __mod_name__ = "Reports"
