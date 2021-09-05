@@ -79,17 +79,16 @@ async def check_afk(message, strings):
             )
             await db.afk.delete_one({"_id": user_afk["_id"]})
 
-    with suppress(UserIdInvalidError, ValueError):
-        user = await get_user(message)
-
-    with suppress(UnboundLocalError):
-        if not user:
-            return
-
     try:
-        user_afk = await db.afk.find_one({"user": user["user_id"]})
-    except UnboundLocalError:
-        user_afk = None
+        user = await get_user(message)
+    except (UserIdInvalidError, ValueError):
+        return
+
+    if not user:
+        return
+
+    user_afk = await db.afk.find_one({"user": user["user_id"]})
+
     if user_afk:
         await message.reply(
             strings["is_afk"].format(
