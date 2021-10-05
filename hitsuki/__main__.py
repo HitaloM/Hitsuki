@@ -103,6 +103,7 @@ log.info("Starting loop..")
 log.info("Aiogram: Using polling method")
 
 if use_uvloop is True:
+    log.info("Hitsuki: Using uvloop to speedup.")
     uvloop.install()
 
 if os.getenv('WEBHOOKS', False):

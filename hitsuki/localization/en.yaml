@@ -813,6 +813,7 @@ STRINGS:
     of_release_date: "  <b>Release date:</b> {date}\n"
     of_maintainer: "  <b>Maintainer:</b> {name}\n"
     of_changelog: "  <u><b>Changelog:</b></u>\n"
+    of_timeout: "Sorry, I couldn't connect to the OranegFox API!"
 
   anime:
     search_err: "Something went wrong, check your search and try again!"

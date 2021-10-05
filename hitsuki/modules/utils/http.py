@@ -17,5 +17,5 @@
 
 import httpx
 
-timeout = httpx.Timeout(20)
+timeout = httpx.Timeout(40, pool=None)
 http = httpx.AsyncClient(http2=True, timeout=timeout)

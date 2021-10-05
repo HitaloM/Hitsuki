@@ -22,6 +22,7 @@ from babel.dates import format_datetime
 import rapidjson as json
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from bs4 import BeautifulSoup
+from httpx import TimeoutException
 
 from hitsuki import decorator
 from hitsuki.decorator import register
@@ -596,7 +597,7 @@ async def orangefox(message, strings):
     if build_type == "":
         build_type = "stable"
 
-    if codename in ("devices", ""):
+    if codename in {"devices", ""}:
         text = strings["of_available"].format(build_type=build_type)
         data = await http.get(
             API_HOST + f"devices/?release_type={build_type}&sort=device_name_asc"
@@ -620,11 +621,17 @@ async def orangefox(message, strings):
         await message.reply(text)
         return
 
-    data = await http.get(API_HOST + f"devices/get?codename={codename}")
-    device = json.loads(data.text)
+    try:
+        data = await http.get(API_HOST + f"devices/get?codename={codename}")
+    except TimeoutException:
+        await message.reply(strings["of_timeout"])
+        return
+
     if data.status_code == 404:
         await message.reply(strings["err_query"])
         return
+
+    device = json.loads(data.text)
 
     data = await http.get(
         API_HOST
