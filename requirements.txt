@@ -13,6 +13,7 @@ dnspython # needed to connect to cloud MongoDB instances
 aiohttp[speedups]
 cryptg
 cryptography
+uvloop
 
 # Other
 jikanpy

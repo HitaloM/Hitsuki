@@ -29,6 +29,15 @@ from hitsuki.modules import ALL_MODULES, LOADED_MODULES, MOD_HELP
 from hitsuki.utils.logger import log
 
 
+# Use uvloop to improve speed if available
+try:
+    import uvloop
+    use_uvloop = get_bool_key("USE_UVLOOP")
+except ImportError:
+    log.warning("uvloop is not installed and therefore will be disabled.")
+    use_uvloop = False
+
+
 if get_bool_key("DEBUG_MODE"):
     log.debug("Enabling logging middleware.")
     dp.middleware.setup(LoggingMiddleware())
@@ -92,6 +101,9 @@ async def start_webhooks(_):
 
 log.info("Starting loop..")
 log.info("Aiogram: Using polling method")
+
+if use_uvloop is True:
+    uvloop.install()
 
 if os.getenv('WEBHOOKS', False):
     port = os.getenv('WEBHOOKS_PORT', 8080)
