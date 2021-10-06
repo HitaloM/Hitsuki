@@ -714,6 +714,7 @@ STRINGS:
     of_release_date: "  <b>Data de lançamento:</b> {date}\n"
     of_maintainer: "  <b>Mantedor:</b> {name}\n"
     of_changelog: "  <u><b>Mudanças:</b></u>\n"
+    of_timeout: "Desculpe, não consegui conectar à API do OranegFox!"
   anime:
     search_err: "Algo deu errado, verifique sua pesquisa e tente novamente!"
     unknown_search_err: "Um erro ocorreu na pesquisa! Tente novamente mais tarde."
