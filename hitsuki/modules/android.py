@@ -682,7 +682,8 @@ async def orangefox(message, strings):
         pass
 
     btn = strings["dl_btn"]
-    url = release["mirrors"]["DL"]
+    mirror = release["mirrors"]["US"]
+    url = mirror if mirror is not None else release["url"]
     button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
     await message.reply(text, reply_markup=button, disable_web_page_preview=True)
 
