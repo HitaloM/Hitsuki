@@ -371,7 +371,7 @@ STRINGS:
     import_done: 供給された禁止令のインポートが完了しました！ {num} 禁止令がインポートされました。
     #def
     automatic_ban: ユーザー {user} は現在のフェデレーション <b>{fed_name}</b>でBANされています。削除されました！
-    automatic_ban_sfed: ユーザー {user} はサブフェデレーション <b>{fed_name}</b>でBANされています。削除されました！
+    automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b> and has been removed!
     automatic_ban_reason: "\n理由: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>連盟禁止情報：</b>\n"
