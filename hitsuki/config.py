@@ -48,17 +48,14 @@ if os.name == 'nt':
 
 if os.path.isfile(CONFIG_PATH):
     log.info(CONFIG_PATH)
-    for item in (data := yaml.load(open('data/bot_conf.yaml', "r"), Loader=yaml.CLoader)):
+    for item in (data := yaml.load(open('data/bot_conf.yaml', "r"), Loader=yaml.Loader)):
         DEFAULTS[item.upper()] = data[item]
 else:
     log.info("Using env vars")
 
 
 def get_str_key(name, required=False):
-    if name in DEFAULTS:
-        default = DEFAULTS[name]
-    else:
-        default = None
+    default = DEFAULTS[name] if name in DEFAULTS else None
     if not (data := env.str(name, default=default)) and not required:
         log.warn('No str key: ' + name)
         return None
@@ -70,10 +67,7 @@ def get_str_key(name, required=False):
 
 
 def get_int_key(name, required=False):
-    if name in DEFAULTS:
-        default = DEFAULTS[name]
-    else:
-        default = None
+    default = DEFAULTS[name] if name in DEFAULTS else None
     if not (data := env.int(name, default=default)) and not required:
         log.warn('No int key: ' + name)
         return None
@@ -85,10 +79,7 @@ def get_int_key(name, required=False):
 
 
 def get_list_key(name, required=False):
-    if name in DEFAULTS:
-        default = DEFAULTS[name]
-    else:
-        default = None
+    default = DEFAULTS[name] if name in DEFAULTS else None
     if not (data := env.list(name, default=default)) and not required:
         log.warn('No list key: ' + name)
         return []
@@ -100,10 +91,7 @@ def get_list_key(name, required=False):
 
 
 def get_bool_key(name, required=False):
-    if name in DEFAULTS:
-        default = DEFAULTS[name]
-    else:
-        default = None
+    default = DEFAULTS[name] if name in DEFAULTS else None
     if not (data := env.bool(name, default=default)) and not required:
         log.warn('No bool key: ' + name)
         return False
