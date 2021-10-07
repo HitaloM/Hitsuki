@@ -370,7 +370,7 @@ STRINGS:
     import_done: Mengimpor blokir federasi selesai! {num} blokir telah diimpor.
     #def
     automatic_ban: Pengguna {user} diblokir di federasi saat ini <b>{fed_name}</b> dan telah dikeluarkan!
-    automatic_ban_sfed: Pengguna {user} diblokir di sub federasi <b>{fed_name}</b> dan telah dikeluarkan!
+    automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b> and has been removed!
     automatic_ban_reason: "\nAlasan: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>Info blokir federasi:</b>\n"
