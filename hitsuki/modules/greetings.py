@@ -68,7 +68,7 @@ async def welcome(message, chat, strings):
     send_id = message.chat.id
 
     if len(args := message.get_args().split()) > 0:
-        no_format = True if args[0] in ('no_format', 'raw') else False
+        no_format = args[0] in ('no_format', 'raw')
     else:
         no_format = None
 
@@ -480,7 +480,10 @@ async def welcome_security_handler(message: Message, strings):
     user_id = new_user.id
 
     if user_id == BOT_ID:
-        await message.reply(strings['thank_for_add'])
+        try:
+            await message.reply(strings['thank_for_add'])
+        except BadRequest:
+            await bot.send_message(strings['thank_for_add'])
         await channel_log(f"I was added to the group <b>{html.escape(message.chat.title)}</b> (<code>{message.chat.id}</code>)", info_log=False)
         return
 
@@ -494,9 +497,8 @@ async def welcome_security_handler(message: Message, strings):
 
     user = await message.chat.get_member(user_id)
     # Check if user was muted before
-    if user['status'] == 'restricted':
-        if user['can_send_messages'] is False:
-            return
+    if user['status'] == 'restricted' and user['can_send_messages'] is False:
+        return
 
     # Check on OPs and chat owner
     if await is_user_admin(chat_id, user_id):
