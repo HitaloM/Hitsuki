@@ -34,3 +34,4 @@ bs4
 lxml
 httpx[http2]
 python-anilist
+meval

@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import traceback
 import asyncio
 import signal
 import shutil
@@ -28,6 +29,8 @@ import requests
 import rapidjson
 
 from time import gmtime, strftime
+from meval import meval
+from io import BytesIO
 
 from aiogram.utils.exceptions import Unauthorized
 
@@ -41,7 +44,7 @@ from hitsuki.config import get_str_key
 from hitsuki.utils.channel_logs import channel_log
 from .utils.covert import convert_size
 from .utils.language import get_strings_dec
-from .utils.message import need_args_dec
+from .utils.message import get_args_str, need_args_dec
 from .utils.notes import BUTTONS, get_parsed_note_list, t_unparse_note_item, send_note
 from .utils.term import chat_term, term
 from .utils.user_details import get_chat_dec
@@ -238,6 +241,35 @@ async def do_backup(chat_id, reply=False):
         parse_mode="html"
     )
     shutil.rmtree('backups')
+
+
+@register(cmds="eval", is_owner=True)
+@need_args_dec()
+async def on_eval_m(message):
+    command = message.text.split()[0]
+    eval_code = message.text[len(command) + 1 :]
+    sm = await message.reply("Running...")
+    try:
+        stdout = await meval(eval_code, globals(), **locals())
+    except BaseException:
+        error = traceback.format_exc()
+        await sm.edit_text(
+            f"An error occurred while running the code:\n<code>{html.escape(error)}</code>"
+        )
+        return
+    lines = str(stdout).split("\n")
+    output = "".join(f"<code>{html.escape(line)}</code>\n" for line in lines)
+    output_message = f"<b>Input\n&gt;</b> <code>{html.escape(eval_code)}</code>\n\n"
+    if len(output) > 0:
+        if len(output) > (4096 - len(output_message)):
+            document = BytesIO(
+                (output.replace("<code>", "").replace("</code>", "")).encode()
+            )
+            document.name = "output.txt"
+            await tbot.send_file(message.chat.id, document, reply_to=message.message_id)
+        else:
+            output_message += f"<b>Output\n&gt;</b> {output}"
+    await sm.edit_text(output_message)
 
 
 @register(cmds="upload", is_owner=True)
