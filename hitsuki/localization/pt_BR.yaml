@@ -124,6 +124,7 @@ STRINGS:
     same_mode: Este é o modo atual! Como posso mudá-lo?
     no_time: Para selecionar o modo 'tmute' você tem que mencionar o tempo!
     invalid_time: Tempo inválido!
+    setup_corrupted: A configuração está corrompida, tente novamente!
     warnmode_success: O modo de advertência de <b>%s</b> mudou com sucesso para <b>%s</b>!
     wrng_args: |
       Estas são as opções disponíveis:
@@ -370,7 +371,7 @@ STRINGS:
     import_done: Importação de banidos da federação finalizada! {num} banidos foram importados.
     #def
     automatic_ban: O usuário {user} está banido na atual federação <b>{fed_name}</b> e foi removido!
-    automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b> and has been removed!
+    automatic_ban_sfed: Usuário {user} está banido na sub federação <b>{fed_name}</b> e foi removido!
     automatic_ban_reason: "Motivo: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>Informações de banimento da federação:</b>\n"
@@ -667,9 +668,12 @@ STRINGS:
     ban: banido
     mute: silenciado
     kick: expulso
+    tban: temporariamente banido
+    tmute: temporariamente silenciado
     #/setfloodaction
     invalid_args: "Ação não suportada, esperava-se {supported_actions}!"
     setfloodaction_success: "Atualizado com sucesso a ação anti-flood para <b>{action}</b>!"
+    send_time: Favor enviar tempo!
   android:
     cmd_example: "Digite o <b>codinome</b> do seu dispositivo!\nPor exemplo, <code>/{cmd} whyred</code>"
     err_github: "Hitsuki tem tentado se conectar ao GitHub, parece que o GitHub está offline"
