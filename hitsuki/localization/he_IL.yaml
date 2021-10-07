@@ -124,6 +124,7 @@ STRINGS:
     same_mode: This is the current mode! How can I change it?
     no_time: For selecting mode 'tmute' you have to mention time!
     invalid_time: זמן לא חוקי!
+    setup_corrupted: Setup is corrupted, try again!
     warnmode_success: Warn mode of <b>%s</b> has successfully changed to <b>%s</b>!
     wrng_args: |
       These are the available options:
@@ -667,9 +668,12 @@ STRINGS:
     ban: נחסם
     mute: מושתק
     kick: נבעט
+    tban: temporarily banned
+    tmute: temporarily muted
     #/setfloodaction
     invalid_args: "Unsupported action, expected {supported_actions}!"
     setfloodaction_success: "Successfully updated flood action to <b>{action}</b>!"
+    send_time: Please send time!
   android:
     cmd_example: "Please type your device <b>codename</b>!\nFor example, <code>/{cmd} whyred</code>"
     err_github: "Hitsuki have been trying to connect to GitHub User Content, It seem like GitHub User Content is down"
