@@ -124,6 +124,7 @@ STRINGS:
     same_mode: Це поточний режим! Як я можу його змінити?
     no_time: Для вибору режиму 'tmute' ви повинні задати час!
     invalid_time: Недійсний час!
+    setup_corrupted: Setup is corrupted, try again!
     warnmode_success: Режим попереджень <b>%s</b> успішно змінено на <b>%s</b>!
     wrng_args: |
       Ось доступні варіанти:
@@ -372,7 +373,7 @@ STRINGS:
     import_done: Імпорт заблокованих користувачів завершено! Імпортовано {num} банів.
     #def
     automatic_ban: Користувач {user} заблокований в даній федерації <b>{fed_name}</b> і тому був видалений!
-    automatic_ban_sfed: Користувач {user} заблокований в підфедерації <b>{fed_name}</b> і тому був видалений!
+    automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b> and has been removed!
     automatic_ban_reason: "\nПричина: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>Інформація про блокування у федерації:</b>\n"
@@ -669,9 +670,12 @@ STRINGS:
     ban: забанений
     mute: заглушений
     kick: виключений
+    tban: temporarily banned
+    tmute: temporarily muted
     #/setfloodaction
     invalid_args: "Непідтримувана дію, очікується {supported_actions}!"
     setfloodaction_success: "Дію антифлуду успішно оновлено до <b>{action}</b>!"
+    send_time: Please send time!
   android:
     cmd_example: "Please type your device <b>codename</b>!\nFor example, <code>/{cmd} whyred</code>"
     err_github: "Hitsuki have been trying to connect to GitHub User Content, It seem like GitHub User Content is down"

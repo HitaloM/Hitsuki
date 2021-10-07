@@ -124,6 +124,7 @@ STRINGS:
     same_mode: '¡Este es el modo actual! ¿Cómo puedo cambiarlo?'
     no_time: '¡Para seleccionar el modo ''tmute'' tienes que colocar el tiempo!'
     invalid_time: '¡Tiempo inválido!'
+    setup_corrupted: Setup is corrupted, try again!
     warnmode_success: '¡El modo de advertencia de <b>%s</b> ha cambiado con éxito a <b>%s</b>!'
     wrng_args: |
       Estas son las opciones disponibles:
@@ -371,7 +372,7 @@ STRINGS:
     import_done: '¡Finalizó la importación de baneados de la federación! {num} baneados fueron importados.'
     #def
     automatic_ban: '¡El usuario {user} está baneado en la actual federación <b>{fed_name}</b> y ha sido eliminado!'
-    automatic_ban_sfed: '¡El usuario {user} está baneado en la subfederación <b>{fed_name}</b> y ha sido eliminado!'
+    automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b> and has been removed!
     automatic_ban_reason: "\nRazón: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>Información de baneo en la Federación:</b>\n"
@@ -668,9 +669,12 @@ STRINGS:
     ban: baneado
     mute: silenciado
     kick: expulsado
+    tban: temporarily banned
+    tmute: temporarily muted
     #/setfloodaction
     invalid_args: "¡Acción no soportada, se esperaba {supported_actions}!"
     setfloodaction_success: "¡Actualizado con éxito la acción antiflood a <b>{action}</b>!"
+    send_time: Please send time!
   android:
     cmd_example: "Please type your device <b>codename</b>!\nFor example, <code>/{cmd} whyred</code>"
     err_github: "Hitsuki have been trying to connect to GitHub User Content, It seem like GitHub User Content is down"

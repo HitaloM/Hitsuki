@@ -124,6 +124,7 @@ STRINGS:
     same_mode: هذا هو الوضع الحالي! كيف يمكنني تغيير ذلك؟
     no_time: لاختيار الوضع "tmute" عليك أن تذكر الوقت!
     invalid_time: Invalid time!
+    setup_corrupted: Setup is corrupted, try again!
     warnmode_success: Warn mode of <b>%s</b> has successfully changed to <b>%s</b>!
     wrng_args: |
       هذه هي إجراءات المتاحة:
@@ -371,7 +372,7 @@ STRINGS:
     import_done: Importing fed bans finished! {num} bans were imported.
     #def
     automatic_ban: User {user} is banned in the current federation <b>{fed_name}</b> and has been removed!
-    automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b and has been removed!
+    automatic_ban_sfed: User {user} is banned in the sub federation <b>{fed_name}</b> and has been removed!
     automatic_ban_reason: "\nالسبب: <code>{text}</code>"
     #/fcheck
     fcheck_header: "<b>معلومات حظر الاتحاد:</b>\n"
@@ -668,9 +669,12 @@ STRINGS:
     ban: banned
     mute: muted
     kick: kicked
+    tban: temporarily banned
+    tmute: temporarily muted
     #/setfloodaction
     invalid_args: "Unsupported action, expected {supported_actions}!"
     setfloodaction_success: "Successfully updated flood action to <b>{action}</b>!"
+    send_time: Please send time!
   android:
     cmd_example: "Please type your device <b>codename</b>!\nFor example, <code>/{cmd} whyred</code>"
     err_github: "Hitsuki have been trying to connect to GitHub User Content, It seem like GitHub User Content is down"
