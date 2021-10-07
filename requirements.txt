@@ -1,13 +1,13 @@
 # General
 telethon~=1.17.0
-aiogram
+aiogram>=2.15
 
 # DBs
 redis
-aioredis==1.3.1 # Redis memery storage fom aiogram
+aioredis>=2.0.0 # Redis memory storage for aiogram
 pymongo
 motor
-dnspython # needed to connect to cloud MongoDB instances
+dnspython # Ceeded to connect to cloud MongoDB instances
 
 # Optional deps to make bot faster
 aiohttp[speedups]

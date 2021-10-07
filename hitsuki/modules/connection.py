@@ -112,7 +112,7 @@ async def connect_chat_keyboard(message, strings, chat):
                 chat['chat_title'],
                 callback_data=connect_to_chat_cb.new(chat_id=chat_id))
             )
-        except ValueError:
+        except (ValueError, TypeError):
             pass
 
     await message.reply(text, reply_markup=markup)
