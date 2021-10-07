@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pickle
+import html
 import re
 from contextlib import suppress
 from typing import Union
@@ -127,9 +128,9 @@ async def get_user_link(user_id, custom_name=None, md=False):
         user_name = custom_name
 
     if md:
-        return "[{name}](tg://user?id={id})".format(name=user_name, id=user_id)
+        return "[{name}](tg://user?id={id})".format(name=html.escape(user_name), id=user_id)
     else:
-        return "<a href=\"tg://user?id={id}\">{name}</a>".format(name=user_name, id=user_id)
+        return "<a href=\"tg://user?id={id}\">{name}</a>".format(name=html.escape(user_name), id=user_id)
 
 
 async def get_admins_rights(chat_id, force_update=False):
