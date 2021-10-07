@@ -70,7 +70,12 @@ def convert_time(time_val):
     else:
         raise InvalidTimeUnit()
 
-    return timedelta(**kwargs)
+    try:
+        td = timedelta(**kwargs)
+    except OverflowError:
+        raise InvalidTimeUnit()
+
+    return td
 
 
 def convert_timedelta(time):
