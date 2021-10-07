@@ -20,6 +20,7 @@ import html
 import sys
 
 from aiogram.types import Update
+from aiogram.utils.exceptions import BotKicked
 from redis.exceptions import RedisError
 
 from hitsuki import dp, bot, OWNER_ID
@@ -106,7 +107,10 @@ async def all_errors_handler(update: Update, error):
     text = "<b>Sorry, I encountered a error!</b>\n"
     text += f'<code>{html.escape(err_tlt, quote=False)}: {html.escape(err_msg, quote=False)}</code>'
     redis.set(chat_id, str(error), ex=600)
-    await bot.send_message(chat_id, text)
+    try:
+        await bot.send_message(chat_id, text)
+    except BotKicked:
+        return
 
 
 def parse_update(update):
