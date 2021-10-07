@@ -71,7 +71,11 @@ async def sourceforge(url: str, strings) -> str:
         reply = strings["sf_link_error"]
         return reply
     reply = f"Mirrors for <code>{file_path.split('/')[-1]}</code>\n"
-    project = re.findall(r"projects?/(.*?)/files", link)[0]
+    try:
+        project = re.findall(r"projects?/(.*?)/files", link)[0]
+    except IndexError:
+        reply = strings["sf_link_error"]
+        return
     mirrors = (
         f"https://sourceforge.net/settings/mirror_choices?"
         f"projectname={project}&filename={file_path}"

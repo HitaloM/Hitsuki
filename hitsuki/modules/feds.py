@@ -504,8 +504,11 @@ async def fed_chat_list(message, fed, strings):
         return await message.reply(strings['no_chats'].format(name=html.escape(fed['fed_name'], False)))
 
     for chat_id in fed['chats']:
-        chat = await db.chat_list.find_one({'chat_id': chat_id})
-        text += '* {} (<code>{}</code>)\n'.format(chat["chat_title"], chat_id)
+        try:
+            chat = await db.chat_list.find_one({'chat_id': chat_id})
+            text += '* {} (<code>{}</code>)\n'.format(chat["chat_title"], chat_id)
+        except ValueError:
+            pass
     if len(text) > 4096:
         await message.answer_document(
             InputFile(io.StringIO(text), filename="chatlist.txt"),

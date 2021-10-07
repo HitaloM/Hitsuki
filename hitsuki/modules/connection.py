@@ -106,11 +106,14 @@ async def connect_chat_keyboard(message, strings, chat):
     text += strings['select_chat_to_connect']
     markup = InlineKeyboardMarkup(row_width=1)
     for chat_id in reversed(connected_data['history'][-3:]):
-        chat = await db.chat_list.find_one({'chat_id': chat_id})
-        markup.insert(InlineKeyboardButton(
-            chat['chat_title'],
-            callback_data=connect_to_chat_cb.new(chat_id=chat_id))
-        )
+        try:
+            chat = await db.chat_list.find_one({'chat_id': chat_id})
+            markup.insert(InlineKeyboardButton(
+                chat['chat_title'],
+                callback_data=connect_to_chat_cb.new(chat_id=chat_id))
+            )
+        except ValueError:
+            pass
 
     await message.reply(text, reply_markup=markup)
 

@@ -75,7 +75,11 @@ async def kick_user_cmd(message, chat, user, args, strings):
         redis.expire(key, 30)
         text += strings['purge']
 
-    await kick_user(chat_id, user_id)
+    if not await is_user_admin(chat_id, user_id):
+        await kick_user(chat_id, user_id)
+    else:
+        await message.reply(strings['kick_admin'])
+        return
 
     msg = await message.reply(text)
 
@@ -135,10 +139,9 @@ async def mute_user_cmd(message, chat, user, args, strings):
         else:
             await message.reply(strings['enter_time'])
             return
-    else:
-        # Add reason
-        if args is not None and len(args := args.split()) > 0:
-            text += strings['reason'] % html.escape(' '.join(args[0:]))
+    # Add reason
+    elif args is not None and len(args := args.split()) > 0:
+        text += strings['reason'] % html.escape(' '.join(args[0:]))
 
     # Check if silent
     silent = False
@@ -240,10 +243,9 @@ async def ban_user_cmd(message, chat, user, args, strings):
         else:
             await message.reply(strings['enter_time'])
             return
-    else:
-        # Add reason
-        if args is not None and len(args := args.split()) > 0:
-            text += strings['reason'] % html.escape(' '.join(args[0:]))
+    # Add reason
+    elif args is not None and len(args := args.split()) > 0:
+        text += strings['reason'] % html.escape(' '.join(args[0:]))
 
     # Check if silent
     silent = False

@@ -22,6 +22,7 @@ import html
 from contextlib import suppress
 
 from telethon.errors import UserIdInvalidError
+from telethon.errors.rpcerrorlist import UsernameInvalidError
 
 from hitsuki.decorator import register
 from hitsuki.services.mongo import db
@@ -81,7 +82,7 @@ async def check_afk(message, strings):
 
     try:
         user = await get_user(message)
-    except (UserIdInvalidError, ValueError):
+    except (UserIdInvalidError, ValueError, UsernameInvalidError):
         return
 
     if not user:

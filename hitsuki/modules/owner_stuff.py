@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from contextlib import suppress
 import traceback
 import asyncio
 import signal
@@ -32,7 +33,7 @@ from time import gmtime, strftime
 from meval import meval
 from io import BytesIO
 
-from aiogram.utils.exceptions import Unauthorized
+from aiogram.utils.exceptions import MessageIsTooLong, Unauthorized
 
 from hitsuki import OWNER_ID, OPERATORS, HITSUKI_VERSION, bot, dp
 from hitsuki.decorator import REGISTRED_COMMANDS, COMMANDS_ALIASES, register
@@ -44,7 +45,7 @@ from hitsuki.config import get_str_key
 from hitsuki.utils.channel_logs import channel_log
 from .utils.covert import convert_size
 from .utils.language import get_strings_dec
-from .utils.message import get_args_str, need_args_dec
+from .utils.message import need_args_dec
 from .utils.notes import BUTTONS, get_parsed_note_list, t_unparse_note_item, send_note
 from .utils.term import chat_term, term
 from .utils.user_details import get_chat_dec
@@ -97,7 +98,8 @@ async def cmd_term(message):
     command = str(message.text.split(" ", 1)[1])
     text = "<b>Shell:</b>\n"
     text += "<code>" + html.escape(await chat_term(message, command), quote=False) + "</code>"
-    await msg.edit_text(text)
+    with suppress(MessageIsTooLong):
+        await msg.edit_text(text)
 
 
 @register(cmds="leavechat", is_owner=True)
