@@ -30,7 +30,7 @@ async def get_connected_chat(message, admin=False, only_groups=False, from_id=No
     user_id = from_id or message.from_user.id
     key = 'connection_cache_' + str(user_id)
 
-    if not message.chat.type == 'private':
+    if message.chat.type != 'private':
         _chat = await db.chat_list.find_one({'chat_id': real_chat_id})
         chat_title = _chat['chat_title'] if _chat is not None else message.chat.title
         # On some strange cases such as Database is fresh or new ; it doesn't contain chat data
@@ -66,9 +66,8 @@ async def get_connected_chat(message, admin=False, only_groups=False, from_id=No
     except Unauthorized:
         return {'status': None, 'err_msg': 'bot_not_in_chat, please /disconnect'}
 
-    if admin:
-        if not user_admin:
-            return {'status': None, 'err_msg': 'u_should_be_admin'}
+    if admin and not user_admin:
+        return {'status': None, 'err_msg': 'u_should_be_admin'}
 
     if 'command' in connected:
         if command in connected['command']:
@@ -107,11 +106,15 @@ def chat_connection(**dec_kwargs):
                 from_id = message.from_user.id
                 message = message.message
 
-            if (check := await get_connected_chat(message, from_id=from_id, **dec_kwargs))['status'] is None:
-                await message.reply(check['err_msg'])
-                return
-            else:
+            if (
+                check := await get_connected_chat(
+                    message, from_id=from_id, **dec_kwargs
+                )
+            )['status'] is not None:
                 return await func(*args, check, **kwargs)
+
+            await message.reply(check['err_msg'])
+            return
 
         return wrapped_1
 

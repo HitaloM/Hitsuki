@@ -26,6 +26,7 @@ from aiogram.types.inline_keyboard import (
     InlineKeyboardButton
 )
 
+from hitsuki import bot_info
 from hitsuki.decorator import register
 from hitsuki.modules.utils.disable import disableable_dec
 from . import MOD_HELP
@@ -106,7 +107,7 @@ async def help_cmd(message, strings):
 async def help_cmd_g(message, strings):
     text = (strings['btn_group_help'])
     button = InlineKeyboardMarkup().add(InlineKeyboardButton(
-        text=text, url="https://t.me/Hitsuki_BOT?start"))
+        text=text, url=f"https://t.me/{bot_info.username}?start"))
     await message.reply(strings['help_header'], reply_markup=button)
 
 
@@ -115,7 +116,6 @@ async def help_cmd_g(message, strings):
 async def helpmenu_callback(query, strings, callback_data=None, **kwargs):
     mod = callback_data['mod']
     if mod not in MOD_HELP:
-        await query.answer()
         return
     msg = strings["help_for"].format(mod_name=mod)
     msg += f"{MOD_HELP[mod]}"
@@ -123,4 +123,3 @@ async def helpmenu_callback(query, strings, callback_data=None, **kwargs):
         InlineKeyboardButton(text=strings['back'], callback_data='get_help'))
     with suppress(MessageNotModified):
         await query.message.edit_text(msg, disable_web_page_preview=True, reply_markup=button)
-        await query.answer(strings["help_for_a"].format(mod_name=mod))

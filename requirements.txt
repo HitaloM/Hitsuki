@@ -7,7 +7,7 @@ redis
 aioredis>=2.0.0 # Redis memory storage for aiogram
 pymongo
 motor
-dnspython # Ceeded to connect to cloud MongoDB instances
+dnspython # Needed to connect to cloud MongoDB instances
 
 # Optional deps to make bot faster
 aiohttp[speedups]
