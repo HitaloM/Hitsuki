@@ -33,7 +33,7 @@ from time import gmtime, strftime
 from meval import meval
 from io import BytesIO
 
-from aiogram.utils.exceptions import MessageIsTooLong, Unauthorized
+from aiogram.utils.exceptions import BadRequest, Unauthorized
 
 from hitsuki import OWNER_ID, OPERATORS, HITSUKI_VERSION, bot, dp
 from hitsuki.decorator import REGISTRED_COMMANDS, COMMANDS_ALIASES, register
@@ -98,7 +98,7 @@ async def cmd_term(message):
     command = str(message.text.split(" ", 1)[1])
     text = "<b>Shell:</b>\n"
     text += "<code>" + html.escape(await chat_term(message, command), quote=False) + "</code>"
-    with suppress(MessageIsTooLong):
+    with suppress(BadRequest):
         await msg.edit_text(text)
 
 
@@ -291,13 +291,6 @@ async def upload_file(message):
             allow_cache=False,
             reply_to=message.message_id
         )
-
-
-@register(cmds="logs", is_op=True)
-async def upload_logs(message):
-    input_str = 'logs/hitsuki.log'
-    with open(input_str, 'rb') as f:
-        await tbot.send_file(message.chat.id, f, reply_to=message.message_id)
 
 
 @register(cmds="crash", is_owner=True)
