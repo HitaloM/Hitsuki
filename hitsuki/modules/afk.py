@@ -19,10 +19,11 @@
 
 import re
 import html
-from contextlib import suppress
+import asyncio
 
 from telethon.errors import UserIdInvalidError
 from telethon.errors.rpcerrorlist import UsernameInvalidError
+from aiogram.utils.exceptions import BadRequest, ChatAdminRequired
 
 from hitsuki.decorator import register
 from hitsuki.services.mongo import db
@@ -57,7 +58,12 @@ async def afk(message, strings):
     text = strings["is_afk"].format(
         user=(await get_user_link(user["user_id"])), reason=html.escape(reason)
     )
-    await message.reply(text)
+    sent = await message.reply(text)
+    await asyncio.sleep(6)
+    try:
+        await sent.delete()
+    except (BadRequest, ChatAdminRequired):
+        return
 
 
 @register(f="text", allow_edited=False)
@@ -73,12 +79,17 @@ async def check_afk(message, strings):
     if user_afk:
         afk_cmd = re.findall("^[!/]afk(.*)", message.text)
         if not afk_cmd:
-            await message.reply(
+            sent = await message.reply(
                 strings["unafk"].format(
                     user=(await get_user_link(message.from_user.id))
                 )
             )
             await db.afk.delete_one({"_id": user_afk["_id"]})
+            await asyncio.sleep(6)
+            try:
+                await sent.delete()
+            except (BadRequest, ChatAdminRequired):
+                return
 
     try:
         user = await get_user(message)
@@ -91,9 +102,14 @@ async def check_afk(message, strings):
     user_afk = await db.afk.find_one({"user": user["user_id"]})
 
     if user_afk:
-        await message.reply(
+        sent = await message.reply(
             strings["is_afk"].format(
                 user=(await get_user_link(user["user_id"])),
                 reason=html.escape(user_afk["reason"]),
             )
         )
+    await asyncio.sleep(6)
+    try:
+        await sent.delete()
+    except (BadRequest, ChatAdminRequired):
+        return
