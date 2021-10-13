@@ -108,8 +108,8 @@ async def check_afk(message, strings):
                 reason=html.escape(user_afk["reason"]),
             )
         )
-    await asyncio.sleep(6)
-    try:
-        await sent.delete()
-    except (BadRequest, ChatAdminRequired):
-        return
+        await asyncio.sleep(6)
+        try:
+            await sent.delete()
+        except (BadRequest, ChatAdminRequired):
+            return
