@@ -390,8 +390,7 @@ async def magisk(message, strings):
             name = "<b>Beta</b>"
         elif variants == "master/canary":
             name = "<b>Canary</b>"
-
-        releases += f'{name}: <a href="{data["magisk"]["link"]}">v{data["magisk"]["version"]}</a> (<code>{data["magisk"]["versionCode"]}</code>) | '
+        releases += f'{name}: <a href="{data["magisk"]["link"]}">{"v" if data["magisk"]["version"][0].isdecimal() else ""}{data["magisk"]["version"]}</a> (<code>{data["magisk"]["versionCode"]}</code>) | '
         releases += f'<a href="{data["magisk"]["note"]}">Changelog</a>\n'
 
     await message.reply(releases, disable_web_page_preview=True)
