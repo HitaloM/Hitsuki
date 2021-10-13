@@ -56,7 +56,7 @@ class GetDevice:
                 name = db[newdevice][0]["name"]
                 model = db[newdevice][0]["model"]
                 brand = db[newdevice][0]["brand"]
-                device = self.device.lower()
+                device = newdevice
                 return {"name": name, "device": device, "model": model, "brand": brand}
             except KeyError:
                 return False
