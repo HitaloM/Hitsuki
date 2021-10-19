@@ -81,6 +81,9 @@ async def sourceforge(url: str, strings) -> str:
         f"projectname={project}&filename={file_path}"
     )
     response = await http.get(mirrors)
+    if response.status_code == 404:
+        reply = strings["sf_link_error"]
+        return reply
     page = BeautifulSoup(response.content, "lxml")
     info = page.find("ul", {"id": "mirrorList"}).findAll("li")
 
