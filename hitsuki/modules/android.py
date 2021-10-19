@@ -17,10 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
-from babel.dates import format_datetime
 
 import rapidjson as json
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from babel.dates import format_datetime
 from bs4 import BeautifulSoup
 from httpx import TimeoutException
 
@@ -421,37 +421,6 @@ async def phh(message, strings):
     await message.reply(text, disable_web_page_preview=True)
 
 
-@register(cmds="phhmagisk")
-@disableable_dec("phhmagisk")
-@get_strings_dec("android")
-async def phh_magisk(message, strings):
-    fetch = await http.get(
-        "https://api.github.com/repos/expressluke/phh-magisk-builder/releases/latest"
-    )
-
-    if fetch.status_code in [500, 504, 505]:
-        await message.reply(strings["err_github"])
-        return
-
-    usr = json.loads(fetch.content)
-    text = strings["phhmagisk"]
-    for i in range(len(usr)):
-        try:
-            name = usr["assets"][i]["name"]
-            url = usr["assets"][i]["browser_download_url"]
-            tag = usr["tag_name"]
-            size_bytes = usr["assets"][i]["size"]
-            text += strings["download"].format(url=url, filename=name)
-            text += strings["phh_tag"].format(tag=tag)
-            text += strings["phh_size"].format(size=convert_size(int(size_bytes)))
-            btn = strings["dl_btn"]
-            button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
-        except IndexError:
-            continue
-
-    await message.reply(text, reply_markup=button)
-
-
 @register(cmds="twrp")
 @disableable_dec("twrp")
 @get_strings_dec("android")
@@ -692,22 +661,21 @@ __mod_name__ = "Android"
 __help__ = """
 Module specially made for Android users.
 
-<b>Device Specific ROM for a device</b>
+<b>Device Specific ROM for a device:</b>
 - /evo (device): Get the latest Evolution X ROM for a device.
 - /los (device): Get the latest LineageOS ROM for a device.
 - /statix (device): Get the latest StatixOS ROM for a device.
 - /crdroid (device): Get the latest crDroid ROM for a device.
 - /pe (device) (?android version): Get the latest Pixel Experience ROM for a device.
 
-<b>GSI</b>
-- /phh: Get the latest PHH AOSP GSIs.
-- /phhmagisk: Get the latest PHH Magisk.
+<b>GSI:</b>
+- /phh: Get the latest Phh AOSP GSIs.
 
 <b>Device firmware:</b>
 - /samcheck (model) (csc): Samsung only - shows the latest firmware info for the given device, taken from samsung servers.
 - /samget (model) (csc): Similar to the <code>/samcheck</code> command but having download buttons.
 
-<b>Misc</b>
+<b>Misc:</b>
 - /magisk: Get latest Magisk releases.
 - /twrp (codename): Gets latest TWRP for the android device using the codename.
 - /ofox (codename): Gets latest OFRP for the android device using the codename.
