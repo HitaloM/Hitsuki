@@ -410,6 +410,9 @@ async def phh(message, strings):
 
     usr = json.loads(fetch.content)
     text = strings["phh"]
+    text += strings["phh_name"].format(name=usr["name"])
+    text += strings["phh_version"].format(tag_name=usr["tag_name"])
+    text += strings["phh_date"].format(date=usr["published_at"])
     for i in range(len(usr)):
         try:
             name = usr["assets"][i]["name"]
