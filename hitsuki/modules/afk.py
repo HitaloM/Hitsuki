@@ -17,20 +17,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import re
-import html
 import asyncio
+import html
+import re
 
+from aiogram.utils.exceptions import BadRequest, ChatAdminRequired
 from telethon.errors import UserIdInvalidError
 from telethon.errors.rpcerrorlist import UsernameInvalidError
-from aiogram.utils.exceptions import BadRequest, ChatAdminRequired
 
 from hitsuki.decorator import register
 from hitsuki.services.mongo import db
+
 from .utils.disable import disableable_dec
 from .utils.language import get_strings_dec
 from .utils.message import get_args_str
-from .utils.user_details import get_user_link, get_user, get_user_by_id
+from .utils.user_details import get_user, get_user_by_id, get_user_link
 
 
 @register(cmds="afk")
@@ -61,6 +62,7 @@ async def afk(message, strings):
     sent = await message.reply(text)
     await asyncio.sleep(6)
     try:
+        await message.delete()
         await sent.delete()
     except (BadRequest, ChatAdminRequired):
         return
@@ -69,9 +71,10 @@ async def afk(message, strings):
 @register(f="text", allow_edited=False)
 @get_strings_dec("afk")
 async def check_afk(message, strings):
-    if bool(
-        message.reply_to_message
-    ) and message.reply_to_message.from_user.id in (1087968824, 777000):
+    if bool(message.reply_to_message) and message.reply_to_message.from_user.id in (
+        1087968824,
+        777000,
+    ):
         return
     if message.from_user.id in (1087968824, 777000):
         return
