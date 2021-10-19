@@ -73,10 +73,11 @@ class AntifloodEnforcer(BaseMiddleware):
         data.count += 1
 
         # check exceeding
-        if data.count >= database['count']:
-            if await self.do_action(message, database):
-                self.reset_flood(message)
-                return True
+        if data.count >= database['count'] and await self.do_action(
+            message, database
+        ):
+            self.reset_flood(message)
+            return True
 
         self.insert_flood(data, message, database)
         return False
@@ -371,6 +372,7 @@ DONE!
 <b>Currently supported actions:</b>
 <code>ban</code>
 <code>mute</code>
+<code>tban</code>
+<code>tmute</code>
 <code>kick</code>
-<i>More soon™</i>
 """
