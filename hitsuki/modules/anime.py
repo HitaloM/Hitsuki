@@ -20,6 +20,7 @@ import re
 
 import anilist
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from httpx._exceptions import ReadTimeout
 from jikanpy import AioJikan
 
 from hitsuki.decorator import register
@@ -64,7 +65,7 @@ async def anilist_anime(message, strings):
             async with anilist.AsyncClient() as client:
                 results = await client.search(query, "anime", 1)
                 anime_id = results[0].id
-        except IndexError:
+        except (IndexError, ReadTimeout):
             return await message.reply(strings["search_err"])
 
     async with anilist.AsyncClient() as client:
@@ -135,7 +136,7 @@ async def anilist_airing(message, strings):
             async with anilist.AsyncClient() as client:
                 results = await client.search(query, "anime", 1)
                 anime_id = results[0].id
-        except IndexError:
+        except (IndexError, ReadTimeout):
             return await message.reply(strings["search_err"])
 
     async with anilist.AsyncClient() as client:
@@ -178,7 +179,7 @@ async def anilist_manga(message, strings):
             async with anilist.AsyncClient() as client:
                 results = await client.search(query, "manga", 1)
                 manga_id = results[0].id
-        except IndexError:
+        except (IndexError, ReadTimeout):
             return await message.reply(strings["search_err"])
 
     async with anilist.AsyncClient() as client:
@@ -239,7 +240,7 @@ async def anilist_character(message, strings):
             async with anilist.AsyncClient() as client:
                 results = await client.search(query, "char", 1)
                 character_id = results[0].id
-        except IndexError:
+        except (IndexError, ReadTimeout):
             return await message.reply(strings["search_err"])
 
     async with anilist.AsyncClient() as client:
@@ -258,10 +259,7 @@ async def anilist_character(message, strings):
         desc = re.sub(re.compile(r"<.*?>"), "", desc)
         if len(character.description) > 700:
             desc = desc[0:500] + "[...]"
-            desc = strings["char_desc"].format(desc=desc)
-        else:
-            desc = strings["char_desc"].format(desc=desc)
-
+        desc = strings["char_desc"].format(desc=desc)
     text = f"<b>{character.name.full}</b> (<code>{character.name.native}</code>)"
     text += strings["id"].format(id=character.id)
     if hasattr(character, "favorites"):
