@@ -126,4 +126,4 @@ async def helpmenu_callback(query, strings, callback_data=None, **kwargs):
         InlineKeyboardButton(text=strings['back'], callback_data='get_help'))
     with suppress(MessageNotModified):
         await query.message.edit_text(msg, disable_web_page_preview=True, reply_markup=button)
-        await event.answer()
+        await query.answer()
