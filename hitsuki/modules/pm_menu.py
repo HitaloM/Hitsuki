@@ -79,16 +79,19 @@ async def help_cb(event, strings):
         strings['back'], callback_data='go_to_start'))
     with suppress(MessageNotModified):
         await event.message.edit_text(strings['help_header'], reply_markup=button)
+        await event.answer()
 
 
 @register(regexp='lang_btn', f='cb')
 async def set_lang_cb(event):
     await select_lang_keyboard(event.message, edit=True)
+    await event.answer()
 
 
 @register(regexp='go_to_start', f='cb')
 async def back_btn(event):
     await get_start_func(event, edit=True)
+    await event.answer()
 
 
 @register(cmds='help', only_pm=True)
@@ -123,3 +126,4 @@ async def helpmenu_callback(query, strings, callback_data=None, **kwargs):
         InlineKeyboardButton(text=strings['back'], callback_data='get_help'))
     with suppress(MessageNotModified):
         await query.message.edit_text(msg, disable_web_page_preview=True, reply_markup=button)
+        await event.answer()
