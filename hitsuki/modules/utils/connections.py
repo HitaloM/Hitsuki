@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from aiogram.utils.exceptions import Unauthorized
 
+from hitsuki.modules.utils.language import get_strings
 from hitsuki.modules.utils.user_details import is_user_admin
 from hitsuki.services.mongo import db
 from hitsuki.services.redis import redis
@@ -113,7 +114,8 @@ def chat_connection(**dec_kwargs):
             )['status'] is not None:
                 return await func(*args, check, **kwargs)
 
-            await message.reply(check['err_msg'])
+            strings = await get_strings(message.chat.id, "connections")
+            await message.reply(strings[check["err_msg"]])
             return
 
         return wrapped_1
