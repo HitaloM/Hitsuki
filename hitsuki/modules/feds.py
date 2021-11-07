@@ -693,13 +693,13 @@ async def fed_ban_user(message, fed, user, reason, strings):
                 if not user:
                     continue
 
-                elif chat_id == user['user_id']:
+                if chat_id == user['user_id']:
                     continue
 
-                elif 'chats' not in user:
+                if 'chats' not in user:
                     continue
 
-                elif chat_id not in user['chats']:
+                if chat_id not in user['chats']:
                     continue
 
                 # Do not slow down other updates
