@@ -89,7 +89,7 @@ async def import_reply(message, strings):
             await message.reply(strings['send_import_file'])
             return
 
-        elif 'document' not in message.reply_to_message:
+        if 'document' not in message.reply_to_message:
             await message.reply(strings['rpl_to_file'])
             return
         document = message.reply_to_message.document

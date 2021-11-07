@@ -129,40 +129,38 @@ async def get_user_link(user_id, custom_name=None, md=False):
 
     if md:
         return "[{name}](tg://user?id={id})".format(name=html.escape(user_name), id=user_id)
-    else:
-        return "<a href=\"tg://user?id={id}\">{name}</a>".format(name=html.escape(user_name), id=user_id)
+    return "<a href=\"tg://user?id={id}\">{name}</a>".format(name=html.escape(user_name), id=user_id)
 
 
 async def get_admins_rights(chat_id, force_update=False):
     key = 'admin_cache:' + str(chat_id)
     if (alist := bredis.get(key)) and not force_update:
         return pickle.loads(alist)
-    else:
-        alist = {}
-        admins = await bot.get_chat_administrators(chat_id)
-        for admin in admins:
-            if not admin:
-                continue
+    alist = {}
+    admins = await bot.get_chat_administrators(chat_id)
+    for admin in admins:
+        if not admin:
+            continue
 
-            user_id = admin['user']['id']
-            alist[user_id] = {
-                'status': admin['status'],
-                'admin': True,
-                'title': admin['custom_title'],
-                'anonymous': admin['is_anonymous'],
-                'can_change_info': admin.can_change_info if admin.status != 'creator' else True,
-                'can_delete_messages': admin.can_delete_messages if admin.status != 'creator' else True,
-                'can_invite_users': admin.can_invite_users if admin.status != 'creator' else True,
-                'can_restrict_members': admin.can_restrict_members if admin.status != 'creator' else True,
-                'can_pin_messages': admin.can_pin_messages if admin.status != 'creator' else True,
-                'can_promote_members': admin.can_promote_members if admin.status != 'creator' else True
-            }
+        user_id = admin['user']['id']
+        alist[user_id] = {
+            'status': admin['status'],
+            'admin': True,
+            'title': admin['custom_title'],
+            'anonymous': admin['is_anonymous'],
+            'can_change_info': admin.can_change_info if admin.status != 'creator' else True,
+            'can_delete_messages': admin.can_delete_messages if admin.status != 'creator' else True,
+            'can_invite_users': admin.can_invite_users if admin.status != 'creator' else True,
+            'can_restrict_members': admin.can_restrict_members if admin.status != 'creator' else True,
+            'can_pin_messages': admin.can_pin_messages if admin.status != 'creator' else True,
+            'can_promote_members': admin.can_promote_members if admin.status != 'creator' else True
+        }
 
-            with suppress(KeyError):  # Optional permissions
-                alist[user_id]['can_post_messages'] = admin['can_post_messages']
+        with suppress(KeyError):  # Optional permissions
+            alist[user_id]['can_post_messages'] = admin['can_post_messages']
 
-        bredis.set(key, pickle.dumps(alist))
-        bredis.expire(key, 900)
+    bredis.set(key, pickle.dumps(alist))
+    bredis.expire(key, 900)
     return alist
 
 
@@ -268,7 +266,7 @@ async def get_user_by_text(message, text: str):
             if entity.type == 'mention':
                 # This one entity is comes with mention by username, like @rHitsukiBot
                 return await get_user_by_username(text)
-            elif entity.type == 'text_mention':
+            if entity.type == 'text_mention':
                 # This one is link mention, mostly used for users without an username
                 return await get_user_by_id(entity.user.id)
 
@@ -319,13 +317,11 @@ async def get_user_and_text(message, **kwargs):
                 print(len(args))
                 if len(args) > 2:
                     return user, args[2]
-                else:
-                    return user, ''
+                return user, ''
 
     if len(args) > 1:
         return user, message.text.split(' ', 1)[1]
-    else:
-        return user, ''
+    return user, ''
 
 
 async def get_users(message):
@@ -346,8 +342,7 @@ async def get_users_and_text(message):
 
     if len(args) > 1:
         return users, args[1]
-    else:
-        return users, ''
+    return users, ''
 
 
 def get_user_and_text_dec(**dec_kwargs):
@@ -361,8 +356,7 @@ def get_user_and_text_dec(**dec_kwargs):
             if not user:
                 await message.reply("I can't get the user!")
                 return
-            else:
-                return await func(*args, user, text, **kwargs)
+            return await func(*args, user, text, **kwargs)
 
         return wrapped_1
 
@@ -380,8 +374,7 @@ def get_user_dec(**dec_kwargs):
             if not bool(user):
                 await message.reply("I can't get the user!")
                 return
-            else:
-                return await func(*args, user, **kwargs)
+            return await func(*args, user, **kwargs)
 
         return wrapped_1
 

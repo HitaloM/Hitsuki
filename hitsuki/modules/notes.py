@@ -249,7 +249,7 @@ async def get_note_hashtag(message, chat, regexp=None, **kwargs):
 @clean_notes
 async def get_notes_list_cmd(message, chat, strings):
     if await db.privatenotes.find_one({'chat_id': chat['chat_id']}) \
-            and message.chat.id == chat['chat_id']:  # Workaround to avoid sending PN to connected PM
+                and message.chat.id == chat['chat_id']:  # Workaround to avoid sending PN to connected PM
         text = strings['notes_in_private']
         if not (keyword := message.get_args()):
             keyword = None
@@ -258,8 +258,7 @@ async def get_notes_list_cmd(message, chat, strings):
             url=await get_start_link(f"notes_{chat['chat_id']}_{keyword}")
         ))
         return await message.reply(text, reply_markup=button, disable_web_page_preview=True)
-    else:
-        return await get_notes_list(message, chat=chat)
+    return await get_notes_list(message, chat=chat)
 
 
 @get_strings_dec('notes')
@@ -346,9 +345,8 @@ async def clear_note(message, chat, strings):
                         note_name=alleged_note_name)
                 await message.reply(text)
                 return
-            else:
-                not_removed += ' #' + note_name
-                continue
+            not_removed += ' #' + note_name
+            continue
 
         await db.notes.delete_one({'_id': note['_id']})
         removed += ' #' + note_name

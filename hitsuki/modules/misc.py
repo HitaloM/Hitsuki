@@ -228,7 +228,7 @@ async def customise_reason_finish(message: Message, _: dict, strings: dict):
     if message.text is None:
         await message.reply(strings['expected_text'])
         return False
-    elif message.text in {'None'}:
+    if message.text in {'None'}:
         return {'reason': None}
     return {'reason': message.text}
 

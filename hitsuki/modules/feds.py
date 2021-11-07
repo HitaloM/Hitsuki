@@ -140,8 +140,7 @@ def get_fed_user_text(skip_no_fed=False, check_self_user=False, disable_self_fed
                     if not skip_no_fed:
                         await message.reply(strings['chat_not_in_fed'])
                         return
-                    else:
-                        fed = None
+                    fed = None
 
             return await func(*args, fed, user, text, **kwargs)
 
@@ -580,23 +579,23 @@ async def fed_ban_user(message, fed, user, reason, strings):
         await message.reply(strings['user_wl'])
         return
 
-    elif user_id == message.from_user.id:
+    if user_id == message.from_user.id:
         await message.reply(strings['fban_self'])
         return
 
-    elif user_id == BOT_ID:
+    if user_id == BOT_ID:
         await message.reply(strings['fban_self'])
         return
 
-    elif user_id == fed['creator']:
+    if user_id == fed['creator']:
         await message.reply(strings['fban_creator'])
         return
 
-    elif 'admins' in fed and user_id in fed['admins']:
+    if 'admins' in fed and user_id in fed['admins']:
         await message.reply(strings['fban_fed_admin'])
         return
 
-    elif data := await db.fed_bans.find_one({'fed_id': fed['fed_id'], 'user_id': user_id}):
+    if data := await db.fed_bans.find_one({'fed_id': fed['fed_id'], 'user_id': user_id}):
         if 'reason' not in data or data["reason"] != reason:
             operation = '$set' if reason else '$unset'
             await db.fed_bans.update_one({'_id': data['_id']}, {operation: {'reason': reason}})
@@ -750,7 +749,7 @@ async def unfed_ban_user(message, fed, user, text, strings):
         await message.reply(strings['unfban_self'])
         return
 
-    elif not (banned := await db.fed_bans.find_one({'fed_id': fed['fed_id'], 'user_id': user_id})):
+    if not (banned := await db.fed_bans.find_one({'fed_id': fed['fed_id'], 'user_id': user_id})):
         await message.reply(strings['user_not_fbanned'].format(user=await get_user_link(user_id)))
         return
 
@@ -979,7 +978,7 @@ async def importfbans_cmd(message, fed, strings):
             await message.reply(strings['send_import_file'])
             return
 
-        elif 'document' not in message.reply_to_message:
+        if 'document' not in message.reply_to_message:
             await message.reply(strings['rpl_to_file'])
             return
         document = message.reply_to_message.document
@@ -1103,7 +1102,7 @@ async def check_fbanned(message: Message, chat, strings):
     if not (fed := await get_fed_f(message)):
         return
 
-    elif await is_user_admin(chat_id, user_id):
+    if await is_user_admin(chat_id, user_id):
         return
 
     feds_list = [fed['fed_id']]

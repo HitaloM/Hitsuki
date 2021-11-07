@@ -75,9 +75,7 @@ async def los(message, strings):
         keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
         await message.reply(text, reply_markup=keyboard, disable_web_page_preview=True)
         return
-
-    else:
-        text = strings["err_query"]
+    text = strings["err_query"]
     await message.reply(text)
 
 
@@ -126,9 +124,7 @@ async def pixel_experience(message, strings):
         keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
         await message.reply(text, reply_markup=keyboard)
         return
-
-    else:
-        text = strings["err_query"]
+    text = strings["err_query"]
     await message.reply(text)
 
 
@@ -169,9 +165,7 @@ async def statix(message, strings):
         keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
         await message.reply(text, reply_markup=keyboard, disable_web_page_preview=True)
         return
-
-    else:
-        text = strings["err_query"]
+    text = strings["err_query"]
     await message.reply(text)
 
 
@@ -440,27 +434,25 @@ async def twrp(message, strings):
         text = strings["err_twrp"].format(device=device)
         await message.reply(text)
         return
+    text = strings["twrp_header"]
+    text += strings["twrp_device"].format(device=device)
+    page = BeautifulSoup(url.content, "lxml")
+    date = page.find("em").text.strip()
+    text += strings["twrp_udpated"].format(date=date)
+    trs = page.find("table").find_all("tr")
+    row = 2 if trs[0].find("a").text.endswith("tar") else 1
 
-    else:
-        text = strings["twrp_header"]
-        text += strings["twrp_device"].format(device=device)
-        page = BeautifulSoup(url.content, "lxml")
-        date = page.find("em").text.strip()
-        text += strings["twrp_udpated"].format(date=date)
-        trs = page.find("table").find_all("tr")
-        row = 2 if trs[0].find("a").text.endswith("tar") else 1
+    for i in range(row):
+        download = trs[i].find("a")
+        dl_link = f"https://dl.twrp.me{download['href']}"
+        dl_file = download.text
+        size = trs[i].find("span", {"class": "filesize"}).text
+    text += strings["twrp_size"].format(size=size)
+    text += strings["twrp_file"].format(dl_file=dl_file.lower())
+    btn = strings["dl_btn"]
+    button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=dl_link))
 
-        for i in range(row):
-            download = trs[i].find("a")
-            dl_link = f"https://dl.twrp.me{download['href']}"
-            dl_file = download.text
-            size = trs[i].find("span", {"class": "filesize"}).text
-        text += strings["twrp_size"].format(size=size)
-        text += strings["twrp_file"].format(dl_file=dl_file.lower())
-        btn = strings["dl_btn"]
-        button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=dl_link))
-
-        await message.reply(text, reply_markup=button)
+    await message.reply(text, reply_markup=button)
 
 
 @decorator.register(cmds=["samcheck", "samget"])
