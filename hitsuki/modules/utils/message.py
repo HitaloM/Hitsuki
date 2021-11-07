@@ -88,8 +88,7 @@ def need_args_dec(num=1):
             message = args[0]
             if len(message.text.split(" ")) > num:
                 return await func(*args, **kwargs)
-            else:
-                await message.reply("Give me args!")
+            await message.reply("Give me args!")
 
         return wrapped_1
 

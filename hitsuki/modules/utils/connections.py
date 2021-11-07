@@ -48,8 +48,7 @@ async def get_connected_chat(message, admin=False, only_groups=False, from_id=No
     if not (connected := await get_connection_data(user_id)) or 'chat_id' not in connected:
         if only_groups:
             return {'status': None, 'err_msg': 'usage_only_in_groups'}
-        else:
-            return {'status': 'private', 'chat_id': user_id, 'chat_title': 'Local chat'}
+        return {'status': 'private', 'chat_id': user_id, 'chat_title': 'Local chat'}
 
     chat_id = connected['chat_id']
 
@@ -73,9 +72,8 @@ async def get_connected_chat(message, admin=False, only_groups=False, from_id=No
     if 'command' in connected:
         if command in connected['command']:
             return {'status': True, 'chat_id': chat_id, 'chat_title': chat_title}
-        else:
-            # Return local chat if user is accessing non connected command
-            return {'status': 'private', 'chat_id': user_id, 'chat_title': 'Local chat'}
+        # Return local chat if user is accessing non connected command
+        return {'status': 'private', 'chat_id': user_id, 'chat_title': 'Local chat'}
 
     # Check on /allowusersconnect enabled
     if settings := await db.chat_connection_settings.find_one({'chat_id': chat_id}):

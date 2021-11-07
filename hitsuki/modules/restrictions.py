@@ -48,11 +48,11 @@ async def kick_user_cmd(message, chat, user, args, strings):
         await message.reply(strings['kick_hitsuki'])
         return
 
-    elif user_id == message.from_user.id:
+    if user_id == message.from_user.id:
         await message.reply(strings['kick_self'])
         return
 
-    elif await is_user_admin(chat_id, user_id):
+    if await is_user_admin(chat_id, user_id):
         await message.reply(strings['kick_admin'])
         return
 
@@ -104,11 +104,11 @@ async def mute_user_cmd(message, chat, user, args, strings):
         await message.reply(strings['mute_hitsuki'])
         return
 
-    elif user_id == message.from_user.id:
+    if user_id == message.from_user.id:
         await message.reply(strings['mute_self'])
         return
 
-    elif await is_user_admin(chat_id, user_id):
+    if await is_user_admin(chat_id, user_id):
         await message.reply(strings['mute_admin'])
         return
 
@@ -177,11 +177,11 @@ async def unmute_user_cmd(message, chat, user, strings):
         await message.reply(strings['unmute_hitsuki'])
         return
 
-    elif user_id == message.from_user.id:
+    if user_id == message.from_user.id:
         await message.reply(strings['unmute_self'])
         return
 
-    elif await is_user_admin(chat_id, user_id):
+    if await is_user_admin(chat_id, user_id):
         await message.reply(strings['unmute_admin'])
         return
 
@@ -208,11 +208,11 @@ async def ban_user_cmd(message, chat, user, args, strings):
         await message.reply(strings['ban_hitsuki'])
         return
 
-    elif user_id == message.from_user.id:
+    if user_id == message.from_user.id:
         await message.reply(strings['ban_self'])
         return
 
-    elif await is_user_admin(chat_id, user_id):
+    if await is_user_admin(chat_id, user_id):
         await message.reply(strings['ban_admin'])
         return
 
@@ -281,11 +281,11 @@ async def unban_user_cmd(message, chat, user, strings):
         await message.reply(strings['unban_hitsuki'])
         return
 
-    elif user_id == message.from_user.id:
+    if user_id == message.from_user.id:
         await message.reply(strings['unban_self'])
         return
 
-    elif await is_user_admin(chat_id, user_id):
+    if await is_user_admin(chat_id, user_id):
         await message.reply(strings['unban_admin'])
         return
 

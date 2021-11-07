@@ -139,14 +139,13 @@ def get_parsed_msg(message):
 def get_msg_parse(text, default_md=True):
     if '[format:html]' in text or '%PARSEMODE_HTML' in text:
         return 'html'
-    elif '[format:none]' in text or '%PARSEMODE_NONE' in text:
+    if '[format:none]' in text or '%PARSEMODE_NONE' in text:
         return 'none'
-    elif '[format:md]' in text or '%PARSEMODE_MD' in text:
+    if '[format:md]' in text or '%PARSEMODE_MD' in text:
         return 'md'
-    else:
-        if not default_md:
-            return None
-        return 'md'
+    if not default_md:
+        return None
+    return 'md'
 
 
 def parse_button(data, name):
@@ -162,10 +161,9 @@ def parse_button(data, name):
 
     if action in BUTTONS:
         return f"\n[{name}](btn{action}:{args}*!repl!*)"
-    elif args:
+    if args:
         return f'\n[{name}].(btn{action}:{args})'
-    else:
-        return f'\n[{name}].(btn{action})'
+    return f'\n[{name}].(btn{action})'
 
 
 def get_reply_msg_btns_text(message):

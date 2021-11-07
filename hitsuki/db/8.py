@@ -43,14 +43,13 @@ def _convert_time(__t: dict) -> str:
     # check days first
     if sec % 86400 == 0:
         return f"{round(sec / 86400)}d"
-    elif sec % 3600 == 0:
+    if sec % 3600 == 0:
         # check hours
         return f"{round(sec / 3600)}h"
-    elif sec % 60 == 0:
+    if sec % 60 == 0:
         # check minutes
         return f"{round(sec / 60)}m"
-    else:
-        log.warning(f"Found unexpected value {sec}...!")
+    log.warning(f"Found unexpected value {sec}...!")
 
 
 for i in data:

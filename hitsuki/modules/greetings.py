@@ -142,21 +142,20 @@ async def set_welcome(message, chat, strings):
         await get_greetings_data.reset_cache(chat_id)
         await message.reply(strings['turnwelcome_disabled'] % chat['chat_title'])
         return
+    note = await get_parsed_note_list(message, split_args=-1)
+
+    if (await db.greetings.update_one(
+            {'chat_id': chat_id},
+            {'$set': {'chat_id': chat_id, 'note': note},
+                '$unset': {'welcome_disabled': 1}},
+            upsert=True
+    )).modified_count > 0:
+        text = strings['updated']
     else:
-        note = await get_parsed_note_list(message, split_args=-1)
+        text = strings['saved']
 
-        if (await db.greetings.update_one(
-                {'chat_id': chat_id},
-                {'$set': {'chat_id': chat_id, 'note': note},
-                    '$unset': {'welcome_disabled': 1}},
-                upsert=True
-        )).modified_count > 0:
-            text = strings['updated']
-        else:
-            text = strings['saved']
-
-        await get_greetings_data.reset_cache(chat_id)
-        await message.reply(text % chat['chat_title'])
+    await get_greetings_data.reset_cache(chat_id)
+    await message.reply(text % chat['chat_title'])
 
 
 @register(cmds='resetwelcome', user_admin=True)
@@ -583,9 +582,8 @@ async def ws_redirecter(message, strings):
         if not redis.exists(f"welcome_security_users:{called_user_id}:{chat_id}"):
             await message.answer(strings['not_allowed'], show_alert=True)
             return
-        else:
-            # For those who lost their buttons
-            url = f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}_0'
+        # For those who lost their buttons
+        url = f'https://t.me/{BOT_USERNAME}?start=ws_{chat_id}_{called_user_id}_{message.message.message_id}_0'
     await message.answer(url=url)
 
 

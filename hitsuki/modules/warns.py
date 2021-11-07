@@ -193,7 +193,7 @@ async def warnlimit(message, chat, strings):
         if int(arg[0]) < 2:
             return await message.reply(strings['warnlimit_short'])
 
-        elif int(arg[0]) > 10000:  # Max value
+        if int(arg[0]) > 10000:  # Max value
             return await message.reply(strings['warnlimit_long'])
 
         new = {
@@ -281,10 +281,10 @@ async def max_warn_func(chat_id, user_id):
     if (data := await db.warnmode.find_one({'chat_id': chat_id})) is not None:
         if data['mode'] == 'ban':
             return await ban_user(chat_id, user_id)
-        elif data['mode'] == 'tmute':
+        if data['mode'] == 'tmute':
             time = convert_time(data['time'])
             return await mute_user(chat_id, user_id, time)
-        elif data['mode'] == 'mute':
+        if data['mode'] == 'mute':
             return await mute_user(chat_id, user_id)
     else:  # Default
         return await ban_user(chat_id, user_id)
@@ -310,7 +310,7 @@ async def __import__(chat_id, data):
         if number < 2:
             return
 
-        elif number > 10000:  # Max value
+        if number > 10000:  # Max value
             return
 
         await db.warnlimit.update_one({'chat_id': chat_id}, {'$set': {'num': number}}, upsert=True)

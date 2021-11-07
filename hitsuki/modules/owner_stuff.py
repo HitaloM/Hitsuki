@@ -348,5 +348,5 @@ async def __stats__():
 async def __user_info__(message, user_id, strings):
     if user_id == OWNER_ID:
         return strings["father"]
-    elif user_id in OPERATORS:
+    if user_id in OPERATORS:
         return strings['sudo_crown']
