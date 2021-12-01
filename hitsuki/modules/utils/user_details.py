@@ -66,7 +66,7 @@ async def add_user_to_db(user):
 
 
 async def get_user_by_id(user_id: int):
-    if user_id > 2147483647:
+    if not user_id <= 9223372036854775807:  # int64
         return None
 
     user = await db.user_list.find_one(
