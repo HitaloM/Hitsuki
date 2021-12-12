@@ -1,6 +1,6 @@
 # General
 telethon~=1.17.0
-aiogram>=2.15
+aiogram==2.15
 
 # DBs
 redis==3.5.3
