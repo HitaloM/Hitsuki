@@ -1,44 +1,33 @@
-# Copyright (C) 2018 - 2020 MrYacha. All rights reserved. Source code available under the AGPL.
-# Copyright (C) 2019 Aiogram
-#
-# This file is part of SophieBot.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
+FROM python:3.10-alpine as base
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
+ENV PYTHONFAULTHANDLER=1 \
+    PYTHONHASHSEED=random \
+    PYTHONUNBUFFERED=1
 
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+FROM python:3.10-slim as builder
 
-# Build image
-FROM python:3.8-slim AS compile-image
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends git
-RUN apt-get install -y --no-install-recommends build-essential gcc
-RUN apt-get install -y --no-install-recommends libyaml-dev
+ENV PIP_DEFAULT_TIMEOUT=100 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
 
-COPY requirements.txt .
-RUN pip install --user -r requirements.txt
+RUN apt update
+RUN apt install build-essential gcc -y
+RUN pip install poetry wheel
+RUN python -m venv /venv
 
+COPY pyproject.toml poetry.lock ./
 
-# Run image
-FROM python:3.8-slim AS run-image
+RUN poetry export -f requirements.txt --without-hashes | /venv/bin/pip install -r /dev/stdin
 
-# Temp
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends libyaml-dev
+COPY sophie_bot sophie_bot
+RUN poetry build && /venv/bin/pip install dist/*.whl
 
-COPY --from=compile-image /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
+FROM base as final
 
-ADD . /sophie_bot
-RUN rm -rf /sophie_bot/data/
-WORKDIR /sophie_bot
+# RUN apk add --no-cache libffi libpq
 
-CMD [ "python", "-m", "sophie_bot" ]
+COPY --from=builder /venv /venv
+
+WORKDIR /app
+
+CMD ["sh", "-c", "source /venv/bin/activate; python -m sophie_bot"]
