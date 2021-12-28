@@ -40,5 +40,3 @@ class InterceptHandler(logging.Handler):
 
 logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
 log = logging.getLogger(__name__)
-logger.add("logs/sophie.log", rotation="1 d", compression="tar.xz", backtrace=True, diagnose=True, level="INFO")
-log.info("Enabled logging intro sophie.log file.")
