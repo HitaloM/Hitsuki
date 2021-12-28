@@ -17,7 +17,7 @@ RUN python -m venv /venv
 
 COPY pyproject.toml poetry.lock ./
 
-RUN poetry export -f requirements.txt --without-hashes | /venv/bin/pip install -r /dev/stdin
+RUN poetry export -f requirements.txt -E fast --without-hashes | /venv/bin/pip install -r /dev/stdin
 
 COPY sophie_bot sophie_bot
 RUN poetry build && /venv/bin/pip install dist/*.whl
