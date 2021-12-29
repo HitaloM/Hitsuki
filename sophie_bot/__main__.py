@@ -60,9 +60,6 @@ async def before_srv_task(loop):
         loop.create_task(module.__before_serving__(loop))
 
 
-import_module("sophie_bot.utils.db_structure_migrator")
-
-
 async def start(_):
     log.debug("Starting before serving task for all modules...")
     loop.create_task(before_srv_task(loop))
