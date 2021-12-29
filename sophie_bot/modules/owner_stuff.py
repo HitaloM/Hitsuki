@@ -219,7 +219,7 @@ async def __stats__():
 
 @get_strings_dec('owner_stuff')
 async def __user_info__(message, user_id, strings):
-    if user_id == OWNER_ID:
+    if user_id == CONFIG.owner_id:
         return strings["father"]
-    elif user_id in OPERATORS:
+    elif user_id in CONFIG.operators:
         return strings['sudo_crown']

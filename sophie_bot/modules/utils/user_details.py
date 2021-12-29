@@ -172,7 +172,7 @@ async def is_user_admin(chat_id, user_id):
     if chat_id == user_id:
         return True
 
-    if user_id in OPERATORS:
+    if user_id in CONFIG.operators:
         return True
 
     # Workaround to support anonymous admins

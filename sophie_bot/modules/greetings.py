@@ -353,7 +353,7 @@ async def welcome_security(message, chat, strings):
         strings['ask_for_time_customization'].format(
             time=format_timedelta(
                 convert_time(
-                    get_str_key("JOIN_CONFIRM_DURATION")
+                    "1h"
                 ),
                 locale=strings['language_info']['babel']
             )
