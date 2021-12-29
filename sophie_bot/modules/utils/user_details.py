@@ -27,7 +27,8 @@ from aiogram.types import CallbackQuery, Message
 from aiogram.utils.exceptions import BadRequest, Unauthorized, ChatNotFound
 from telethon.tl.functions.users import GetFullUserRequest
 
-from sophie_bot import OPERATORS, bot
+from sophie_bot import bot
+from sophie_bot.config import CONFIG
 from sophie_bot.services.mongo import db
 from sophie_bot.services.redis import bredis
 from sophie_bot.services.telethon import tbot
@@ -194,7 +195,7 @@ async def check_admin_rights(event: Union[Message, CallbackQuery], chat_id, user
     if chat_id == user_id:
         return True
 
-    if user_id in OPERATORS:
+    if user_id in CONFIG.operators:
         return True
 
     # Workaround to support anonymous admins

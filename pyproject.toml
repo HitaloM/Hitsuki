@@ -27,6 +27,7 @@ Babel = "^2.9.1"
 captcha = "^0.3"
 async-timeout = "^4.0.2"
 regex = "^2021.11.10"
+pydantic = {extras = ["dotenv"], version = "^1.8.2"}
 
 [tool.poetry.extras]
 fast = ["aiohttp", "cryptg", "cryptography"]

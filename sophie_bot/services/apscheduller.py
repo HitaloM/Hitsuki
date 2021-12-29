@@ -21,16 +21,16 @@ from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pytz import utc
 
-from sophie_bot.config import get_str_key, get_int_key
+from sophie_bot.config import CONFIG
 from sophie_bot.utils.logger import log
 
 DEFAULT = "default"
 
 jobstores = {
     DEFAULT: RedisJobStore(
-        host=get_str_key("REDIS_URI"),
-        port=get_str_key("REDIS_PORT"),
-        db=get_int_key("REDIS_DB_FSM")
+        host=CONFIG.redis_host,
+        port=CONFIG.redis_port,
+        db=CONFIG.redis_db_states
     )
 }
 executors = {DEFAULT: AsyncIOExecutor()}

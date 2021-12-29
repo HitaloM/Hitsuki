@@ -17,46 +17,40 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-import os
 from importlib import import_module
 
 from aiogram import executor
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 
-from sophie_bot import dp, TOKEN, bot
-from sophie_bot.config import get_bool_key, get_list_key
+from sophie_bot import dp, bot
+from sophie_bot.config import CONFIG
 from sophie_bot.modules import ALL_MODULES, LOADED_MODULES
 from sophie_bot.utils.logger import log
 
-if get_bool_key("DEBUG_MODE"):
+if CONFIG.debug_mode:
     log.debug("Enabling logging middleware.")
     dp.middleware.setup(LoggingMiddleware())
 
-LOAD = get_list_key("LOAD")
-DONT_LOAD = get_list_key("DONT_LOAD")
-
-if get_bool_key('LOAD_MODULES'):
-    if len(LOAD) > 0:
-        modules = LOAD
-    else:
-        modules = ALL_MODULES
-
-    modules = [x for x in modules if x not in DONT_LOAD]
-
-    log.info("Modules to load: %s", str(modules))
-    for module_name in modules:
-        log.debug(f"Importing <d><n>{module_name}</></>")
-        imported_module = import_module("sophie_bot.modules." + module_name)
-        LOADED_MODULES.append(imported_module)
-    log.info("Modules loaded!")
+# Load modules
+if len(CONFIG.modules_load) > 0:
+    modules = CONFIG.modules_load
 else:
-    log.warning("Not importing modules!")
+    modules = ALL_MODULES
+
+modules = [x for x in modules if x not in CONFIG.modules_not_load]
+
+log.info("Modules to load: %s", str(modules))
+for module_name in modules:
+    log.debug(f"Importing <d><n>{module_name}</></>")
+    imported_module = import_module("sophie_bot.modules." + module_name)
+    LOADED_MODULES.append(imported_module)
+log.info("Modules loaded!")
 
 loop = asyncio.get_event_loop()
 
 # Import misc stuff
 import_module("sophie_bot.utils.exit_gracefully")
-if not get_bool_key('DEBUG_MODE'):
+if CONFIG.debug_mode:
     import_module("sophie_bot.utils.sentry")
 
 
@@ -73,22 +67,20 @@ async def start(_):
     log.debug("Starting before serving task for all modules...")
     loop.create_task(before_srv_task(loop))
 
-    if not get_bool_key("DEBUG_MODE"):
+    if CONFIG.debug_mode:
         log.debug("Waiting 2 seconds...")
         await asyncio.sleep(2)
 
 
 async def start_webhooks(_):
-    url = os.getenv('WEBHOOK_URL') + f"/{TOKEN}"
-    await bot.set_webhook(url)
+    await bot.set_webhook(CONFIG.webhooks_url + f"/{CONFIG.token}")
     return await start(_)
 
 
 log.info("Starting loop..")
 log.info("Aiogram: Using polling method")
 
-if os.getenv('WEBHOOKS', False):
-    port = os.getenv('WEBHOOKS_PORT', 8080)
-    executor.start_webhook(dp, f'/{TOKEN}', on_startup=start_webhooks, port=port)
+if CONFIG.webhooks_enable:
+    executor.start_webhook(dp, f'/{CONFIG.token}', on_startup=start_webhooks, port=CONFIG.webhooks_port)
 else:
     executor.start_polling(dp, loop=loop, on_startup=start)

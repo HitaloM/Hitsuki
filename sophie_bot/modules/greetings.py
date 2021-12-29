@@ -37,7 +37,7 @@ from captcha.image import ImageCaptcha
 from telethon.tl.custom import Button
 
 from sophie_bot import BOT_USERNAME, BOT_ID, bot, dp
-from sophie_bot.config import get_str_key
+from sophie_bot.config import CONFIG
 from sophie_bot.decorator import register
 from sophie_bot.services.apscheduller import scheduler
 from sophie_bot.services.mongo import db
@@ -526,7 +526,7 @@ async def welcome_security_handler(message: Message, strings):
     if raw_time := db_item['welcome_security'].get('expire', None):
         time = convert_time(raw_time)
     else:
-        time = convert_time(get_str_key('JOIN_CONFIRM_DURATION'))
+        time = convert_time("1h")
 
     scheduler.add_job(
         join_expired,

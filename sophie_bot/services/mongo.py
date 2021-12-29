@@ -24,16 +24,12 @@ from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
 
 from sophie_bot import log
-from sophie_bot.config import get_str_key, get_int_key
-
-MONGO_URI = get_str_key("MONGO_URI")
-MONGO_PORT = get_int_key("MONGO_PORT")
-MONGO_DB = get_str_key("MONGO_DB")
+from sophie_bot.config import CONFIG
 
 # Init MongoDB
-mongodb = MongoClient(MONGO_URI, MONGO_PORT)[MONGO_DB]
-motor = motor_asyncio.AsyncIOMotorClient(MONGO_URI, MONGO_PORT)
-db = motor[MONGO_DB]
+mongodb = MongoClient(CONFIG.mongo_host, CONFIG.mongo_port)[CONFIG.mongo_db]
+motor = motor_asyncio.AsyncIOMotorClient(CONFIG.mongo_host, CONFIG.mongo_port)
+db = motor[CONFIG.mongo_db]
 
 try:
     asyncio.get_event_loop().run_until_complete(motor.server_info())

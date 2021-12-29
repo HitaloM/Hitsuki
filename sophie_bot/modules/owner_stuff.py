@@ -23,7 +23,8 @@ import os
 import requests
 import ujson
 
-from sophie_bot import OWNER_ID, OPERATORS, SOPHIE_VERSION, dp
+from sophie_bot import SOPHIE_VERSION, dp
+from sophie_bot.config import CONFIG
 from sophie_bot.decorator import REGISTRED_COMMANDS, COMMANDS_ALIASES, register
 from sophie_bot.modules import LOADED_MODULES
 from sophie_bot.services.mongo import db, mongodb

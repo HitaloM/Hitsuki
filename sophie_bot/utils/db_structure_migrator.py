@@ -20,7 +20,8 @@ import asyncio
 import time
 from importlib import import_module
 
-from sophie_bot import bot, OWNER_ID
+from sophie_bot import bot
+from sophie_bot.config import CONFIG
 from sophie_bot.services.mongo import mongodb
 from sophie_bot.utils.logger import log
 from sophie_bot.versions import DB_STRUCTURE_VER
@@ -28,7 +29,7 @@ from sophie_bot.versions import DB_STRUCTURE_VER
 
 async def notify_bot_owner(old_ver, new_ver):
     await bot.send_message(
-        OWNER_ID,
+        CONFIG.owner_id,
         f"Sophie database structure was updated from <code>{old_ver}</code> to <code>{new_ver}</code>"
     )
 

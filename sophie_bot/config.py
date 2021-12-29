@@ -1,113 +1,51 @@
-# Copyright (C) 2018 - 2020 MrYacha. All rights reserved. Source code available under the AGPL.
-# Copyright (C) 2019 Aiogram
-# Copyright (C) 2019 pqhaz
-#
-# This file is part of SophieBot.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-import os
-
-import yaml
-from envparse import env
-
-from sophie_bot.utils.logger import log
-
-DEFAULTS = {
-    'LOAD_MODULES': True,
-    'DEBUG_MODE': True,
-
-    'REDIS_HOST': 'localhost',
-    'REDIS_PORT': 6379,
-    'REDIS_DB_FSM': 1,
-
-    'MONGODB_URI': 'localhost',
-    'MONGO_DB': 'sophie',
-
-    'API_PORT': 8080,
-
-    'JOIN_CONFIRM_DURATION': '30m',
-}
-
-CONFIG_PATH = 'data/bot_conf.yaml'
-if os.name == 'nt':
-    log.debug("Detected Windows, changing config path...")
-    CONFIG_PATH = os.getcwd() + "\\data\\bot_conf.yaml"
-
-if os.path.isfile(CONFIG_PATH):
-    log.info(CONFIG_PATH)
-    for item in (data := yaml.load(open('data/bot_conf.yaml', "r"), Loader=yaml.CLoader)):
-        DEFAULTS[item.upper()] = data[item]
-else:
-    log.info("Using env vars")
+from pydantic import BaseSettings, validator, AnyHttpUrl
+from typing import List, Optional
 
 
-def get_str_key(name, required=False):
-    if name in DEFAULTS:
-        default = DEFAULTS[name]
-    else:
-        default = None
-    if not (data := env.str(name, default=default)) and not required:
-        log.warn('No str key: ' + name)
-        return None
-    elif not data:
-        log.critical('No str key: ' + name)
-        exit(2)
-    else:
-        return data
+class Config(BaseSettings):
+    token: str
+
+    app_id: int
+    app_hash: str
+
+    owner_id: int
+    operators: List[int]
+
+    mongo_host: str = "mongodb://localhost"
+    mongo_port: int = 27017
+    mongo_db: str = "sophie"
+
+    redis_host: str = 'localhost'
+    redis_port: int = 6379
+    redis_db_fsm: int = 1
+    redis_db_states: int = 2
+    redis_db_schedule: int = 3
+
+    botapi_server: Optional[AnyHttpUrl] = None
+
+    debug_mode: bool = False
+    modules_load: List[str] = []
+    modules_not_load: List[str] = []
+
+    webhooks_enable: bool = False
+    webhooks_url: str = ""
+    webhooks_port: int = 8080
+
+    handle_forwarded_commands: bool = False
+    handle_monofont_commands: bool = False
+
+    sentry_url: Optional[AnyHttpUrl] = None
+
+    class Config:
+        env_file = 'data/config.env'
+        env_file_encoding = 'utf-8'
+
+    @validator('operators')
+    def validate_operators(cls, value: List[int], values) -> List[int]:
+        owner_id = values['owner_id']
+        if owner_id not in value:
+            value.append(owner_id)
+        return value
 
 
-def get_int_key(name, required=False):
-    if name in DEFAULTS:
-        default = DEFAULTS[name]
-    else:
-        default = None
-    if not (data := env.int(name, default=default)) and not required:
-        log.warn('No int key: ' + name)
-        return None
-    elif not data:
-        log.critical('No int key: ' + name)
-        exit(2)
-    else:
-        return data
-
-
-def get_list_key(name, required=False):
-    if name in DEFAULTS:
-        default = DEFAULTS[name]
-    else:
-        default = None
-    if not (data := env.list(name, default=default)) and not required:
-        log.warn('No list key: ' + name)
-        return []
-    elif not data:
-        log.critical('No list key: ' + name)
-        exit(2)
-    else:
-        return data
-
-
-def get_bool_key(name, required=False):
-    if name in DEFAULTS:
-        default = DEFAULTS[name]
-    else:
-        default = None
-    if not (data := env.bool(name, default=default)) and not required:
-        log.warn('No bool key: ' + name)
-        return False
-    elif not data:
-        log.critical('No bool key: ' + name)
-        exit(2)
-    else:
-        return data
+CONFIG = Config()

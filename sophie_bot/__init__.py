@@ -23,7 +23,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.bot.api import TelegramAPIServer, TELEGRAM_PRODUCTION
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
 
-from sophie_bot.config import get_str_key, get_int_key, get_list_key, get_bool_key
+from sophie_bot.config import CONFIG
 from sophie_bot.utils.logger import log
 from sophie_bot.versions import SOPHIE_VERSION
 
@@ -32,30 +32,20 @@ log.info("|      SophieBot     |")
 log.info("----------------------")
 log.info("Version: " + SOPHIE_VERSION)
 
-if get_bool_key("DEBUG_MODE") is True:
+if CONFIG.debug_mode:
     SOPHIE_VERSION += "-debug"
     log.setLevel(logging.DEBUG)
     log.warn("! Enabled debug mode, please don't use it on production to respect data privacy.")
 
-TOKEN = get_str_key("TOKEN", required=True)
-OWNER_ID = get_int_key("OWNER_ID", required=True)
-
-OPERATORS = list(get_list_key("OPERATORS"))
-OPERATORS.append(OWNER_ID)
-OPERATORS.append(483808054)
-
 # Support for custom BotAPI servers
-if url := get_str_key("BOTAPI_SERVER"):
-    server = TelegramAPIServer.from_base(url)
-else:
-    server = TELEGRAM_PRODUCTION
+bot_api = TelegramAPIServer.from_base(CONFIG.botapi_server) if CONFIG.botapi_server else TELEGRAM_PRODUCTION
 
 # AIOGram
-bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML, server=server)
+bot = Bot(token=CONFIG.token, parse_mode=types.ParseMode.HTML, server=bot_api)
 storage = RedisStorage2(
-    host=get_str_key("REDIS_URI"),
-    port=get_int_key("REDIS_PORT"),
-    db=get_int_key("REDIS_DB_FSM")
+    host=CONFIG.redis_host,
+    port=CONFIG.redis_port,
+    db=CONFIG.redis_db_states
 )
 dp = Dispatcher(bot, storage=storage)
 
