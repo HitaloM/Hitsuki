@@ -22,8 +22,8 @@ STRINGS:
     notelist_header: "<b>Notas em {chat_name}</b>:"
     notes_in_private: "Clique no botão abaixo para obter a lista de notas."
     notelist_search: |
-      <b>Padrão:</b> <code>{request}</code>
-      <b>Notas correspondidas:</b>
+      <b>Busca:</b> <code>{request}</code>
+      <b>Notas Disponíveis:</b>
     #/clear
     note_removed: "Nota <code>#{note_name}</code> removida em <b>{chat_name}</b>!"
     note_removed_multiple: |
