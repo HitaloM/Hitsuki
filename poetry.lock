@@ -893,7 +893,7 @@ fast = ["aiohttp", "cryptg", "cryptography"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "ea950a344d7e35fc8a48ebd0a4508587ca41644558b156a71ec95167a5f4500a"
+content-hash = "2aee4b50fe6d6c56db15bebcd9c061b4ec80db0c6df61c245a18b12cbc3b9c07"
 
 [metadata.files]
 aiocron = [

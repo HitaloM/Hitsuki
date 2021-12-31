@@ -13,14 +13,12 @@ class Config(BaseSettings):
 
     backup_pass: str = "hitsuki"
 
-    SW_API: str = ""
-
     owner_id: int
     operators: List[int]
 
     mongo_host: str = "mongodb://localhost"
     mongo_port: int = 27017
-    mongo_db: str = "sophie"
+    mongo_db: str = "hitsuki"
 
     redis_host: str = 'localhost'
     redis_port: int = 6379
