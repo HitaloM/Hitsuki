@@ -11,6 +11,7 @@ class Config(BaseSettings):
     logs_channel_id: int = 0
     backup_dumps_id: int = 0
 
+    auto_backup: bool = False
     backup_pass: str = "hitsuki"
 
     owner_id: int
