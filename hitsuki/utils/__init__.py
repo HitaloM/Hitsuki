@@ -1,6 +1,3 @@
-# Copyright (C) 2018 - 2020 MrYacha. All rights reserved. Source code available under the AGPL.
-# Copyright (C) 2019 Aiogram
-#
 # This file is part of Hitsuki (Telegram Bot)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,13 +12,3 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-from hitsuki import bot
-from hitsuki.config import CONFIG
-from hitsuki.utils.logger import log
-
-
-async def channel_log(msg, info_log=True):
-    if info_log:
-        log.info(msg)
-    await bot.send_message(CONFIG.logs_channel_id, msg)
