@@ -8,6 +8,11 @@ class Config(BaseSettings):
     app_id: int
     app_hash: str
 
+    logs_channel_id: int = 0
+    backup_dumps_id: int = 0
+
+    backup_pass: str = "hitsuki"
+
     owner_id: int
     operators: List[int]
 

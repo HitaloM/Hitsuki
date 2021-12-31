@@ -17,13 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from hitsuki import bot
-from hitsuki.config import get_int_key
+from hitsuki.config import CONFIG
 from hitsuki.utils.logger import log
 
 
 async def channel_log(msg, info_log=True):
-    chat_id = get_int_key("LOGS_CHANNEL_ID")
     if info_log:
         log.info(msg)
-
-    await bot.send_message(chat_id, msg)
+    await bot.send_message(CONFIF.logs_channel_id, msg)

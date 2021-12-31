@@ -216,7 +216,7 @@ async def do_backup(chat_id, reply=False):
     file_name = f"backups/dump_{date}.7z"
     if not os.path.exists("backups/tempbackup/"):
         os.makedirs("backups/tempbackup/")
-    MONGO_URI = get_str_key("MONGO_URI")
+    MONGO_URI = CONFIG.mongo_host
     await term(f'mongodump --uri "mongodb://{MONGO_URI}" --out=backups/tempbackup')
 
     # Copy config file
@@ -224,7 +224,7 @@ async def do_backup(chat_id, reply=False):
 
     if reply:
         await bot.send_message(chat_id, "Compressing and uploading to Telegram...", reply_to_message_id=reply)
-    password = get_str_key("BACKUP_PASS")
+    password = CONFIG.backup_pass
     await term(f"cd backups/tempbackup/; 7z a -mx9 ../../{file_name} * -p{password} -mhe=on")
     shutil.rmtree('backups/tempbackup')
 

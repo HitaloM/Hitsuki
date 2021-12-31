@@ -19,11 +19,11 @@
 import aiocron
 
 from hitsuki.modules.owner_stuff import do_backup
-from hitsuki.config import get_bool_key, get_int_key
+from hitsuki.config import CONFIG
 
 
-@aiocron.crontab('0 * * * *')
+@aiocron.crontab("0 * * * *")
 async def backup():
-    if get_bool_key("AUTO_BACKUP") is False:
+    if CONFIG.auto_backup is False:
         return
     await do_backup(get_int_key("BACKUP_DUMPS_ID"))
