@@ -56,15 +56,6 @@ if len(LOAD) > 0:
 else:
     modules = ALL_MODULES
 
-modules = [x for x in modules if x not in DONT_LOAD]
-
-log.info("Modules to load: %s", str(modules))
-for module_name in modules:
-    log.debug(f"Importing <d><n>{module_name}</></>")
-    imported_module = import_module("sophie_bot.modules." + module_name)
-    LOADED_MODULES.append(imported_module)
-log.info("Modules loaded!")
-
 loop = asyncio.get_event_loop()
 
 import_module('hitsuki.modules.pm_menu')

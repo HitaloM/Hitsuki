@@ -24,7 +24,7 @@ from aiogram.utils.exceptions import BotKicked
 from redis.exceptions import RedisError
 
 from hitsuki import dp, bot
-from sophie_bot.config import CONFIG
+from hitsuki.config import CONFIG
 from hitsuki.services.redis import redis
 from hitsuki.utils.logger import log
 
