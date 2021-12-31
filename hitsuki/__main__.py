@@ -26,6 +26,7 @@ from hitsuki import dp, bot
 from hitsuki.config import CONFIG
 from hitsuki.modules import ALL_MODULES, LOADED_MODULES, MOD_HELP
 from hitsuki.utils.logger import log
+from hitsuki.utils import sentry  # need to import to start the service
 
 if CONFIG.debug_mode:
     log.debug("Enabling logging middleware.")
