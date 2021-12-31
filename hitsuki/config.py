@@ -13,6 +13,8 @@ class Config(BaseSettings):
 
     backup_pass: str = "hitsuki"
 
+    SW_API: str = ""
+
     owner_id: int
     operators: List[int]
 

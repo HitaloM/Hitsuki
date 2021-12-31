@@ -8,7 +8,7 @@ __pycache__/
 *.session-journal
 
 # Config
-data/bot_conf.yaml
+data/config.env
 
 # Logs
 logs/
