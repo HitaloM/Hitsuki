@@ -16,5 +16,5 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-HITSUKI_VERSION = "v2.2.9-H4.0"
+HITSUKI_VERSION = "V2.2.9-H4.5"
 DB_STRUCTURE_VER = 8
