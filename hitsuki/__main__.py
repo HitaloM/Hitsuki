@@ -31,30 +31,27 @@ if CONFIG.debug_mode:
     log.debug("Enabling logging middleware.")
     dp.middleware.setup(LoggingMiddleware())
 
-LOAD = CONFIG.modules_load
-DONT_LOAD = CONFIG.modules_not_load
-
 # Load modules
-if len(LOAD) > 0:
-    modules = LOAD if len(LOAD) > 0 else ALL_MODULES
-    modules = [x for x in modules if x not in DONT_LOAD]
-
-    log.info("Modules to load: %s", str(modules))
-    for module_name in modules:
-        # Load pm_menu at last
-        if module_name == 'pm_menu':
-            continue
-        log.debug(f"Importing <d><n>{module_name}</></>")
-        imported_module = import_module("hitsuki.modules." + module_name)
-        if hasattr(imported_module, '__help__'):
-            if hasattr(imported_module, '__mod_name__'):
-                MOD_HELP[imported_module.__mod_name__] = imported_module.__help__
-            else:
-                MOD_HELP[imported_module.__name__] = imported_module.__help__
-        LOADED_MODULES.append(imported_module)
-    log.info("Modules loaded!")
+if len(CONFIG.modules_load) > 0:
+    modules = CONFIG.modules_load
 else:
     modules = ALL_MODULES
+
+modules = [x for x in modules if x not in CONFIG.modules_not_load]
+
+log.info("Modules to load: %s", str(modules))
+for module_name in modules:
+    if module_name == 'pm_menu':
+        continue
+    log.debug(f"Importing <d><n>{module_name}</></>")
+    imported_module = import_module("hitsuki.modules." + module_name)
+    if hasattr(imported_module, '__help__'):
+        if hasattr(imported_module, '__mod_name__'):
+            MOD_HELP[imported_module.__mod_name__] = imported_module.__help__
+        else:
+            MOD_HELP[imported_module.__name__] = imported_module.__help__
+    LOADED_MODULES.append(imported_module)
+log.info("Modules loaded!")
 
 loop = asyncio.get_event_loop()
 

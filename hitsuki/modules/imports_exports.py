@@ -27,7 +27,7 @@ from aiogram.types.input_file import InputFile
 from babel.dates import format_timedelta
 
 from hitsuki import bot
-from sophie_bot import CONFIG
+from hitsuki import CONFIG
 from hitsuki.decorator import register
 from hitsuki.services.redis import redis
 from . import LOADED_MODULES

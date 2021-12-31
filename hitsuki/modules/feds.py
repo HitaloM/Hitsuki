@@ -41,7 +41,7 @@ from babel.dates import format_timedelta
 from pymongo import DeleteMany, InsertOne
 
 from hitsuki import BOT_ID, decorator, bot
-from sophie_bot.config import CONFIG
+from hitsuki.config import CONFIG
 from hitsuki.services.mongo import db
 from hitsuki.services.redis import redis
 from hitsuki.services.telethon import tbot
