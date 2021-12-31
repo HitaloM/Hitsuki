@@ -37,7 +37,7 @@ from captcha.image import ImageCaptcha
 from telethon.tl.custom import Button
 
 from hitsuki import BOT_USERNAME, BOT_ID, bot, dp
-from hitsuki.config import get_str_key
+from hitsuki.config import CONFIG
 from hitsuki.decorator import register
 from hitsuki.services.apscheduller import scheduler
 from hitsuki.services.mongo import db
@@ -359,7 +359,7 @@ async def welcome_security(message, chat, strings):
         strings['ask_for_time_customization'].format(
             time=format_timedelta(
                 convert_time(
-                    get_str_key("JOIN_CONFIRM_DURATION")
+                    "1h"
                 ),
                 locale=strings['language_info']['babel']
             )
@@ -538,7 +538,7 @@ async def welcome_security_handler(message: Message, strings):
     if raw_time := db_item['welcome_security'].get('expire', None):
         time = convert_time(raw_time)
     else:
-        time = convert_time(get_str_key('JOIN_CONFIRM_DURATION'))
+        time = convert_time("1h")
 
     scheduler.add_job(
         join_expired,

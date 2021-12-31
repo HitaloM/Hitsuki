@@ -1,7 +1,7 @@
 # Copyright (C) 2018 - 2020 MrYacha. All rights reserved. Source code available under the AGPL.
 # Copyright (C) 2019 Aiogram
 #
-# This file is part of Hitsuki (Telegram Bot)
+# This file is part of SophieBot.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -19,8 +19,8 @@
 import os
 import signal
 
-from hitsuki.services.redis import redis
-from hitsuki.utils.logger import log
+from sophie_bot.services.redis import redis
+from sophie_bot.utils.logger import log
 
 
 def exit_gracefully(signum, frame):

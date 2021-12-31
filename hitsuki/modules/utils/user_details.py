@@ -27,7 +27,8 @@ from aiogram.types import CallbackQuery, Message
 from aiogram.utils.exceptions import BadRequest, Unauthorized, ChatNotFound
 from telethon.tl.functions.users import GetFullUserRequest
 
-from hitsuki import OPERATORS, bot
+from hitsuki import bot
+from sophie_bot.config import CONFIG
 from hitsuki.services.mongo import db
 from hitsuki.services.redis import bredis
 from hitsuki.services.telethon import tbot
@@ -169,7 +170,7 @@ async def is_user_admin(chat_id, user_id):
     if chat_id == user_id:
         return True
 
-    if user_id in OPERATORS:
+    if user_id in CONFIG.operators:
         return True
 
     # Workaround to support anonymous admins
@@ -189,7 +190,7 @@ async def check_admin_rights(event: Union[Message, CallbackQuery], chat_id, user
     if chat_id == user_id:
         return True
 
-    if user_id in OPERATORS:
+    if user_id in CONFIG.operators:
         return True
 
     # Workaround to support anonymous admins

@@ -24,15 +24,12 @@ from aiogram.dispatcher.handler import SkipHandler
 from sentry_sdk import configure_scope
 
 from hitsuki import BOT_USERNAME, dp
-from hitsuki.config import get_bool_key
+from hitsuki.config import CONFIG
 from hitsuki.modules.error import parse_update
 from hitsuki.utils.filters import ALL_FILTERS
 from hitsuki.utils.logger import log
 
-DEBUG_MODE = get_bool_key('DEBUG_MODE')
-ALLOW_F_COMMANDS = get_bool_key("ALLOW_FORWARDS_COMMANDS")
-ALLOW_COMMANDS_FROM_EXC = get_bool_key("ALLOW_COMMANDS_WITH_!")
-CMD_NOT_MONO = get_bool_key("DISALLOW_MONO_CMDS")
+ALLOW_COMMANDS_FROM_EXC = False  # TODO: currently broken
 
 REGISTRED_COMMANDS = []
 COMMANDS_ALIASES = {}
@@ -54,10 +51,10 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
     if cmds and not f:
         regex = r'\A^{}('.format('[!/]' if ALLOW_COMMANDS_FROM_EXC else '/')
 
-        if 'not_forwarded' not in kwargs and ALLOW_F_COMMANDS is False:
+        if 'not_forwarded' not in kwargs and not CONFIG.handle_forwarded_commands:
             kwargs['not_forwarded'] = True
 
-        if 'cmd_not_mono' not in kwargs and CMD_NOT_MONO:
+        if 'cmd_not_mono' not in kwargs and not CONFIG.handle_monofont_commands:
             kwargs['cmd_not_mono'] = True
 
         for idx, cmd in enumerate(cmds):
@@ -113,7 +110,7 @@ def register(*args, cmds=None, f=None, allow_edited=True, allow_kwargs=False, **
                 parsed_update = parse_update(dict(message))
                 scope.set_extra("update", str(parsed_update))
 
-            if DEBUG_MODE:
+            if CONFIG.debug_mode:
                 # log.debug('[*] Starting {}.'.format(func.__name__))
                 # log.debug('Event: \n' + str(message))
                 start = time.time()

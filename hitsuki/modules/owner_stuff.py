@@ -35,7 +35,8 @@ from io import BytesIO
 
 from aiogram.utils.exceptions import BadRequest, Unauthorized
 
-from hitsuki import OWNER_ID, OPERATORS, HITSUKI_VERSION, bot, dp
+from hitsuki import HITSUKI_VERSION, bot, dp
+from hitsuki.config import CONFIG
 from hitsuki.decorator import REGISTRED_COMMANDS, COMMANDS_ALIASES, register
 from hitsuki.modules import LOADED_MODULES
 from hitsuki.services.mongo import db, mongodb
@@ -346,7 +347,7 @@ async def __stats__():
 
 @get_strings_dec('owner_stuff')
 async def __user_info__(message, user_id, strings):
-    if user_id == OWNER_ID:
+    if user_id == CONFIG.owner_id::
         return strings["father"]
-    if user_id in OPERATORS:
+    if user_id in CONFIG.operators:
         return strings['sudo_crown']

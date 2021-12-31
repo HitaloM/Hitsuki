@@ -20,16 +20,9 @@
 
 from telethon import TelegramClient
 
-from hitsuki.config import get_str_key, get_int_key
+from hitsuki.config import CONFIG
 
-TOKEN = get_str_key("TOKEN", required=True)
-NAME = TOKEN.split(':')[0]
-
-tbot = TelegramClient(
-    NAME,
-    get_int_key("APP_ID", required=True),
-    get_str_key("APP_HASH", required=True)
-)
+tbot = TelegramClient(CONFIG.token.split(':')[0], CONFIG.app_id, CONFIG.app_hash)
 
 # Telethon
-tbot.start(bot_token=TOKEN)
+tbot.start(bot_token=CONFIG.token)

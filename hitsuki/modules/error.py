@@ -23,7 +23,8 @@ from aiogram.types import Update
 from aiogram.utils.exceptions import BotKicked
 from redis.exceptions import RedisError
 
-from hitsuki import dp, bot, OWNER_ID
+from hitsuki import dp, bot
+from sophie_bot.config import CONFIG
 from hitsuki.services.redis import redis
 from hitsuki.utils.logger import log
 
@@ -57,10 +58,10 @@ def catch_redis_error(**dec_kwargs):
                     if await bot.send_message(chat_id, text):
                         SENT.append(chat_id)
                 # Alert bot owner
-                if OWNER_ID not in SENT:
+                if CONFIG.owner_id not in SENT:
                     text = 'Hitsuki panic: Got redis error'
-                    if await bot.send_message(OWNER_ID, text):
-                        SENT.append(OWNER_ID)
+                    if await bot.send_message(CONFIG.owner_id, text):
+                        SENT.append(CONFIG.owner_id)
                 log.error(RedisError, exc_info=True)
                 return True
 

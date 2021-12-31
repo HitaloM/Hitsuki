@@ -19,12 +19,13 @@
 import sentry_sdk
 from sentry_sdk.integrations.redis import RedisIntegration
 
-from hitsuki.config import get_str_key
+from hitsuki.config import CONFIG
 from hitsuki.utils.logger import log
 
-log.info("Starting sentry.io integraion...")
+if CONFIG.sentry_url:
+    log.info("Starting sentry.io integraion...")
 
-sentry_sdk.init(
-    get_str_key('SENTRY_API_KEY'),
-    integrations=[RedisIntegration()]
-)
+    sentry_sdk.init(
+        CONFIG.sentry_url,
+        integrations=[RedisIntegration()]
+    )

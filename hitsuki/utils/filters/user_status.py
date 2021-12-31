@@ -19,8 +19,8 @@
 from aiogram import types
 from aiogram.dispatcher.filters import BoundFilter
 
-from hitsuki import OPERATORS, dp
-from hitsuki.config import get_int_key
+from hitsuki import dp
+from hitsuki.config import CONFIG
 from hitsuki.modules.utils.language import get_strings_dec
 from hitsuki.modules.utils.user_details import is_user_admin
 from hitsuki.services.mongo import mongodb
@@ -54,7 +54,7 @@ class IsOwner(BoundFilter):
         self.is_owner = is_owner
 
     async def check(self, message: types.Message):
-        if message.from_user.id == get_int_key("OWNER_ID"):
+        if message.from_user.id == CONFIG.owner_id:
             return True
 
 
@@ -65,7 +65,7 @@ class IsOP(BoundFilter):
         self.is_owner = is_op
 
     async def check(self, message: types.Message):
-        if message.from_user.id in OPERATORS:
+        if message.from_user.id in CONFIG.operators:
             return True
 
 

@@ -21,20 +21,20 @@ import sys
 import redis as redis_lib
 
 from hitsuki import log
-from hitsuki.config import get_str_key, get_int_key
+from hitsuki.config import CONFIG
 
 # Init Redis
 redis = redis_lib.StrictRedis(
-    host=get_str_key("REDIS_URI"),
-    port=get_str_key("REDIS_PORT"),
-    db=get_int_key("REDIS_DB_FSM"),
+    host=CONFIG.redis_host,
+    port=CONFIG.redis_port,
+    db=CONFIG.redis_db_fsm,
     decode_responses=True
 )
 
 bredis = redis_lib.StrictRedis(
-    host=get_str_key("REDIS_URI"),
-    port=get_str_key("REDIS_PORT"),
-    db=get_int_key("REDIS_DB_FSM")
+    host=CONFIG.redis_host,
+    port=CONFIG.redis_port,
+    db=CONFIG.redis_db_fsm
 )
 
 try:

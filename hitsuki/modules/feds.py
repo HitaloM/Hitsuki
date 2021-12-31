@@ -40,7 +40,8 @@ from aiogram.utils.exceptions import Unauthorized, NeedAdministratorRightsInTheC
 from babel.dates import format_timedelta
 from pymongo import DeleteMany, InsertOne
 
-from hitsuki import OWNER_ID, BOT_ID, OPERATORS, decorator, bot
+from hitsuki import BOT_ID, decorator, bot
+from sophie_bot.config import CONFIG
 from hitsuki.services.mongo import db
 from hitsuki.services.redis import redis
 from hitsuki.services.telethon import tbot
@@ -184,7 +185,7 @@ def is_fed_owner(func):
         if user_id in [1087968824, 777000]:
             return
 
-        if not user_id == fed["creator"] and user_id != OWNER_ID:
+        if not user_id == fed["creator"] and user_id != CONFIG.owner_id:
             text = (await get_string(message.chat.id, "feds", 'need_fed_admin')).format(
                 name=html.escape(fed['fed_name'], False)
             )
@@ -206,7 +207,7 @@ def is_fed_admin(func):
         if user_id in [1087968824, 777000]:
             return
 
-        if not user_id == fed["creator"] and user_id != OWNER_ID:
+        if not user_id == fed["creator"] and user_id != CONFIG.owner_id:
             if 'admins' not in fed or user_id not in fed['admins']:
                 text = (await get_string(message.chat.id, "feds", 'need_fed_admin')).format(
                     name=html.escape(fed['fed_name'], False)
@@ -238,7 +239,7 @@ async def new_fed(message, strings):
         await message.reply(strings['fed_name_long'])
         return
 
-    if await get_fed_by_creator(user_id) and not user_id == OWNER_ID:
+    if await get_fed_by_creator(user_id) and not user_id == CONFIG.owner_id:
         await message.reply(strings['can_only_1_fed'])
         return
 
@@ -575,7 +576,7 @@ async def fed_ban_user(message, fed, user, reason, strings):
     user_id = user['user_id']
 
     # Checks
-    if user_id in OPERATORS:
+    if user_id in CONFIG.operators:
         await message.reply(strings['user_wl'])
         return
 
@@ -911,9 +912,8 @@ async def fed_rename(message, fed, strings):
 async def fban_export(message, fed, strings):
     fed_id = fed['fed_id']
     key = 'fbanlist_lock:' + str(fed_id)
-    if redis.get(key) and message.from_user.id not in OPERATORS:
-        ttl = format_timedelta(timedelta(seconds=redis.ttl(
-            key)), strings['language_info']['babel'])
+    if redis.get(key) and message.from_user.id not in CONFIG.operators:
+        ttl = format_timedelta(timedelta(seconds=redis.ttl(key)), strings['language_info']['babel'])
         await message.reply(strings['fbanlist_locked'] % ttl)
         return
 
@@ -961,9 +961,8 @@ async def fban_export(message, fed, strings):
 async def importfbans_cmd(message, fed, strings):
     fed_id = fed['fed_id']
     key = 'importfbans_lock:' + str(fed_id)
-    if redis.get(key) and message.from_user.id not in OPERATORS:
-        ttl = format_timedelta(timedelta(seconds=redis.ttl(
-            key)), strings['language_info']['babel'])
+    if redis.get(key) and message.from_user.id not in CONFIG.operators:
+        ttl = format_timedelta(timedelta(seconds=redis.ttl(key)), strings['language_info']['babel'])
         await message.reply(strings['importfbans_locked'] % ttl)
         return
 
