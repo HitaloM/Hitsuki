@@ -19,8 +19,8 @@
 import os
 import signal
 
-from sophie_bot.services.redis import redis
-from sophie_bot.utils.logger import log
+from hitsuki.services.redis import redis
+from hitsuki.utils.logger import log
 
 
 def exit_gracefully(signum, frame):

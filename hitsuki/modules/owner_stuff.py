@@ -42,7 +42,6 @@ from hitsuki.modules import LOADED_MODULES
 from hitsuki.services.mongo import db, mongodb
 from hitsuki.services.redis import redis
 from hitsuki.services.telethon import tbot
-from hitsuki.config import get_str_key
 from hitsuki.utils.channel_logs import channel_log
 from .utils.covert import convert_size
 from .utils.language import get_strings_dec
@@ -220,7 +219,7 @@ async def do_backup(chat_id, reply=False):
     await term(f'mongodump --uri "mongodb://{MONGO_URI}" --out=backups/tempbackup')
 
     # Copy config file
-    shutil.copyfile('data/bot_conf.yaml', 'backups/tempbackup/bot_conf.yaml')
+    shutil.copyfile('data/config.env', 'backups/tempbackup/bot_conf.yaml')
 
     if reply:
         await bot.send_message(chat_id, "Compressing and uploading to Telegram...", reply_to_message_id=reply)

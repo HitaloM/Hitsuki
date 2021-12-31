@@ -28,7 +28,7 @@ from aiogram.utils.exceptions import BadRequest, Unauthorized, ChatNotFound
 from telethon.tl.functions.users import GetFullUserRequest
 
 from hitsuki import bot
-from sophie_bot.config import CONFIG
+from hitsuki.config import CONFIG
 from hitsuki.services.mongo import db
 from hitsuki.services.redis import bredis
 from hitsuki.services.telethon import tbot
