@@ -1,5 +1,5 @@
+# Copyright (C) 2022 HitaloSama.
 # Copyright (C) 2019 Aiogram.
-# Copyright (C) 2021 HitaloSama.
 #
 # This file is part of Hitsuki (Telegram Bot)
 #
@@ -93,7 +93,7 @@ async def pixel_experience(message, strings):
     try:
         atype = args[2].lower()
     except IndexError:
-        atype = "eleven"
+        atype = "twelve"
 
     if device == "":
         text = strings["cmd_example"].format(cmd=get_cmd(message))

@@ -1,4 +1,4 @@
-# Copyright (C) 2021 HitaloSama.
+# Copyright (C) 2022 HitaloSama.
 # Copyright (C) 2019 Aiogram.
 #
 # This file is part of Hitsuki (Telegram Bot)
@@ -63,7 +63,7 @@ async def anilist_anime(message, strings):
     else:
         try:
             async with anilist.AsyncClient() as client:
-                results = await client.search(query, "anime", 1)
+                results = await client.search(query, "anime", page=1, limit=1)
                 anime_id = results[0].id
         except (IndexError, ReadTimeout):
             return await message.reply(strings["search_err"])
@@ -134,7 +134,7 @@ async def anilist_airing(message, strings):
     else:
         try:
             async with anilist.AsyncClient() as client:
-                results = await client.search(query, "anime", 1)
+                results = await client.search(query, "anime", page=1, limit=1)
                 anime_id = results[0].id
         except (IndexError, ReadTimeout):
             return await message.reply(strings["search_err"])
@@ -177,7 +177,7 @@ async def anilist_manga(message, strings):
     else:
         try:
             async with anilist.AsyncClient() as client:
-                results = await client.search(query, "manga", 1)
+                results = await client.search(query, "manga", page=1, limit=1)
                 manga_id = results[0].id
         except (IndexError, ReadTimeout):
             return await message.reply(strings["search_err"])
@@ -238,7 +238,7 @@ async def anilist_character(message, strings):
     else:
         try:
             async with anilist.AsyncClient() as client:
-                results = await client.search(query, "char", 1)
+                results = await client.search(query, "char", page=1, limit=1)
                 character_id = results[0].id
         except (IndexError, ReadTimeout):
             return await message.reply(strings["search_err"])
