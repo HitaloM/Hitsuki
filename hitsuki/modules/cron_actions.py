@@ -26,4 +26,4 @@ from hitsuki.config import CONFIG
 async def backup():
     if CONFIG.auto_backup is False:
         return
-    await do_backup(get_int_key("BACKUP_DUMPS_ID"))
+    await do_backup(CONFIG.backup_dumps_id)
