@@ -124,7 +124,7 @@ STRINGS:
     same_mode: Berikut ini adalah mode saat ini! Bagaimana saya akan mengubahnya?
     no_time: Untuk memilih mode 'tmute' anda harus memberikan waktu!
     invalid_time: Waktu salah!
-    setup_corrupted: Setup is corrupted, try again!
+    setup_corrupted: Pengaturan rusak, coba lagi!
     warnmode_success: Mode peringatan dari <b>%s</b> telah berhasil diubah ke <b>%s</b>!
     wrng_args: |
       Berikut ini beberapa opsi yang tersedia:
@@ -147,10 +147,10 @@ STRINGS:
     conn_chat_id: "ID percakapan yang terhubung saat ini: <code>{id}</code>"
     help_btn: "Tekan saya untuk mendapatkan bantuan!"
     help_txt: "Klik tombol dibawah untuk mendapatkan bantuan!"
-    github_err: "User not found. Make sure you entered valid username!"
-    paste_success: "<b>Pasted successfully!</b>\nNekobin URL: {}"
-    paste_fail: "Failed to reach Nekobin!"
-    paste_no_text: "You haven't supplied text to paste!"
+    github_err: "Pengguna tidak ditemukan. Pastikan Anda memasukkan nama pengguna yang valid!"
+    paste_success: "<b>Menempel berhasil!</b>\nNekobin URL:{}"
+    paste_fail: "Gagal mencapai Nekobin!"
+    paste_no_text: "Anda belum menyediakan teks untuk di tempel!"
     delmsg_filter_title: 'Hapus pesan'
     send_text: Mohon kirim pesan balasan!
     replymsg_filter_title: 'Balas pesan'
