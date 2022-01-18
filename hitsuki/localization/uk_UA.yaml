@@ -448,7 +448,7 @@ STRINGS:
   global:
     u_not_admin: Ви повинні бути адміністратором, щоб зробити це!
     #Rights
-    "bot_no_right:not_admin": Я не адмін!
+    "bot_no_right:not_admin": I'm not an admin!
     bot_no_right: "Я не маю дозволу на {permission} тут!"
     user_no_right: "У вас немає дозволу на {permission} тут!"
     "user_no_right:not_admin": Ви повинні бути адміністратором, щоб зробити це!
