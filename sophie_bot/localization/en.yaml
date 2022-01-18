@@ -502,7 +502,7 @@ STRINGS:
     u_not_admin: You should be an admin to do this!
 
     # Rights
-    bot_no_right:not_admin: I'm not a admin!
+    bot_no_right:not_admin: I'm not an admin!
     bot_no_right: "I dont have permission to {permission} here!"
     user_no_right: "You don't have permission to {permission} here!"
     user_no_right:not_admin: You should be admin to-do it!
