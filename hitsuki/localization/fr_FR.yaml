@@ -447,7 +447,7 @@ STRINGS:
   global:
     u_not_admin: Vous devriez être un administrateur pour faire ça !
     #Rights
-    "bot_no_right:not_admin": Je ne suis pas un administrateur !
+    "bot_no_right:not_admin": I'm not an admin!
     bot_no_right: "Je n'ai pas besoin de la permission de le faire ! \nPermission manquante : <b>%s</b>"
     user_no_right: "Vous devriez avoir la permission de le faire ! \nPermission manquante : <b>%s</b>"
     "user_no_right:not_admin": Vous devriez être administrateur pour le faire !
