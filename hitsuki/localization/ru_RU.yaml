@@ -443,7 +443,7 @@ STRINGS:
   global:
     u_not_admin: Вы должны быть админом, чтобы сделать это!
     #Rights
-    "bot_no_right:not_admin": Я не админ!
+    "bot_no_right:not_admin": I'm not an admin!
     bot_no_right: "У меня нет требуемого разрешения на это! \nОтсутствующее разрешение: <b>%s</b>"
     user_no_right: "У вас должно быть необходимое разрешение для этого! \nОтсутствующее разрешение: <b>%s</b>"
     "user_no_right:not_admin": Вы должны быть админом, чтобы сделать это!
