@@ -447,7 +447,7 @@ STRINGS:
   global:
     u_not_admin: يجب أن تكون مشرفا للقيام بهذا!
     #Rights
-    "bot_no_right:not_admin": أنا لست مشرفًا!
+    "bot_no_right:not_admin": I'm not an admin!
     bot_no_right: "لست بحاجة إلى إذن للقيام بذلك! \nإذن مفقود: <b>%s</b>"
     user_no_right: "يجب أن يكون لديك الإذن للقيام بذلك! \nالصلاحية مفقودة: <b>%s</b>"
     "user_no_right:not_admin": يجب أن تكون مشرف للقيام بذلك!
