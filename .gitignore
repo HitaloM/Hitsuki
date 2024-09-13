@@ -1,3 +1,8 @@
+# Rust / Cargo
 /target
-Cargo.lock
+
+# Grammers
 *.session
+
+# Hitsuki
+config.toml

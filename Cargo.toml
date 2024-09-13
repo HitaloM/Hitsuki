@@ -1,8 +1,24 @@
 [package]
 name = "hitsuki"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+grammers-friendly = { git = "https://github.com/AndrielFR/grammers-friendly", features = [
+    "macros",
+] }
+grammers-client = { git = "https://github.com/Lonami/grammers", features = [
+    "html",
+] }
+grammers-session = { git = "https://github.com/Lonami/grammers" }
+
+log = "0.4.22"
+toml = "0.8.19"
+tokio = { version = "1.40.0", features = [
+    "macros",
+    "sync",
+    "signal",
+    "rt-multi-thread",
+] }
+serde = { version = "1.0.209", features = ["derive"] }
+env_logger = "0.11.5"
