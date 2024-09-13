@@ -534,7 +534,7 @@ dependencies = [
 [[package]]
 name = "grammers-friendly"
 version = "0.1.0"
-source = "git+https://github.com/AndrielFR/grammers-friendly#1d8a3174060b6d6488e1e36044ca94aa2231d958"
+source = "git+https://github.com/AndrielFR/grammers-friendly#ed4fddc8fb572690a7e2498edbe2445c29010061"
 dependencies = [
  "async-recursion",
  "async-trait",
@@ -551,7 +551,7 @@ dependencies = [
 [[package]]
 name = "grammers-macros"
 version = "0.1.0"
-source = "git+https://github.com/AndrielFR/grammers-friendly#1d8a3174060b6d6488e1e36044ca94aa2231d958"
+source = "git+https://github.com/AndrielFR/grammers-friendly#ed4fddc8fb572690a7e2498edbe2445c29010061"
 
 [[package]]
 name = "grammers-mtproto"
@@ -1271,6 +1271,7 @@ dependencies = [
  "bytes",
  "libc",
  "mio",
+ "parking_lot",
  "pin-project-lite",
  "signal-hook-registry",
  "socket2",
