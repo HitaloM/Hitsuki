@@ -27,8 +27,10 @@ async fn main() -> Result<()> {
 }
 
 async fn connect_bot(config: &hitsuki::Config) -> Result<Client> {
-    let client = Client::connect(Config {
-        session: Session::load_file_or_create(SESSION_FILE)?,
+    let session = Session::load_file_or_create(SESSION_FILE)?;
+
+    let client_config = Config {
+        session,
         api_id: config.telegram.api_id,
         api_hash: config.telegram.api_hash.clone(),
         params: InitParams {
@@ -36,8 +38,10 @@ async fn connect_bot(config: &hitsuki::Config) -> Result<Client> {
             flood_sleep_threshold: 180,
             ..Default::default()
         },
-    })
-    .await?;
+    };
+
+    let client = Client::connect(client_config).await?;
+
     Ok(client)
 }
 
@@ -45,6 +49,7 @@ async fn authorize_bot(client: &Client, config: &hitsuki::Config) -> Result<()> 
     if !client.is_authorized().await? {
         client.bot_sign_in(&config.bot.token).await?;
         client.session().save_to_file(SESSION_FILE)?;
+
         log::info!("Bot authorized");
     }
     Ok(())
@@ -55,12 +60,16 @@ async fn setup_dispatcher(client: &Client) -> Result<()> {
         .add_router(handlers::start())
         .run(client.clone())
         .await?;
+
     log::info!("Dispatcher is running");
+
     Ok(())
 }
 
 fn save_session(client: &Client) -> Result<()> {
     client.session().save_to_file(SESSION_FILE)?;
+
     log::info!("Session saved");
+
     Ok(())
 }
