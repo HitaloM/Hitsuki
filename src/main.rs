@@ -57,6 +57,7 @@ async fn authorize_bot(client: &Client, config: &hitsuki::Config) -> Result<()> 
 
 async fn setup_dispatcher(client: &Client) -> Result<()> {
     Dispatcher::default()
+        .add_router(handlers::bans())
         .add_router(handlers::start())
         .run(client.clone())
         .await?;
