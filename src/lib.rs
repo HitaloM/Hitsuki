@@ -6,3 +6,6 @@ mod config;
 pub mod handlers;
 
 pub use config::Config;
+use teloxide::adaptors::{CacheMe, DefaultParseMode};
+
+type Bot = CacheMe<DefaultParseMode<teloxide::Bot>>;

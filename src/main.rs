@@ -16,7 +16,9 @@ async fn main() -> Result<()> {
     let config = Config::load().expect("Failed to load configuration");
 
     log::info!("Starting Hitsuki...");
-    let bot = Bot::new(config.bot.token).parse_mode(ParseMode::Html);
+    let bot = Bot::new(config.bot.token)
+        .parse_mode(ParseMode::Html)
+        .cache_me();
 
     let handler = Update::filter_message()
         .branch(
