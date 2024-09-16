@@ -6,6 +6,6 @@ mod config;
 pub mod handlers;
 
 pub use config::Config;
-use teloxide::adaptors::{CacheMe, DefaultParseMode};
+use teloxide::adaptors::{CacheMe, DefaultParseMode, Throttle};
 
-type Bot = CacheMe<DefaultParseMode<teloxide::Bot>>;
+type Bot = CacheMe<DefaultParseMode<Throttle<teloxide::Bot>>>;

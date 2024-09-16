@@ -2,7 +2,7 @@
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
 use anyhow::Result;
-use teloxide::{prelude::*, types::ParseMode};
+use teloxide::{adaptors::throttle::Limits, prelude::*, types::ParseMode};
 
 use hitsuki::{
     commands::{BansCommand, StartCommand},
@@ -17,6 +17,7 @@ async fn main() -> Result<()> {
 
     log::info!("Starting Hitsuki...");
     let bot = Bot::new(config.bot.token)
+        .throttle(Limits::default())
         .parse_mode(ParseMode::Html)
         .cache_me();
 
