@@ -28,9 +28,8 @@ async fn main() -> ResponseResult<()> {
                 .endpoint(bans),
         );
 
-    Dispatcher::builder(bot.clone(), handler)
-        .dependencies(dptree::deps![bot])
-        .default_handler(|_upd| async move {}) // For Teloxide to stop warning about unhandled updates
+    Dispatcher::builder(bot, handler)
+        .default_handler(|_upd| async move {}) // To stop warning about unhandled updates
         .error_handler(LoggingErrorHandler::with_custom_text(
             "An error has occurred in the dispatcher",
         ))
