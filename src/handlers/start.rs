@@ -1,17 +1,40 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
-use grammers_client::{Client, InputMessage, Update};
-use grammers_friendly::prelude::*;
+use teloxide::{prelude::*, utils::command::BotCommands};
 
-use crate::Result;
+use crate::handlers::BansCommand;
 
-pub fn router() -> Router {
-    Router::default().add_handler(Handler::new_message(start, macros::command!("start")))
+#[derive(BotCommands, Clone)]
+#[command(rename_rule = "lowercase")]
+pub enum Command {
+    #[command(description = "Start the bot")]
+    Start,
+    #[command(description = "Get this message")]
+    Help,
 }
 
-async fn start(_client: &mut Client, update: &mut Update, _data: &mut Data) -> Result<()> {
-    let message = update.get_message().unwrap();
-    message.reply(InputMessage::text("Hi!")).await?;
+pub async fn action(bot: Bot, message: Message, cmd: Command) -> ResponseResult<()> {
+    match cmd {
+        Command::Start => start(bot, message).await?,
+        Command::Help => help(bot, message).await?,
+    };
+
+    Ok(())
+}
+
+async fn start(bot: Bot, message: Message) -> ResponseResult<()> {
+    bot.send_message(message.chat.id, "Hi!").await?;
+    Ok(())
+}
+
+async fn help(bot: Bot, message: Message) -> ResponseResult<()> {
+    let text = format!(
+        "{}\n{}",
+        Command::descriptions(),
+        BansCommand::descriptions()
+    );
+
+    bot.send_message(message.chat.id, text).await?;
     Ok(())
 }

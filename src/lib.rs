@@ -5,5 +5,3 @@ mod config;
 pub mod handlers;
 
 pub use config::Config;
-
-pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;

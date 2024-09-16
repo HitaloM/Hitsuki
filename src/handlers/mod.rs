@@ -4,5 +4,7 @@
 mod bans;
 mod start;
 
-pub use bans::router as bans;
-pub use start::router as start;
+pub use bans::action as bans;
+pub use bans::Command as BansCommand;
+pub use start::action as start;
+pub use start::Command as StartCommand;
