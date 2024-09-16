@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
+use anyhow::Result;
 use teloxide::prelude::*;
 use teloxide::types::ParseMode;
 
@@ -8,7 +9,7 @@ use hitsuki::handlers::{bans, start, BansCommand, StartCommand};
 use hitsuki::Config;
 
 #[tokio::main]
-async fn main() -> ResponseResult<()> {
+async fn main() -> Result<()> {
     env_logger::init();
 
     let config = Config::load().expect("Failed to load configuration");

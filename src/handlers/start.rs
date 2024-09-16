@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
+use anyhow::Result;
 use teloxide::adaptors::DefaultParseMode;
 use teloxide::prelude::*;
 use teloxide::utils::command::BotCommands;
@@ -16,11 +17,7 @@ pub enum Command {
     Help,
 }
 
-pub async fn action(
-    bot: DefaultParseMode<Bot>,
-    message: Message,
-    cmd: Command,
-) -> ResponseResult<()> {
+pub async fn action(bot: DefaultParseMode<Bot>, message: Message, cmd: Command) -> Result<()> {
     match cmd {
         Command::Start => start(&bot, &message).await?,
         Command::Help => help(&bot, &message).await?,
@@ -29,12 +26,12 @@ pub async fn action(
     Ok(())
 }
 
-async fn start(bot: &DefaultParseMode<Bot>, message: &Message) -> ResponseResult<()> {
+async fn start(bot: &DefaultParseMode<Bot>, message: &Message) -> Result<()> {
     bot.send_message(message.chat.id, "<b>Hi!</b>").await?;
     Ok(())
 }
 
-async fn help(bot: &DefaultParseMode<Bot>, message: &Message) -> ResponseResult<()> {
+async fn help(bot: &DefaultParseMode<Bot>, message: &Message) -> Result<()> {
     let text = format!(
         "{}\n\n{}",
         Command::descriptions(),

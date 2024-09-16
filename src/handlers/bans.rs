@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
+use anyhow::Result;
 use teloxide::adaptors::DefaultParseMode;
 use teloxide::prelude::*;
 use teloxide::types::ChatPermissions;
@@ -17,11 +18,7 @@ pub enum Command {
     Mute,
 }
 
-pub async fn action(
-    bot: DefaultParseMode<Bot>,
-    message: Message,
-    cmd: Command,
-) -> ResponseResult<()> {
+pub async fn action(bot: DefaultParseMode<Bot>, message: Message, cmd: Command) -> Result<()> {
     match cmd {
         Command::Kick => kick_user(&bot, &message).await?,
         Command::Ban => ban_user(&bot, &message).await?,
@@ -31,7 +28,7 @@ pub async fn action(
     Ok(())
 }
 
-async fn kick_user(bot: &DefaultParseMode<Bot>, message: &Message) -> ResponseResult<()> {
+async fn kick_user(bot: &DefaultParseMode<Bot>, message: &Message) -> Result<()> {
     if let Some(replied) = message.reply_to_message() {
         bot.unban_chat_member(message.chat.id, replied.from.as_ref().unwrap().id)
             .await?;
@@ -45,7 +42,7 @@ async fn kick_user(bot: &DefaultParseMode<Bot>, message: &Message) -> ResponseRe
     Ok(())
 }
 
-async fn ban_user(bot: &DefaultParseMode<Bot>, message: &Message) -> ResponseResult<()> {
+async fn ban_user(bot: &DefaultParseMode<Bot>, message: &Message) -> Result<()> {
     if let Some(replied) = message.reply_to_message() {
         bot.ban_chat_member(
             message.chat.id,
@@ -66,7 +63,7 @@ async fn ban_user(bot: &DefaultParseMode<Bot>, message: &Message) -> ResponseRes
     Ok(())
 }
 
-async fn mute_user(bot: &DefaultParseMode<Bot>, message: &Message) -> ResponseResult<()> {
+async fn mute_user(bot: &DefaultParseMode<Bot>, message: &Message) -> Result<()> {
     if let Some(replied) = message.reply_to_message() {
         bot.restrict_chat_member(
             message.chat.id,
