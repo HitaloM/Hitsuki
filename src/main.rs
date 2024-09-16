@@ -2,11 +2,12 @@
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
 use anyhow::Result;
-use teloxide::prelude::*;
-use teloxide::types::ParseMode;
+use teloxide::{prelude::*, types::ParseMode};
 
-use hitsuki::handlers::{bans, start, BansCommand, StartCommand};
-use hitsuki::Config;
+use hitsuki::{
+    commands::{BansCommand, StartCommand},
+    Config,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -21,12 +22,12 @@ async fn main() -> Result<()> {
         .branch(
             dptree::entry()
                 .filter_command::<StartCommand>()
-                .endpoint(start),
+                .endpoint(StartCommand::handler),
         )
         .branch(
             dptree::entry()
                 .filter_command::<BansCommand>()
-                .endpoint(bans),
+                .endpoint(BansCommand::handler),
         );
 
     Dispatcher::builder(bot, handler)
