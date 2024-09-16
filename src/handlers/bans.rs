@@ -22,15 +22,8 @@ pub async fn kick_cmd(bot: &Bot, message: &Message) -> Result<()> {
 
 pub async fn ban_cmd(bot: &Bot, message: &Message) -> Result<()> {
     if let Some(replied) = message.reply_to_message() {
-        bot.ban_chat_member(
-            message.chat.id,
-            replied
-                .from
-                .as_ref()
-                .expect("Must be MessageKind::Common")
-                .id,
-        )
-        .await?;
+        bot.ban_chat_member(message.chat.id, replied.from.as_ref().unwrap().id)
+            .await?;
     } else {
         bot.send_message(
             message.chat.id,
@@ -45,11 +38,7 @@ pub async fn mute_cmd(bot: &Bot, message: &Message) -> Result<()> {
     if let Some(replied) = message.reply_to_message() {
         bot.restrict_chat_member(
             message.chat.id,
-            replied
-                .from
-                .as_ref()
-                .expect("Must be MessageKind::Common")
-                .id,
+            replied.from.as_ref().unwrap().id,
             ChatPermissions::empty(),
         )
         .await?;

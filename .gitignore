@@ -1,8 +1,5 @@
 # Rust / Cargo
 /target
 
-# Grammers
-*.session
-
 # Hitsuki
-config.toml
+/config.toml
