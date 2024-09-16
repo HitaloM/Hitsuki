@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
+use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
-use std::{fs::File, io::Read};
+use std::fs;
 
 const PATH: &str = "./config.toml";
 
@@ -12,21 +13,11 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn load() -> anyhow::Result<Self> {
-        let toml_str = read_file_to_string(PATH)?;
-        parse_toml(&toml_str)
+    pub fn load() -> Result<Self> {
+        let toml_str = fs::read_to_string(PATH).context("Failed to read config file")?;
+        let config = toml::from_str::<Config>(&toml_str).context("Failed to parse config file")?;
+        Ok(config)
     }
-}
-
-fn read_file_to_string(path: &str) -> anyhow::Result<String> {
-    let mut file = File::open(path)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-    Ok(contents)
-}
-
-fn parse_toml(toml_str: &str) -> anyhow::Result<Config> {
-    Ok(toml::from_str::<Config>(toml_str)?)
 }
 
 #[derive(Deserialize, Serialize)]

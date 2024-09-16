@@ -1,3 +1,3 @@
-# Hitsuki - Telegram Bot
+# Hitsuki
 
-> Work in progress...
+> A work-in-progress Telegram bot for group management built with Rust using the [teloxide](https://github.com/teloxide/teloxide) crate.

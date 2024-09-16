@@ -2,21 +2,19 @@
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
 use teloxide::prelude::*;
+use teloxide::types::ParseMode;
 
-use hitsuki::handlers::{BansCommand, StartCommand};
-use hitsuki::{
-    handlers::{bans, start},
-    Config,
-};
+use hitsuki::handlers::{bans, start, BansCommand, StartCommand};
+use hitsuki::Config;
 
 #[tokio::main]
 async fn main() -> ResponseResult<()> {
     env_logger::init();
 
-    let config = Config::load().unwrap();
+    let config = Config::load().expect("Failed to load configuration");
 
     log::info!("Starting Hitsuki...");
-    let bot = Bot::new(config.bot.token);
+    let bot = Bot::new(config.bot.token).parse_mode(ParseMode::Html);
 
     let handler = Update::filter_message()
         .branch(

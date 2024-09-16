@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
-use teloxide::{prelude::*, types::ChatPermissions, utils::command::BotCommands};
+use teloxide::adaptors::DefaultParseMode;
+use teloxide::prelude::*;
+use teloxide::types::ChatPermissions;
+use teloxide::utils::command::BotCommands;
 
 #[derive(BotCommands, Clone)]
-#[command(rename_rule = "lowercase")]
+#[command(rename_rule = "lowercase", description = "Bans commands:")]
 pub enum Command {
     #[command(description = "Reply to a user to kick him from the group")]
     Kick,
@@ -14,78 +17,73 @@ pub enum Command {
     Mute,
 }
 
-pub async fn action(bot: Bot, message: Message, cmd: Command) -> ResponseResult<()> {
+pub async fn action(
+    bot: DefaultParseMode<Bot>,
+    message: Message,
+    cmd: Command,
+) -> ResponseResult<()> {
     match cmd {
-        Command::Kick => kick_user(bot, message).await?,
-        Command::Ban => ban_user(bot, message).await?,
-        Command::Mute => mute_user(bot, message).await?,
+        Command::Kick => kick_user(&bot, &message).await?,
+        Command::Ban => ban_user(&bot, &message).await?,
+        Command::Mute => mute_user(&bot, &message).await?,
     };
 
     Ok(())
 }
 
-async fn kick_user(bot: Bot, message: Message) -> ResponseResult<()> {
-    match message.reply_to_message() {
-        Some(replied) => {
-            bot.unban_chat_member(message.chat.id, replied.from.as_ref().unwrap().id)
-                .await?;
-        }
-        None => {
-            bot.send_message(
-                message.chat.id,
-                "Use this command in reply to another message",
-            )
+async fn kick_user(bot: &DefaultParseMode<Bot>, message: &Message) -> ResponseResult<()> {
+    if let Some(replied) = message.reply_to_message() {
+        bot.unban_chat_member(message.chat.id, replied.from.as_ref().unwrap().id)
             .await?;
-        }
+    } else {
+        bot.send_message(
+            message.chat.id,
+            "Use this command in reply to another message",
+        )
+        .await?;
     }
     Ok(())
 }
 
-async fn ban_user(bot: Bot, message: Message) -> ResponseResult<()> {
-    match message.reply_to_message() {
-        Some(replied) => {
-            bot.ban_chat_member(
-                message.chat.id,
-                replied
-                    .from
-                    .as_ref()
-                    .expect("Must be MessageKind::Common")
-                    .id,
-            )
-            .await?;
-        }
-        None => {
-            bot.send_message(
-                message.chat.id,
-                "Use this command in a reply to another message!",
-            )
-            .await?;
-        }
+async fn ban_user(bot: &DefaultParseMode<Bot>, message: &Message) -> ResponseResult<()> {
+    if let Some(replied) = message.reply_to_message() {
+        bot.ban_chat_member(
+            message.chat.id,
+            replied
+                .from
+                .as_ref()
+                .expect("Must be MessageKind::Common")
+                .id,
+        )
+        .await?;
+    } else {
+        bot.send_message(
+            message.chat.id,
+            "Use this command in a reply to another message!",
+        )
+        .await?;
     }
     Ok(())
 }
 
-async fn mute_user(bot: Bot, message: Message) -> ResponseResult<()> {
-    match message.reply_to_message() {
-        Some(replied) => {
-            bot.restrict_chat_member(
-                message.chat.id,
-                replied
-                    .from
-                    .as_ref()
-                    .expect("Must be MessageKind::Common")
-                    .id,
-                ChatPermissions::empty(),
-            )
-            .await?;
-        }
-        None => {
-            bot.send_message(
-                message.chat.id,
-                "Use this command in a reply to another message!",
-            )
-            .await?;
-        }
+async fn mute_user(bot: &DefaultParseMode<Bot>, message: &Message) -> ResponseResult<()> {
+    if let Some(replied) = message.reply_to_message() {
+        bot.restrict_chat_member(
+            message.chat.id,
+            replied
+                .from
+                .as_ref()
+                .expect("Must be MessageKind::Common")
+                .id,
+            ChatPermissions::empty(),
+        )
+        .await?;
+    } else {
+        bot.send_message(
+            message.chat.id,
+            "Use this command in a reply to another message!",
+        )
+        .await?;
     }
     Ok(())
 }
