@@ -6,10 +6,7 @@ use teloxide::{
     adaptors::throttle::Limits, prelude::*, types::ParseMode, update_listeners::Polling,
 };
 
-use hitsuki::{
-    commands::{BansCommand, StartCommand},
-    Config,
-};
+use hitsuki::{handlers, Config};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -26,21 +23,13 @@ async fn main() -> Result<()> {
         .parse_mode(ParseMode::Html)
         .cache_me();
 
-    let handler = Update::filter_message()
-        .branch(
-            dptree::entry()
-                .filter_command::<StartCommand>()
-                .endpoint(StartCommand::handler),
-        )
-        .branch(
-            dptree::entry()
-                .filter_command::<BansCommand>()
-                .endpoint(BansCommand::handler),
-        );
+    let handler = dptree::entry()
+        .branch(handlers::start::schema())
+        .branch(handlers::bans::schema());
 
     let error_handler =
         LoggingErrorHandler::with_custom_text("An error has occurred in the dispatcher");
-    let update_listener = Polling::builder(bot.clone())
+    let listener = Polling::builder(bot.clone())
         .timeout(std::time::Duration::from_secs(10))
         .drop_pending_updates()
         .build();
@@ -50,7 +39,7 @@ async fn main() -> Result<()> {
         .default_handler(|_| async move {}) // Don't warn about unhandled updates
         .enable_ctrlc_handler()
         .build()
-        .dispatch_with_listener(update_listener, error_handler)
+        .dispatch_with_listener(listener, error_handler)
         .await;
 
     Ok(())

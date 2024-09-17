@@ -1,20 +1,28 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
-use anyhow::Result;
-use teloxide::{prelude::*, utils::command::BotCommands};
+use anyhow::{Error, Result};
+use teloxide::{dispatching::UpdateHandler, prelude::*, utils::command::BotCommands};
 
-use crate::{
-    commands::{BansCommand, StartCommand},
-    Bot,
-};
+use crate::Bot;
 
-pub async fn start_cmd(bot: &Bot, message: &Message) -> Result<()> {
+use super::{BansCommand, StartCommand};
+
+pub fn schema() -> UpdateHandler<Error> {
+    dptree::entry().branch(
+        Update::filter_message()
+            .filter_command::<StartCommand>()
+            .branch(dptree::case![StartCommand::Start].endpoint(start))
+            .branch(dptree::case![StartCommand::Help].endpoint(help)),
+    )
+}
+
+pub async fn start(bot: Bot, message: Message) -> Result<()> {
     bot.send_message(message.chat.id, "<b>Hi!</b>").await?;
     Ok(())
 }
 
-pub async fn help_cmd(bot: &Bot, message: &Message) -> Result<()> {
+pub async fn help(bot: Bot, message: Message) -> Result<()> {
     let text = format!(
         "{}\n\n{}",
         StartCommand::descriptions(),

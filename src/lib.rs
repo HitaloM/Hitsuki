@@ -3,7 +3,6 @@
 
 use teloxide::adaptors::{CacheMe, DefaultParseMode, Throttle};
 
-pub mod commands;
 mod config;
 pub mod handlers;
 
