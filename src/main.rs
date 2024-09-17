@@ -2,7 +2,9 @@
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
 use anyhow::Result;
-use teloxide::{adaptors::throttle::Limits, prelude::*, types::ParseMode};
+use teloxide::{
+    adaptors::throttle::Limits, prelude::*, types::ParseMode, update_listeners::Polling,
+};
 
 use hitsuki::{
     commands::{BansCommand, StartCommand},
@@ -11,11 +13,14 @@ use hitsuki::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    env_logger::init();
+    pretty_env_logger::formatted_builder()
+        .filter_level(log::LevelFilter::Info)
+        .init();
+
+    log::info!("Starting bot...");
 
     let config = Config::load().expect("Failed to load configuration");
 
-    log::info!("Starting Hitsuki...");
     let bot = Bot::new(config.bot.token)
         .throttle(Limits::default())
         .parse_mode(ParseMode::Html)
@@ -33,14 +38,19 @@ async fn main() -> Result<()> {
                 .endpoint(BansCommand::handler),
         );
 
+    let error_handler =
+        LoggingErrorHandler::with_custom_text("An error has occurred in the dispatcher");
+    let update_listener = Polling::builder(bot.clone())
+        .timeout(std::time::Duration::from_secs(10))
+        .drop_pending_updates()
+        .build();
+
     Dispatcher::builder(bot, handler)
-        .default_handler(|_upd| async move {}) // To stop warning about unhandled updates
-        .error_handler(LoggingErrorHandler::with_custom_text(
-            "An error has occurred in the dispatcher",
-        ))
+        .distribution_function(|_| None::<()>) // Always processing updates concurrently
+        .default_handler(|_| async move {}) // Don't warn about unhandled updates
         .enable_ctrlc_handler()
         .build()
-        .dispatch()
+        .dispatch_with_listener(update_listener, error_handler)
         .await;
 
     Ok(())

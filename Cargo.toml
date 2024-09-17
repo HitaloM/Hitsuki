@@ -5,9 +5,9 @@ edition = "2021"
 
 [dependencies]
 log = "0.4.22"
-env_logger = "0.11.5"
 toml = "0.8.19"
 serde = { version = "1.0.209", features = ["derive"] }
 tokio = { version = "1.40.0", features = ["full"] }
 teloxide = { version = "0.13.0", features = ["macros", "cache-me", "throttle"] }
 anyhow = "1.0.89"
+pretty_env_logger = "0.5.0"
