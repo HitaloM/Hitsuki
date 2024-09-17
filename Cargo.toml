@@ -2,12 +2,15 @@
 name = "hitsuki"
 version = "1.0.0"
 edition = "2021"
+description = "A cutting-edge and efficient Telegram Group Manager bot."
+repository = "https://github.com/HitaloM/Hitsuki"
+license = "BSD-3-Clause"
 
 [dependencies]
-log = "0.4.22"
-toml = "0.8.19"
-serde = { version = "1.0.209", features = ["derive"] }
-tokio = { version = "1.40.0", features = ["full"] }
-teloxide = { version = "0.13.0", features = ["macros", "cache-me", "throttle"] }
 anyhow = "1.0.89"
+log = "0.4.22"
 pretty_env_logger = "0.5.0"
+serde = { version = "1.0.209", features = ["derive"] }
+teloxide = { version = "0.13.0", features = ["macros", "cache-me", "throttle"] }
+tokio = { version = "1.40.0", features = ["full"] }
+toml = "0.8.19"
