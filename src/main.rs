@@ -23,9 +23,11 @@ async fn main() -> Result<()> {
         .parse_mode(ParseMode::Html)
         .cache_me();
 
-    let handler = dptree::entry()
-        .branch(handlers::start::schema())
-        .branch(handlers::bans::schema());
+    let handler = dptree::entry().branch(
+        Update::filter_message()
+            .branch(handlers::start::schema())
+            .branch(handlers::bans::schema()),
+    );
 
     let error_handler =
         LoggingErrorHandler::with_custom_text("An error has occurred in the dispatcher");

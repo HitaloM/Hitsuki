@@ -9,12 +9,10 @@ use crate::Bot;
 use super::{BansCommand, StartCommand};
 
 pub fn schema() -> UpdateHandler<Error> {
-    dptree::entry().branch(
-        Update::filter_message()
-            .filter_command::<StartCommand>()
-            .branch(dptree::case![StartCommand::Start].endpoint(start))
-            .branch(dptree::case![StartCommand::Help].endpoint(help)),
-    )
+    dptree::entry()
+        .filter_command::<StartCommand>()
+        .branch(dptree::case![StartCommand::Start].endpoint(start))
+        .branch(dptree::case![StartCommand::Help].endpoint(help))
 }
 
 pub async fn start(bot: Bot, message: Message) -> Result<()> {

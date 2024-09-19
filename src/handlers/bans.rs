@@ -9,13 +9,11 @@ use crate::Bot;
 use super::BansCommand;
 
 pub fn schema() -> UpdateHandler<Error> {
-    dptree::entry().branch(
-        Update::filter_message()
-            .filter_command::<BansCommand>()
-            .branch(dptree::case![BansCommand::Kick].endpoint(kick))
-            .branch(dptree::case![BansCommand::Ban].endpoint(ban))
-            .branch(dptree::case![BansCommand::Mute].endpoint(mute)),
-    )
+    dptree::entry()
+        .filter_command::<BansCommand>()
+        .branch(dptree::case![BansCommand::Kick].endpoint(kick))
+        .branch(dptree::case![BansCommand::Ban].endpoint(ban))
+        .branch(dptree::case![BansCommand::Mute].endpoint(mute))
 }
 
 pub async fn kick(bot: Bot, message: Message) -> Result<()> {
