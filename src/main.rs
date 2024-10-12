@@ -6,7 +6,7 @@ use teloxide::{
     adaptors::throttle::Limits, prelude::*, types::ParseMode, update_listeners::Polling,
 };
 
-use hitsuki::{handlers, Config};
+use hitsuki::{database::Database, handlers, Config};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -17,6 +17,8 @@ async fn main() -> Result<()> {
     log::info!("Starting bot...");
 
     let config = Config::load().expect("Failed to load configuration");
+
+    let database = Database::new(config.bot.database_url);
 
     let bot = Bot::new(config.bot.token)
         .throttle(Limits::default())
@@ -37,6 +39,7 @@ async fn main() -> Result<()> {
         .build();
 
     Dispatcher::builder(bot, handler)
+        .dependencies(dptree::deps![database])
         .distribution_function(|_| None::<()>) // Always processing updates concurrently
         .default_handler(|_| async move {}) // Don't warn about unhandled updates
         .enable_ctrlc_handler()

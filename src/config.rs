@@ -23,4 +23,5 @@ impl Config {
 #[derive(Deserialize, Serialize)]
 pub struct Bot {
     pub token: String,
+    pub database_url: String,
 }
