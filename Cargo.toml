@@ -13,6 +13,10 @@ diesel-async = { version = "0.5.0", features = ["postgres", "deadpool"] }
 log = "0.4.22"
 pretty_env_logger = "0.5.0"
 serde = { version = "1.0.209", features = ["derive"] }
-teloxide = { version = "0.13.0", features = ["macros", "cache-me", "throttle"] }
+teloxide = { git = "https://github.com/teloxide/teloxide", features = [
+    "macros",
+    "cache-me",
+    "throttle",
+] }
 tokio = { version = "1.40.0", features = ["full"] }
 toml = "0.8.19"

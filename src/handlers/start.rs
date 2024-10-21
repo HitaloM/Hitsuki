@@ -4,9 +4,8 @@
 use anyhow::{Error, Result};
 use teloxide::{dispatching::UpdateHandler, prelude::*, utils::command::BotCommands};
 
+use super::StartCommand;
 use crate::Bot;
-
-use super::{BansCommand, StartCommand};
 
 pub fn schema() -> UpdateHandler<Error> {
     dptree::entry()
@@ -21,12 +20,7 @@ pub async fn start(bot: Bot, message: Message) -> Result<()> {
 }
 
 pub async fn help(bot: Bot, message: Message) -> Result<()> {
-    let text = format!(
-        "{}\n\n{}",
-        StartCommand::descriptions(),
-        BansCommand::descriptions()
-    );
-
-    bot.send_message(message.chat.id, text).await?;
+    bot.send_message(message.chat.id, StartCommand::descriptions().to_string())
+        .await?;
     Ok(())
 }
