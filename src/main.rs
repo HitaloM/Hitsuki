@@ -25,8 +25,18 @@ async fn main() -> Result<()> {
         .parse_mode(ParseMode::Html)
         .cache_me();
 
-    let handler =
-        dptree::entry().branch(Update::filter_message().branch(handlers::start::schema()));
+    let handler = dptree::entry().branch(
+        Update::filter_message().branch(
+            dptree::entry()
+                .filter_command::<handlers::StartCommand>()
+                .branch(
+                    dptree::case![handlers::StartCommand::Start].endpoint(handlers::start::start),
+                )
+                .branch(
+                    dptree::case![handlers::StartCommand::Help].endpoint(handlers::start::help),
+                ),
+        ),
+    );
 
     let error_handler =
         LoggingErrorHandler::with_custom_text("An error has occurred in the dispatcher");
