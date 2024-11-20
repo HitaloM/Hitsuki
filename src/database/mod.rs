@@ -2,37 +2,53 @@
 // Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
 pub mod models;
+pub mod operations;
 pub mod schema;
 
 use diesel_async::{
     pooled_connection::{deadpool::Pool, AsyncDieselConnectionManager},
     AsyncPgConnection,
 };
-use std::sync::OnceLock;
+use operations::{Chats, Users};
+use std::sync::LazyLock;
+
+use crate::config::Config;
 
 pub type ConnectionPool = Pool<AsyncPgConnection>;
 
-pub struct Database {
-    pub connection_pool: ConnectionPool,
+pub static DB: LazyLock<DatabaseOperations> = LazyLock::new(DatabaseOperations::new);
+
+pub struct DatabaseOperations {
+    pub chats: Chats,
+    pub users: Users,
 }
 
-impl Database {
-    pub fn new(database_url: String) -> Database {
-        Database {
-            connection_pool: Self::initialize_pool(database_url),
+impl DatabaseOperations {
+    fn new() -> Self {
+        let pool = Database::get_connection_pool();
+        Self {
+            chats: Chats::new(pool.clone()),
+            users: Users::new(pool),
         }
     }
+}
 
-    fn initialize_pool(database_url: String) -> ConnectionPool {
-        static POOL: OnceLock<ConnectionPool> = OnceLock::new();
+pub struct Database;
 
-        POOL.get_or_init(|| {
-            let connection_manager =
-                AsyncDieselConnectionManager::<AsyncPgConnection>::new(database_url);
+impl Database {
+    pub fn get_connection_pool() -> ConnectionPool {
+        static POOL: LazyLock<ConnectionPool> = LazyLock::new(|| {
+            let config = Config::load().expect("Failed to load configuration");
+
+            let connection_manager = AsyncDieselConnectionManager::<AsyncPgConnection>::new(
+                config.bot.database_url.clone(),
+            );
+
             Pool::builder(connection_manager)
                 .build()
                 .expect("Failed to build the Database connection pool!")
-        })
-        .clone()
+        });
+
+        POOL.clone()
     }
 }
