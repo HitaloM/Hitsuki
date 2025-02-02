@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
+// Copyright (c) 2025 Hitalo M. <https://github.com/HitaloM>
 
 use diesel_async::pooled_connection::deadpool::Pool;
 use diesel_async::AsyncPgConnection;
