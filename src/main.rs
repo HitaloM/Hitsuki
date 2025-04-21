@@ -16,7 +16,7 @@ async fn main() -> Result<()> {
 
     log::info!("Starting bot...");
 
-    let config = Config::load().expect("Failed to load configuration");
+    let config = Config::load().await?;
 
     let bot = Bot::new(config.bot.token)
         .throttle(Limits::default())
@@ -43,7 +43,6 @@ async fn main() -> Result<()> {
         .drop_pending_updates()
         .build();
 
-    // TODO: add .dependencies(dptree::deps![DB.clone()])
     Dispatcher::builder(bot, handler)
         .distribution_function(|_| None::<()>) // Always processing updates concurrently
         .default_handler(|_| async move {}) // Don't warn about unhandled updates

@@ -4,7 +4,6 @@
 use teloxide::adaptors::{CacheMe, DefaultParseMode, Throttle};
 
 mod config;
-pub mod database;
 pub mod handlers;
 
 pub use config::Config;

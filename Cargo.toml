@@ -7,16 +7,14 @@ repository = "https://github.com/HitaloM/Hitsuki"
 license = "BSD-3-Clause"
 
 [dependencies]
-anyhow = "1.0.89"
-diesel = "2.2.4"
-diesel-async = { version = "0.5.0", features = ["postgres", "deadpool"] }
-log = "0.4.22"
+anyhow = "1.0.98"
+log = "0.4.27"
 pretty_env_logger = "0.5.0"
-serde = { version = "1.0.209", features = ["derive"] }
+serde = { version = "1.0.219", features = ["derive"] }
 teloxide = { git = "https://github.com/teloxide/teloxide", features = [
     "macros",
     "cache-me",
     "throttle",
 ] }
-tokio = { version = "1.40.0", features = ["full"] }
-toml = "0.8.19"
+tokio = { version = "1.44.2", features = ["full"] }
+toml = "0.8.20"
